@@ -1,47 +1,75 @@
-## 1. Recommended Books (Reading Order)
+# Prometheus · Long
 
-| Priority | Book                                                      | Focus                                                                             |
-| -------- | --------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| 1        | Neuronal Dynamics — Gerstner et al.                       | Chapters 17–20, especially Ch. 19: synaptic plasticity, learning, neural dynamics |
-| 2        | Principles of Neural Science — Kandel et al.              | Chapters 43–45: neural development, formation and modification of connections     |
-| 3        | Theoretical Neuroscience — Dayan & Abbott                 | Chapters 7–10: neural computation, network dynamics, learning mechanisms          |
-| 4        | Self-Organization in Biological Systems — Camazine et al. | How local interactions generate global order                                      |
-| 5        | How to Build a Brain — Chris Eliasmith                    | Building cognitive architectures from neural dynamics                             |
-| 6        | The Origins of Order — Stuart Kauffman                    | Self-organization, natural selection, complexity, and open-ended evolution        |
+**Period:** 2026-10-27 → 2026-11-26 (rolling one-month plan)  
+**Time budget:** ~4–6 hours/week; flexible, without catch-up debt  
+**Mode:** Reading, reasoning, Markdown notes. No Python implementation required.
 
-Start with Neuronal Dynamics. There is no need to read all six books simultaneously.
+## Monthly question
 
-## 2. Recommended Papers & Classic Experiments
+> How can simple local interaction rules produce stable organization, memory, and useful computation?
 
-| Priority | Research                                                                     | What to Investigate                                                      |
-| -------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| 1        | Movable Feast Machine — David Ackley                                         | Local asynchronous computation, self-organization, scalable computing    |
-| 2        | Growing Neural Cellular Automata (2020)                                      | How local interactions generate structures and self-repair               |
-| 3        | Evolving Virtual Creatures — Karl Sims (1994)                                | Co-evolution of morphology and neural controllers                        |
-| 4        | Learning Representations by Back-Propagating Errors (1986)                   | How internal representations emerge through learning                     |
-| 5        | Neural Machine Translation by Jointly Learning to Align and Translate (2014) | The original intuition behind attention                                  |
-| 6        | Attention Is All You Need (2017)                                             | Why recurrence can be replaced with attention                            |
-| 7        | Unsupervised Learning of Digit Recognition Using STDP (2015)                 | Whether local synaptic learning rules can produce useful representations |
+**This month's boundary:** Understand specific known mechanisms of emergence and learning. Do not attempt to solve open-ended evolution, design Prometheus' final architecture, or prove that intelligence will emerge.
 
-## 3. Six Questions to Guide Your Reading
+## Three anchor sources
 
-1. Origin of Computation: How can simple computational units collectively implement complex computations?
-2. Origin of Learning: Can learning emerge without predefined loss functions or reward signals?
-3. Origin of Structure: Can networks autonomously create, remove, and reorganize their computational connections?
-4. Evolution of Rules: Can the mechanisms governing learning and structural adaptation themselves evolve?
-5. Open-Ended Evolution: Why do existing artificial life systems stagnate, and what conditions enable sustained innovation?
-6. Limits of Computability: Can a finite, deterministic algorithm support genuinely open-ended evolution?
+1. **Growing Neural Cellular Automata** (Mordvintsev et al., 2020) — https://distill.pub/2020/growing-ca/  
+   Focus: local perception, cell update, growth, persistence, regeneration, and the *externally supplied training objective*.
+2. **Neuronal Dynamics** (Gerstner et al.) — https://neuronaldynamics.epfl.ch/online/  
+   Focus: §19.1–19.3 (Hebbian learning, STDP, unsupervised learning), with §17.1–17.2 for memory and attractor dynamics.
+3. **A Movable Architecture for Robust Spatial Computing** (Ackley, Cannon & Williams) — https://www.cs.unm.edu/~williams/acw.pdf  
+   Focus: local asynchronous updates, spatial computation, redundancy and self-healing. Do not assume the model already achieves open-ended evolution.
 
-## 4. Central Research Question
+All other books and papers are **references**, not a reading backlog. Open one only when a concrete question in an anchor source requires it.
 
-> Does there exist a sufficiently simple, computable set of local interaction rules that enables computational units to autonomously develop memory, learning, organization, and novel computational capabilities while supporting sustained open-ended evolution?
+## Weekly route
 
-This is the central theoretical question emerging from our discussion.
+| Dates | Focus | Required reading | Test of understanding |
+|---|---|---|---|
+| Oct 27–Nov 1 | Local rules → organized form | Growing NCA, sections Model / Learning to Grow / persistence; Neuronal Dynamics §19.1–19.2 | Explain which mechanisms are predesigned, trained, or emergent |
+| Nov 2–8 | Local plasticity → memory | Neuronal Dynamics §19.3 and §17.1–17.2 | Explain Hebbian/STDP updates and the distinction between state persistence and retrievable memory |
+| Nov 9–15 | Local events → robust computation | Ackley et al.: introduction, MFM model, self-healing examples | Describe how information moves and computation survives local changes without global coordination |
+| Nov 16–22 | Synthesis | Revisit the three sources; no new major book | Compare the assumptions, mechanisms, demonstrated outcomes, and limits |
+| Nov 23–26 | Buffer and next question | Fill a concrete knowledge gap only if necessary | Write one precise question worth studying next month |
 
-## 5. Immediate Research Strategy
+## Output (small on purpose)
 
-Read → Understand → Critically Analyze → Form Hypotheses → Design Experiments.
+- One concise mechanism note for each anchor source (roughly one page each; can be shorter).
+- One comparison table: **What is fixed? What is learned? What emerges? What is measured?**
+- One unresolved *specific* question to guide the next month. A mathematical hypothesis is optional, not mandatory.
 
-For now, prioritize understanding the theoretical foundations and historical breakthroughs.
+## Method: prevent both failure modes
 
-No premature architecture design or implementation.
+**Against directionless textbook reading**
+- Before reading, write the question this source is supposed to answer.
+- Read the relevant sections, not whole books sequentially.
+- If a definition blocks progress, consult a single supporting section and return.
+
+**Against endless abstract speculation**
+- After every reading block, close the PDF and reconstruct one mechanism from memory: diagram, equation, or 150–250 words.
+- For every claim about emergence, name the source and distinguish results from conjecture.
+- Put exciting tangents into a brief `Later` paragraph; revisit only at the weekly review.
+
+**Guardrail:** Do not judge success by page count, idea count, novelty, or conference potential. Judge whether one mechanism is clearer than last week.
+
+## Reading-note template
+
+```markdown
+# Source / Mechanism
+Question I brought to this source:
+
+What the system is allowed to do (state, interactions, updates):
+
+What is specified / learned / emergent:
+
+One mechanism I can explain without the paper:
+
+One mathematical detail I understand (or need to resolve):
+
+What the paper does NOT show:
+
+Next concrete question:
+```
+
+## Not in scope this month
+
+Full-text reading of Kandel, Kauffman, Simon, Ashby, von Neumann, etc.; exhaustive citation gathering; Python prototypes; learning Chinese greetings; proposing a complete new neural architecture.
