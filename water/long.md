@@ -4,6 +4,18 @@
 **Time budget:** 每周约 4–6 小时，弹性安排；未完成的时间不补课（no catch-up debt）  
 **Mode:** 阅读一手文献、重建机制、数学推导、比较已有方法、记录 Markdown。现阶段不强制写 Python。
 
+## Research anchor · 研究锚点
+
+**Field:** Self-Organizing Neural Computation  
+**Fundamental question:** *How can neural networks learn to construct, compose, and improve their own internal computational mechanisms?*
+
+Prometheus 研究神经系统如何通过学习自主形成、组织、组合、保留、复用和改进内部计算机制，并由此获得与迁移日益复杂的计算能力。
+
+- **研究对象：** 内部计算机制自身的形成和变化；不预设它们必然对应固定的人类设计模块。
+- **方法边界：** 严格区分状态更新规则、参数学习规则、外部优化及运行期自适应。
+- **证据标准：** 能力产生（creation）、机制识别（identification）、因果解释（understanding）分别检验；生物类比只作为候选机制来源。
+- **远期愿景：** 发现新的学习原理或神经架构；当前不预选架构，也不把 cognitive closure 作为技术前提（见 `fire/cognitive-limits.md`）。
+
 ## 研究目标 · Purpose
 
 未来三个月只回答一个决策问题：
@@ -19,6 +31,35 @@
 3. **Research gap — 研究缺口：** 最接近的已有方法已经做到哪里？有什么可以被测量、被反驳的新问题？
 
 **边界：** 不急于设计 Prometheus 的最终架构；不试图证明通用智能会涌现；不把 `food/` 当作必须读完的书单。科学问题可以改变，证据标准不能降低。
+
+## Foundational Components · 基石库
+
+“基石”指已有文献中可明确说明其**状态、输入、更新、约束、可测行为和证据来源**的具体机制。它可以是数学构造、学习规则或可复现的实验现象；不等于未来系统的预制模块。
+
+| ID | 基石问题（提取具体机制，而非综述） | 当前优先来源 | 对应月份 |
+|---|---|---|---|
+| F1 · State & Representation | 允许什么状态、什么表征、什么局部可见信息？ | Growing NCA、Neuronal Dynamics | M1 |
+| F2 · Local Interaction | 谁与谁交互？同步/异步、邻域和信息传播如何限定？ | NCA、IsoNCA；MFM 按需 | M1–M2 |
+| F3 · Plasticity & Adaptation | 哪些变量可在运行期改变？学习信号和信用分配来自何处？ | Hebbian/STDP、SAM；Miconi | M1、M3 |
+| F4 · Self-Organization | 什么局部规则生成并稳定维持特定整体结构？设计者固定了什么？ | NCA、IsoNCA；Turing/Kauffman 按需 | M1 |
+| F5 · Memory & Stability | 保存的状态何时可读取、可抗扰动并影响未来任务？ | Neuronal Dynamics、Strogatz 按需 | M2 |
+| F6 · Computation & Composition | 什么证据表明结构执行操作、被复用、被组合？ | Crutchfield–Mitchell、SICP | M2 |
+| F7 · Selection & Feedback | 哪些反馈选择了有用机制？评估/搜索过程位于系统内部还是外部？ | SAM、AutoML-Zero、Differentiable Plasticity | M3 |
+
+**记录办法：** 按阅读进度填写一个 `water/foundations.md`。每个已经理解的基石只需一张卡片：
+
+```markdown
+## F# — Name / 来源（具体论文、章节、页码）
+Question: 此机制要回答的一个问题
+State / input / topology: 状态、输入、允许的交互
+Update / learning rule: 一条方程或伪代码；哪些量固定、可学习、运行期可变
+Demonstrated behavior: 原文做了什么实验，观察到了什么
+Boundary: 原文没有证明什么；是否存在外部目标/训练器
+Reuse hypothesis (optional): 未来可能与哪个基石形成可检验组合？
+Status: source-established / reconstructed / speculative
+```
+
+**不要为填表而补读七个领域。** 当月只处理该月文献出现的基石；未知栏位留空。重点是掌握可使用、可被质疑的机制，而不是积累术语。
 
 ---
 
@@ -74,7 +115,7 @@
 | Hebbian / STDP | | | | | |
 | SAM | | | | | |
 
-另选 **两条更新方程或机制流程图**，关掉论文后独立重建。可以记录不理解的部分，无须伪装成已经掌握。
+另选 **两条更新方程或机制流程图**，关掉论文后独立重建。可以记录不理解的部分，无须伪装成已经掌握。 同步在 `water/foundations.md` 填写本月已经理解的 F1–F4 卡片；不要求四项都填满。
 
 **Gate 1 — 月末判断：**
 
@@ -133,7 +174,7 @@
 3. 一个看起来相似、实际上不符合定义的反例（false positive）；
 4. 一个尚未确定的边界问题。
 
-四个概念：**mechanism / memory / composition / improvement**。
+四个概念：**mechanism / memory / composition / improvement**。 在 `water/foundations.md` 补 F5、F6，并从已读基石中提取 1 个可以被形式化的候选问题；条件具备时可试运行 PRP。
 
 **Gate 2 — 月末判断：**
 
@@ -179,7 +220,7 @@
 
 ### 月末产出 · A researchable question
 
-写一页 **`question.md`**，无需强行提出原创结论，但要尽力填出：
+在 F7（选择/反馈机制）的对照阅读完成后，写一页 **`question.md`**，无需强行提出原创结论。允许 AI 在 PRP 中提供备选假说和最小实验设计，由本人检查来源、数学推导与基线。尽力填出：
 
 - **Claim / 假设：** 一个具体的候选命题，标注 *provisional*。
 - **Closest prior work / 最近先例：** 2–3 个方法，分别写明已经做到什么。
@@ -215,6 +256,56 @@
 `#4` von Neumann（本地仅节选）、`#7` Hofstadter、`#21` McGinn 等继续保留；只有具体问题确实需要时才打开。尤其要把 **cognitive closure** 的哲学猜想与神经网络的实验性主张分开。
 
 **规则：** 每次补充阅读最多先选一节或一篇；读完回到当月主问题。不要因为一本书有趣就把它自动升级成新的学习任务。
+
+## AI-assisted Research Protocol · 有界研究尝试
+
+可参考 [OpenAI 2026-10-06 数学发布](https://openai.com/index/sharing-ai-progress-in-mathematics/) 与其 [数学仓库](https://github.com/openai/math) 的**固定程序、候选问题筛选、结果记录、形式验证**等公开原则。其完整固定程序、所用内部模型和运行配置未公开；平均「约三小时 ChatGPT Pro Thinking 等效计算量」不是我们可以直接复现的模型用量或计时承诺。以下 PRP 是 **Prometheus 自己设计的流程**，不应称为 OpenAI 的原始算法。
+
+**触发条件：** 一旦掌握至少两张可重建的基石卡片，并出现值得比较的具体机制问题，便可开展一次尝试。通常 **每两周至多一次**，不强制排期；优先确保个人阅读和推导质量。若没有清晰问题，就不启动 AI 研究轮次。
+
+### PRP · One bounded research attempt
+
+**0. Research packet — 研究输入（1–2 页）**  
+由本人汇编：一个精确的问题、有关基石和更新式、已知最接近的结果（附引用）、允许的假设、需要证实或推翻的主张、可验证目标，以及可用计算和时间资源。AI 不直接从整个 `food/` 猜任务，也不根据长期愿景空想架构。
+
+**1. Formalize — 明确问题**  
+让 AI 将问题写成「状态—交互—学习规则—环境—功能指标—已知边界」，指出含糊定义和隐藏的全局信息通道。本人决定是否认可该问题表述。
+
+**2. Explore — 两次独立尝试**  
+使用同一份 packet，分别探索两条明确不同的机制假设或理论路径（可以用独立会话避免相互污染）。必须列出前提、关键推导、与现有基石的关系及可能失败方式。每条路径只追求一个可检查的中间结果。
+
+**3. Attack — 反例审查**  
+选择最有希望的一条，要求 AI 主动构造反例、查找已有工作、检查非局部依赖、额外参数、外部训练或目标泄漏；不允许只做赞成性解释。失败也要记录。
+
+**4. Verify — 独立验证**  
+本人重新推导关键式子、核查原始出处，必要时设计极简手算例子；进入实验期后才使用程序测试或数学形式化工具。计算检验不等于因果解释；所有未检验结论标注 `hypothesis`。
+
+**5. Consolidate — 形成可继承的研究结果**  
+只保留：已核实的机制事实、可复现的推导、明确被否定的猜想、未解决的定义、下一次尝试可以使用的问题。输出一个简短 `water/research-log.md` 条目。避免每次让模型重新消化全部聊天记录。
+
+### 一次尝试的产出格式
+
+```markdown
+## PRP-001 — Candidate question
+Research packet: 相关 foundations ID / 精确来源
+Claim: 精确且可被否定的主张
+Known facts: 已核实结果与适用假设
+Candidate A / B: 各自的一条机制路径或推导
+Adversarial checks: 反例、最近先例、隐藏设计假设
+Verification: 人工或程序到底检查了什么？
+Status: verified / partially checked / falsified / open
+Next smallest question: 唯一的下一步
+```
+
+### First pilot · 第一轮试运行（可在 M2 末或 M3 开始）
+
+> **在完全相同的局部状态更新框架下，允许运行期局部可塑性，是否会产生可重复利用、能够影响第二个任务的新内部功能？怎样与只改变隐藏状态或单纯增加容量区分？**
+
+这是一个用于训练提问方式的 **provisional question**，尚无新颖性结论。其目的在于强制把 NCA、STDP/SAM、记忆和机制定义接到同一个可验证问题上；先写出最小假想任务和反例，不要求立刻实现模型。可与 Miconi 等近邻工作比较后修改或否定。
+
+**资源原则：** 每次尝试采用 2 条候选路径 + 1 轮强反例审查 + 1 次本人验证的有限流程。`~3h Pro` 是 OpenAI 未公开系统的比较口径，**不能用来推算 ChatGPT 当前消息额度、实际研究耗时或成功率**。每周 4–6 小时仍是整个项目预算，不为研究尝试另设加班。
+
+---
 
 ## 每周如何执行 · Weekly practice
 
