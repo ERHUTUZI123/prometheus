@@ -94,3 +94,14 @@ Hard limits remain external900s/internal850s (or explicitly frozen <=1800s), D<=
 - Rabiner1989, https://www.fceia.unr.edu.ar/prodivoz/Rabiner_1989.pdf : printed pp262–265, forward/backward, local-vs-path decoding and Eqs(36)–(40) reestimation. Our terminal-conditioned operator/expert formula is a reconstruction from that framework, not its quoted theorem for this architecture. Other chapters unread.
 - Krishnamurthy et al.,2023, https://arxiv.org/pdf/2302.14703 : pp1–3 mechanism/problem statement and related work, pp7–8 utilization/regularization comparisons. It explicitly distinguishes specialization from using all experts. Its Euclidean sample similarity is not the semantic closed-relation rule proposed here. Section6 full mathematics not yet read, so no claim of a literature gap relative to it.
 - Jacobs et al.1991 author-hosted PDF located, but root text extraction failed; do not claim full original reading from its abstract. Independent source analysis is separate.
+
+
+## 2026-11-01 · Method integration: evidence boundaries retained
+
+Canonical method is water/method.md only. Its prior complete wording is frozen in probes/topology-architecture/versions/native-v6-method-before-continuous-integration.md. Moving repeated limitations out of the method changes no scientific finding.
+
+Architecture history: protocol-v1 already specifies a software quotient, matching chambers and old/new reachable graph relations; there is no recorded failed continuous realizer experiment. Native-v5 installs self-learned whole operations; v6 adds observed-history-driven workspace growth. Exact monodromy is locally constant away from degeneracies, so exact terminal semantic gradient alone cannot change its class. This is an unresolved interface, not a proved impossibility.
+
+Retained boundaries: MI routing repair is ordinary expert specialization, joint matching need not factor as native calls, compiled primitives/graph equivalence are ordinary tools, and topo_off retains shared materialization/growth preservation. The step/temperature guards had no rejections in the recorded v6 run. The present permutation quotient discards pure braids; a canonical braid selector is not a homomorphism. A continuous realizer does not by itself establish a new acquisition rule, physical protection, or M0 advantage. Parameter growth, actual training cost, and repeated semantic checks must remain charged.
+
+Actual v6b/error evidence: probes/topology-architecture/baseline-and-error-sync-manifest-20261101T205356Z.json; resource-extraction-v6b-20261101.json. Native stage2 has111/4096 training errors and one observed-history alias; the repaired neural checkpoint is not yet claimed at this entry.

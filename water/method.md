@@ -1,205 +1,332 @@
 # Prometheus · Current Method
 
-**唯一持续维护的方法正文 · 当前实现 native-v6 · 2026-11-01**
+**唯一持续维护的方法正文 · native-v6 持续开发与连续 monodromy 接入 · 2026-11-01**
 
-**MAIN=TOPOLOGY，人类锁定；当前目标 M0，最终目标 M3。主要 baseline 固定为 Transformer。** Replay / Adapter 是该基线的持续学习增强；程序学习与约束优化是机制对照，不取代 Transformer 的主要 baseline 地位。
+**MAIN=TOPOLOGY，人类锁定；当前 M0，最终 M3；Transformer 为主要 baseline。** 本文原位维护计算与学习方法；方向和行动见 [now.md](now.md)。冻结版本、原始结果和详细反例留在同一 V2 的证据记录。
 
-本页随实质算法变化原位更新，不另建“最新方法 v2/v3”。研究方向与行动只见 [now.md](now.md)。旧版本、冻结协议、失败及原始数据留在同一 V2，作为历史证据，不倒改。
+## 1. 中心机制与开发目标
 
-## 1. 方法核心与实际边界
+研究一个统一过程：**终端经验形成操作 → 操作成为原生可调用原语 → 在保护旧调用与组合的条件下继续学习 → 经验推动状态分化、原语修订与能力增长。** 连续 monodromy 层接入这个过程，承担已形成操作在共享实现变化中的语义保护。
 
-当前机制：**终端反馈形成软计算 → 完整计算形成原生可调用操作 → 保持旧输入绑定与转移闭包并继续学习 → 由经验见证决定内部状态扩展。**
+核心假说是：共享参数连续变化时，能否利用同伦不变量保持旧计算能力，以更少的额外参数、重训及验证成本持续获得新能力？准确率、时间效率、参数增长与完整资源成本共同评价此假说。
 
-学习器只接收 $(x,w,c,y)$：初始操作数、符号序列、公开任务 ID、最终输出。没有正确原语、教师调用、隐藏模式或中间状态。各方法获得相同这些信息；短串的终端反馈也是合法训练数据。
-
-当前是软件置换/编织语义原型；实际原生执行用已学置换索引，不把编织词当作已实测的物理执行，也不声称量子硬件优势。该方法尚不是已证新颖性或 M0 通过结果。
-
-### 1.1 拓扑载体的数学定义
-
-**SOURCE / 数学载体，不能与当前执行范围混同。** 令
+学习样本为 $(x,w,c,y)$：初始操作数、符号串、公开任务 ID、终端输出。终端标签提供任务信息；系统自己学习编码、操作、调用与内部记忆。方法状态写为
 
 $$
-\mathrm{Conf}_D(\mathbb C)=\{(z_1,\ldots,z_D):z_i\ne z_j\ (i\ne j)\},\qquad
+\mathfrak M_t=(D,K,\theta,\tau,\mathcal B,\mathcal P,\mathcal R_{\rm old};\omega),\qquad
+\theta=(E,R,\{W_k\},\{e_a\},\{t_c\},\mathrm{Call}).
+$$
+
+$D$ 是内部状态数，$K$ 是原语数；$\mathcal B$ 保存学得的原生操作，$\mathcal P$ 是调用程序，$\mathcal R_{\rm old}$ 是旧行为关系；$\omega$ 是正在接入的共享连续路径参数。
+
+| 部分 | 当前状态 |
+|---|---|
+| 终端训练、可学习表示/操作/调用、原生原语形成、三阶段续训 | 已实现、已执行 |
+| 旧输入绑定与转移闭包保护、经验触发 $D:8\to16$ | 已实现、已执行 |
+| 历史区分见证驱动的置换修订 | 已执行；已安装真实神经 checkpoint 并追加 200 次训练 |
+| 连续配置回路、共享形变与路径提升 | 接入模块代码已写，尚待执行及训练集成 |
+| 同伦保护降低持续获取的总体成本 | 中心待验证假说；M0 尚未通过 |
+
+## 2. 拓扑对象、执行语义与保护原理
+
+### 2.1 配置空间与 monodromy
+
+令
+
+$$
+\mathrm{Conf}_D(\mathbb C)=\{(z_1,\ldots,z_D):z_i\ne z_j\},\qquad
 X_D=\mathrm{Conf}_D(\mathbb C)/S_D.
 $$
 
-为对应 $D$ 个内部 sheet，可用标记一个点的 $D$ 重覆盖
+标记其中一个点得到 $D$ 重覆盖
 
 $$
-\mathcal E_D=\{(C,z):C\in X_D,\ z\in C\}\xrightarrow{p}X_D,\qquad p(C,z)=C.
+\mathcal E_D=\{(C,z):C\in X_D,\ z\in C\}\xrightarrow{p}X_D.
 $$
 
-这是数学解释所用的关联覆盖；不是把有序配置到无序配置的 $D!$ 重覆盖误称为 $D$ 重覆盖。配置回路使标记点发生 monodromy，给出 $B_D=\pi_1(X_D)$ 及
-
+以固定配置 $C_*$ 为基点，回路 $\gamma$ 的提升把初始 sheet $q$ 送至终止 sheet $q\cdot\rho_D([\gamma])$。有
 
 $$
+B_D=\pi_1(X_D,C_*),\qquad
 1\longrightarrow PB_D\longrightarrow B_D\xrightarrow{\rho_D}S_D\longrightarrow1.
 $$
 
-**当前实现只使用 $\rho_D$ 的置换商。** 学到的每个 $\Pi_k\in S_D$ 可写为相邻交换对应的规范编织词 $b(\Pi_k)$；代码生成该词及长度，但实际执行 $\Pi_k$。它丢失 pure-braid 信息，不能区分所有不同编织类；规范选词也不是群同态。没有把一个普通置换表称为完整编织计算或物理 anyon 系统。
+采用**右作用**：置换矩阵满足 $[\Pi]_{q,\Pi(q)}=1$，状态分布按 $\alpha\mapsto\alpha\Pi$ 更新。先执行 $b_1$ 再执行 $b_2$ 对应 $\rho_D(b_1)\rho_D(b_2)$，一般不可交换。
 
-定义与自然满射核对了 [González-Meneses2011 §1.1/1.3、§2.1 Eq2.1](https://www.numdam.org/article/AMBP_2011__18_1_15_0.pdf)；其余章节不视为已读。
+数学定义依据 [González-Meneses2011 §1.1/1.3、§2.1 Eq2.1](https://www.numdam.org/article/AMBP_2011__18_1_15_0.pdf)。当前已训练执行器使用这个作用的**置换商**；连续层将回路和路径提升接入原生执行。
 
-### 1.2 保护原理：真正的拓扑事实与实际软件规则
+### 2.2 同伦保护与完整能力合同
 
-**SOURCE / 拓扑原理：** 在固定覆盖及基点条件下，同伦路径有兼容的唯一提升。对基于同一配置的回路同伦 $\gamma_t$，提升端点落在离散 fiber 中，故 $\rho_D([\gamma_t])$ 不变；前提是形变不跨碰撞/退化集合。依据 [Hatcher §1.3, Prop1.30, printed pp60–61](https://pi.math.cornell.edu/~hatcher/AT/AT.pdf)。这个结论不自动保护神经编码器、调用策略或读出。
-
-**IMPLEMENTED / 软件实现：** 分数矩阵的唯一匹配类在区域
+若 $\gamma_\lambda$ 是固定基点的连续回路形变，且全过程处于 $X_D$，则
 
 $$
-\mathcal U_{\Pi}=\{W:\langle W,\Pi\rangle>\langle W,Q\rangle\ \forall Q\ne\Pi\}
+\rho_D([\gamma_\lambda])=\rho_D([\gamma_0])\quad(0\le\lambda\le1).
 $$
 
-中不变。这是离散匹配的决策 chamber；它本身不是已实现的物理同伦保护。定义虽对所有 $Q$ 量化，实际用匹配算法而不枚举 $D!$ 个候选。当前更一般地允许原语/坐标变化，只要第6节的旧输入—调用—读出关系继续闭合；该关系是行为兼容检查，不自动等于覆盖空间同构。有限图等价、回溯和编译事务是实现这一约束的普通计算工具，**不是直接认领为拓扑创新的部分**。
+这是覆盖同伦提升给出的操作语义保持，参见 [Hatcher Prop1.30, printed pp60–61](https://pi.math.cornell.edu/~hatcher/AT/AT.pdf)。它允许共享实现改变，而旧操作作用保持。
 
-**UNVERIFIED / 尚待建立：** 学得并实际执行连续编织/覆盖轨迹，让其同伦不变量在有用共享适应中带来相对普通约束、冻结、模块化或回放的重要资源/学习优势。当前没有执行这种连续几何层，没有物理能隙或硬件鲁棒性证据；不能用“存在编织表示”补上这项缺口。
-
-### 1.3 在操作形成、复用和能力增长中的具体位置
-
-**形成。** 终端梯度和临时多样性先形成行为，随后第4节把完整行为材料化为可调用的 $\Pi_{new}$。拓扑/群作用表示提供操作类型与复合语义，不负责凭空产生反馈。记当前原生库生成的作用为
+能力合同同时连接三个接口：**输入编码 → 操作调用及复合 → 输出读出**。为旧、当前执行器建立关系 $\mathcal R$，要求初始编码相关，并对每个旧符号闭合：
 
 $$
-G_t=\langle\Pi_1,\ldots,\Pi_K\rangle\le S_D.
+(q,q')\in\mathcal R\ \Longrightarrow\
+R_{\rm hard}(q)=R'_{\rm hard}(q'),\qquad
+\bigl(T_{a,c}(q),T'_{a,c}(q')\bigr)\in\mathcal R.
 $$
 
-在此前保存的 MI05 状态中，材料化前硬原语仅有 identity 与 bit rotation，均为偶置换；新形成的加一八循环是奇置换，因此它不在那个具体旧库的 $G_t$ 中。这是**原生可执行操作范围严格增加的代数见证**；新信息来自已训练软参数。学习后匹配/编译是具体形成工具，不能因这个群论见证就声称新的学习原理。当前程序只对原语类去重，不普遍求群成员资格；其他新增原语可能只是缩短已有程序，不能一律算可计算范围扩大。
+由词长归纳得到全部旧词的已学输出保持。当前用有限 BFS 实现此绑定合同；连续层负责操作作用的同伦保持，二者在同一准入事务中配合。
 
-**复用与组合。** 原生程序按顺序执行 $\rho_D(b_1\cdots b_L)$，一般 $\Pi_i\Pi_j\ne\Pi_j\Pi_i$。第6节的完整绑定关系保持旧输入的操作语义；只固定一组门不够。精确类相同可共享已有原语，不因符号不同另造类型。当前已实测旧操作用于新任务与长组合；未证明任意新任务的组合泛化。
+## 3. 可训练计算与终端信用分配
 
-**增长。** 第5节的经验见证决定是否添加 sheet/workspace，旧作用在其原可达域保持兼容，新状态与 discovery expert 从反馈学会使用。$D\to D'$ 是结构更新，**不是同一个 $X_D$ 中的连续形变**；必须重新检查旧关系，不能从同伦保持自动推出扩容安全。8→16及其费用已有实际执行，但还没有可持续扩展的成本规律。
-
-当前要验证的中心联系仍是：这种作用语义、闭合保持和经验驱动扩展，是否能帮助后来获得新计算，并改善保持—塑性—资源权衡。普通程序编译、图等价和专家分配可解释的部分始终单独标出；当前消融还不足以确认独有的拓扑因果贡献。
-
-## 2. 状态、执行与终端学习
-
-内部状态 $q\in\{1,\ldots,D\}$；可学习编码 $E$、解码 $R$、符号/任务嵌入 $e_a,t_c$；操作分数 $W_k\in\mathbb R^{D\times D}$；共享调用头产生两个槽，另有 identity skip。
+编码、读出及两个调用槽为
 
 $$
-P_0=I,\quad P_k=\operatorname{Sinkhorn}(W_k/\tau),\qquad
-p_{a,c,s}=\operatorname{softmax}\!\left(\operatorname{Call}_s(\tanh(e_a+t_c))/\tau\right).
-$$
-
-$$
-A_{a,c}=\prod_{s=1}^{2}\left(\sum_{k=0}^{K}p_{a,c,s,k}P_k\right),\quad
 \alpha_0=\operatorname{softmax}(E_x/\tau),\quad
-\alpha_t=\alpha_{t-1}A_{w_t,c},\quad
-p(y\mid x,w,c)=[\alpha_L\operatorname{softmax}(R/\tau)]_y.
+D_R=\operatorname{softmax}(R/\tau),\quad
+p_{a,c,s}=\operatorname{softmax}\!\left(\mathrm{Call}_s(\tanh(e_a+t_c))/\tau\right).
 $$
 
-实现采用有限次 log-Sinkhorn 和 log-semiring 传播，PAD 跳过。初始化有观察接口偏置：编码/读出近 identity；不声称从零发现所有表示。初始 $K=6$，进程上限 $K\le24,D\le64$；实际增加均计价。
-
-训练为 Adam、终端交叉熵、梯度范数上限 1。初始操作形成时使用
+置 $\widetilde P_0=I$。对每个 $W_k/\tau$ 做四轮 log-Sinkhorn 行/列归一化，最后再做行归一化，得到实际行随机矩阵 $\widetilde P_k$。执行
 
 $$
-\mathcal L=-\log p(y\mid x,w,c)+\lambda\mathcal L_{\rm div},\qquad
-\mathcal L_{\rm div}=\frac1m\sum_a H(p_a)-H(\bar p)=-I(A;K),\quad \bar p=\frac1m\sum_ap_a.
+A_{a,c}=\prod_{s=1}^{2}\left(\sum_{k=0}^{K}p_{a,c,s,k}\widetilde P_k\right),\quad
+\alpha_j=\alpha_{j-1}A_{w_j,c},\quad
+p_\theta(y\mid x,w,c)=[\alpha_LD_R]_y.
 $$
 
-实际按 minibatch 中出现的不同 $(c,a)$ 统计并在槽间平均，当前 $\lambda=0.05$；原语形成后停止当前阶段该辅助项。它不是永久“不同符号必须不同专家”的语义规则。
+代码使用 log-semiring，PAD 跳过。编码/读出以近 identity 初始化；初始 $K=6$，现有进程上限 $K\le24,D\le64$。
 
-## 3. 路由坍缩的机制推导
+学习采用 Adam、梯度范数上限 1：
 
-仅考虑终端项 $\mathcal L_{\rm term}=-\log p(y\mid x,w,c)$。单槽 $A_a=\sum_kp_{ak}P_k$，令 $l_{ak}=\operatorname{Call}_{ak}/\tau$ 为已除温度的分数，$G_a=\partial\mathcal L_{\rm term}/\partial A_a$：
+$$
+\mathcal L=\mathcal L_{\rm term}+\lambda\mathcal L_{\rm div},\quad
+\mathcal L_{\rm term}=-\log p_\theta(y\mid x,w,c),\quad
+\mathcal L_{\rm div}=\frac1m\sum_aH(p_a)-H(\bar p)=-I(A;K).
+$$
+
+实际对 batch 中不同 $(c,a)$ 及各槽统计，$\lambda=.05$；当前阶段原语形成后停止该辅助项。
+
+单槽 $A_a=\sum_kp_{ak}P_k$，令 $l_{ak}=\mathrm{Call}_{ak}/\tau$、$G_a=\partial\mathcal L_{\rm term}/\partial A_a$，则
 
 $$
 \frac{\partial\mathcal L_{\rm term}}{\partial l_{ak}}=p_{ak}\langle G_a,P_k-A_a\rangle,\qquad
 \frac{\partial\mathcal L_{\rm term}}{\partial P_k}=\sum_ap_{ak}G_a.
 $$
 
-若对原始 Call 分数求导，第一式另乘 $1/\tau$；总损失还要加上直接依赖路由的多样性项梯度。相同专家使路由难以区分，相同路由又将不同操作的梯度混入同一专家。完全坍缩时负互信息的值及一阶梯度均为零，但对 $p_a=\bar p+\epsilon v_a,\sum_av_a=0$：
+对原始 Call 分数求导另乘 $1/\tau$。此式定位了路由与操作共同坍缩的信用瓶颈。负互信息在差异方向提供负曲率，帮助已有扰动形成专门化；形成后的复用再依据操作语义去重，而非按符号强制分配。
+
+## 4. 从学习行为形成、调用和复用原语
+
+分别定义 soft 计算、完整行为候选、原生调用：
 
 $$
--I(A;K)=-\frac{\epsilon^2}{2m}\sum_{a,k}\frac{v_{ak}^2}{\bar p_k}+O(\epsilon^3).
-$$
-
-它提供差异方向的负曲率，可放大已有扰动；不注入操作答案，也不保证饱和路由能脱困。普通专家分配/负载平衡是当前成功的首要已有方法解释。相同操作的不同别名也可能被不必要地分开，故后续复用依据计算语义而非符号不同。
-
-## 4. 从完整行为形成原生操作
-
-必须分开报告 **soft、joint proposal、native execution**：
-
-$$
+C_{a,c}=\operatorname{Match}(\log A_{a,c}),\qquad
 \Pi_k=\operatorname{Match}(W_k),\qquad
-T^{\rm native}_{a,c}=\Pi_{r_{a,c,1}}\Pi_{r_{a,c,2}},\qquad
-C_{a,c}=\operatorname{Match}(\log A_{a,c}).
+T^{\rm native}_{a,c}=\Pi_{r_{a,c,1}}\Pi_{r_{a,c,2}}.
 $$
 
-一般 $\operatorname{Match}(AB)\ne\operatorname{Match}(A)\operatorname{Match}(B)$。实际 8 状态结果中，joint 加一正确，但组件调用是同一专家两次。八循环 $U$ 为奇置换，$\operatorname{sgn}(\Pi^2)=+1$；在当时八状态、identity 编解码前提下，该程序不能实现 $U$。不能把联合编译准确率冒充原组件程序的能力。
+完整行为成为原语的事务为：
 
-**实际实现的形成事件：**
+1. 每 100 步检查当前 joint validation；达到 .95 时提取模型自己的 $C_{a,c}$。
+2. 若与现有原语同类则复用；否则新增分数表示 $W_{new}$，在 $C$ 的位置设 $+8$，其余 $-8$。已有原语只按自身已学类锐化。
+3. 收集旧任务**当前 native 图**及新候选。以 $H_{(c,a)}=[\tanh(e_a+t_c),1]$、自生成调用目标 $Y$，解 $\widehat W=H^+Y$，将完整操作调用一次、另一槽 skip。
+4. 要求满行秩、条件数 $\le10^8$、double 拟合残差 $\le10^{-5}$、实际路由 margin $\ge1$，并验证旧能力合同。
+5. 接受后更新真实模型 Parameter、重建 Adam、记录形成事件并继续训练；失败回滚事务。
 
-1. 每 100 次更新检查；当前 joint validation accuracy 达到 0.95 时提取完整候选 $C$。该阈值不是正确性证明。
-2. 对已有硬操作类去重；不存在时由模型自己的 $C$ 初始化新原语。目标分数 $+8$、其余 $-8$；使用的已有原语只向其自身已学类锐化，不填教师算术答案。
-3. 编译目标只来自旧上下文的**当前 native 图**与新任务的 joint 候选。旧任务不受保护的 soft proposal 不参与。
-4. 对学得的隐藏特征 $H_{(c,a)}=[\tanh(e_a+t_c),1]$，用 $\widehat W=H^+Y$ 重写共享调用头。$Y$ 表示自生成的“完整操作一次，其余 skip”，分数 $\pm4$。
-5. 要求满行秩、条件数不超过 $10^8$、double 拟合残差不超过 $10^{-5}$、实际路由 margin 至少为 1，并核对新旧 native 图的闭合关系。失败恢复原 Parameter 对象。
-6. 成功后重建 Adam，记录编译/验证费用，停止当前多样性项并继续剩余训练。所有参数仍可训练。当前实现同时保存当前任务的 native 关系，可能保留尚未完全学好的行为，不能隐去这一限制。
+记 $G_t=\langle\Pi_1,\ldots,\Pi_K\rangle\le S_D$。新增原语可以扩大原生闭包，也可以压缩已有程序。已保存的首阶段例子中，旧硬原语均为偶置换，新形成的八循环为奇置换，给出该次原生闭包严格扩大的代数见证。
 
-形成后的操作真正进入原生调用库。候选可以按自身全操作类复用；是否能低成本复用更长程序仍需实测。普通程序编译/蒸馏可解释这些组成，不据此宣称新颖性。
+连续层在**同一形成事件**中接收 $\Pi_{new}$，建立对应回路 $\gamma_{new}$；调用头仍调用同一个原语 ID。新原语的共享形变、连续执行与旧绑定由统一合同管理。
 
-## 5. 由终端经验决定 workspace 扩展
+## 5. 经验驱动的状态增长与操作修订
 
-在固定任务 ID 下，历史 $h=(x,\text{prefix})$ 只保留实际观察的剩余后缀与终端标签。若两个历史有同一后缀 $s$ 且 $F(h_i s)\ne F(h_j s)$，它们不能对应同一确定性状态。两两有实际见证的 clique $\mathcal C$ 给出
+### 5.1 从终端经验识别需要区分的历史
 
-$$
-D_{\min}\ge|\mathcal C|.
-$$
-
-当前候选历史仅空 prefix 或单个新符号 prefix；最多 64 节点、10 万搜索访问、2 秒内限。返回每对历史的后缀、标签和源记录行，不声称找到了最大 clique。同一固定 task、同一 history 与同一 suffix 的观测标签出现冲突时，禁止据此扩容；不同 history 的输出不同正是区分见证。
-
-只有 $|\mathcal C|>D$ 才扩至覆盖下界的下一幂次，且不超过 64。事务保留旧参数块，新 workspace 用小随机参数及旧**已学**解码行中性拷贝初始化，追加一个无正确语义的 discovery expert。没有预置正确 toggle 或隐藏模式；其使用及转移继续从终端反馈学习。
-
-扩容检查跨维数旧关系，旧图保留原维数。没有展开所有可能组合；新增状态、原语、发现与维护费用均计入。当前有限扩容不等于已建立可扩展架构。
-
-## 6. 保护对象与消融的准确范围
-
-旧能力保存为从已训练模型提取的编码、解码与旧符号闭合转移图。旧/新状态关系 $\mathcal R$ 要求初始编码相关，且
+固定任务下，历史 $h=(x,\text{prefix})$ 的已观测后缀 $s$ 若满足
 
 $$
-(q,q')\in\mathcal R\Rightarrow
-\operatorname{decode}(q)=\operatorname{decode}'(q'),\qquad
-(T_aq,T'_aq')\in\mathcal R\quad\forall a\in\Sigma_{\rm old}.
+F(h_i s)\ne F(h_j s),
 $$
 
-有限 BFS 覆盖所有旧词的已学行为，包含输入—调用绑定；不证明原模型对所有真实任务正确。每个 Adam 提案回溯
+则两个历史必须对应不同的确定性内部状态。具有实际成对后缀见证的 clique $\mathcal C$ 给出 $D_{min}\ge|\mathcal C|$。证据来自原始训练记录的行号、后缀及标签。
+
+当前候选为空 prefix 或一个新符号的 prefix；搜索限 64 节点、10 万访问、2 秒。只有 $|\mathcal C|>D$ 才扩至下一幂次。扩容保留旧块，初始化新 workspace 和中性 discovery expert，再由终端反馈学习其功能；旧能力合同跨维数重新检查。
+
+### 5.2 已有容量中的分化修订
+
+实际第三阶段表明：容量已达 16，仍可能把两个有区分证据的历史映射到同一状态。因此增长还需要**经验驱动的操作修订**，而非只增加状态数。
+
+对发生别名的历史，取其实际 prefix 中的边 $q\xrightarrow{a}\Pi_k(q)$。枚举候选目的状态 $r$，令
 
 $$
-\theta'=\theta+\alpha(\theta_{\rm Adam}-\theta),\quad
+q'=\Pi_k^{-1}(r),\qquad
+\Pi'_k(q)=\Pi_k(q'),\quad \Pi'_k(q')=\Pi_k(q),
+$$
+
+其余像保持。该提案保持置换结构。先验证全部旧任务闭合，再以当前训练终端误差和未消除的别名数选择严格改进；最终验证集只做一次准入。
+
+接入要求是更新真实神经模型中的 $W_k$、保留原语 ID 与调用头，重建必要的优化器状态，更新经反馈修订的当前任务合同，并继续终端训练。执行图是检查接口，真实 checkpoint 保存可继续训练的参数、旧关系和优化器状态。
+
+## 6. 共享学习期间的保护与可塑性
+
+操作类在唯一匹配区域
+
+$$
+\mathcal U_\Pi=\{W:\langle W,\Pi\rangle>\langle W,Q\rangle\ \forall Q\ne\Pi\}
+$$
+
+内保持。当前软件层对每个 Adam 提案回溯
+
+$$
+\theta'=\theta+\alpha(\theta_{Adam}-\theta),\qquad
 \alpha\in\{1,1/2,1/4,1/8,1/16,1/32,1/64,0\},
 $$
 
-直到旧关系成立。温度也是执行状态，需要语义检查；当前优化器内部状态不随回溯恢复。
+直到旧输入—调用—读出合同成立。温度改变也检查合同。允许改变连续分数、共享表示与调用实现；保护对象是旧可执行语义。当前优化器内部状态不随回溯恢复，该行为保留在执行记录。
 
-置换/编织类是不跨语义类的接口，当前实际验证器同时是普通图等价约束。独有拓扑优势尚未建立。**现有 `topo_off` 仅关闭逐步/温度 guard，仍共享形成原语和扩容时的旧语义保持**；不是移除了所有保护。后续消融必须前瞻定义，不能故意损伤对手，也不能倒改已有解释。
+当前任务的形成与修订合同采用版本化准入；旧任务合同保持，当前未完成行为可以在真实终端反馈支持下修订。原语出生、状态扩容、修订及连续实现都经过同一事务接口，成本分别累计。
 
-## 7. Transformer 主 baseline 与当前实测
+## 7. 连续 monodromy 接入现有 Method
 
-真实两层 Transformer Encoder：$d_{model}=48$、4 heads、FFN96、dropout0，学习输入/位置/任务编码。Replay 为同一 backbone/初始化，总 batch64 中分配 32 当前、32 旧样本，旧存储计价。Adapter 是待完成的增强对照，未执行代码不算结果。
+### 7.1 从已学操作到可执行连续回路
 
-共同数据：每阶段 4096 train、512 validation、512 IID、512 长串、512 length16，数据及 batch 哈希相同。每阶段 800 更新、batch64、当前开发学习率 0.01，仅终端监督。相同更新数不等于相同参数量或总计算。各方法都知道任务 ID；当前不是 task-free continual learning。
+固定基配置 $z_j=4(j-(D-1)/2)$。将模型学得的 $\Pi_k$ 写为相邻交换序列；每个交换段使用
 
-**N=8、seed0，实际三阶段检查点续训，旧阶段未重跑：**
+$$
+z_i(u)=m-2e^{i\pi h(u)},\quad z_{i+1}(u)=m+2e^{i\pi h(u)},\quad
+h(u)=3u^2-2u^3,\quad u\in[0,1].
+$$
 
-| 阶段 | Transformer 当前 / 旧 | Transformer + Replay 当前 / 旧 | 当前原生架构 当前 / 旧 |
+其余点固定。无序配置构成回路 $C_k(t)$，点间距离至少 4。亦可写作覆盖方程 $F_k(z,t)=\prod_{c\in C_k(t)}(z-c)=0$。
+
+执行器接收无标签配置点集，通过连续路径提升输送内部 sheet，读出提升终点。组合直接串接回路并携带同一 sheet，不在操作之间重置。当前接入模块采用因子化配置接口；神经操作 ID、调用与组合程序沿用第4节。
+
+### 7.2 可持续变化的共享实现参数
+
+用同一 $\omega$ 改变所有原语路径：
+
+$$
+\Phi_{\omega,t}(x+iy)=x+i\left[y+a(t)h_\omega(x)\right],\quad
+a(t)=\sin^2(\pi t/T),\quad
+h_\omega(x)=\sum_\ell\omega_\ell\tanh(v_\ell x+b_\ell).
+$$
+
+$v,b$ 固定，$\omega$ 为共享参数。该剪切对每个有限 $\omega$ 都是全局微分同胚，且操作端点为 identity。故 $\Phi_{(1-\lambda)\omega+\lambda\omega',t}$ 给出碰撞自由同伦：
+
+$$
+\rho_D([\Phi_{\omega',\cdot}(C_k)])=\rho_D([C_k])=\Pi_k.
+$$
+
+令 $B=\sum|\omega_\ell v_\ell|$、$H=\sum|\omega_\ell|$，有统一充分界
+
+$$
+\delta_{\rm pair}\ge\frac4{1+B},\qquad
+V_{max}\le(1+B)3\pi+\frac{\pi H}{T},\qquad
+V_{max}\Delta t<\frac{\delta_{\rm pair}}4.
+$$
+
+最后一个条件使无标签点集的近邻提升唯一，提供可计费的执行步长。它将保护转移到解析结构和路径执行，而非每个旧组合逐一重放。
+
+### 7.3 学习接口：形成操作类与优化类内实现
+
+精确 monodromy 在无退化区域内局部常值；因此采用两种相互接入的更新：
+
+$$
+\text{终端经验}\longrightarrow\text{操作/调用提案}\longrightarrow
+(\Pi_{new},\gamma_{new}),\qquad
+\omega\leftarrow\omega-\eta_\omega\nabla_\omega\mathcal J_{exec}.
+$$
+
+第一条由第3–5节获得、修订离散操作；第二条在同伦类内学习执行质量。$\mathcal J_{exec}$ 将针对明确的路径工作、时延或数值执行误差冻结定义，并与同信息直接实现比较。旧调用绑定仍遵守第2.2节。
+
+**接入状态：** `continuous_monodromy.py` 已有代码，连续层的执行、真实共享权重训练和成本优势按各自实际完成情况标记；它是现行模型原语的执行层扩展，不另起方法。最初假说的关键检验是：类内共享适应能否减少额外参数、重训或验证，同时新类仍能持续获得。
+
+## 8. 完整学习过程
+
+```text
+输入：任务流中的终端样本；当前神经 checkpoint 与旧能力合同
+for 每个新阶段：
+    从真实终端记录构造历史区分见证
+    若容量下界超过 D：事务扩容并验证旧关系
+    repeat 有界训练：
+        软执行 → 终端损失 → Adam 提案
+        保护旧编码/调用/转移/读出；记录接受、回溯与维护成本
+        当前完整行为达到形成门槛时：
+            复用/形成原生原语，更新真实权重与调用头
+            接入该原语的连续回路；验证旧合同并保存 checkpoint
+        若经验见证仍被合并：
+            生成置换修订候选 → 终端训练反馈选择 → 验证准入
+            安装真实参数并继续训练，保留修订前后记录
+        连续层接通时：在保护的同伦类内学习共享实现参数
+    评价新任务、全部旧任务及未见组合；保存完整资源账目
+```
+
+已执行主循环为 native-v6；见证修订和连续层是正在融合的开发增量，其执行状态见第1节及直接产物。
+
+## 9. M0：能力、时间、增长和完整资源共同计量
+
+### 9.1 每新增能力的成本向量
+
+每阶段同时记录
+
+$$
+\mathbf C_t=(T_{train},T_{discover},T_{install},T_{protect},T_{retrain},
+P_t,P_t^{trainable},\Delta P_t,S_{model},S_{optim},S_{retain},
+\ell_{infer}^{50/95},N_{queries},N_{reject},M_{peak}).
+$$
+
+$T_{protect}$ 包括旧合同、路径认证、温度检查及回滚；存储分别计模型、优化器、旧关系/回放/模块和路径表示。推理计入编码、调用、真实执行与读出，区分冷启动和缓存后的成本。发现、调参、失败重试及维护单独记账并纳入总投入。
+
+能力数 $C_t^{cap}$ 依据冻结任务成功和保持标准计算；原语数 $K$ 与能力数分开。若 $\Delta C_t^{cap}>0$，报告
+
+$$
+\frac{\Delta T_{total}}{\Delta C_t^{cap}},\qquad
+\frac{\Delta P_t}{\Delta C_t^{cap}},\qquad
+\frac{\Delta S_t}{\Delta C_t^{cap}};
+$$
+
+未获得新能力的阶段记录失败/删失，不以零成本表示。比较任务数、程序长度和状态规模增长下的成本曲线，以及同准确率/保持要求下的时间—参数—存储前沿。
+
+Transformer 是主要架构基线；Replay、Adapter 使用同一 backbone。相同信息、训练预算、硬件和计时方式是共同条件，强基线调优及专有记忆/模块成本均保留。推理延迟用相同 batch/长度/热身和设备同步测量；评估整个训练集所用时间不替代独立推理延迟。
+
+### 9.2 已执行的三阶段开发结果
+
+数据每阶段 4096 train、512 validation/IID/OOD/length16；800 更新、batch64，只有终端监督。下表 Transformer/Replay/Adapter 使用已实际补跑的较强 LR=.003；Native 为 .01。规模 $N=8$、seed0。
+
+| 阶段 | Transformer 新 / 旧 IID | +Replay 新 / 旧 IID | Native 新 / 旧 IID |
 |---|---|---|---|
-| 一 | 92.19% / — | 92.19% / — | 100% / — |
-| 二 | 52.34% / 57.42% | 48.44% / 91.02% | 100% / 100% |
-| 三 | 36.91% / 42.38%,31.64% | 33.79% / 89.06%,52.34% | 97.46% / 100%,100% |
+| 一 | 95.51% / — | 95.51% / — | 100% / — |
+| 二 | 61.72% / 69.53% | 58.98% / 98.83% | 100% / 100% |
+| 三 | 40.82% / 43.75%,29.10% | 39.84% / 97.07%,57.62% | 97.46% / 100%,100% |
 
-逐步 guard ON/OFF 当前这些结果相同。第三阶段原生新任务长串 90.63%、length16 为 83.59%，不写成完全组合泛化。实际反馈产生 16 个两两可区分历史的证据，触发 $D:8\to16$，没有教师隐藏标签。最终原生参数 3606，Transformer40280；原生方法的匹配、头重写、扩容和维护另计，不能仅按参数更少声称总成本优势。
+Adapter 最终新任务 32.81%，旧任务 98.44%/47.66%；普通 program-v2 最终新任务 51.56%，旧任务均100%。原始 .01 Transformer 结果仍保留在历史记录。
 
-这是单规模单种子的开发证据，M0 未通过。程序表示、路由修正及共同编译保持可能解释当前收益；逐步 guard 没有拒绝/回溯，尚未显示额外因果收益。多规模、多种子、完整强基线及保护归因仍须完成。
+**同一 checkpoint 的实际修订续训：** 在16状态内搜索15个见证驱动候选，接受一次原语像交换，训练错误111→0；随后更新真实 $W_{10}$、保留调用与编码、修订当前任务合同，保存实际神经 checkpoint 并追加200次 Adam。最终原三阶段全部 train/validation/IID/OOD/length16 的 soft 与 native 均为100%。参数仍3606；新增训练3.1178s、保护0.6550s、安装0.0229s。此新增预算单独记账，上表保留原800步对比，后续同预算基线需得到对应增量机会。
 
-## 8. 实现、原文与证据索引
+修订前 Native 第三阶段 OOD90.63%、length16为83.59%；实际误差分析与修订均针对有训练区分证据的状态别名。现有 topo_off 只关闭逐步/温度 guard，共同形成与扩容仍保持旧语义；该消融边界与详细反例集中在证据记录。
 
-同一运行：[`2026-10-31T234403-0400-v2`](../.deep-work/2026-10-31T234403-0400-v2/)。以下路径相对此运行：
+### 9.3 已记录的资源与待补测量
 
-- 实际代码：`probes/topology-architecture/{topology_model.py,semantic_promotion_model.py,workspace_refinement.py,train.py}`；Transformer 在 `torch_baselines.py`。
-- 冻结协议：同目录 `native-promotion-protocol-v5.json`、`native-continuation-protocol-v5b.json`、`native-workspace-protocol-v6.json`；历史实际源码保存在 `versions/`。
-- 原始数据、失败、检查点、曲线及收据：同目录 `runs/gpu-native-v5-*`、`runs/gpu-native-v5b-*`、`runs/gpu-native-v6-*`；哈希同步清单一并保留。remote overlay 不是已确认的持久盘，原物持续同步本地。
-- 历史推导：`candidates/topology-architecture/root-routing-mechanism.md`、`sources/topology-architecture/router-causality-s.md`。它们保留版本史，不是另一份当前方法正文。
-- 实际独立审查：`supervision/reviews/review-029-architecture.md` 已查前两阶段；第三阶段后续审查按实际发生记录，不补写成此前已审。
+| 方法 | 三阶段训练时间 | 实际模型调用总时间 | 最终参数 | 优化器 / 保持数据字节 |
+|---|---:|---:|---:|---:|
+| Native ON | 22.728 s | 79.449 s | 3,606 | 28,876 / 1,728 |
+| Transformer | 17.544 s | 24.770 s | 40,280 | 322,372 / 0 |
+| Transformer+Replay | 19.321 s | 23.601 s | 40,280 | 322,372 / 1,376,256 回放 |
+| Transformer+Adapter | 21.599 s | 30.976 s | 50,664 | 32,624 / 模块含在参数内 |
 
-主要原文：普通路由坍缩与均衡解释见 [Shazeer2017 §4](https://arxiv.org/pdf/1701.06538)；匹配/连续松弛接口见 [Mena2018 pp2–3](https://arxiv.org/pdf/1802.08665)；终端条件 responsibility 的推导源于 [Rabiner1989 pp262–265](https://www.fceia.unr.edu.ar/prodivoz/Rabiner_1989.pdf) 的 forward/backward 框架。后者与精确 BPTT 的等价推导已保存，**尚未替代实际 Adam 更新**，不认领新增反馈或新学习原理。完整实际阅读边界见运行内来源记录。
+Native 参数为 $1102\to1216\to1444\to3606$；三阶段逐步保护共4.266s、温度保护3.327s、材料化0.0503s、状态见证及扩容0.2868s。这些是实际开发调用成本，评估、恢复过程不同；保留原口径，后续以统一测量比较增长前沿。独立推理延迟、完整内存及等准确率成本尚待测量。
 
-每次实质修改，原位更新本页的状态/更新规则、实现边界、对应版本与证据；旧事实留档、未实现思想不冒充结果。下一阶段的执行行动仍只在 NOW，M0–M3 的验收不由方法叙述替代。
+## 10. 实现与证据
+
+同一 V2：[`2026-10-31T234403-0400-v2`](../.deep-work/2026-10-31T234403-0400-v2/)。以下路径相对此目录：
+
+- 核心：`probes/topology-architecture/{topology_model.py,semantic_promotion_model.py,workspace_refinement.py,train.py}`；Transformer 为 `torch_baselines.py`。
+- 融合增量：同目录 `witness_operation_repair.py`、`integrate_native_repair.py`、`continuous_monodromy.py`；真实 checkpoint 与续训见 `runs/native-neural-repair-integration-v1/`。
+- 冻结协议：`protocol-v1.md`、`native-promotion-protocol-v5.json`、`native-continuation-protocol-v5b.json`、`native-workspace-protocol-v6.json`、`baseline-supplement-protocol-v6b.json`。
+- 原始训练、失败、曲线与收据：`probes/topology-architecture/runs/`；源码快照在 `versions/`。远端 overlay 持续同步本地。
+- 成本原值和来源哈希：`probes/topology-architecture/resource-extraction-v6b-20261101.json`。
+- 架构演变、数学反例、消融范围与详细审查：`candidates/topology-architecture/root-routing-mechanism.md`、`supervision/reviews/review-029-architecture.md`。
+
+当前架构从初版协议起即采用置换商简化；native-v5 修复原生操作形成，v6 加入经验状态增长。连续层尚未接通并非已记录的连续 monodromy 实验失败；其学习—几何接口正按第7节接回。
+
+原文依据：路由与均衡见 [Shazeer2017 §4](https://arxiv.org/pdf/1701.06538)，连续匹配松弛见 [Mena2018 pp2–3](https://arxiv.org/pdf/1802.08665)，终端前后向信用见 [Rabiner1989 pp262–265](https://www.fceia.unr.edu.ar/prodivoz/Rabiner_1989.pdf)。实际阅读边界及与当前更新的区别留在来源记录。
+
+**当前科学判断：** 已有三阶段学习和可执行原语形成证据。拓扑保护对完整资源和持续增长的贡献，由连续层融合、真实参数更新、机制消融及强 Transformer 比较共同检验；M0–M3 按既定标准判定。
