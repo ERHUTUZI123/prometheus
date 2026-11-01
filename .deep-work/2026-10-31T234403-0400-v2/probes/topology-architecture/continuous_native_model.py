@@ -34,6 +34,7 @@ def _new_costs():
         geometry_class_bank_assignments=0, geometry_class_check_seconds=0.,
         geometry_moment_rebuilds=0, geometry_quadrature_point_strands=0,
         geometry_moment_seconds=0., geometry_torch_objective_seconds=0.,
+        geometry_quadrature_reference_point_strands=0,
         hard_eval_calls=0, hard_eval_total_seconds=0., hard_bank_assignment_batches=0,
         hard_bank_hungarian_assignments=0, hard_bank_assignment_seconds=0.,
         hard_cache_signature_checks=0, hard_cache_signature_seconds=0.,
@@ -49,7 +50,7 @@ class ContinuousNativeModel(SemanticPromotionModel):
     geometry_loss_weight = PATH_WEIGHT
 
     def __init__(self, *args, initial_omega=(0., 0., 0., 0.),
-                 continuous_lift_seconds=110., **kwargs):
+                 continuous_lift_seconds=110., geometry_cache_capacity=0, **kwargs):
         super().__init__(*args, **kwargs)
         value = self.encoder.new_tensor(initial_omega)
         if value.shape != (4,) or not torch.isfinite(value).all() or value.abs().max().item() > 8:
@@ -62,11 +63,19 @@ class ContinuousNativeModel(SemanticPromotionModel):
         self._geometry_deadline = None
         self._geometry_costs = _new_costs()
         self._moment_signature = self._moments = None
+        self._moment_trace_signature = None
         self._moment_linear = self._moment_quadratic = None
         self._bank_parameter_signature = self._hard_bank = None
         self._lift_cache_signature = None
         self._lifted_maps = {}
         self._last_realizations = []
+        if geometry_cache_capacity not in (0, 32, 128):
+            raise ValueError('declared geometry cache capacity must be0,32,128')
+        self.geometry_cache_capacity = int(geometry_cache_capacity)
+        self._path_moment_cache = None
+        if self.geometry_cache_capacity:
+            from path_moment_cache import PathMomentCache
+            self._path_moment_cache = PathMomentCache(self.geometry_cache_capacity)
 
     def set_stage(self, stage, new_token_ids=None):
         super().set_stage(stage, new_token_ids=new_token_ids)
@@ -106,12 +115,20 @@ class ContinuousNativeModel(SemanticPromotionModel):
         self._geometry_costs["geometry_class_check_seconds"] += time.perf_counter()-start
         if signature != self._moment_signature:
             start = time.perf_counter()
-            self._moments = kinetic_moments(classes)
+            if self._path_moment_cache is None:
+                self._moments = kinetic_moments(classes)
+                actual_points = self._moments['quadrature_point_strands']
+            else:
+                previous_points = self._path_moment_cache.statistics()['point_strands_actually_computed_on_misses']
+                self._moments = self._path_moment_cache.get(classes)
+                actual_points = (self._path_moment_cache.statistics()['point_strands_actually_computed_on_misses']
+                                 - previous_points)
             self._moment_signature = signature
             self._moment_linear = self.path_omega.new_tensor(self._moments["linear"])
             self._moment_quadratic = self.path_omega.new_tensor(self._moments["quadratic"])
             self._geometry_costs["geometry_moment_rebuilds"] += 1
-            self._geometry_costs["geometry_quadrature_point_strands"] += self._moments["quadrature_point_strands"]
+            self._geometry_costs["geometry_quadrature_point_strands"] += actual_points
+            self._geometry_costs['geometry_quadrature_reference_point_strands'] += self._moments['quadrature_point_strands']
             self._geometry_costs["geometry_moment_seconds"] += time.perf_counter()-start
         elif (self._moment_linear.device != self.path_omega.device
               or self._moment_linear.dtype != self.path_omega.dtype):
@@ -240,6 +257,7 @@ class ContinuousNativeModel(SemanticPromotionModel):
             quadrature_point_strands=int(self._moments["quadrature_point_strands"]),
             active_learned_classes=[list(p) for p in self._moment_signature[1]])
         return dict(costs=copy.deepcopy(self._geometry_costs),
+            moment_cache=None if self._path_moment_cache is None else self._path_moment_cache.statistics(),
             current_omega=self.path_omega.detach().cpu().tolist(),
             current_path_omega_gradient=(None if self.path_omega.grad is None
                                          else self.path_omega.grad.detach().cpu().tolist()),
@@ -251,12 +269,29 @@ class ContinuousNativeModel(SemanticPromotionModel):
             geometry_gradient_source="normalized kinetic action; terminal likelihood is invariant to this shear",
             timings="perf_counter; torch objective launch time may exclude asynchronous GPU completion")
 
+    def geometry_moment_trace(self):
+        """Log every actual moment-class change for same-input cost replay."""
+        if self._moment_signature is None or self._moment_signature == self._moment_trace_signature:
+            return None
+        self._moment_trace_signature = self._moment_signature
+        return dict(latent_states=int(self.d), stage=int(self.stage),
+                    active_learned_classes=[list(p) for p in self._moment_signature[1]],
+                    constant=float(self._moments['constant']),
+                    linear=self._moments['linear'].tolist(),
+                    quadratic=self._moments['quadratic'].tolist(),
+                    normalizer=float(self._moments['normalizer']),
+                    quadrature_point_strands=int(self._moments['quadrature_point_strands']),
+                    source='actual pre-update learned native classes; no teacher data',
+                    cumulative_moment_rebuilds=self._geometry_costs['geometry_moment_rebuilds'])
+
     def extra_state_dict(self):
         extra = super().extra_state_dict()
         extra["continuous_monodromy"] = dict(
             kind="shared_endpoint_fixed_nonlinear_vertical_shear", state_key="path_omega",
             dimensions=4, frequencies=FREQUENCIES.tolist(), biases=BIASES.tolist(), spacing=SPACING,
             initial_omega=list(self._initial_path_omega),
+            moment_cache_capacity=self.geometry_cache_capacity,
+            moment_cache_entries_persisted=False,
             kinetic_weight=PATH_WEIGHT, quadrature_per_segment=QUADRATURE_PER_SEGMENT,
             continuous_lift_seconds=self.continuous_lift_seconds,
             checkpoint_loader="continuous_native_model.ContinuousNativeModel",
@@ -282,6 +317,8 @@ class ContinuousNativeModel(SemanticPromotionModel):
             for name in self._geometry_costs:
                 if name in saved_costs:
                     self._geometry_costs[name] = saved_costs[name]
+            if 'geometry_quadrature_reference_point_strands' not in saved_costs:
+                self._geometry_costs['geometry_quadrature_reference_point_strands'] = saved_costs.get('geometry_quadrature_point_strands', 0)
         self._invalidate_derived_caches()
         self._geometry_costs["cache_restore_invalidations"] += 1
 

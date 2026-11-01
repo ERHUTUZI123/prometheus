@@ -138,16 +138,18 @@ def source_model(checkpoint, device):
         raise ValueError("checkpoint differs from current native architecture")
     settings = extra.get("promotion_settings", {})
     model_class = SemanticPromotionModel
+    geometry_options = {}
     if "path_omega" in state:
         # Runtime import avoids a module-initialization cycle with the shared
         # kinetic-action utility. A stripped-omega legacy extension load still
         # deliberately follows the original SemanticPromotionModel route.
         from continuous_native_model import ContinuousNativeModel
         model_class = ContinuousNativeModel
+        geometry_options['geometry_cache_capacity'] = int(extra.get('continuous_monodromy', {}).get('moment_cache_capacity', 0))
     model = model_class(n, vocab=vocab-1, max_len=18, n_tasks=n_tasks,
         latent_factor=d//n, protection=True, seed=int(checkpoint["args"]["seed"]),
         n_ops=count, slots=slots, emb_dim=emb_dim,
-        max_bank=int(extra.get("max_bank", 24)), **settings).to(device)
+        max_bank=int(extra.get("max_bank", 24)), **geometry_options, **settings).to(device)
     model.load_state_dict(state)
     model.load_extra_state_dict(extra)
     model.protection = True

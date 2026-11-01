@@ -1,3 +1,19 @@
+## ACTIVE Step3 actual baseline continuation — 2026-11-01T22:43:54.962202+00:00
+
+MAIN TOPOLOGY human_only; M0 NOT_PASSED/M3 ultimate; Transformer primary. Cache full-training control COMPLETED: new .46484375, old1/1 unchanged; train16.6344→14.4203, modelwall38.9777→38.9380 essentiallyunchanged. Kernel3.607x mustNOTbeclaimedwholetraininggain. Hashverifiedfulloutput+sources local.
+
+NOW GPU n16-matched-baselines-v1 fromREAL stage1-step800 Transformer/Replay/Adapter;200extra stage1, original800stage2 indices+200extra; all15curves/checkpoints/costs andrealreload. External900/internal850, existingauthorizedrunner/readonlyinputs, no oldstage0/1rerun. Root ownsSSHsession16590. Acquisition5arms andMonodromy/backend×guard4arms actualcodeRootread, finitefrozenprotocol beforeeachserialrun, no claimsbeforeexecution.
+
+## ACTIVE Step3 contribution tests after actual N16 acquisition repair — 2026-11-01T22:37:36.331296+00:00
+
+MAIN TOPOLOGY human_only; M0 NOT_PASSED/M3 final; TransformerPRIMARY. Unique current Method water/method.md updatedINPLACE. Oldbatch final/topology-architecture/result.md remainsfrozennegativeevidence.
+
+ACTUALNEW: N8v7 graphrepair REALNNinstalled+200updates all15soft/native/continuous1 params3610. N16stage1 terminal-constrainedformation REALNN+200updates alltask0/1splits1 params3254; continuedONLYstage2fromactual1000ckpt to800 (explicit200provenance) new.46484375old1/1,params10984. Then historyclosure formation fromactual32TRAINhistories/496pairs/4106obs, only1of2μfeasible,2TRAINprogramcandidates→one0error,oldLEARNEDactionlayerreuse selectedfromdata,5newexpertsK9→14. REALNN+200actualupdates andcheckpointreload ALL15soft/native/continuous1,params16354. Source/raw/pts synchronizedlocally: runs/n16-history-formation-v1/learn. Learnerlineage800/1000/1000updates; failedbranchesandsearchcosts separatelycharged; doNOToverwriteoriginal800baselines.
+
+COST: replay128ACTUALgeometry_moment_stateevents original5.437626s/cache1.507399s,3.607xKERNELONLY;128LRU47,616Bnumeric+keypayload; coefficientsallpass. Numericcounterfactual sourcecheckpoint700 actualstrides restored,ONEAdamproposal: ALL2642bitsdirect-vsalpha1reconstructidentical,zerooutputs/classdifferences. No demonstrated localroundingcause.
+
+CURRENTROOTGPU: outputs/n16-cache-training-v1 sameactualstage1repaired1000source +same800stage2indices, onlybounded128LRUcacheadded. Processbound900/internal850; checkreceiptbeforelaunchanotherGPU. NewcanonicaluserStep3 requiresseparateacquisitioncontribution,Monodromy/bindingguards,fullcostvsstrongmatchedbudgetbaselines. Threehelperscodingrespectiveacquisition5arms/monodromy4arms/baselineextra200+1000; ROOTsolelauncher. Noneofthesecontributionstudiesclaimexecuteduntilreceipt. Cachedmatrixsourcesfrozenincode-n16-cache-training-v1. No model/resource/permission/install/MAINchange.
+
 ## RECOVER HERE — completed continuous-primary v7 batch / M0 not passed — 2026-11-01T21:40:00.150094+00:00
 
 MAIN=TOPOLOGY human_only; M3 ultimate; Transformer primary; unique current method water/method.md. Human requested fullresults. Saved final/topology-architecture/result.md with actualtwo-scale seed0 3stage results, resource/time/growth/latency tables, CSV/JSON, visuallycheckedPNG/SVG. This is completed BATCH evidence, NOT campaign success/completion/PARK. Allscience original/olderreports preserved.

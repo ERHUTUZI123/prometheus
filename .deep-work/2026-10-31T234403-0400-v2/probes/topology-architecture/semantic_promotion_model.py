@@ -116,7 +116,7 @@ class SemanticPromotionModel(TopologyExecutor):
         return {task: tuple(sorted(tokens)) for task, tokens in sorted(domains.items()) if tokens}
 
     @torch.no_grad()
-    def materialize(self, stage, token_ids, old_alphabets=None):
+    def materialize(self, stage, token_ids, old_alphabets=None, candidate_graph=None):
         started = time.perf_counter()
         original_ops, original_call, original_count = self.operations, self.call, self.n_ops
         original_flags = {name: p.requires_grad for name, p in self.named_parameters()}
@@ -144,10 +144,30 @@ class SemanticPromotionModel(TopologyExecutor):
                 costs["native_graphs"] += 1
                 costs["graph_bank_assignments"] += self.n_ops
             # Current soft proposals for OLD tasks are deliberately never read.
-            current_candidate = self.joint_graph(stage, token_ids)
-            costs["joint_graphs"] += 1
-            costs["graph_bank_assignments"] += self.n_ops
-            costs["joint_transition_assignments"] += len(token_ids)
+            if candidate_graph is None:
+                current_candidate = self.joint_graph(stage, token_ids)
+                costs["joint_graphs"] += 1
+                costs["graph_bank_assignments"] += self.n_ops
+                costs["joint_transition_assignments"] += len(token_ids)
+                candidate_source = "current_joint_candidate"
+            else:
+                current_candidate = copy.deepcopy(candidate_graph)
+                audit = current_candidate.get("formation_audit", {})
+                if (int(current_candidate.get("task", -1)) != stage
+                        or tuple(current_candidate.get("tokens", ())) != token_ids
+                        or set(current_candidate.get("trans", {})) != set(token_ids)
+                        or not audit.get("training_only")
+                        or int(audit.get("fixed_task_id", -1)) != stage):
+                    raise _PromotionFailure("terminal candidate task/alphabet/audit mismatch")
+                if (not np.array_equal(current_candidate.get("enc"), self.encoder.argmax(-1).cpu().numpy())
+                        or not np.array_equal(current_candidate.get("dec"), self.decoder.argmax(-1).cpu().numpy())):
+                    raise _PromotionFailure("terminal candidate must use the current learned encoder/decoder")
+                for token in token_ids:
+                    self._permutation_key(current_candidate["trans"][token], self.d)
+                candidate_source = "terminal_training_constrained_candidate"
+                report.update(target_source="old CURRENT native graphs + terminal-constrained current candidate",
+                              candidate_override_source=candidate_source,
+                              formation_audit=copy.deepcopy(audit))
             for reference in self.reference:
                 native = old_graphs[int(reference["task"])]
                 okay, pairs = self.related(reference, native)
@@ -260,7 +280,7 @@ class SemanticPromotionModel(TopologyExecutor):
                 costs["certificate_checks"] += 1
                 costs["certificate_relation_pairs"] += count
                 certificates.append(dict(task=before["task"], tokens=list(before["tokens"]),
-                    source="current_joint_candidate" if before["task"] == stage else "old_CURRENT_native",
+                    source=candidate_source if before["task"] == stage else "old_CURRENT_native",
                     exact_full_latent_transition_equality=bool(exact), related=bool(related),
                     relation_pairs=count, all_words_over_declared_alphabet=True))
                 if not exact or not related:
