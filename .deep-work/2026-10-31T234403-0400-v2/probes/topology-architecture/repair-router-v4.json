@@ -1,0 +1,39 @@
+{
+  "status": "frozen before two new diagnostic training runs",
+  "MAIN": "TOPOLOGY human_only",
+  "M0": "NOT_PASSED",
+  "M3": "ultimate",
+  "observed_failure": "N8seed0/800updates/.01: topology u/v share route[0,2] and same learned permutation; hardIID .513671875. Same-info Transformer/Replay .921875. Thus current acquisition bottleneck is architecture-specific.",
+  "intervention": "negative mutual information regularizer between observed token/task symbols and learned call choices, without target operator labels; all input encoder/operator/call parameters remain learned from terminal CE",
+  "formula": "L=terminal_CE+lambda*(mean_token H(call|token)-H(mean_token p(call|token)))",
+  "diagnostics": [
+    {
+      "router_mi": 0.05
+    },
+    {
+      "router_mi": 0.2
+    }
+  ],
+  "fixed": {
+    "scale": 8,
+    "seed": 0,
+    "steps": 800,
+    "batch": 64,
+    "lr": 0.01,
+    "stages": 1,
+    "compilation": "joint",
+    "credit": "log",
+    "protection_timing": "admitted"
+  },
+  "decision": "if diversity restores distinct learned executable u/v and validation acquisition, proceed to continual stages; otherwise record failure and use measured bottleneck for new parameterization, not LR sweep",
+  "maintenance_bug_repair": "temperature is executable compilation state: changing it is now itself checked against old graph. This fixes alpha0 rollback failure caused by unguarded temperature changes; no old references exist during this firststage, so it cannot explain this ablation contrast.",
+  "costs": "same terminal sample/update budget; additional router entropy computation counted in train wall; equivalent heuristic available to conventional learners; no novelty claim",
+  "external_timeout_seconds": 900,
+  "internal_timeout_seconds": 850,
+  "source_sha256": {
+    "train.py": "31d7e54605c5c1b24acc3700e626de6d509d6ce874bac82b5f5f79e33f43e6fa",
+    "topology_model.py": "48f8f7aa5efe96297bef04e29ca6c52b8bd8bc38a2af409ce772619679e77acd",
+    "torch_baselines.py": "c22f59c4dd68385910f7df7f5c8be5d0268a479e6d5820ef6a636ce8efbde176",
+    "tasks.py": "dbca2935925f713e2f5716d8ac5faf4892464918eed6b2e0a66b45680ec5d9bc"
+  }
+}

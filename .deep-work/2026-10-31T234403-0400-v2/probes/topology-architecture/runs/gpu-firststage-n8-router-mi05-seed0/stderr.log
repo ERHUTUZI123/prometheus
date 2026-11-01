@@ -1,0 +1,37 @@
+{"event": "runner_failure", "error_type": "KeyboardInterrupt", "error": "", "isolation_fallback": false}
+Traceback (most recent call last):
+  File "/workspace/prometheus-v2-m0-architecture/remote_runner_gpu_authorized.py", line 481, in main
+  File "/workspace/prometheus-v2-m0-architecture/remote_runner_gpu_authorized.py", line 363, in _child
+  File "<frozen runpy>", line 286, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspace/prometheus-v2-m0-architecture/code/train.py", line 556, in <module>
+    main()
+  File "/workspace/prometheus-v2-m0-architecture/code/train.py", line 537, in main
+    results.append(run_model(name, args, datasets, raw_data, batches, old_indices, device, recorder))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code/train.py", line 329, in run_model
+    metrics = evaluate(model, datasets, device, args.batch, recorder)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code/train.py", line 195, in evaluate
+    hard = hard_method(b["tokens"], b["starts"], b["task_ids"]) if callable(hard_method) else logits
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code/topology_model.py", line 214, in hard_eval
+    graph = self.graph(task_id, range(1, self.vocab+1))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code/topology_model.py", line 180, in graph
+    soft=self.soft_ops()
+         ^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code/topology_model.py", line 99, in soft_ops
+    def soft_ops(self):
+    
+KeyboardInterrupt

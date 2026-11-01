@@ -1,0 +1,23 @@
+/usr/local/lib/python3.12/dist-packages/torch/autograd/graph.py:829: UserWarning: CUDA initialization: Unexpected error from cudaGetDeviceCount(). Did you run some cuda functions before calling NumCudaDevices() that might have already set an error? Error 304: OS call failed or operation not supported on this OS (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:109.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+{"event": "runner_failure", "error_type": "RuntimeError", "error": "rollback failed to preserve reference model relation", "isolation_fallback": false}
+Traceback (most recent call last):
+  File "/workspace/prometheus-v2-m0-architecture/remote_runner_cpu_v2.py", line 437, in main
+  File "/workspace/prometheus-v2-m0-architecture/remote_runner_cpu_v2.py", line 328, in _child
+  File "<frozen runpy>", line 286, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspace/prometheus-v2-m0-architecture/code/train.py", line 531, in <module>
+    main()
+  File "/workspace/prometheus-v2-m0-architecture/code/train.py", line 512, in main
+    results.append(run_model(name, args, datasets, raw_data, batches, old_indices, device, recorder))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code/train.py", line 382, in run_model
+    report = model.project_update(before)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code/topology_model.py", line 255, in project_update
+    raise RuntimeError('rollback failed to preserve reference model relation')
+RuntimeError: rollback failed to preserve reference model relation

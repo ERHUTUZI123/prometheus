@@ -1,0 +1,11 @@
+{
+  "status": "cuda_compatibility_blocked_no_gpu_training",
+  "historical_scope": "This records the failed shim versions only; later separately authorized own-process task-subtree permission and trusted-init/TSYNC smoke are in authorized-gpu-smoke-summary.json.",
+  "compiler": "gcc 13.3.0 already installed; no compiler package was installed by this support task",
+  "v9": {"shim": "pthread_setname_np_noop", "cuda_available": false, "cuda_error": 304, "gpu_smoke_qualified": false},
+  "v10": {"kind": "trusted_health_strace", "cuda_available": false, "denied_path": "/proc/self/task/3357/comm", "result": "EACCES", "source_sha256": "5b5216be2e9d3393bbc323e157d713c0931553c472e3bd39d304eef2dd2d1b01", "binary_sha256": "ef900efe29779fd64026d2de2e31fddc9a3bd27c04691b384ae43415a6c0271b"},
+  "v11": {"shim": "exact_comm_OWRONLY_open_open64_openat_openat64_redirect", "cuda_available": false, "cuda_error": 304, "gpu_smoke_qualified": false},
+  "v12": {"kind": "trusted_health_strace", "public_open_metadata_test_fd": 3, "public_open_metadata_test_target": "/dev/null", "cuda_available": false, "denied_path": "/proc/self/task/3488/comm", "operation": "openat O_WRONLY|O_CREAT|O_TRUNC", "result": "EACCES", "source_sha256": "a81c72ec9a192427f0f784377937292021c9a22202a6a3e27ec06754dc243835", "binary_sha256": "1130ccf452e35ac2d6d745cb2a67929d8486a813a589f446e21594972cabbf7f"},
+  "scope": "The exact allowed public open interposition works on a direct test, but the CUDA naming write bypasses those interposition points. No general open/write/syscall suppression, proc write permission or automatic CPU fallback was applied.",
+  "next_permission_boundary": "Stop this scoped compatibility attempt. A different explicit isolation/runtime decision is required; CPU results are not GPU evidence."
+}

@@ -1,0 +1,44 @@
+{
+  "version": "native-v5b checkpoint continuation",
+  "frozen_before_execution": true,
+  "MAIN": "TOPOLOGY human_only",
+  "M0": "NOT_PASSED",
+  "M3": "ultimate",
+  "primary_baselines": [
+    "transformer",
+    "replay"
+  ],
+  "new_question": "Can acquired native operations survive shared learning of XOR/affine terminal tasks, while newnativeoperations are learned?",
+  "continuation": "load own trusted stage0step800consolidated checkpoints; execute ONLYstage1; no stage0retraining. FreshAdamatnewstage is originalprotocol.",
+  "arms": [
+    "topo",
+    "topo_off",
+    "transformer",
+    "replay"
+  ],
+  "fixed": {
+    "scale": 8,
+    "seed": 0,
+    "steps": 800,
+    "start_stage": 1,
+    "stages": 2,
+    "batch": 64,
+    "lr": 0.01,
+    "latent_factor": 1
+  },
+  "protection": "native graphs only; newcandidatejointmaterializedat.95valid; allcostscounted",
+  "no_automatic_M0_acceptance": true,
+  "limits": {
+    "external_seconds_per_arm": 900,
+    "internal_seconds_per_arm": 850,
+    "gpu_fraction": 0.3,
+    "fileMiB": 100
+  },
+  "source_sha256": {
+    "semantic_promotion_model.py": "d77a400a470bddd073467876cf1c0add467e19624697abe2c5c248763ba3f937",
+    "train.py": "c72fdae4915f7d92c092b3adb53fe26728405d969d7c88195ca323d8e343ef5f",
+    "topology_model.py": "48f8f7aa5efe96297bef04e29ca6c52b8bd8bc38a2af409ce772619679e77acd",
+    "torch_baselines.py": "c22f59c4dd68385910f7df7f5c8be5d0268a479e6d5820ef6a636ce8efbde176",
+    "tasks.py": "dbca2935925f713e2f5716d8ac5faf4892464918eed6b2e0a66b45680ec5d9bc"
+  }
+}

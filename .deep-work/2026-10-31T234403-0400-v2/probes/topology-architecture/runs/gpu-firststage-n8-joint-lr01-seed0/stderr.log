@@ -1,0 +1,20 @@
+{"event": "runner_failure", "error_type": "ValueError", "error": "Expected a torch.device with a specified index or an integer, but got:cuda", "isolation_fallback": false}
+Traceback (most recent call last):
+  File "/workspace/prometheus-v2-m0-architecture/remote_runner_gpu_authorized.py", line 481, in main
+  File "/workspace/prometheus-v2-m0-architecture/remote_runner_gpu_authorized.py", line 363, in _child
+  File "<frozen runpy>", line 286, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspace/prometheus-v2-m0-architecture/code/train.py", line 531, in <module>
+    main()
+  File "/workspace/prometheus-v2-m0-architecture/code/train.py", line 479, in main
+    torch.cuda.set_per_process_memory_fraction(.30, device)
+  File "/usr/local/lib/python3.12/dist-packages/torch/cuda/memory.py", line 187, in set_per_process_memory_fraction
+    device = _get_device_index(device)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/cuda/_utils.py", line 363, in _get_device_index
+    return _torch_get_device_index(device, optional, allow_cpu)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/_utils.py", line 872, in _get_device_index
+    raise ValueError(
+ValueError: Expected a torch.device with a specified index or an integer, but got:cuda
