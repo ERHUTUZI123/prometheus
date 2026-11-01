@@ -1,0 +1,23 @@
+# K original reading and provenance — M0 operation acquisition
+
+Same V2. MAIN=TOPOLOGY / USER_LOCKED / HUMAN_ONLY_CHANGE; PS standalone USER-PAUSED; Online USER-PARK. No experiment/code/shots. Effective provider mode unavailable. This accompanies `candidates/topology-continual/mechanism-k.md`; it does not rewrite earlier frozen sources.
+
+Actually read canonical `water/now.md` Core M Axis lines31–107, including full M0–M3, six Permanent Evaluation Rules and historical recognition. Receipt confirmed to root: M0 active and NOT PASSED; M1–M3 future gates, not parallel tasks/promises. No resource, constitution or MAIN authority changed.
+
+Before this construction read complete actual `quantum-shared-control.md`, `calibration-observation.md` and `review-024.md`. Root then delivered the explicit human correction: a stream of only old-gate speed/calibration improvements is insufficient. No speed-only topology-continual file had been written. I stopped that draft and selected interior-loop operation formation, preserving the existing six-mode resources and paid-observation obligations.
+
+## Primary bodies entered in this allocation
+
+1. Karzig, Pientka, Refael, von Oppen, *Shortcuts to non-Abelian braiding*, Phys.Rev.B91,201102(R),2015. [Author-hosted primary PDF](https://www.physik.fu-berlin.de/en/einrichtungen/ag/ag-von-oppen/papers/karzi15a.pdf). Actually read pp201102-1–3, especially degenerate shortcut Eq12, active Y Hamiltonian Eq15, counterdiabatic term Eq17, three-step exchange and robustness passage. SOURCE summary: its extra outer couplings implement the desired degenerate adiabatic dynamics; the correction depends on the particular path and is not itself topologically protected. This reading does not audit the paper's simulations/supplement or establish hardware availability.
+
+2. Karzig, Oreg, Refael, Freedman, *A universal geometric path to a robust Majorana magic gate*, arXiv1511.05161v3,2016/Phys.Rev.X6,031019. [Author-distributed primary PDF](https://www.microsoft.com/en-us/research/wp-content/uploads/2017/09/1511.05161.pdf). Actually entered §§I–IV, particularly §II Eq5–8 and naive-gate qualification; §III Eq9–15 and boundary assumptions; §IV parity-echo construction. The initial long body result stopped mid-equation; the relevant remainder was explicitly reopened and read through the echo discussion. SOURCE summary: the paper relates phase to enclosed area, cancels geometric error modes using turning points pinned by boundary protection, and uses an echo against static dynamical phase. It supplies a robust magic-gate precedent and explicitly explains why a simple interior path is unprotected. I did not independently audit its numerical experiments, all appendices, or any full device-realization claim. No exponential robustness for arbitrary merely smooth error functions is imported here.
+
+The new artifact borrows that scaffold openly. The finite P1/P2 prior, two-/four-turn derivations, collocated-pair structural proposal, shared neural/constraint interface and prospective task/measurement/contract process are RECONSTRUCTION/AGENT PROPOSAL. The analytic four-turn witness is closely related to the source's known solution and is not claimed original. Ordinary direct robust control is deliberately allowed to use it.
+
+## Information and chronology boundaries
+
+The nonlinear correction-response class was suggested by root as a possible paid-calibration model before this construction; it is not independently discovered device physics. Root's prior Granade reading is recorded in `calibration-observation.md`; I have not reentered that original in this allocation and make no independent source claim about its performance. The binary probabilities in the candidate follow directly from the stipulated one-qubit Hamiltonian/task-example interface.
+
+I sent root the interior-loop route and its failure of pure Majorana-topological protection BEFORE entering the robust-magic-gate original. The successful source entry then supplied a useful actual cancellation/echo mechanism, which I reported to root before saving the candidate. Root has not supplied any target task data or successful new loop to this context. Proposed hidden target angles are evaluator definitions in an UNEXECUTED finite task stream, not observed learned outcomes.
+
+New non-Clifford operation retention is therefore qualified as topology-assisted geometric/error-contract retention, not arbitrary topological quantization of those angles. The candidate explicitly states its unresolved direct-compiler equivalence and missing M0 advantage. No other new topology-continual worker candidate was read before this save.

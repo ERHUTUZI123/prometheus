@@ -1,0 +1,217 @@
+# Same-code direct control and a concrete composite-pulse comparator
+
+**RECONSTRUCTION / prospective comparator; 2026-11-01.** Same V2. MAIN=TOPOLOGY; priority=USER_LOCKED; MAIN_CHANGE=HUMAN_ONLY. Online remains USER-PARK; Persistent State standalone allocation remains paused/reserve. **M0 is active and NOT PASSED; M1–M3 are later milestones, with M3 the final research evidence ambition.** This support task changes neither direction nor allocation. No numerical execution, code, shots, training, installation, hardware action or resource/model change. Provider-effective mode is unknown.
+
+Actual inputs read: `AGENTS.md`, `water/now.md` through the complete Core M Axis and its Permanent Evaluation Rules; `deep-work/WORKFLOW.md`; `mechanism-k.md`; `calibration-p.md` including §8; and the existing `candidates/topology-return/quantum-shared-control.md`. No missing predecessor review is reconstructed or claimed read.
+
+## Judgment and coverage
+
+A direct idle pulse provides a concrete prospective acquisition rule for every proposed task phase, using the SAME paid task-angle observations and no geometric excursion. With two independently signed outer-pair controls available simultaneously, BB1 also has an explicit same-code realization. This is a genuine conventional comparator, not a universal-simulation argument. However, the current componentwise cubic response does **not** satisfy BB1's common fractional-error premise. Nominal inverse compensation is legal using the same paid information, but its remaining uncertainty must be propagated; it cannot be replaced with a fictitious single gain.
+
+Coverage is **DIRECT** for the finite-dimensional code/axis identities, pulse costs, conditional error bounds and four-turn chart below; **PARTIAL** for the actual physical-control comparison; **OUT_OF_SCOPE** for measured acquisition, a retention/resource victory, physical model validation, novelty or M0 passage. This sharpens the strong rival inside topology MAIN. It does not falsify the broader protected-acquisition hypothesis.
+
+Connection to the Fundamental Question: forming and retaining executable internal operations is the proposed route toward neural construction/composition of computation. This comparator tests whether the topology/controller organization changes that ability or its full cost beyond task estimation plus established direct control. A successful control identity alone would not answer the broader learning question.
+
+## 1. Actual code and actuators
+
+Keep six Majoranas, fixed total parity and `H_idle=g B03`, where `Bab=i gamma_a gamma_b`, `g>0`. Fix `B03=-1` for the idle ground code. The remaining four zero modes give the stipulated two-dimensional logical code. Set, on that same code,
+
+    Z=B12,     X=B24,     Y=B14.
+
+Then `Z²=X²=Y²=I`, `ZX=iY`, `XY=iZ`, `YZ=iX`. All three bilinears commute with `B03` and total parity. Thus direct zero-mode controls preserve the idle code exactly in the stated closed Hamiltonian model, even when they split its logical degeneracy. They do not possess passive protection of a calibrated dynamical angle.
+
+The example needs the already required correction channels for the routed `12` and `24` exchanges; relabel any actually supplied noncommuting pair sharing one zero mode. It adds no Majorana or new kind of coupling. **Channel existence and simultaneous independently signed channel access are different premises.** The present artifacts supply routed correction couplers but do not explicitly freeze their simultaneous-use/crosstalk contract. If that access is admitted for both arms, use the two-channel BB1 construction below. If it is unavailable, the one-channel direct comparator remains legal; do not claim that standard BB1 was implemented, or give it cost-free phase-axis synthesis. Sequential conjugation would require its actual additional pulses and errors.
+
+## 2. Gate formula, order and its conditional cancellation
+
+Define
+
+    n_phi=cos(phi) Z+sin(phi) X,
+    R_phi(theta)=exp[-i theta n_phi/2].
+
+This is just a relabeling of the conventional spin-rotation axes. **SOURCE:** Brown–Harrow–Chuang, [original v2, Eq.1 and Eqs.7–8, pp.1–2](https://arxiv.org/pdf/quant-ph/0407022v2), specifies a common unknown fractional rotation error and displays BB1. We use that published sequence; the same-code realization and the resource/error calculations below are reconstructions.
+
+For a learned positive target angle `beta_hat` in `[pi/10,2pi/5]`, set
+
+    phi=acos[-beta_hat/(4pi)].
+
+Execute the following four pulses in chronological order:
+
+| Pulse | Rotation angle theta_j | Axis angle phi_j |
+|---|---:|---:|
+| 0: task pulse | beta_hat | 0 |
+| 1: correction | pi | phi |
+| 2: correction | 2pi | 3phi |
+| 3: correction | pi | phi |
+
+The final product is
+
+    U_BB1=R_phi(pi) R_(3phi)(2pi) R_phi(pi) R_0(beta_hat).
+
+The ideal correction triplet is exactly `I`, not `-I`, so the ideal logical gate is exactly `Rz(beta_hat)`. Each pulse is generated by the actual idle Hamiltonian
+
+    H_j(t)=g B03+h_j(t)[cos(phi_j) Z+sin(phi_j) X],
+    integral h_j(t)dt=theta_j/2.
+
+Because the idle term commutes, its factor on the ground code is the common phase `exp(+i g T_total)`. If the idle occupation were instead `s=+1`, it would be `exp(-i g T_total)`; the occupation must not be forgotten. Uncontrolled calls can use the declared common-phase quotient. Coherently controlled calls need the intended relative phase matched by an actually available correction/padding procedure with its time and controls charged. BB1 itself adds no hidden ideal sign.
+
+### A checkable operator-norm bound under the source error premise
+
+Suppose the actual vector drive is exactly `(1+epsilon) h_j(t) n_(phi_j)`, with the SAME constant `epsilon` for all four pulses, and no other error. Then each actual pulse is `M_phi(theta)=R_phi[(1+epsilon)theta]`. Toggling the ideal correction rotations gives the error relative to the target:
+
+    F(epsilon)=R_phi(pi epsilon) R_(-phi)(2pi epsilon)
+                    R_phi(pi epsilon) R_0(beta_hat epsilon).
+
+The logarithm of its first three factors has linear term
+
+    -i 2pi epsilon cos(phi) Z=+i beta_hat epsilon Z/2.
+
+Their palindrome removes the quadratic logarithm term. The last factor cancels the linear term and commutes with it, so `F(0)=I`, `F'(0)=F''(0)=0`. This explicitly identifies the cancellation, rather than importing a performance adjective.
+
+Let
+
+    A=2pi+beta_hat/2.
+
+The third derivative of the four-factor product has operator norm at most `A³`: by the product rule, the sum of all multinomial bounds is the cube of the sum of the four generator norms, while every intervening factor is unitary. Taylor's integral remainder therefore gives the rigorous, conservative finite bound
+
+    ||U_actual-Rz(beta_hat)|| <= min(2,A³ |epsilon|³/6).       (1)
+
+This is an operator-norm statement, not an infidelity value or a numerical claim for the current uncertainty set. It requires static common fractional error. Rapid drift, detuning, axis errors and residual splitting do not inherit it automatically.
+
+## 3. Why the current cubic plant is not that premise
+
+The available model is an ODD **componentwise** response
+
+    a_kappa(c)=kappa0 c+kappa1 c³,
+
+with either the retained finite K hypotheses or the paid uncertainty set of `calibration-p.md`. A command vector `(c_z,c_x)` produces
+
+    H_control=a_kappa(c_z) Z+a_kappa(c_x) X,
+
+not `a_kappa(sqrt(c_z²+c_x²)) n_phi`. Even one common kappa across channels does not make these two laws equal. With raw commands `c_z=h cos(phi)`, `c_x=h sin(phi)`, the two fractional gains are
+
+    kappa0+kappa1 h² cos²(phi),
+    kappa0+kappa1 h² sin²(phi).
+
+They generally differ. The transverse component of the actual drive along `-sin(phi)Z+cos(phi)X` is
+
+    kappa1 h³ sin(phi)cos(phi)[sin²(phi)-cos²(phi)].          (2)
+
+Thus a tilted-axis pulse generally has an axis error, not merely a rotation-angle error. Its axis can also change during a smooth envelope. Standard BB1 cancellation is not certified by declaring the response common.
+
+### Give the conventional arm the same paid nominal inverse
+
+Choose a permitted nominal `hat_kappa` using the same retained observations/U. For a desired component `d`, command
+
+    c(d)=a_hat^(-1)(d).
+
+This odd inverse exists in the current monotone cubic class. It is an actual scalar solve or charged table/evaluation with certified approximation error, not new plant information. For completeness, if `hat_kappa1>0` it is
+
+    c(d)=2 sqrt[hat_kappa0/(3hat_kappa1)]
+         sinh{asinh[(3d/(2hat_kappa0))
+                           sqrt(3hat_kappa1/hat_kappa0)]/3};
+
+if `hat_kappa1=0`, it is `d/hat_kappa0`. For each pulse use
+
+    d_z=h_j cos(phi_j),       d_x=h_j sin(phi_j),
+    c_z=c(d_z),               c_x=c(d_x).                   (3)
+
+Under the nominal plant this realizes exactly the desired vector and the BB1 formula. Under another retained plant, the component's remaining gain is
+
+    [kappa0+kappa1 c_alpha²]/
+                  [hat_kappa0+hat_kappa1 c_alpha²].         (4)
+
+It depends on the component, envelope and pulse. The source premise is recovered if `kappa=(1+epsilon)hat_kappa` for both channels, or in another explicitly justified common-scalar special case. Generic cubic uncertainty does not have that property. In particular, a finite parameter set does not turn residual nonlinearity into zero without enough actual information to exclude the alternatives.
+
+There are two valid prospective certificates:
+
+1. **General inverse-residual envelope.** Let `delta` be the uniform bound from `calibration-p.md` on `|a_kappa(c)/a_hat(c)-1|` over all actually used signed commands and retained hypotheses. Then the Pauli axes anticommute, so `||E(t)||<=delta h_j(t)` even though its direction changes. Duhamel gives `error<=delta A+r T_total+epsilon_inverse+epsilon_num`, plus task-angle uncertainty and other declared terms. For independent channel envelopes use their actual Euclidean component bound, or conservatively their maximum. This is valid but spends BB1's full extra area; it does not claim cubic cancellation.
+2. **Common part plus honest mismatch.** For each retained kappa and any chosen real epsilon, form
+
+       D_(kappa,epsilon)(t)=
+          [a_kappa(c_z)-(1+epsilon)d_z] Z
+         +[a_kappa(c_x)-(1+epsilon)d_x] X.
+
+   A sufficient conditional error bound is
+
+       min(2,A³|epsilon|³/6)+integral ||D_(kappa,epsilon)||dt
+          +r T_total+epsilon_inverse+epsilon_num.           (5)
+
+   Minimize this expression over epsilon separately when CERTIFYING each retained plant, then take the worst retained value. This chooses no secret physical control: the pulse remains fixed by (3), and every hypothesis is checked. It can retain a useful common-gain cancellation while charging nonlinear/axis mismatch. Alternatively propagate the actual two-dimensional idle-code Hamiltonian for every retained plant, with verified numerical error and paid work. A time-varying actual axis needs time ordering; it cannot be reduced to one scalar pulse area by fiat.
+
+The response confidence event, its failure allowance and drift age remain exactly those paid for by the common calibration protocol. No fictional per-task remeasurement is imposed on the direct arm, and no calibration observation is created here. Static or nonstatic unwanted logical terms during idle pulses require their ACTUAL model; BB1 is not an automatic echo of the interior-loop splitting in K's candidate. A uniform residual-norm bound contributes `r T_total`. If splitting is physically absent at idle but present only inside a geometric excursion, that is a model fact to justify, not a comparator handicap to invent.
+
+## 4. Finite smooth pulse schedule and all specified control costs
+
+An executable smooth ideal-vector envelope for each pulse is
+
+    h_j(t)=h_star sin²(pi t/tau_j),
+    0<=t<=tau_j,       tau_j=theta_j/h_star.                (6)
+
+It has the required area `theta_j/2`, zero endpoint value and zero endpoint slope. Changing axes between these zero-drive endpoints produces no command or first-derivative jump. No instantaneous switching is hidden; a stricter acceleration/bandwidth condition would require its additional actual constraint. The common ideal vector peak is `h_star`, with each component peak at most that. The command cap and sign/domain assumptions apply to the inverse commands, not just h.
+
+The following equalities are for (6), not hardware measurements:
+
+| Resource | Exact nominal value |
+|---|---:|
+| Total duration T | `(beta_hat+4pi)/h_star` |
+| Control norm area A | `(beta_hat+4pi)/2` |
+| Sum of squared applied coefficients C | `3 h_star (beta_hat+4pi)/8` |
+| Largest vector slew in pulse j | `pi h_star²/theta_j` |
+| Integrated squared vector slew | `(pi² h_star³/2)[1/beta_hat+5/(2pi)]` |
+| Full Hamiltonian norm-squared action, constant g | `g² T+2g A+C` |
+
+The full-action expression uses `[B03,n_phi]=0`, giving `||gB03+h n_phi||=g+h` on the fixed-parity block. It is different from the anticommuting active terms of a braid leg. Neither action is established electrical energy.
+
+Under nominal inversion, use the actual command cost `integral(c_z²+c_x²)dt`. A sufficient bound is `C/hat_kappa0²`, since `|c(d)|<=|d|/hat_kappa0`; equality is not claimed for a cubic. A sufficient individual-command peak bound is `C_star=a_hat^(-1)(h_star)`. With command slew cap S and command amplitude cap `C_max<=1`, one sufficient choice obeys
+
+    h_star<=a_hat(C_max),
+    h_star²<=S hat_kappa0 beta_hat/pi,                     (7)
+
+because `dot c_alpha=dot d_alpha/a_hat'(c_alpha)` and `a_hat'>=hat_kappa0`. Channel-specific limits can be sharper. Actual bounds over U, inverse approximation, cross-channel response, timing, coherence and drift must still pass. In particular, slowing down reduces drive cost but increases idle/residual exposure and calibration age.
+
+For comparison, a single compensated direct `Z` pulse with the same shape, peak and learned angle has `T=beta_hat/h_star`, `A=beta_hat/2`, `C=3h_star beta_hat/8`. BB1's nominal time/area/drive-action multiplier under this same schedule is `1+4pi/beta_hat`: it is exactly 17, 25 and 21 for the evaluator's three nominal target phases respectively. These are algebraic cost ratios, not performance results. A rectangular idealization halves these shape durations but has unbounded switching slew; it is not substituted into a smooth contract for only one arm.
+
+The direct arm may choose the simple pulse, BB1, a better legal composite, or robust optimization according to the SAME retained U and resource vector. When one-channel calibration is already precise, adding BB1 can be wasteful. For a constant legal command c with positive scalar response extrema `a_L,a_U`, the simple minimax pulse uses `T=beta_hat/(a_L+a_U)` and has maximal area error `(beta_hat/2)(a_U-a_L)/(a_U+a_L)`; include actual ramps rather than silently using a rectangle. A stronger competitor should be permitted to select this strategy.
+
+## 5. Actual acquisition/retention interface of the rival
+
+Use K's paid task examples and retain precisely the same target confidence set `B_j`; do not hand the evaluator's beta to this controller. A direct program stores the learned scalar `beta_hat_j`, its confidence record and the shared pulse generator/calibration state, rather than one copied neural network per operation. The first specified target is genuinely non-Clifford in this same code; successful acquisition/execution still needs the actual task evidence and error contract. Its uncertainty contribution from the task record is `rad(B_j)/2`, using the same radius convention as K. Every later gate/word and preparation/readout obligation is retained.
+
+A shared neural/spline shape may continue changing while each desired direct area stays normalized, followed by the current nominal inverse. The arm is not forced to use a neural net when a simple generator is cheaper. Under exact nominal inversion the area constraint retains logical angles as shapes change; under uncertainty, every old actual command domain/error/deadline is rechecked or covered by a valid uniform certificate. This is ordinary constrained direct quantum control. Its potential economy comes from remaining at idle and avoiding excursions/echoes when the actual residual model allows it. No learning or superiority has been observed.
+
+## 6. Independent check of the uniform four-turn chart
+
+This is a separate constructive support calculation, not evidence of a comparator advantage. For an echoed half-loop, K's retained target range gives `a=beta_hat/pi in [1/10,2/5]`. Let `rho in [9/20,11/20]`, and set
+
+    w1=a rho,                  w2=a(1-rho),
+    c1=1/2-(1-rho)D,           c2=1/2+rho D,
+    D²=a²/4+(1-a²)/[12rho(1-rho)],
+    (q1,q2,q3,q4)=(c1-w1/2,c1+w1/2,c2-w2/2,c2+w2/2).       (8)
+
+**VERIFIED analytically in the stated finite domain.** The two intervals have total width a. Their width-weighted center is `rho c1+(1-rho)c2=1/2`. Since `P1'=1-2x`, this gives `M1=0`.
+
+Write `t=rho(1-rho)`. Their width-normalized second moment around 1/2 is
+
+    V=tD²+a²[rho³+(1-rho)³]/12
+     =tD²+a²(1-3t)/12=1/12.
+
+Since `P2'=1/2-6(x-1/2)²`, this gives `M2=a(1/2-6V)=0` exactly. Thus the chart preserves the three geometric constraints for the ENTIRE declared response class, not just its corner samples.
+
+It is uniformly ordered and interior. Here `t>=99/400`, and the coefficient of a² in D² is negative, giving
+
+    D²<=1/400+1/3=403/1200<(7/12)².
+
+Consequently
+
+    q1>=1/2-(11/20)(7/12)-(2/5)(11/20)/2=83/1200>0,
+    q4<=1-83/1200<1,
+    q3-q2=D-a/2>0,
+
+where the last inequality follows directly from `D²-a²/4>0`. Each interval width is at least `9/200`. The constraint Jacobian with respect to the four turns has rows given, up to the alternating column signs, by evaluations of `1,P1',P2'`. They are independent polynomials of degrees 0,1,2; any three distinct turns give a nonsingular Vandermonde change of basis. Its rank is therefore three everywhere on this compact chart. At `rho=1/2`, (8) reduces to K's symmetric witness. Varying rho changes a width by `a d rho`, so it is a genuine nonconstant semantic-preserving degree of freedom.
+
+This proves an admitted chart, not that changing rho improves finite-time error, gives substantial shared plasticity or lowers lifetime cost. The latter claims still need the actual H0/Hcd mismatch, pulse/echo, learning and conventional-comparator evaluation.
+
+`CLAIM | STATUS | EVIDENCE/ARTIFACT | WEAKEST REMAINING LINK | FAILED BRANCHES | NEXT SINGLE DECISION`
+
+`Same-code conventional direct/composite comparator and robust-contour chart | ANALYTICALLY CONSTRUCTED / UNEXECUTED | this note; original BHC equations; current six-mode model | actual simultaneous-control/noise contract and paid-U finite-time performance | naïve BB1 certification under arbitrary common cubic response is invalid | freeze the common signed/simultaneous actuator and residual model before choosing the simple/composite/optimized direct arm for the same actual multistage acquisition comparison.`
