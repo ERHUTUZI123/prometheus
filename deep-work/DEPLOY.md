@@ -1,33 +1,15 @@
-# Deployment handoff — execute in the existing authorized local host
+# Deployment v2 — execute after migration, in a fresh session
 
-Read README, CONSTITUTION and WORKFLOW. Deploy a minimal implementation of this workflow and execute one substantial research campaign. Do not return another workflow proposal, and do not create a large platform.
+The root AGENTS.md is the only constitution. Read it and the current WORKFLOW; load other roles and sources selectively. This run must be explicitly started by the user. Installing the update is not an execution authorization.
 
-## Preflight
+1. Check the host's actual model/mode, tool access and approved resource route. The requested mode is Pro; record requested, visible selected and provider-effective metadata separately. Unknown fields remain unknown. Earlier Ultra permission was run-scoped and is not reused. No invented model IDs, API fields or flags. Use official current host documentation only when needed. Avoid repeated configuration probing or new paid calls just to obtain receipts.
+2. Prefer available native independent sessions. Every substantive worker needs its own observed-mode receipt or a truthful statement that the host does not expose it. A user-authorized alternative for this run may be accepted but must never be reported as Pro. No silent downgrade. An unresolved mandatory mode requirement produces a concise BLOCKED_MODE result, not a long diagnosis loop or pretend research.
+3. Locate the established canonical NOW from actual AGENTS/README. Preserve source PDFs, original index, existing edits and all earlier campaign artifacts. Create one new `.deep-work/<run-id>/` for research artifacts and checkpoints. Do not reopen the completed campaign for writes.
+4. Launch P/K/R from neutral input packets in new contexts. Do not include previous reports, full project chat or historical NOW commentary in their invention packets. R initially receives no curated bibliography/index. K may access the library voluntarily. If host inheritance defeats the intended separation, use actual independent sessions when available or disclose contamination; do not certify false blindness.
+5. Read and invent together. Freeze first substantive candidates, then release old reports and cross-entry comparisons. Apply the success counterfactual before major implementation. Select one principal mechanism and one genuinely different high-risk alternative. Do not keep the former six academic tracks alive by default.
+6. Bring the closest prior and strongest matched simple rival into development early, while giving new ideas a serious constructive opportunity. Execute original reading, derivation, targeted code/experiments, substantive revisions and independent reconstruction using authorized tools. Do not just restate a plan or construct another agent platform.
+7. Preserve raw records incrementally; test output serialization before batches. Use a checkpoint before context limits and when evidence changes the next action. Resume actual task IDs without relabelling repeats or recovered evaluation as original training.
+8. Use `runtime.example.json` only as our scheduling specification, never as vendor config. `tools/audit.py` checks declared bookkeeping and current run authorization; do not rewrite history to satisfy it. The prior campaign's original failed audit remains unchanged.
+9. Finish with `final/result.md`, actual evidence and the minimal reconstruction route. Update only the existing NOW summary with a meaningful result or decision. Do not alter AGENTS or Research Vision during research. No auto-start of another campaign.
 
-Inspect existing AGENTS, README, current git diff and the canonical NOW path without modifying them. Preserve user edits. Find actual source PDFs; a bibliography does not prove possession. Record source fingerprints and available tools/compute without copying secrets.
-
-Verify the actual model and Pro execution route. High/max effort alone is insufficient. The requirement applies to substantive child research tasks as well as the main session. Use provider metadata when available; otherwise explicitly record UI/user attestation. Never ask a model to certify its own identity.
-
-Prefer existing native independent Pro sessions/subagents. If child Pro cannot be established, use an already authorized independently verifiable Pro adapter, or stop with BLOCKED_MODE. Do not fabricate CLI flags. The optional tools/pro_probe.py tests one Responses API route and makes no call unless --live is explicit; it is not a full agent harness. Do not activate a new paid route without authorization.
-
-## Runtime
-
-Use native host orchestration first. Implement only missing essentials: task queue/dependencies, separate contexts, input manifests, append-only event records, checkpoints and output persistence. runtime.example.json is this workflow's specification, not a vendor configuration. Adapt it to real supported APIs.
-
-Create one `.deep-work/<run-id>/`. Keep the existing canonical NOW as the only active human-facing state. Do not modify root AGENTS or the Research Vision. This task authorizes isolated architecture work and experiments; it does not authorize external publication, purchasing resources, unsafe system changes or access to unrelated assets.
-
-Start six independent research tasks from inputs/seed.md and WORKFLOW §5. Supply only relevant role and source inputs. Exclude prior architecture reports and other branches' results until first candidates are frozen. Enforce file/context isolation when possible; declare instruction-only isolation when that is all the host provides.
-
-Workers decide what to read, derive, implement and test. No per-stage human approval for scientific choices. Missing ordinary tools or source files should trigger alternatives, not a request to make the human do the work. Install needed tools in an isolated environment when allowed.
-
-## Autonomous campaign
-
-Execute actual primary reading, reconstruction and independent invention. Continue through cross-field reconstruction, prior-art attack, constructive repair, deeper mechanisms, discriminating tests, revisions and independent rebuilding. Keep a protected high-risk candidate. Do not force quotas or novelty claims.
-
-The user permits intensive resource consumption during research. Do not impose arbitrary three-hour, three-round or token-saving limits. Respect actual quotas and authorized resources. Persist results continually and reserve enough capacity to deliver. Every expansion should serve a scientific decision, not consume tokens for appearance.
-
-Freeze candidates and test contracts, isolate evaluation from builders, save failed results. Use the relevant ROLES section per job rather than all roles in every context. If mode/tool/context constraints change, record them and recover without pretending continuity that did not occur.
-
-## Finish
-
-Produce final/result.md and actual supporting evidence. Update the existing NOW with completed results and unresolved decisions, not planned outcomes. Run tools/audit.py on the declared run record; its pass checks bookkeeping, not truth or novelty. Do not automatically launch a separate unrelated campaign.
+All ordinary research choices are autonomous within explicit authorization. Existing quota may be used extensively when informative; paid expansion, publication, destructive edits and access escalation need separate authorization. Stop at a genuine resource/permission boundary and save recoverable state; never imply execution continues without an operating host.

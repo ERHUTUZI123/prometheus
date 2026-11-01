@@ -1,0 +1,11 @@
+# User steering within active main campaign: acquire where experience propagates
+
+The user supplies unverified optional directions from a webpage research partner; they are neither established literature gaps nor mandatory routes. This native team has not obtained webpage review. Do not turn this campaign into prior-art lookup followed by closure.
+
+Priority question: from continuing experience, acquire/revise reusable associations controlling which computational positions co-update or differentiate, then transfer the association to new positions/contexts. Fixed S and the first-order cross-effect −eta*g_j^T SS^T g_i are diagnostic identities, not an acquisition algorithm. Splitting, merging and reparameterization are tools, not the target. Meta-learning Symmetries by Reparameterization arXiv2007.02933 §4 already learns sharing; learning S alone is not novelty. Enter original technical text.
+
+Alternative: share current computation while retaining an explicitly obtained low-cost state sufficient for later differentiation; compare same-information/cost replay, optimizer memory and adapters. No deleted information reappears by assumption. Prior K/supplement constraints remain valid but do not force exact historical trajectory preservation as scientific objective.
+
+Complete a serious constructive pass on at least one potentially consequential mechanism before load-bearing attack. Attack must receive constructive repair of representation/update/interpretation; do not preserve refuted mechanisms. Allowed known neural/arithmetic/gradient primitives remain. Deliver an actually developed candidate with state/update, complete learning/computation cycle, weakest technical gap and actual derivation/execution. This is MAIN campaign steering, not another standalone subtask completion.
+
+Current evidence retained: root ownership/kernel diagnostic ran; P alias portability/specialization rule frozen proposal; R local-actuation macro rule frozen proposal, not executed. Their deficiencies should inform stronger construction, not only cause closure. Only root coordinates shared files; new assigned artifacts get separate paths. Existing authorization/isolation/tools unchanged; no Pro claim, purchase/new paid path or original/workflow edits.

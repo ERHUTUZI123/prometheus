@@ -1,0 +1,15 @@
+# Execution of review001 — actual revision and test
+
+Decision received: REFRAME, in reviews/review-001.md. Coordinator accepted it and did not run the previously considered continuous/discrete covariance-closure exercise. It wrote and froze candidates/K/candidate-v3.md and probes/promotion/contract.md + check.py before execution. This changed the construction law to a quotient-defined nonlinear mode promotion; it did not alter any previous candidate freeze.
+
+Actual action: one isolated <=90s process, exit0, observed internal duration0.126s. Three seeds,100 SGD batches each, two task-conditioned promotions per seed, switching target observations halfway. Each of three implementations computed its own errors/gradients/selector: wide residual factors, compact Gram residual, and minimum-width ordinary factors with a Householder split. Explicit nonlinear path gradients also passed finite differences (maxerror1.081e-11). All300 steps and six births were incrementally recorded.
+
+Outcome: source, compact hybrid and strong ordinary alternative matched; largest residual error1.888e-15, largest output error1.277e-15. Actual final nonlinearity witnesses0.00692–0.01276, rather than only nonzero gates. Every second promotion used the updated residual. Omitting nonlinear path state caused output error0.00346–0.00638. Final stored scalar counts were652 wide source,27 Gram hybrid,27 ordinary minimum-factor hybrid. These are counts, not a measured hardware/resource advantage.
+
+Scientific result: the action descends through H and permits actual nonlinear construction followed by learning and reconstruction. The strongest ordinary alternative has the same behavior, so this test supplies no acquisition or learning advantage for Gram organization. R's independent derivation further gives a finite reservoir: each promotion consumes one residual rank, and ordinary residual SGD cannot replenish it. At most rank(H0)<=m+n promotions without a separately charged growth action. No path was discarded merely because its gate was currentlyzero.
+
+Independent correctness prerequisite also completed: fresh v2_rebuild froze its own source-law-only derivation/code/results before author access; exact Fraction120updates passed. After authorized comparison, it independently interpreted the actual emitted scalar/matrix JSON programs for12more commands with exact agreement and two mutation controls detected. No algebraic discrepancy found; no neural discovery or novelty claim follows.
+
+Evidence: probes/promotion/pre-execution.json, execution.log, raw.jsonl, result.json; candidates/R/promotion-rival.md; candidates/rebuild/certificate-v0.md, author-comparison-v0.md, generated-replay-certificate-v0.md and both freeze manifests. No original, old campaign or workflow file changed.
+
+Next real handoff: packet-002.md asks supervisor to inspect these originals and decide where substantive inventive work should go. This document records a completed submission-review-revision-execution loop, not only role declarations. It is not webpage ChatGPT review.

@@ -1,0 +1,17 @@
+# K v3 — construct a nonlinear mode through a retained learning interface
+
+AGENT PROPOSAL / RECONSTRUCTION, following independent strategic review001 REFRAME. Preserves v0/v1/v2 and all frozen evidence. This version is a substantive construction-law revision, not numerical repair. Neither neural autonomous construction nor novelty is established.
+
+The candidate object is a learning mechanism whose retained state determines both execution and declared subsequent updates. V2 supplies exact residual state H=ZZ^T under shared-left factor SGD. V3 adds a quotient-defined construction action; it cannot recover deleted hidden-neuron identities. Its potential is adaptive construction followed by continued compaction, rather than only a static covariance reduction.
+
+For a context-selected boundary vector t with q=t^THt>0, set r=Ht/sqrt(q), H_res=H−rr^T. On any physical source Z with this H, let s=Z^Tt/sqrt(q); then ||s||=1, r=Zs and Z_res=Z−rs^T has Gram H_res. Split r=[v;u]. The output W x is exactly W_res x+v(u^Tx), independent of source orientation. Replace the explicit mode by v[u^Tx+c phi(u^Tx)], c=0 at birth. Its parameters (v,u,c), gradients and identity remain retained even at c=0. Later construction extracts another mode from the UPDATED residual, never from discarded coordinates or a stale covariance.
+
+For sample x, z=u^Tx, e=dL/dy, residual G=e x^T, explicit gradients are dv=e[z+c phi(z)], du=(e^Tv)[1+c phi'(z)]x, dc=(e^Tv)phi(z). Average these over a batch and use the pre-update state simultaneously. Residual H follows M(G)HM(G)^T. Thus arbitrary finite post-construction training agrees with the corresponding physically split source, as long as every nonlinear exception remains explicit and the residual interface remains valid.
+
+The constructor in the next check is a DECLARED HAND-DESIGNED task-feedback rule, not a learned neural proposer. It uses current residual errors and input second moments, selects an input eigen-direction and output error direction, and pays its actual proposal work. No future targets or source hidden coordinates are used. A learned constructor and its acquisition advantage remain open.
+
+Strongest actual alternative: factor current H into a minimum-width ordinary network, retain the same explicit nonlinear paths, use the same invariant split and ordinary SGD. This has the same legal construction semantics and learning trajectory; a test must include it. Redundant-width elimination alone therefore cannot be a new computational principle. Possible remaining contributions must concern learned discovery/selection of useful interfaces and construction laws or a demonstrated total-resource distinction beyond this representation.
+
+Prospective broader class: compact shared-linear residual learning systems with finitely many deliberately exposed nonlinear modes and repeated task-conditioned construction. This is not an exact compaction of generic nonlinear neural populations. Explicit exceptions can grow until savings disappear. Per-coordinate nonlinear reactivation does not descend through H; equal-H sources can disagree under such an action. No present function preservation is called future retention, and no path is recycled merely because its gate currently vanishes.
+
+Next scoped action: one frozen bounded source/hybrid/minimal-factor replay with two promotions and actual nonlinear learning; inspect the matched rival and raw evidence, then resubmit to the strategic supervisor. A pass validates this construction law and its scope. It does not establish foundational value.

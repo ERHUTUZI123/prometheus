@@ -21,14 +21,21 @@ def make_request(model: str, effort: str) -> dict[str, Any]:
 def make_receipt(response: dict[str, Any], request: dict[str, Any]) -> dict[str, Any]:
     reasoning = response.get("reasoning") or {}
     mode = reasoning.get("mode") if isinstance(reasoning, dict) else None
-    return {"checked_utc": datetime.now(timezone.utc).isoformat(),
+    checked = datetime.now(timezone.utc).isoformat()
+    return {"checked_utc": checked, "checked_at_utc": checked,
             "response_id": response.get("id"), "model": response.get("model"),
-            "model_requested": request["model"], "requested_mode": "pro",
+            "model_requested": request["model"], "model_returned": response.get("model"),
+            "requested_mode": request["reasoning"]["mode"],
             "effective_mode": mode, "requested_effort": request["reasoning"]["effort"],
+            "returned_effort": reasoning.get("effort") if isinstance(reasoning, dict) else None,
             "evidence_kind": "provider_metadata" if mode is not None else "requested_only",
             "response_status": response.get("status"), "usage": response.get("usage"),
             "pro_verified": mode == "pro",
             "scope": "This call only; no claim about other workers or future calls."}
+
+
+# v2 name; keep make_receipt and legacy receipt fields for existing callers.
+receipt_from = make_receipt
 
 
 def main() -> int:

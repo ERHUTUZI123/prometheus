@@ -1,0 +1,74 @@
+# Strategic review 002 — FINISH the finite scientific study
+
+Version 1; 2026-11-01 04:45 UTC. Same independent native supervisor context. Coordinator remains `/root`; provider-effective mode remains unknown. This review does not overwrite candidate freezes, raw evidence or execution records.
+
+## Decision and one next action
+
+**FINISH the current finite scientific study.** The implemented K construction is correct within its declared interface and genuinely constructs nonlinear computation. Its strongest ordinary alternative matches the whole learning/construction process, with no demonstrated acquisition or resource advantage. The remaining P/R hypotheses are not refuted, but no concrete next law currently gives a reasoned consequential difference. Further covariance exercises, another hand-built exact subclass, or training the same designed selector would extend implementation without addressing that frontier.
+
+**One concrete next action:** prepare and freeze the finite closeout packet, then resubmit it for review003 before announcing completion. It should contain the checked claim/evidence boundary below, the actual supervisor-directed construction and its matched-rival outcome, the two reporting corrections, preserved P/K/R status, and a concise proposed NOW checkpoint reflecting the changed next decision. No new mechanism experiment, training run, literature-completeness exercise or artifact polishing campaign is recommended.
+
+This is a stop on this study, not a claim that the fundamental question is answered, that neural self-construction is impossible, that exact closures exhaust the possibilities, or that the permanent ambition should be reduced to toy correctness. A clean finite frontier is the justified result.
+
+## Evidence obtained and checked
+
+I entered the frozen v3 mechanism, test contract, pre-execution manifest, complete promotion code, raw records and result. All three manifest hashes still match the files. The raw stream contains 300 steps, six promotion records, three case completions, opening serialization/derivative/action checks and a terminal `FINAL_PASS`. I independently recomputed the reported maxima from the 300 step records: output `1.27675647831893e-15`, boundary gradient `3.469446951953614e-16`, residual state `1.887379141862766e-15`, path parameters `1.124100812432971e-15`. These are finite floating replay errors under the chosen settings, not universal numerical guarantees.
+
+The construction is substantive. It selects its direction from available task errors and input statistics, extracts the mode independently through each representation, creates a trainable nonlinear path, updates that path, and extracts a second mode from the updated residual. The selector is designed rather than acquired. Explicit-path gradients pass the separate finite-difference check at a nonzero-gate state. The final nonadditivity witnesses `0.0069249`, `0.0079703`, and `0.0127594` establish actual nonlinear responses on the stated finite probes, rather than merely nonzero gates.
+
+The exact rival proof is decisive beyond the numerical replay. Any thin realization `Zbar Zbar^T=H` induces the same residual SGD. An orthogonal split produces the identical promoted mode, and the explicit nonlinear paths then receive the identical ordinary gradients. Equal interface state and paths imply equal next outputs, task-conditioned selector decisions and updates. Induction covers every legal finite sequence in this class. Therefore the match is not an underpowered search for an accuracy difference: this organization cannot produce a different learning trajectory against that alternative when the decisions are the same.
+
+The promotion code actually implements the thin-factor alternative with an initial PSD factorization, a Householder rotation, removal of the extracted column, and direct old-factor SGD. It does not hand this alternative the compact recurrence as its update rule. Both source and thin-factor forward code form their Gram for convenient comparison; consequently this script is not a measured implementation of the thin factor's more efficient direct matvec route. The rival's stated low-rank cost comparison is an analytic claim, not an observed timing result.
+
+I checked the rank-reservoir derivation. The promoted unit vector lies in the source row space, so its orthogonal removal decreases the residual rank by one. Ordinary shared-left updates cannot increase rank. Thus at most `rank(H0)<=m+n` nonzero promotions are available without separately charged replenishment. This does not forbid replenishment; it shows why original redundant width is not an unbounded resource for internal invention.
+
+**The independent correctness gaps are closed in their stated finite scopes.** I read the source-law-only freeze/result certificates, underlying direct-update code, author comparison, generated-program contract evidence and full generated interpreter. Raw stream counts are 120 exact closure steps in 20 cases, the declared function/initial-response witnesses and scalar/append checks, and terminal PASS. The generated interpreter consumes the actual emitted events/updates, executes all emitted coordinates, compares against independent old-factor loops, and detects two deliberate coefficient mutations over 12 commands. It substitutes no handwritten Gram formula for the generated program. These checks strengthen correctness and provenance; they do not establish universal correctness of the generator, acquisition, novelty or significance. The shared filesystem was not a secrecy boundary, and another model context alone is not the verification.
+
+## Two reporting corrections required in closeout
+
+1. **Independent state counts versus allocated scalar slots.** The reported compact `27` is `15` independent symmetric H entries plus `12` explicit-path parameters. The tested code actually retains a dense `5x5` ndarray, so its compact allocation is `25+12=37` scalar slots, versus the thin-factor alternative's `15+12=27`. The wide source allocation is `640+12=652`. No measured memory or speed advantage was established. The unchanged raw result's field `compact_symmetric` should be explained accurately rather than rewritten.
+2. **Wrong-fold control scope.** The final wrong-fold output errors `0.0034625–0.0063797` show that deleting the explicit nonlinear contribution destroys present nonlinear behavior after its gate has learned. They are not a matched-current-function deletion/relearning intervention at zero gate. The code separately records nonzero gate derivatives at every zero-gate birth, supporting the mathematical fact that an omitted path can carry an available future edit. Keep that inference distinct from the experiment actually executed.
+
+The coordinator has accepted both corrections and will append a precision note while preserving the frozen execution record. Neither correction changes the matched-rival conclusion, and neither justifies rerunning the study.
+
+## Primary-source boundary
+
+The previous review's covariance and finite-step source findings stand. I additionally entered the original *Network Morphism* §3.3, equations (9)–(11), PDF p.5 / printed p.568. It defines an identity-at-insertion parameterized activation that subsequently becomes nonlinear through training. Thus a learned nonlinear gate after function-preserving insertion cannot carry the contribution by itself. The present invariant extraction rule is not certified as covered by that passage; the ordinary-rival equivalence is established by the inspected derivation and code. [Wei et al., Network Morphism](https://proceedings.mlr.press/v48/wei16.pdf).
+
+This is a targeted source boundary, not a comprehensive priority verdict. The purpose is to locate the causal effect that remains to be invented, not require all primitives to be new.
+
+## Protected candidate assessment and the actual frontier
+
+**K — restricted mechanism established; stronger hypothesis open.** The symbolic constructor really discovers missing update observables in its supplied class. The nonlinear action really descends through the retained interface and avoids recovering deleted neuron identities. These are useful results. The current exact representation plus policy has no established learning/acquisition distinction from a small ordinary source. Giving the same designed policy to the rival is the correct control for that representation claim; it does not prove that a future acquired construction policy has no value, or that its discovery may be donated to a rival at zero cost. Such a policy would need an actual acquisition law and consequential success counterfactual. No such unexecuted claim is promoted to a result.
+
+**P — nonlinear persistent repair acquisition remains open.** Its shared-edit conflict is real, its dependency-aware relation composition is legitimate, and its affine intervention identification has an explicit boundary. But the exact recurrence is available to a graph-aware inference solver, while affine effect identification/nullspace repair does not supply the missing nonlinear reusable repair operation. I revisited its concrete acquisition loop and source comparison. A new law would need to acquire and reuse compact conditional edits across newly constructed nonlinear routines while paying for acquisition and preserving shared edit identity. We do not currently have that law. Running another truth table, adding a known conditional-inference cache, or increasing interaction degree without a compression mechanism would not resolve it. P is unresolved, not falsified.
+
+**R — structured edit closure remains open.** The product-rule carrier correctly acquires derived effect channels in its example; the full-algebra counterexample correctly demonstrates that compact exact closure can disappear. Its possible contribution lies in acquiring computational organizations whose useful future edit transport remains cheap, rather than in another implementation of exact AD or a supplied sparse algebra. No actual rule currently shows how task feedback discovers and retains that organization under a fair total budget. R is unresolved, not disproved by one full-dimensional case.
+
+The common scientific frontier is now sharper: **how can construction acquire a new, reusable way to change a nonlinear computational mechanism, such that later acquisition improves after charging the construction, interface maintenance and alternatives?** This remains connected to the fundamental question. It is not established as novel merely because we can phrase it precisely. A future campaign should start from a concrete proposed acquisition law or original phenomenon bearing on this frontier; it should not automatically resume these exact subclasses because they have working verifiers.
+
+## What remains between this result and the fixed ambition
+
+We have exact reconstruction, automatically inferred sufficient statistics in a restricted grammar, finite replay, a legal nonlinear construction action, an ordinary-equivalence explanation and a scope obstruction. We do not have an acquired constructor, acquired novel learning interface, improved held-out composition, preserved future discovery after later task change, a total-resource advantage over the actual rival, or a substantiated new computational principle. Ordinary learned path parameters are task learning, not evidence that the system has learned to construct its own learning mechanism.
+
+The ambition remains a potentially paradigm-level change in computation or learning. No Attention-scale intellectual contribution follows from the current evidence. Nor does failure to meet that ambition in this finite study identify the causal effect of the model, corpus, orchestration or research method. Stopping preserves the distinction between reliable local work and the unsolved scientific objective.
+
+## Reversal condition
+
+Reopen the scientific work if a specific new acquisition/construction rule or independently observed phenomenon supplies a reasoned consequential difference from the inspected ordinary alternatives, with an inspectable route to testing it under authorized resources. A larger model, more seeds, another exact known subclass, renaming the coupling, or merely a learned version of the existing selector does not itself satisfy that condition. No global impossibility claim is required to close the current finite study.
+
+## Actual additional materials inspected
+
+Paths are relative to this run. Previously inspected sources/candidates remain as recorded in review001.
+
+- `supervision/packet-002.md`, `supervision/execution-001.md`.
+- `candidates/K/candidate-v3.md`; `candidates/R/promotion-rival.md`.
+- `probes/promotion/contract.md`, `pre-execution.json`, `check.py`, `result.json`, all 313 records in `raw.jsonl` parsed for counts/step maxima, with birth/final gate evidence entered. Input hashes checked against the pre-execution manifest. I did not execute the promotion program.
+- `candidates/rebuild/certificate-v0.md`, `result-v0.md`, `author-comparison-v0.md`, `generated-replay-certificate-v0.md`; `probes/rebuild/summary.json`, `check.py` through its source laws, closure, witness, scalar and append logic; `generated_replay.py`, `generated-replay-summary.json`; `raw.jsonl` and `generated-replay-raw.jsonl` for opening, record counts, selected records and terminal status. I did not rerun these programs or independently rehash their entire manifests.
+- `sources/P/source-record-v1.md` and the continuing candidate's closing status/lineage section were revisited. The P source record identifies actual inference/target-propagation rivals, but its original papers were not independently re-entered during this review; no new literature conclusion about P is certified.
+- Live primary original `https://proceedings.mlr.press/v48/wei16.pdf`, especially §3.3 equations (9)–(11). Source contents were read directly, not only through R's summary.
+
+CLAIM | STATUS | EVIDENCE/ARTIFACT | WEAKEST REMAINING LINK | FAILED BRANCHES | NEXT SINGLE DECISION
+--- | --- | --- | --- | --- | ---
+H-relative nonlinear construction with repeated later learning is executable | VERIFIED in the exact law plus the stated finite floating replay | v3; promotion contract/code/raw/result; ordinary-rival derivation | General numerical robustness and applicability outside the stated interface | Arbitrary deleted-neuron actions do not descend | Close the finite study and report the true frontier
+This organization improves acquisition or total resources over a fair ordinary realization | NOT ESTABLISHED; current trajectory distinction excluded by inspected induction | Matching minimum-width alternative; state/allocation accounting; finite reservoir | No acquired rule with a consequential remaining difference | Redundant-width advantage removed by the actual rival | Same closeout action; preserve P/K/R and the original ambition

@@ -1,0 +1,2360 @@
+
+PAGE 1
+
+arXiv:2001.05786v2 [cs.FL] 2 May 2022
+A Categorical Framework for Learning
+Generalised Tree Automata
+Gerco van Heerdt1 , Tobias Kapp´e2 , Jurriaan Rot3, Matteo Sammartino4,1
+and Alexandra Silva5,1
+1 University College London
+gerco.heerdt@ucl.ac.uk
+2 ILLC, University of Amsterdam
+t.kappe@uva.nl
+3 Radboud University
+jrot@cs.ru.nl
+4 Royal Holloway, University of London
+matteo.sammartino@rhul.ac.uk
+5 Cornell University
+alexandra.silva@cornell.edu
+,
+Abstract. Automata learning is a popular technique used to automati-
+cally construct an automaton model from queries. Much research went
+into devising ad hoc adaptations of algorithms for diﬀerent types of au-
+tomata. The CALF project seeks to unify these using category theory in
+order to ease correctness proofs and guide the design of new algorithms.
+In this paper, we extend CALF to cover learning of algebraic structures
+that may not have a coalgebraic presentation. Furthermore, we provide
+a detailed algorithmic account of an abstract version of the popular L ⋆
+algorithm, which was missing from CALF. We instantiate the abstract
+theory to a large class of Set functors, by which we recover for the first
+time practical tree automata learning algorithms from an abstract frame-
+work and at the same time obtain new algorithms to learn algebras of
+quotiented polynomial functors.
+1 Introduction
+Automata learning—automated discovery of automata models from system
+observations—is emerging as a highly eﬀective bug-finding technique with appli-
+cations in verification of passports [3], bank cards [2], and network protocols [23].
+The design of algorithms for automata learning of diﬀerent models is a funda-
+mental research problem, and in the last years much progress has been made in
+developing and understanding new algorithms. The roots of the area go back
+to the 50s, when Moore studied the problem of inferring deterministic finite
+automata. Later, the same problem, albeit under diﬀerent names, was studied
+by control theorists [25] and computational linguists [21]. The algorithm that
+caught the attention of the verification community is the one presented in Dana
+Angluin’s seminal paper in 1987 [11]. She proves that it is possible to infer mini-
+mal deterministic automata in polynomial time using only so-called membership
+
+PAGE 2
+
+2 Van Heerdt et al.
+and equivalence queries. Vaandrager’s CACM article [45] provides an extensive
+review of the literature in automata learning and its applications to verification.
+Angluin’s algorithm, called L ⋆, has served as a basis for many extensions
+that work for more expressive models than plain deterministic automata: I/O
+automata [4], weighted automata [16,31], register automata [34,40,1], nominal
+automata [39], and B¨uchi automata [12]. Many of these extensions were developed
+independently and, though they bear close resemblance to the original algorithm,
+arguments of correctness and termination had to be repeated every time. This
+motivated Silva and Jacobs to provide a categorical understanding of L ⋆ [35] and
+capture essential data structures abstractly, in the hope of developing a generic,
+modular, and parametric framework for automata learning based on (co)algebra.
+Their early work was taken much further in Van Heerdt’s master thesis [27], which
+then formed the basis of a wider project on developing a Categorical Automata
+Learning Framework—CALF.6 CALF was described in the 2017 paper [32], but
+several problems were left open:
+1. An abstract treatment of counterexamples: in the original L ⋆ algorithm, coun-
+terexamples are a core component, as they enable refinement of the state
+space of the learned automaton to ensure progress towards termination.
+2. The development of a full abstract learning algorithm that could readily be
+instantiated for a given model: in essence, CALF provided only the abstract
+data structures needed in the learning process, but no direct algorithm.
+3. Finding suitable constraints on the abstract framework to cover interesting
+examples, such as tree automata [20], that did not fit the constraints in [32].
+In this paper, we resolve the open problems above, and develop CALF further
+to provide concrete learning algorithms for models that are algebras for a given
+functor, which notably include tree automata. In a nutshell, the contributions and
+technical roadmap of the paper are as follows. After recalling some categorical
+notions, the basics of L ⋆ (Section 2), and CALF (Section 3), we provide:
+1. A general treatment of counterexamples (Section 4), together with an abstract
+analysis of progress, that enables termination analysis of a generic algorithm.
+2. A step-by-step generalisation of all components of L ⋆ for models that are
+algebras of a given functor (Section 5).
+3. An instantiation of the abstract algorithm to concrete categories (Section 6),
+providing the first abstractly derived learning algorithm for tree automata.
+The present paper complements other recent work on abstract automata learning
+algorithms: Barlocco, Kupke, and Rot [15] gave an algorithm for coalgebras of a
+functor, whereas Urbat and Schr¨oder [44] provided an algorithm for structures that
+can be represented as both algebras and coalgebras. More recently, Colcombet,
+Petrisan, and Stabile [19] gave an abstract learning algorithm based on modelling
+automata as functors. Our focus is on algebras, such as tree automata, that
+cannot be covered by the aforementioned frameworks. A detailed comparison is
+given in Section 7. We conclude with directions for future work in Section 8.
+6 http://www.calf-project.org
+
+PAGE 3
+
+Learning Generalised Tree Automata 3
+2 Preliminaries
+We now introduce some categorical notions that we will need later in our technical
+development, and describe Angluin’s original L ⋆ algorithm. We assume some prior
+knowledge of category theory (categories, functors); see e.g., [14,36].
+An (E,M)-factorisation system on a category C consists of classes of mor-
+phisms Eand M, closed under composition with isos, such that for every mor-
+phism f in C there exist e∈Eand m∈Mwith f= m◦e, and we have a unique
+diagonal fill-in property. Given a morphism f, we write f◃ and f▹ for the E-part
+and M-part of its factorisation, respectively.
+We work in a category C with finite products and coproducts. When f : X →
+Z and g: Y →Z, we write [f,g] for the unique arrow from X+ Y to Z induced
+by the coproduct. We assume that C admits a fixed factorisation system (E,M),
+where Econsists of epis and Mconsists of monos. We fix a varietor F in C, that
+is, an endofunctor such that there is a free F-algebra monad (T,η,µ). We write
+γX for the F-algebra structure FTX →TX, which is natural in X. Given an
+F-algebra (Y,y), we write f♯: (TX,µX) →(Y,y) for the extension of f: X →Y
+and denote y∗
+= id♯
+Y : (TY,µY) →(Y,y). We often implicitly apply forgetful
+functors. We fix an input object I and an output object O and write FI for the
+functor I+ F(−). Lastly, we assume F preserves E.
+2.1 Abstract Automata
+We recall the automaton definition from Arbib and Manes [13], which we will
+use in this paper, and its basic properties of accepted language and minimality.
+Definition 1 (Automaton). An automaton is a tuple A= (Q,δ,i,o) con-
+sisting of a state space object Q, dynamics δ: FQ→Q, initial states i: I →Q,
+and an output o: Q →O. A homomorphism from Ato A′ = (Q′,δ′,i′,o′) is
+an F-algebra morphism h from (Q,δ) to (Q′,δ′) — that is to say, a function
+h: Q→Q′ with δ′◦Fh= h◦δ — such that h◦i= i′ and o′◦h= o.
+We will use the case of deterministic automata as a running example.
+Example 2. If C= Set with the (surjective, injective) factorisation system,
+F = (−) ×A for a finite set A, I = 1 = {∗}, and O = 2 = {0,1}, we recover
+deterministic automata (DAs) as automata: the state space is a set Q, the
+transition function is the dynamics, the initial state is represented as a function
+1 →Q, and the classification of states into accepting and rejecting ones is
+represented by a function Q→2. In this case we obtain the monad T = (−)×A∗
+,
+with its unit pairing an element with the empty word ε and the multiplication
+concatenating words. The extension of δ: Q×A→Q to δ∗: Q×A∗→Q is the
+usual one that lets the automaton read a word starting from a given state.
+Definition 3 (Language). A language is a morphism TI →O. The language
+accepted by an automaton A= (Q,δ,i,o) is given by LA= TI reachA −−−−→Qo
+−→O,
+where reachA: TI →Q is the reachability map of Agiven by i♯
+.
+
+PAGE 4
+
+4 Van Heerdt et al.
+Algorithm 1 Make table closed and consistent
+Algorithm 2 L ⋆ algo-
+rithm
+1: function Fix(S,E)
+2: 3: 4: 6: 7: while T is not closed or not consistent do
+if T is not closed then
+find t∈S,a∈Asuch that ∀s∈S.T(ta) ̸= T(s)
+5: S ←S∪{sa}
+else if T is not consistent then
+find s1,s2 ∈S, a∈A and e∈E such that
+T(s1) = T(s2) and T(s1a)(e) ̸= T(s2a)(e)
+8: E ←E∪{ae}
+9: return S, E
+1: S ←{ε}
+2: E ←{ε}
+3: S,E ←Fix(S,E)
+4: while EQ(HT) = cdo
+5: S ←S∪prefixes(c)
+6: S,E ←Fix(S,E)
+7: return HT
+Definition 4 (Minimality [13]). An automaton Ais said to be reachable if
+reachA∈E. Ais minimal if it is reachable and every reachable automaton A′
+s.t. LA= LA′ admits a (necessarily unique) homomorphism to A.
+Example 5. Recall the setting from Example 2. The reachability map reachA: 1×
+A∗→Q for a DA A= (Q,δ,i,o) assigns to each word the state reached after
+reading that word from the initial state. The language LA: 1 ×A∗→2 accepted
+by Ais precisely the language accepted by Ain the traditional sense. Reachability
+of Ameans that for every state q∈Q there exists a word that leads to q from
+the initial state. If this is the case, the unique homomorphism into a language-
+equivalent minimal automaton identifies states that accept the same language.
+Here, minimality is equivalent to having a minimal number of states.
+A general study of existence of minimal automata in this setting is given in [10];
+see also [29].
+2.2 The L ⋆ algorithm
+In this section, we recall Angluin’s algorithm L ⋆, which learns the minimal DFA
+accepting a given unknown regular language L. The algorithm can be seen as
+a game between two players: a learner and a teacher. The learner can ask two
+types of queries to the teacher:
+1. Membership queries: is a word w∈A∗in L?
+2. Equivalence queries: is a hypothesis DFA Hcorrect? That is, is LH= L?
+The teacher answers yes or no to these queries. Moreover, negative answers
+to equivalence queries are witnessed by a counterexample—a word classified
+incorrectly by H. The learner gathers the results of queries into an observation
+table: a function T : S∪S·A→2E, where S,E ⊆A∗are finite and T(s)(e) = L(se).
+This function can be depicted as a table where elements of S∪S·A label rows
+(·is pointwise concatenation) and elements of E label columns.
+
+PAGE 5
+
+E
+ε b ab
+S ε 1 0 1
+S·A a 0 1 0
+b 0 0 0
+Learning Generalised Tree Automata 5
+As an example, consider the table on the right,
+over the alphabet A= {a,b}, where S= {ε}and
+E= {ε,b,ab}. This table approximates a language
+that contains ε,ab, but not a,b,bb,aab,bab. Follow-
+ing the visual intuition, we will refer to the part of
+the table indexed by S as the top part of the table,
+and the one indexed by S·A as the bottom part.
+Intuitively, the content of each row labelled by a
+word s approximates the Myhill–Nerode equivalence class of s. This is in fact
+the main idea behind the construction of a hypothesis DFA HT from T: states of
+HT are distinct rows of T, corresponding to distinct Myhill–Nerode equivalence
+classes. Formally, HT = (Q,q0,δ,F) is defined as follows:
+– Q= {T(s) |s∈S}is the set of states;
+– F= {T(s) |s∈S,T(s)(ε) = 1}is the set of final states;
+– q0 = T(ε) is the initial state;
+– δ: Q×A→Q,(T(s),a) →T(sa) is the transition function.
+For F and q0 to be well-defined we need εin E and S respectively. Moreover, for
+δ to be well-defined we need T(sa) ∈Q for all sa∈S·A, and we must ensure
+that the choice of s to represent a row does not aﬀect the transition. These
+constraints are captured in the following two properties.
+Definition 6 (Closedness and consistency). A table T is closed if for all
+t∈S and a∈A there exists s∈S such that T(s) = T(ta). A table is consistent
+if for all s1,s2 ∈S with T(s1) = T(s2) we have T(s1a) = T(s2a) for any a∈A.
+Closedness and consistency form the core of L ⋆, described in Algorithm 2. The sets
+S and E are initialised with the empty word ε(lines 1 and 2), and extended as a
+closed and consistent table is built using the subroutine Fix, given in Algorithm 1.
+The main loop uses an equivalence query, denoted EQ, to ask the teacher whether
+the hypothesis induced by the table is correct. If the result is a counterexample
+c, the table is updated by adding all prefixes of c to S (line 5) and made closed
+and consistent again (line 6). Otherwise, the algorithm returns with the correct
+hypothesis (line 7). See Appendix A for an example.
+3 The abstract data structures in CALF
+We recall the basic notions underpinning CALF [32]: generalisations of the
+observation table, closedness, consistency and hypothesis. The generalised table
+is called a wrapper:
+Definition 7 (Wrapper). A wrapper for an object Q is a pair of morphisms
+W= S α GG Q, Q β
+GG P
+We denote the factorisation of β◦α by S eW
+GG GG HW GG mW
+GG P.
+
+PAGE 6
+
+6 Van Heerdt et al.
+This will be instantiated with Q the state space of the target automaton, S a
+collection of row labels of an observation table, and P a collection of possible
+values of the rows. Then α selects states in Q, and β classifies them into P.
+We note that although such α and β underly the learning algorithm, they
+are not actually known to the learner, as they explicitly involve the unknown
+target automaton. However, we will see that we only need to represent certain
+compositions involving these morphisms, and that when α and β are chosen
+appropriately it will be possible to compute these compositions.
+Example 8 (Observation table wrapper). Recall the DA setting from Example 2
+and consider a DA A= (Q,δ,i,o). For S ⊆A∗ and E ⊆A∗, we can define a
+wrapper W= S αS
+GG Q, Q βE
+GG 2E for Q as follows:
+αS(w) = reachA(∗,w) βE(q)(e) = (o◦δ∗)(q,e).
+The composition βE◦αS: S →2E is precisely the top part of the observation table
+of L ⋆, with rows S and columns E. In fact, we have (βE ◦αS)(s)(e) = LA(∗,se).
+The image of βE ◦αS is the set of rows that appear in the table. In L ⋆, this
+set is used as states of the hypothesis, and in our setting can be obtained as
+HW, recalling that the (surjective, injective) factorisation system in Set gives
+factorisation through the image.
+Before we define hypotheses in this abstract framework, we need generalised
+notions of closedness and consistency.
+Definition 9 (Closedness and consistency). Given a wrapper
+W= S α GG Q, Q β
+GG P ,
+where Q is the state space of an automaton (Q,δ,i,o), we say that Wis closed if
+there exist morphisms iW: I →HWand closeW: FS →HWmaking the diagrams
+below commute.
+Fα
+δ
+FS FQ Q
+β
+i
+I Q
+iW β
+mW
+HW P
+closeW
+mW
+HW P
+Furthermore, we say that Wis consistent if there exist morphisms oW: HW→O
+and consW: FHW→P making the diagrams below commute.
+eW
+S HW
+FeW
+FS FHW
+α oW
+Fα
+o
+Q O
+δ β
+FQ Q P
+Example 10. In the DA case, generalised closedness and consistency instantiate
+to the conditions allowing the hypothesis to be well-defined in L ⋆ (see Section 2.2):
+consW
+
+PAGE 7
+
+Learning Generalised Tree Automata 7
+Closedness: The wrapper (αS,βE) is closed if: (i) there exists s∈S such that
+(βE ◦αS)(s) = (βE ◦i)(∗) and; (ii) for all s ∈S and a ∈A there exists
+sa ∈S such that (βE ◦αS)(sa) = (βE ◦δ)(αS(s),a). Condition (i) holds
+immediately if ε ∈S—the function (βE ◦i)(∗): E →2 maps e ∈E to
+LA(∗,e). Condition (ii) corresponds to closedness in Definition 6. In fact,
+βE ◦δ◦(αS ×idA): S×A→2E represents the lower part of the observation
+table associated with S and E.
+Consistency: The wrapper (αS,βE) is consistent if: (iii) for all s1,s2 ∈S such
+that (βE ◦αS)(s1) = (βE ◦αS)(s2) we have (o◦αS)(s1) = (o◦αS)(s2) and;
+(iv) for all a∈Awe have (βE◦δ)(αS(s1),a) = (βE◦δ)(αS(s2),a). Condition
+(iii) holds immediately if ε∈E—the function o◦αS: S →2 maps s∈S to
+LA(∗,s). Condition (iv) corresponds to consistency in Definition 6.
+To determine these properties, we do not need the individual descriptions of
+αS and βE, which refer to the target automaton and are thus not available to
+the learner; we just need the compositions βE ◦αS, βE ◦i, βE ◦δ◦(αS ×idA),
+and o◦αS, which can be determined using membership queries in this case. In
+general, for any instantiation of our abstract algorithm it will be important to
+show that these compositions (adapted to the wrapper and functor involved) can
+be determined and used concretely by the instantiated algorithm.
+So far, we have used the wrapper to obtain the state space HW of the hypothesis.
+When a wrapper is closed and consistent, we can equip HWwith a full automaton
+structure, leveraging the unique diagonal fill-in property of the factorisation.
+Definition 11 (Hypothesis). A closed and consistent wrapper
+W= S α GG Q,Q β
+GG P
+for (Q,δ,i,o) induces a hypothesis automaton HW= (HW,δW,iW,oW), where
+δW is the unique diagonal in the commutative square below.
+FeW
+FS FHW
+δW
+closeW consW
+mW
+HW P
+4 Counterexamples, generalised
+We now provide a key missing element for the development and analysis of
+an abstract learning algorithm in CALF: counterexamples. In the original L ⋆
+algorithm, counterexamples are used to refine the state space of the hypothesis—
+namely the representations of the Myhill–Nerode classes of the language being
+learned. A crucial property for termination, which we prove at a high level
+of generality in this section, is that adding counterexamples to a closed and
+consistent table results in a table which is either not closed or not consistent, and
+hence needs to be extended. Such an extension, in turn, results in progress being
+
+PAGE 8
+
+8 Van Heerdt et al.
+made in the algorithm. We show how we can use recursive coalgebras [41,43] as
+witnesses for discrepancies—i.e., as counterexamples—between a hypothesis and
+the target language in our abstract approach.7 Here, and throughout the paper,
+we fix a target automaton At = (Qt,δt,it,ot) whose language we want to learn.
+Definition 12 (Recursive coalgebras). An F-coalgebra ρ: S →FS is recur-
+sive if for every algebra x: FX →X there is a unique morphism xρ: S →X
+making the diagram below commute.
+Fxρ
+FS FX
+ρ
+x
+xρ
+S X
+Example 13. A prefix-closed subset S ⊆A∗is easily equipped with a coalgebra
+structure ρ: S →1 + S×A that detaches the last letter from each non-empty
+word and assigns ∗to the empty one. Such a coalgebra is recursive, with the
+unique map into an algebra being defined as a restricted reachability map. In
+fact, under certain conditions that are satisfied in the DA setting, recursivity of
+a coalgebra is equivalent to having a coalgebra homomorphism into the initial
+algebra [8, Corollary 5.6]. This means that every recursive coalgebra is isomorphic
+to one given by a prefix-closed multiset of words. If the unique morphism into
+the initial algebra is injective, then the multiset becomes a set.
+Given an automaton A= (Q,δ,i,o) and a recursive coalgebra ρ: S →FIS, the
+map S [i,δ]ρ
+−−−→Qcan be seen as a generalised reachability map, allowing states in Q
+to be reached from S. We use this map to derive a notion of generalised language
+induced by a recursive coalgebra. This will be used to compare languages of
+the hypothesis and of the target automaton with respect to a specific recursive
+coalgebra, i.e., a specific counterexample.
+Definition 14 (ρ-languages). Given a recursive coalgebra ρ: S →FIS and an
+automaton A= (Q,δ,i,o), the ρ-language of Ais Lρ
+A= S [i,δ]ρ
+−−−→Qo
+−→O.
+For instance, in the case of a DA Aand a recursive coalgebra as in Example 13,
+Lρ
+Ais the restriction of the language of Ato the prefix-closed set of words S.
+In Algorithm 2, a counterexample is produced by the teacher (line 4) when
+the hypothesis does not agree with the target automaton. We now generalise
+counterexamples to wrappers: counterexamples are recursive coalgebras on which
+the languages of the hypothesis and of the target automaton disagree.
+Definition 15 (Counterexample). A closed and consistent wrapper Wis said
+to be correct up to a recursive ρ: S →FIS if Lρ
+HW
+= Lρ
+At
+. A counterexample
+for W(or HW) is a recursive ρ: S →FIS such that Wis not correct up to ρ.
+The following guarantees incorrect hypotheses yield counterexamples.
+7 Recursive coalgebras have been used to generalise prefix-closedness in an automata
+learning context in earlier work [28], as well as to generalise counterexamples [15,44].
+
+PAGE 9
+
+Learning Generalised Tree Automata 9
+Algorithm 3 Make wrapper closed
+and consistent
+Algorithm 4 Abstract automata
+learning algorithm
+1: function Fix(α,β)
+2: while (α,β) not closed
+or not consistent do
+3: if (α,β) not closed then
+4: α←α
+′ such that (α
+′,β) is
+locally closed w.r.t. α
+5: 6: else if (α,β) not consistent then
+β ←β′ such that (α,β′) is
+locally consistent w.r.t. β
+7: return α,β
+1: α,β ←Fix(!: 0 →Qt,!: Qt →1)
+2: while EQ(H(α,β)) = ρ: S →FIS do
+3: α←α
+′ s.t. α
+′▹ = [α,[it,δt]ρ]▹
+4: α,β ←Fix(α,β)
+5: return H(α,β)
+Proposition 16 (Language equivalence via recursion). Given an automa-
+ton A= (Q,δ,i,o), we have LAt
+= LAif and only if Lρ
+= Lρ
+At
+Afor every recursive
+coalgebra ρ: S →FIS.
+Corollary 17 (Counterexample existence). Given a closed and consistent
+wrapper Wfor Qt, we have LHW ̸= LAt iﬀ there exists a counterexample for W.
+The next step in Algorithm 2 is to fix the table by adding all prefixes of
+the counterexample to S (line 5). We generalise this step by incorporating the
+counterexample given by a recursive coalgebra into the wrapper. In the DA case,
+this precisely corresponds to adding a prefix-closed subset to S. The following
+results say that doing so will lead to either a closedness or a consistency defect.
+In other words, we give theoretical guarantees that resolving counterexamples
+results in progress being made towards convergence.
+Theorem 18 (Resolving counterexamples). Given a closed and consistent
+β
+wrapper W= S αGG Qt , Qt
+GG P and a recursive coalgebra ρ: S′→FIS′, the
+following holds. If the wrapper W′ = ([α,[it,δt]ρ],β) is closed and consistent,
+then Wis correct up to ρ.
+This theorem is used contrapositively: given a closed and consistent wrapper,
+adding a counterexample yields a wrapper that is either not closed or inconsistent.
+5 Generalised Learning Algorithm
+We are now in a position to describe our general algorithm. Similarly to L ⋆ (Sec-
+tion 2.2) it is organised into two procedures: Algorithm 3, which contains the
+abstract procedure for making a wrapper closed and consistent, and Algorithm 4,
+containing the learning iterations. These generalise the analogous procedures in
+L ⋆, Algorithm 1 and Algorithm 2, respectively. We note again that although the
+
+PAGE 10
+
+10 Van Heerdt et al.
+algorithmic description operates on a wrapper (α,β), these individual morphisms
+will not be known to the learner. In fact, at this level of abstraction the descrip-
+tions should be seen as algorithmic templates rather than concrete algorithms.
+An instantiation must ensure that at least the compositions required to determine
+the closedness and consistency conditions and to construct the hypothesis can be
+maintained. These compositions are β◦α, β◦it, β◦δt ◦Fα, and ot ◦α. We have
+previously shown how these instantiate to recover L ⋆, and in Section 6 we will
+discuss the class of examples given by generalised tree automata.
+In Algorithm 4, the wrapper is initialised with trivial maps and extended to
+be closed and consistent using the subroutine Fix (line 1). The equivalence query
+for the main loop (line 2) returns a counterexample in the form of a recursive
+coalgebra, which is used to update the wrapper (line 3, which will be explained
+in more detail later, when we define runs). The updated wrapper is passed on to
+the subroutine Fix (line 4) to be made closed and consistent.
+A crucial point for Algorithm 3 is defining what it means to resolve the
+“current” closedness and consistency defects. We call these local defects, meaning
+the ones that can be directly detected in the current wrapper. For DAs, local
+closedness defects are rows from the bottom part missing in the top part, and the
+empty word row if it is missing. Local consistency defects are pairs of row labels
+which are distinguished by the target language, or with diﬀering rows when the
+labels are extended with a single symbol.
+We first introduce additional notions to formalise these ideas. We partially
+order the subobjects and quotients of the target automaton’s state space Qt in
+the usual way. Given two subobjects j: J →Qt and k: K →Qt, we say j ≤k if
+there is f: J →K such that k◦f= j. Intuitively, j is “contained” in k. Given
+two quotients x: Qt X and y: Qt Y, we say x≤y if there exists g: X →Y
+such that y= g◦x. Intuitively, x is “finer” than y.
+Now, consider a wrapper (α,β) for Qt. We have that α▹ and β◃ are a subobject
+and a quotient of Qt, respectively. For instance, in the DA case, α▹ is the set of
+states in Qt currently represented by the table, and β◃ is the equivalence relation
+on states induced by the rows. We can now say another wrapper (α′,β′) is a
+locally closed extension of (α,β) if (a) it represents at least the same states of
+the target automaton as α, formalised α▹ ≤α′▹, and; (b) it solves the closedness
+defects present in α. Local consistency is analogous: it requires the extended
+wrapper to distinguish at least the same states of Qt as the original one.
+Definition 19 (Local closedness and consistency). Consider a wrapper
+′
+W= S′ α
+GG Qt , Qt
+β′
+GG P′
+We call Wlocally closed w.r.t. a morphism α: S →Qt if α▹ ≤α′▹ and there are
+morphisms iW: I →HW and lcloseW,α: FS →HW s.t. these diagrams commute:
+it
+I Qt
+Fα
+δt
+FS FQt Qt
+β′
+lcloseW,α
+mW
+HW P′
+mW
+HW P′
+iW β′
+
+PAGE 11
+
+Learning Generalised Tree Automata 11
+Given β: Q→P, we say that Wis locally consistent w.r.t. β if β′◃ ≤β◃ and
+there exist morphisms oW: HW →O and lconsW,β: FHW →P making the
+diagrams below commute.
+eW
+S′ HW
+α
+′ oW
+ot
+Qt O
+FeW
+FS′ FHW
+Fα′
+lconsW,β
+δt β
+FQt Qt P
+A wrapper (α,β) is closed if and only if it is locally closed w.r.t. αand consistent
+if and only if it is locally consistent w.r.t. β.
+Example 20. For the case of DAs, consider a wrapper (αS′,βE′) representing an
+observation table (S′,E′) for the target DA At (see Example 8):
+Local closedness: Given αS: S →Qt, (αS′,βE′) is locally closed w.r.t. αS
+if (1) S ⊆S′ (to ensure α▹
+S ≤α▹
+S′); (2) S′ contains the empty word (left
+diagram); and (3) any row in the bottom part of the table (S,E′) occurs in
+the top part of (S′,E′) (right diagram).
+Local consistency: Similarly, given βE: Qt →2E, (αS′,βE′) is locally consis-
+tent w.r.t. βE if (1) E ⊆E′(to ensure β◃
+E′ ≤β◃
+E); (2) E′contains the empty
+word (left diagram); and (3) for all s,s′∈S′and a∈A, if s and s′map to
+the same row in the top part of (S′,E′), then the rows for saand s′aare the
+same in the bottom part of (S′,E) (right diagram).
+In Algorithm 3 we assume that we can always find locally closed and consistent
+wrappers (lines 4 and 6 respectively). This assumption holds in general for local
+closedness: for each wrapper (α,β) for Qt we can always find α′such that (α′,β)
+is locally closed w.r.t. α.
+Lemma 21. Given a wrapper (α,β) for Qt, ([α,[it,δt]◦FIα],β) is locally closed
+w.r.t. α.
+This result is enabled by the algebraic nature of automata. Local consistency is
+not inherently algebraic, so ensuring it takes more eﬀort. We shall see in Section 6
+that existence of locally closed/consistent extensions can be proved constructively
+for a broad class of automata.
+Termination. To analyse termination of Algorithm 4, we introduce its runs.
+Definition 22 (Run of the algorithm). A run of the algorithm is a stream
+of wrappers Wn = (αn,βn) satisfying the following conditions:
+1. α0 : 0 →Qt and β0 : Qt →1 are the unique morphisms;
+2. if Wn is not closed, then βn+1 = βn and αn+1 is s.t. (αn+1,βn) is locally
+closed w.r.t. αn;
+3. if Wn is closed but not consistent, then αn+1 = αn and βn+1 is s.t. (αn,βn+1)
+is locally consistent w.r.t. βn;
+4. if Wn is closed and consistent and we obtain a counterexample ρ: S →FIS
+for Wn, then α▹
+n+1 = [αn,[it,δt]ρ]▹ and βn+1 = βn; and
+
+PAGE 12
+
+12 Van Heerdt et al.
+5. if Wn is closed and consistent and correct up to all recursive FI-coalgebras,
+then Wn+1 = Wn.
+Note that, in point 4 above and in line 3 of Algorithm 4, we admit a more general
+counterexample resolution than Theorem 18: we only require that αn+1 and
+[αn,[it,δt]ρ] represent the same states of the target automaton. This captures
+how observation tables are updated in practice; for instance in L ⋆ a counterexample
+prefix already in the table is discarded.
+Proposition 23. Algorithm 4 halts if and only if for all runs {Wn}n∈N there is
+n with Wn+1 = Wn.
+We can establish an invariant on the order of subsequent wrappers in runs.
+Lemma 24. Let {Wn = (αn,βn)}n∈N be a run. For all n ∈N, we have α▹
+n ≤
+α▹
+n+1 and β◃
+n+1 ≤β◃
+n. Moreover, if α▹
+n+1 ≤α▹
+n, then αn+1 = αn; if β◃
+n ≤β◃
+n+1,
+then βn+1 = βn.
+Putting these results together, we conclude that the algorithm terminates
+with a correct automaton, which is minimal under certain conditions. Satisfaction
+of the requirement on recursive coalgebras ρk depends on the implementation of
+counterexamples and closing of wrappers; for DAs, it suﬃces to keep the set of
+row labels S prefix-closed.
+Theorem 25 (Termination). If Qt has finitely many subobject and quotient
+isomorphism classes, then for all runs {Wn = (αn,βn)}n∈N there exists n∈N
+such that Wn is closed and consistent and its hypothesis is correct. If At is
+minimal and for all k ∈N there exists a recursive ρk: Sk →FISk such that
+αk = [it,δt]ρk, then the final hypothesis is minimal.
+6 Generalised Tree Automata
+We now instantiate the above development to a wide class of Set endofunctors.
+This yields an abstract algorithm for generalised tree automata—i.e., automata
+accepting sets of trees, possibly subject to equations—including bottom-up tree
+automata and unordered tree automata. We first introduce the running examples.
+Example 26 (Tree automata). Let Γ be a ranked alphabet, i.e., a finite set where
+γ ∈Γ comes with arity(γ) ∈N. The set of Γ-trees over a finite set of leaf symbols
+I is the smallest set TΓ(I) such that I ⊆TΓ(I), and for all γ ∈Γ we have that
+t1,...,tarity(γ) ∈TΓ(I) implies (γ,t1,...,tarity(γ)) ∈TΓ(I). The alphabet Γ gives
+rise to the polynomial functor FX=
+γ∈Γ Xarity(γ). The free F-algebra monad
+is precisely TΓ, where the unit turns elements into leaves, and the multiplication
+flattens nested trees into a tree. A bottom-up deterministic tree automaton [20]
+is then an automaton over F, with finite I and O= 2.
+Example 27 (Unordered tree automata). Consider the finite powerset functor
+Pf : Set →Set, mapping a set to its finite subsets. The corresponding free
+
+PAGE 13
+
+Learning Generalised Tree Automata 13
+Pf -monad maps a set X to the set of finitely-branching unordered trees with
+nodes in X. Automata over Pf , with output set O= 2 and finite I, accept sets of
+such trees. Note that unordered trees can be seen as trees over a ranked alphabet
+Γ= {si |i∈N}, where arity(si) = i, satisfying equations that collapse duplicate
+branches and identify lists of branches up to permutations.
+Automata in these examples are algebras for endofunctors with the following
+properties: they are strongly finitary [9]—i.e., they are finitary and preserve finite
+sets—and they preserve weak pullbacks. We turn these into a global assumption,
+used in several places; in particular, that F is strongly finitary is used to guarantee
+the existence of finite counterexamples.
+Assumption 28. In the remainder we take C= Set with the (surjective, in-
+jective) factorisation system, assume F is strongly finitary and preserves weak
+pullbacks, and I finite.
+If the target automaton At is finite, the algorithm terminates by Theorem 25.
+We start with the central notion of contextual wrapper, a specific form of
+wrapper using contexts to generalise string concatenation to trees. We then
+show that contextual wrappers enable eﬀective procedures for local closedness
+and consistency, and for computing hypotheses. Moreover, they can always be
+updated via finite counterexamples. Altogether, this makes the ingredients of our
+abstract algorithm concrete for generalised tree automata.
+6.1 Contextual wrappers
+Denote by 1 the set { }. Given x∈X for any set X, we write ex for the function
+1 →X that assigns xto . We use the set 1 to define the set of contexts T(I+1),
+where the holes occurring in a context c∈T(I+ 1) can be used to plug in
+further data such as another context or a tree, e.g., in the case of Examples 26
+and 27. In fact, it is well known that T(I+ (−)) forms a monad with unit ˆ
+ηX
+turning each hole from X into a context, and multiplication ˆ
+µX plugging a
+context into another context [38].
+Definition 29 (Contextual wrapper). Let S ⊆TI and E ⊆T(I+ 1). Now:
+– αS: S →Qt is defined as the restriction of the reachability map of At to S;
+– βE: Qt →OE is defined as the function given by βE(q)(e) = (ot ◦[it,eq]♯)(e).
+A wrapper is called contextual if it is of the form (αS,βE) for some S and E.
+Intuitively, βE classifies states by plugging them into every context in E and
+comparing the resulting outputs. In the DA case, contextual wrappers are equiva-
+lent to those of Example 8, where row labels are plugged into word contexts—i.e.,
+words of the form·e, with e∈A∗—to achieve string concatenation.
+We now show how to compute several morphisms induced by a wrapper.
+These morphisms, intuitively, correspond to diﬀerent parts of an observation
+table, and are used for (local) closedness and consistency, and to construct the
+hypothesis. In particular, we show that they can be computed concretely by
+querying the language LAt , i.e., via membership queries.
+
+PAGE 14
+
+14 Van Heerdt et al.
+Proposition 30 (Computing wrapper morphisms). Given S ⊆TI with
+inclusion j: S →TI and E ⊆T(I+ 1) with inclusion k: E →T(I+ 1), we have:
+– The top observation table βE ◦αS: S →OE
+, s→LAt
+◦µI ◦T[ηI,j◦es]◦k;
+– The bottom observation table βE ◦δt ◦FαS: FS →OE
+, t →LAt
+◦µI ◦
+T[ηI,γI ◦Fj◦et]◦k;
+– The input rows βE ◦it : I →OE given by (βE ◦it)(x) = LAt
+◦T[idI,ex]◦k;
+– The row output ot ◦αS: S →O given by (ot ◦αS)(s) = LAt (s).
+Example 31. For tree automata, a contextual wrapper is as follows: S ⊆TΓ(I)
+is a set of Γ-trees over I, and E ⊆TΓ(I+ 1) is formed by contexts, i.e., Γ-trees
+where a special leaf may occur, or equivalently Γ + -trees, where Γ + is
+the signature Γ extended with an additional constant . Plugging into a context
+intuitively amounts to replacing this leaf with a tree.
+We now give the intuition behind the maps of Proposition 30:
+– The top part of the observation table has rows labelled by trees in S, columns
+by contexts in E, and rows are computed by plugging their tree labels into
+each column context and querying the language. When E contains only
+contexts with exactly one instance of , this corresponds precisely to the
+observation tables of [22,17].
+– The bottom part contains rows labelled over elements of FS=
+γ∈Γ Sarity(γ)
+,
+i.e., trees obtained by adding a new root symbol to those from S. This
+generalises adding an alphabet symbol to row labels, as done in the bottom
+observation table of L ⋆. Rows are computed as in the top part, by plugging
+their tree labels into contexts E and querying.
+– The input rows are those for the leaves I, and the row output function queries
+the language for each row label.
+The case of unordered trees is analogous, with a key diﬀerence: wrapper maps
+are now up to equations, as both S and E are sets of unordered trees. The
+corresponding observation table can be understood as containing equivalence
+classes of rows and columns. For instance, the bottom part has only one successor
+row for each set of trees in S, whereas in the previous case we have one successor
+row for each symbol γ ∈Γ and arity(γ)-list of trees from S.
+Hypotheses. Recall that, given a closed and consistent wrapper (αS,βE), the
+state space of the associated hypothesis is given by the image of βE◦αS: S →OE
+.
+Since S and E are finite sets, we can compute the image of this function. For
+bottom-up and unordered tree automata, as in the DA case (see Example 8),
+this image consists of distinct rows. The initial states, outputs and dynamics of
+the hypothesis automaton are defined as follows:
+iHW(x) = (βE ◦it)(x) oHW(eW(s)) = (ot ◦αS)(s)
+δHW(F(eW)(x)) = (βE ◦δt ◦FαS)(x).
+Closedness and consistency ensure well-definedness. We know from Proposition 30
+how to compute those functions via membership queries.
+
+PAGE 15
+
+Learning Generalised Tree Automata 15
+6.2 Witnessing local closedness and consistency
+We now consider local closedness and consistency. In the current setting, these
+amount to equality checks on finite structures, which can be performed eﬀectively.
+Lemma 32 (Local closedness for Set automata). Given S,S′⊆TI and
+E ⊆T(I+ 1) such that S ⊆S′
+, (αS′,βE) is locally closed w.r.t. αS if there exist
+k: I →S′ and ℓ: FS →S′ such that (1) αS′◦k= it and (2) αS′◦ℓ= δt ◦FαS.
+Example 33. For bottom-up tree automata, local closedness holds if the table
+(S′,E) already contains each leaf row (equation 1), and it contains every successor
+row for S, namely FS=
+γ∈Γ Sarity(γ) (equation 2). For unordered tree automata
+the condition is similar, and now involves successor trees in Pf (S).
+Lemma 34 (Local consistency for Set automata). Let S ⊆TI and E ⊆
+E′ ⊆ T(I + 1), with S finite. Furthermore, suppose that for s,s′ ∈ S with
+(βE′ ◦αS)(s) = (βE′ ◦αS)(s′) we have: (1) (ot ◦αS)(s) = (ot ◦αS)(s′); and
+(2) βE ◦δt ◦F(αS ◦[idS,es]) = βE ◦δt ◦F(αS ◦[idS,es′]). Then W= (αS,βE′)
+is locally consistent w.r.t. βE.
+Example 35. For bottom-up tree automata, local consistency amounts to require
+the following for the table for (S,E′). For all s,s′∈S corresponding to the same
+row we must have: (1) s and s′are both accepted/rejected; (2) successor rows
+obtained by plugging s and s′into the same one-level context from F(S+ 1) =
+γ∈Γ (S+ { })arity(γ) are equal.
+For unordered-tree automata, we need to compare sand s′only when they are
+equationally inequivalent. Note that one-level contexts are also up to equations,
+which means that the position of the hole in the context is irrelevant for computing
+extensions of s and s′
+.
+We now develop procedures for fixing local closedness and consistency defects.
+First, we show that we can always extend S to make the wrapper locally closed.
+Proposition 36. Given finite S ⊆TI and E ⊆T(I+ 1), there exists a finite
+S′⊆TI such that (αS′,βE) is locally closed w.r.t. αS. If there exists a recursive
+ρ: S →FIS such that [ηI,γI]ρ: S →TI is the inclusion, then there exists a
+′
+recursive ρ′: S′→FIS′ such that [ηI,γI]ρ
+: S′→TI is the inclusion.
+The condition of [ηI,γI]ρ: S →TI being the inclusion map in the above
+result amounts to prefix closedness of S in tree automata, see Example 37 below.
+Further, under this condition we have that αS = [it,δt]ρ, since the reachability
+map is an algebra morphism, and similarly for αS′. This is crucial to satisfy the
+requirements for minimality of the termination theorem.
+Example 37. To better understand the above proposition, it is worth describing
+what recursive coalgebras are for the automata of Examples 26 and 27. For bottom-
+up tree automata, they are coalgebras ρ: S → γ∈Γ Sarity(γ) +Isatisfying suitable
+conditions. Subtree-closed subsets of TΓ(I) are sets of trees closed under taking
+subtrees. Every subtree-closed S can be made into a recursive coalgebra that
+
+PAGE 16
+
+16 Van Heerdt et al.
+returns the root symbol and its arguments, if applied to a tree of non-zero depth,
+and a leaf otherwise. For unordered tree automata, ρ: S →Pf S+ I will just
+return the set of subtrees or a leaf.
+The proof of Proposition 36, which can be found in Appendix D, is constructive
+and describes a naive procedure to make a table locally closed: adding all (finitely-
+many) successor rows to the table. For instance, in the case of tree automata, one
+adds rows obtained by adding a new root symbol to trees labelling rows in all
+possible ways, for each symbol in the alphabet. One may optimise the algorithm
+by instead adding only missing rows.
+We now show how to fix local consistency, by extending a finite set of column
+labels E to a finite set E′such that the resulting wrapper is locally consistent.
+Proposition 38. Given finite S ⊆TI and E ⊆T(I+ 1), define E′⊆T(I+ 1)
+by E′
+= E ∪ {(ηI+1 ◦κ2)( )} ∪ {(ˆ
+µ1 ◦T(idI +cx))(e) |e∈E,x∈F(S+ 1)}
+where cx: 1 →T(I+ 1), with cx = γI+1 ◦F[Tκ1 ◦j,ˆ
+η1]◦ex, and j: S →TI is set
+inclusion. It holds that E′ is finite and (αS,βE′) is locally consistent w.r.t. βE.
+For tree automata, E′is Eplus the empty context and the trees obtained by
+plugging one-level contexts formed from the current row labels (see Example 35)
+into all contexts in E. This amounts to extending columns so that all consistency
+defects are fixed. One can optimise the procedure above by incrementally adding
+to Eonly those elements of E′that result in new pairs of rows being distinguished.
+6.3 Finite counterexamples
+Finally, we show that the teacher can always supply a finite counterexample.
+Proposition 39 (Language equivalence via finite recursion). Given an
+automaton A= (Q,δ,i,o), we have LAt
+= LA iﬀ Lρ
+= Lρ
+At
+A for all recursive
+ρ: S →FIS such that S is finite.
+Corollary 40 (Finite counterexamples). Given a closed and consistent
+wrapper Wfor Qt, we have LHW ̸= LAt iﬀ there exists a counterexample ρ: S →
+FIS for Wsuch that S is finite.
+Example 41. Recall from Example 37 that finite recursive coalgebras for bottom-
+up (resp. unordered) tree automata are coalgebras ρ: S → γ∈Γ Sarity(γ) + I
+(resp. ρ: S →Pf S+ I). Thus, finite counterexamples are recursive coalgebras of
+this form where S is finite or, more concretely, a finite subtree-closed set of trees.
+Given a finite counterexample, if αS arises from a recursive coalgebra ρ (e.g.,
+when S is prefix-closed), updating the wrapper in line 3 of Algorithm 4 can be
+done as follows: (1) combine ρ with the recursive coalgebra in Corollary 40 via a
+coproduct (which preserves recursiveness); (2) take a suitable factorisation to
+make sure that there is an inclusion of S into TI, and thus that the updated αS′
+forms a contextual wrapper (see Lemma 48 for a formal justification). Concretely,
+the latter step amounts to removing multiple copies of rows with the same label.
+Altogether, these steps take the union of the current rows with the (prefix-closed)
+counterexample, and guarantee that αS′ again arises from a recursive coalgebra.
+
+PAGE 17
+
+Learning Generalised Tree Automata 17
+6.4 Minimality
+Theorem 25 gives suﬃcient conditions for minimality of the automaton obtained
+from the algorithm, namely: each α arises from a recursive coalgebra, and the
+target automaton should be minimal. For the first condition to hold, there are
+two parts of the algorithm that need to be implemented appropriately, as they
+change α: closing the table and adding counterexamples. This can always be done:
+for closing the table, this follows from Proposition 36; for counterexamples, the
+strategy outlined in the previous section yields a wrapper of the desired form. As
+for the second condition, a minimal automaton exists if the functor F preserves
+arbitrary cointersections, which is the case iﬀ F is finitary [10].
+7 Related work
+This paper proceeds in the line of work on categorical automata learning started
+in [35], and further developed in the CALF framework [32,33]. CALF provides
+abstract definitions of closedness, consistency, and hypothesis and several tech-
+niques to analyse and guide the development of concrete learning algorithms.
+CALF operates at a high level of abstraction and previously did not include an
+explicit learning algorithm. We discuss two further recent categorical approaches
+to learning, which make stronger assumptions than CALF in order to allow for
+the definition of concrete algorithms. The present paper is a third such approach.
+Barlocco et al. [15] proposed an abstract algorithm for learning coalgebras,
+where tests are formed by an abstract version of coalgebraic modal logic. On the
+one hand, the notion of wrapper and closedness from CALF essentially instantiate
+to that setting; on the other hand, the combination of logic and coalgebra is
+what enables to define an actual algorithm in [15]. The current work focuses
+on algebras rather than coalgebras, and is orthogonal. In particular, it covers
+(bottom-up) tree automata, which are outside the scope of [15].
+Urbat and Schr¨oder proposed another categorical approach to automata
+learning [44], which—similarly to the work of Barlocco et al.—makes stronger as-
+sumptions than CALF in order to define a learning algorithm. Their work focuses
+primarly on automata, assuming that the systems of interest can be viewed both
+as algebras and coalgebras, and the generality comes from allowing to instantiate
+these in various categories. Moreover, it allows covering algebraic recognisers
+in certain cases, through a reduction to automata over a carefully constructed
+alphabet; this (orthogonal) extension allows covering, e.g., ω-languages as well
+as tree languages. However, the reduction to automata makes this process quite
+diﬀerent than the approach to tree learning in the present paper: it makes use of
+an automaton over all (flat) contexts, yielding an infinite alphabet, and therefore
+the algorithmic aspect is not clear. The extension to an actual algorithm for
+learning tree automata is mentioned as future work in [44]. In the present paper,
+this is achieved by learning algebras directly.
+Yet another categorical approach to learning was proposed recently by Col-
+combet, Petrisan, and Stabile [19]. Here, the way automata are modelled is rather
+
+PAGE 18
+
+18 Van Heerdt et al.
+diﬀerent: not as algebras or coalgebras within a category, but as functors from
+a structure category to an output category. So far this has led the authors to
+develop an abstract automata learning algorithm that generalises algorithms
+for DFAs, weighted automata, and subsequential transducers. However, as their
+structure category is built by generating morphisms representing words by start-
+ing with a morphism for each alphabet symbol and closing under composition, it
+is unclear whether this approach could cover tree automata.
+Concrete algorithms for learning tree automata and languages have appeared
+in the literature. The inference of regular tree languages using membership and
+equivalence queries appeared in [22], extending earlier work of Sakakibara [42].
+Later, [17] provided a learning algorithm for regular tree automata using only
+membership queries. The instantiated algorithm in our paper has elements (such
+as the use of contexts) close to the concrete algorithms. The focus of the present
+paper is on presenting an algebraic framework that can eﬀectively be instantiated
+to recover such concrete algorithms in a modular and canonical fashion, with
+proofs of correctness and termination stemming from the general framework.
+8 Future Work
+This paper makes use of the free monad of a functor F in the formulation of
+the generalised learning algorithm, and hence can only deal with quotienting
+in a restricted setting, namely by flat equations in the presentation of F. It
+remains an open challenge to extend the present algorithm to a setting with more
+general equations. For the concrete case of pomset languages [24,26] represented
+by bimonoids [37], we note that we have succesfully instantiated the abstract
+algorithm described in this paper, and augmented it to include optimisations
+specific to the equations that hold in that setting [30]. In future work, we aim to
+extend the ideas behind these optimisations to the abstract setting, as well.
+Another direction is to extend the framework with side-eﬀects, encoded by a
+monad, in the style of [33]. This would enable learning more compact automata—
+albeit with richer, monadic, transitions—representing languages and, as a concrete
+instance, provide an active learning algorithm for weighted tree automata.
+Acknowledgements T. Kapp´e was partially supported by the European Union’s
+Horizon 2020 research and innovation programme under the Marie Sklodowska-
+Curie grant agreement No. 101027412 (VERLAN), as well as ERC Starting
+Grant 679127 (ProFoundNet). Gerco van Heerdt, Matteo Sammartino, and
+Alexandra Silva were partially supported by the EPSRC Standard Grant CLeVer
+(EP/S028641/1).
+References
+1. Aarts, F., Fiter˘au-Bros
+, tean, P., Kuppens, H., Vaandrager, F.W.: Learning reg-
+ister automata with fresh value generation. In: ICTAC. pp. 165–183 (2015).
+https://doi.org/10.1007/978-3-319-25150-9 11
+
+PAGE 19
+
+Learning Generalised Tree Automata 19
+2. Aarts, F., de Ruiter, J., Poll, E.: Formal models of bank cards for free. In: ICST.
+pp. 461–468 (2013). https://doi.org/10.1109/ICSTW.2013.60
+3. Aarts, F., Schmaltz, J., Vaandrager, F.W.: Inference and abstraction of the biometric
+passport. In: ISoLA. pp. 673–686 (2010). https://doi.org/10.1007/978-3-642-16558-
+0 54
+4. Aarts, F., Vaandrager, F.W.: Learning I/O automata. In: CONCUR. pp. 71–85
+(2010). https://doi.org/10.1007/978-3-642-15375-4 6
+5. Ad´amek, J.: Free algebras and automata realizations in the language of categories.
+Commentationes Mathematicae Universitatis Carolinae 15(4), 589–602 (1974)
+6. Ad´amek, J., Herrlich, H., Strecker, G.E.: Abstract and Concrete Categories - The
+Joy of Cats. Dover Publications (2009)
+7. Ad´amek, J., L¨ucke, D., Milius, S.: Recursive coalgebras of finitary functors. RAIRO
+- TIA 41(4), 447–462 (2007). https://doi.org/10.1051/ita:2007028
+8. Ad´amek, J., Milius, S., Moss, L.S.: On well-founded and recursive coalgebras. In:
+FoSSaCS. pp. 17–36 (2020). https://doi.org/10.1007/978-3-030-45231-5 2
+9. Ad´amek, J., Milius, S., Velebil, J.: Free iterative theories: a coalgebraic view. MFCS
+13(2), 259–320 (2003). https://doi.org/10.1017/S0960129502003924
+10. Ad´amek, J., Trnkov´a, V.: Automata and algebras in categories. Kluwer (1989)
+11. Angluin, D.: Learning regular sets from queries and counterexamples. Inf. Comput.
+75(2), 87–106 (1987). https://doi.org/10.1016/0890-5401(87)90052-6
+12. Angluin, D., Fisman, D.: Learning regular omega languages. Theor. Comput. Sci.
+650, 57–72 (2016). https://doi.org/10.1016/j.tcs.2016.07.031
+13. Arbib, M.A., Manes, E.G.: A categorist’s view of automata and systems. In:
+Category Theory Applied to Computation and Control. pp. 51–64 (1974).
+https://doi.org/10.1007/3-540-07142-3 61
+14. Awodey, S.: Category theory. Oxford University Press (2010)
+15. Barlocco, S., Kupke, C., Rot, J.: Coalgebra learning via duality. In: FoSSaCS. pp.
+62–79 (2019). https://doi.org/10.1007/978-3-030-17127-8 4
+16. Bergadano, F., Varricchio, S.: Learning behaviors of automata from multiplic-
+ity and equivalence queries. SIAM J. Comput. 25(6), 1268–1280 (Dec 1996).
+https://doi.org/10.1137/S009753979326091X
+17. Besombes, J., Marion, J.: Learning tree languages from positive exam-
+ples and membership queries. Theor. Comput. Sci. 382(3), 183–197 (2007).
+https://doi.org/10.1016/j.tcs.2007.03.038
+18. Capretta, V., Uustalu, T., Vene, V.: Recursive coalgebras from
+comonads. Information and Computation 204(4), 437–468 (2006).
+https://doi.org/10.1016/j.ic.2005.08.005
+19. Colcombet, T., Petrisan, D., Stabile, R.: Learning automata and trans-
+ducers: A categorical approach. In: CSL. vol. 183, pp. 15:1–15:17 (2021).
+https://doi.org/10.4230/LIPIcs.CSL.2021.15
+20. Comon, H., Dauchet, M., Gilleron, R., Jacquemard, F., Lugiez, D., L¨oding, C.,
+Tison, S., Tommasi, M.: Tree Automata Techniques and Applications (2008),
+https://hal.inria.fr/hal-03367725
+21. de la Higuera, C.: Grammatical Inference: Learning Automata and Grammars.
+Cambridge University Press, USA (2010)
+22. Drewes, F., H¨ogberg, J.: Learning a regular tree language from a teacher. In: DLT.
+pp. 279–291 (2003). https://doi.org/10.1007/3-540-45007-6 22
+23. Fiter˘au-Bro¸stean, P., Janssen, R., Vaandrager, F.W.: Combining model learning
+and model checking to analyze TCP implementations. In: CAV. pp. 454–471 (2016).
+https://doi.org/10.1007/978-3-319-41540-6 25
+
+PAGE 20
+
+20 Van Heerdt et al.
+24. Gischer, J.L.: The equational theory of pomsets. Theor. Comput. Sci. 61, 199–224
+(1988). https://doi.org/10.1016/0304-3975(88)90124-7
+25. Gold, E.M.: System identification via state characterization. Automatica 8(5),
+621–636 (Sep 1972). https://doi.org/10.1016/0005-1098(72)90033-7
+26. Grabowski, J.: On partial languages. Fundam. Inform. 4(2), 427 (1981)
+27. van Heerdt, G.: An Abstract Automata Learning Framework. Master’s thesis,
+Radboud Universiteit Nijmegen (2016)
+28. van Heerdt, G., Jacobs, B., Kapp´e, T., Silva, A.: Learning to coordinate. In: It’s All
+About Coordination, pp. 139–159. Springer (2018). https://doi.org/10.1007/978-3-
+319-90089-6 10
+29. van Heerdt, G., Kapp´e, T., Rot, J., Sammartino, M., Silva, A.: Tree automata as
+algebras: Minimisation and determinisation. In: CALCO. vol. 139, pp. 6:1–6:22
+(2019). https://doi.org/10.4230/LIPIcs.CALCO.2019.6
+30. van Heerdt, G., Kapp´e, T., Rot, J., Silva, A.: Learning pomset automata. In:
+FOSSACS. pp. 510–530 (2021). https://doi.org/10.1007/978-3-030-71995-1 26
+31. van Heerdt, G., Kupke, C., Rot, J., Silva, A.: Learning weighted automata over prin-
+cipal ideal domains. In: FoSSaCS. pp. 602–621 (2020). https://doi.org/10.1007/978-
+3-030-45231-5 31
+32. van Heerdt, G., Sammartino, M., Silva, A.: CALF: categorical
+automata learning framework. In: CSL. pp. 29:1–29:24 (2017).
+https://doi.org/10.4230/LIPIcs.CSL.2017.29
+33. van Heerdt, G., Sammartino, M., Silva, A.: Learning automata with side-eﬀects. In:
+CMCS. pp. 68–89 (2020). https://doi.org/10.1007/978-3-030-57201-3 5
+34. Isberner, M., Howar, F., Steﬀen, B.: The open-source learnlib - A framework for
+active automata learning. In: CAV. pp. 487–495 (2015). https://doi.org/10.1007/978-
+3-319-21690-4 32
+35. Jacobs, B., Silva, A.: Automata learning: A categorical perspective. In: Hori-
+zons of the Mind. A Tribute to Prakash Panangaden - Essays Dedicated to
+Prakash Panangaden on the Occasion of His 60th Birthday. pp. 384–406 (2014).
+https://doi.org/10.1007/978-3-319-06880-0 20
+36. Lane, S.M.: Categories for the Working Mathematician. Graduate Texts in Mathe-
+matics, Springer New York (1998)
+37. Lodaya, K., Weil, P.: Series-parallel languages and the bounded-width property. The-
+oretical Computer Science 237(1), 347–380 (2000). https://doi.org/10.1016/S0304-
+3975(00)00031-1
+38. L¨uth, C., Ghani, N.: Composing monads using coproducts. In: ICFP. pp. 133–144
+(2002). https://doi.org/10.1145/581478.581492
+39. Moerman, J., Sammartino, M., Silva, A., Klin, B., Szynwelski, M.: Learning nominal
+automata. In: POPL. pp. 613–625 (2017). https://doi.org/10.1145/3009837.3009879
+40. Mues, M., Howar, F., Luckow, K.S., Kahsai, T., Rakamaric, Z.: Re-
+leasing the PSYCO: using symbolic search in interface generation for
+Java. ACM SIGSOFT Software Engineering Notes 41(6), 1–5 (2016).
+https://doi.org/10.1145/3011286.3011298
+41. Osius, G.: Categorical set theory: a characterization of the category of sets. Journal
+of Pure and Applied Algebra 4(1), 79–119 (1974)
+42. Sakakibara, Y.: Learning context-free grammars from structural data in
+polynomial time. Theor. Comput. Sci. 76(2?3), 223–242 (Nov 1990).
+https://doi.org/10.1016/0304-3975(90)90017-C
+43. Taylor, P.: Practical foundations of mathematics. Cambridge University Press
+(1999)
+
+PAGE 21
+
+Learning Generalised Tree Automata 21
+44. Urbat, H., Schr¨oder, L.: Automata learning: An algebraic approach. In: LICS. pp.
+900–914 (2020). https://doi.org/10.1145/3373718.3394775
+45. Vaandrager, F.W.: Model learning. Commun. ACM 60(2), 86–95 (2017).
+https://doi.org/10.1145/2967606
+A Example of execution of L ⋆
+We now run Algorithm 2 with the target language L= {w ∈{a}∗||w|̸= 1}.
+The algorithm starts with S= E= {ε}; the corresponding table is depicted in
+Figure 1a. It invokes Algorithm 1 to check closedness and consistency of this table:
+it is not closed, because T(a) does not appear in the top part of the table. To fix
+this, it adds the word a to the set S. The resulting table (Figure 1b) is closed
+and consistent, so the algorithm builds the hypothesis Hshown in Figure 1c
+and poses the equivalence query EQ(H). The teacher returns the counterexample
+aaa, which should have been accepted, and all its prefixes are added to the set
+S. The next table (Figure 1d) is closed, but not consistent: T(ε) = T(aa), but
+T(ε·a) ̸= T(aa·a). The algorithm adds a·ε= ato E so that T(ε) and T(aa) can
+be distinguished, as depicted in Figure 1e. The table is now closed and consistent,
+and the new hypothesis automaton is precisely the minimal DFA accepting L
+(Figure 1f).
+ε
+ε
+ε
+ε 1
+ε 1
+a 0
+a
+ε 1
+a 0
+aa 1
+aaa 1
+a 0
+(a)
+aa 1
+(b)
+a
+(c)
+aaaa 1
+(d)
+εa
+a
+ε 1 0
+a 0 1
+aa 1 1
+aaa 1 1
+a
+1 1
+a
+aaaa (e)
+(f)
+Fig. 1: Example run of L ⋆ on L= {w∈{a}∗||w|̸= 1}.
+
+PAGE 22
+
+22 Van Heerdt et al.
+B Proofs for Section 4
+Proposition 16 (Language equivalence via recursion). Given an automa-
+ton A= (Q,δ,i,o), we have LAt
+= LAif and only if Lρ
+= Lρ
+At
+Afor every recursive
+coalgebra ρ: S →FIS.
+Proof. First assume that Lρ
+= Lρ
+At
+Afor all recursive ρ: S →FIS. Note that TI
+is the initial algebra of FI; thus [η,γ]: FITI →TI has an inverse. One easily sees
+that this inverse is recursive, with the corresponding unique maps into algebras
+being reachability maps. Thus, LAt
+= ot ◦i♯
+t = o◦i♯ = LA.
+Conversely, assume LAt
+= LA. Given a recursive coalgebra ρ: S →FIS, we
+have that [it,δt]ρ = i♯
+t ◦[ηI,γI]ρ and [i,δ]ρ = i♯ ◦[ηI,γI]ρ by uniqueness. Thus,
+the diagram below commutes.
+[it ,δt ]ρ
+ot
+[η,γ]ρ
+LAt
+=LA
+S TI O
+Qt
+i♯
+t
+i♯
+[i,δ]ρ
+Q
+o ⊓⊔
+Theorem 18 (Resolving counterexamples). Given a closed and consistent
+β
+wrapper W= S αGG Qt , Qt
+GG P and a recursive coalgebra ρ: S′→FIS′, the
+following holds. If the wrapper W′ = ([α,[it,δt]ρ],β) is closed and consistent,
+then Wis correct up to ρ.
+Proof. h: HW→HW′ on the right.
+Since the diagram below on the left commutes, we obtain a unique diagonal
+eW
+S HW
+κ1 α
+eW
+S HW
+κ1
+S+ S′ Qt
+[α,[it ,δt ]ρ]
+S+ S′
+β
+τ◃
+W′
+τ◃
+W′
+HW′ P
+τ▹
+W′
+HW′ P
+τ▹
+W′
+We will show that his an automaton homomorphism. Noting that τ▹
+W′ is a mono
+and eW is an epi, commutativity of the diagrams below shows that h commutes
+h
+mW
+mW
+
+PAGE 23
+
+Learning Generalised Tree Automata 23
+iW′
+κ1
+3
+eW
+oW
+2
+ot
+with the initial states (h◦iW= iW′) and outputs (oW′◦h= oW).
+iW
+h
+I HW HW′
+1 2
+it
+Qt
+mW
+τ▹
+W′
+1
+β
+HW′ P
+τ▹
+W′
+eW
+S HW
+α
+S+ S′ Qt
+[α,[it ,δt ]ρ]
+τ◃
+W′
+3
+HW HW′ O
+h
+oW′
+1 closedness 2 definition of h 3 consistency
+As for the transition functions, we use that τ▹
+W′is a mono to show that h◦closeW=
+closeW′◦Fκ1 with the commutative diagram below.
+closeW
+h
+FS HW HW′
+Fα
+Fκ1
+1 2
+F(S+ S′) FQt
+F[α,[it ,δt ]ρ]
+mW
+δt
+closeW′
+1
+Qt
+β
+HW′ P
+τ▹
+W′
+1 closedness 2 definition of h
+We are now ready to show that h◦δW= δW′◦Fh. This follows from commutativity
+of the diagram below using the fact that FeW is an epi.
+FeW
+FS FHW
+closeW 1
+δW
+Fκ1
+4
+F(S+ S′) HW
+closeW′
+Fτ◃
+W′
+h
+3
+FHW FHW′ HW′
+Fh
+δW′
+1 definition of δW 2 definition of h
+3 definition of δW′ 4 previous observation
+τ▹
+W′
+FeW
+2
+
+PAGE 24
+
+24 Van Heerdt et al.
+Thus, h is an automaton homomorphism HW→HW′. This implies in particular
+that h◦[iW,δW]ρ = [iW′,δW′]ρ. It follows that the diagram below commutes.
+[iW,δW]ρ
+S′ HW
+oW
+h
+(1)
+[iW′,δW′]ρ
+HW′ O
+oW′
+We now show that τ◃
+W′ ◦κ2 = [iW′,δW′]ρ. This follows by the uniqueness
+property of [iW′,δW′]ρ from commutativity of the diagram below, using that τ▹
+W′
+is monic.
+FIκ2
+FIτ◃
+W′
+FI(S+ S′) FIHW′
+3
+FI[α,[it ,δt ]ρ]
+FIS′ FIQt HW′
+[iW′,closeW′]
+FI[it ,δt ]ρ
+ρ
+1
+[iW′,δW′]
+[it ,δt ] 2
+S′ Qt
+[it ,δt ]ρ
+τ▹
+W′
+β
+κ2
+4
+[α,[it ,δt ]ρ]
+S+ S′ HW′ P
+τ◃
+W′ τ▹
+W′
+1 definition of [it,δt]ρ 2 closedness and def. of iW
+3 definition of δW′ 4 definitions of τ◃
+W′ and τ▹
+W′
+The commutative diagram below completes the proof.
+[it ,δt ]ρ
+S′
+κ2
+[iW′,δW′]ρ
+[α,[it ,δt ]ρ]
+S+ S′ Qt
+2
+τ◃
+W′
+1
+HW HW′
+(1)
+[iW,δW]ρ ot
+oW′
+O
+oW
+1 consistency 2 previous observation ⊓⊔
+C Proofs for Section 5
+Lemma 42. For all morphisms α1 : S1 →Qt, α2 : S2 →Qt, and f: S1 →S2
+such that α2 ◦f= α1 we have α▹
+1 ≤α▹
+2.
+
+PAGE 25
+
+Learning Generalised Tree Automata 25
+Proof. diagram below.
+This follows directly from the unique diagonal obtained in the commutative
+α◃
+1
+S1 •
+f
+S2
+α◃
+2
+α▹
+1
+α▹
+2
+⋆ Qt
+⊓⊔
+Lemma 21. Given a wrapper (α,β) for Qt, ([α,[it,δt]◦FIα],β) is locally closed
+w.r.t. α.
+Proof. Let W = ([α,[it,δt]◦FIα],β). Note that α▹ ≤ [α,[it,δt]◦FIα]▹ by
+Lemma 42 (via κ1 : S →S+ FIS). We define
+iW= I κ1 −→FIS κ2 −→S+ FIS eW −−→HW
+lcloseW,α = FS κ2 −→FIS κ2 −→S+ FIS eW −−→HW
+and note that the commutative diagrams below show that they satisfy the required
+properties.
+it
+I
+κ2 ◦κ1
+κ2 ◦κ1
+S+ FIS S+ FIQt Qt
+id +FIα
+[α,[it ,δt ]]
+eW
+β
+mW
+HW P
+δt
+FIα
+FS FQt
+κ2 ◦κ2
+κ2 ◦κ2
+S+ FIS S+ FIQt Qt
+id +FIα
+[α,[it ,δt ]]
+eW
+β
+mW
+HW P
+⊓⊔
+Lemma 43. For any run {Wn = (αn,βn)}n∈N and n∈N, if α▹
+n+1 ≤α▹
+n, then
+Wn is closed.
+Proof. For each j ∈N, denote by Sj the domain of αj and by Pj the codomain of
+βj, and let Xj be the object through which αj factorises. We define fj: Xn →Hn
+
+PAGE 26
+
+26 Van Heerdt et al.
+as the unique diagonal in the commutative square below.
+α◃
+j
+Sj Xj
+α▹
+j
+fj
+τ◃
+Wj
+Qt
+βj
+τ▹
+Wj
+HWj Pj
+Note that fj ∈Ebecause τ◃
+∈E.
+Wj
+We write v: Xn+1 →Xn for the witness of α▹
+n+1 ≤α▹
+n. Assume towards a
+contradiction that Wn is not closed. By the definition of a run we then have that
+βn+1 = βn and Wn+1 is locally closed w.r.t. αn. Define iWn
+= h◦iWn+1 : I →HWn
+and closeWn
+= h◦lcloseWn+1 ,αn, where iWn+1 and lcloseWn+1 ,αn exist by local
+closedness and h: HWn+1 →HWn is the unique diagonal in the commutative
+diagram below.
+fn+1
+Xn+1 HWn+1
+α▹
+n+1
+v
+1
+Xn Qt
+α▹
+n
+βn=βn+1
+τ▹
+Wn+1
+fn
+1
+HWn
+Pn = Pn+1
+τ▹
+Wn
+1 definition of fn or fn+1
+Now the diagrams below commute, leading to the desired contradiction that Wn
+is closed.
+fn+1
+Xn+1 HWn+1
+v
+Xn
+fn
+HWn
+τ▹
+Wn+1
+h
+τ▹
+Wn
+Pn = Pn+1
+τ▹
+Wn
+I
+Fαn
+FSn FQt
+it
+iWn+1
+lcloseWn+1 ,αn δt
+1
+HWn+1 Qt
+τ▹
+Wn+1
+1
+HWn+1 Qt
+τ▹
+Wn+1
+h
+βn
+h
+βn
+2
+2
+HWn
+Pn = Pn+1
+HWn
+Pn = Pn+1
+τ▹
+Wn
+1 local closedness 2 definition of h⊓⊔
+Proposition 44. Given a recursive ρ: S →FIS and a closed and consistent
+wrapper for Qt of the form W= ([it,δt]ρ,β), we have that eW= [iW,δW]ρ and
+HW is reachable.
+Proof. We will first show that eW= [iW,δW]ρ by using the uniqueness property
+of the right hand side. This follows from the commutative diagram below as a
+
+PAGE 27
+
+Learning Generalised Tree Automata 27
+result of mW being a mono, together with the uniqueness property of [iW,δW]ρ
+.
+FIeW
+FIS FIHW
+3
+FI[it ,δt ]ρ
+[iW,δW]
+[iW,closeW]
+FIQt HW
+1
+[it ,δt ] 2
+mW
+[it ,δt ]ρ
+β
+S Qt P
+mW
+ρ
+4
+eW
+HW
+1 definition of [it,δt]ρ 2 closedness and def. of iW
+3 definition of δW 4 definition of τ
+Now i♯
+W◦[ηI,γI]ρ = [iW,δW]ρ = eW∈E, so i♯
+W∈Eby [6, Proposition 14.11 via
+duality]. Thus, HW is reachable.
+Lemma 45. For any run {Wn = (αn,βn)}n∈N and n∈N, if Wn is closed and
+β◃
+n ≤β◃
+n+1, then Wn is consistent.
+Proof. For each j ∈N, denote by Sj the domain of αj and by Pj the codomain of
+βj, and let Xj be the object through which βj factorises. We define fj: HWj →Xj
+as the unique diagonal in the commutative square below.
+τ◃
+Wj
+Sj HWj
+fj τ▹
+Wj
+αj
+β◃
+j
+Qt
+β▹
+j
+Xj Pj
+Note that fj ∈Mbecause τ▹
+Wj ∈M.
+We write v: Xn →Xn+1 for the witness of β◃
+n ≤β◃
+n+1. Assume towards
+a contradiction that Wn is not consistent. By the definition of a run of the
+algorithm we then have that αn+1 = αn and Wn+1 is locally consistent w.r.t.
+βn. Define oWn
+= oWn+1 ◦h: HWn
+→O and consWn
+= lconsWn+1 ,βn
+◦h, where
+
+PAGE 28
+
+28 Van Heerdt et al.
+τ◃
+Wn
+Sn = Sn+1 HWn
+fn
+τ◃
+Wn+1
+h
+Xn
+v
+fn+1
+HWn+1 Xn+1
+h: HWn
+→HWn+1 is the unique diagonal in the commutative diagram below.
+τ◃
+Wn
+Sn = Sn+1 HWn
+1
+fn
+αn=αn+1
+τ◃
+Wn+1
+β◃
+n
+Qt Xn
+1
+v
+β◃
+fn+1
+n+1
+HWn+1 Xn+1
+1 definition of fn or fn+1
+Now the diagrams below commute, leading to the desired contradiction that Wn
+is consistent.
+τ◃
+Wn
+Sn = Sn+1 HWn
+Fτ◃
+Wn
+FSn = FSn+1 FHWn
+2
+2
+αn
+h
+Fαn
+Fv
+τ◃
+Wn+1
+Qt HWn+1
+1
+Fτ◃
+Wn+1
+FQt FHWn+1
+1
+oWn+1
+δt
+ot
+lconsWn+1 ,βn
+O
+βn
+Qt Pn
+1 local consistency 2 definition of h⊓⊔
+Lemma 46. Let α: S →Qt, α′: S′→Qt, and β: Qt →P be such that α▹ and
+α′▹ are isomorphic subobjects. If (α,β) is closed and consistent, then so is (α′,β).
+Proof. Write W= (α,β) and W′ = (α′,β). Let X and X′ be the respective
+objects through which αand α′factorise, and denote by φ: X →X′the subobject
+isomorphism (α′▹ ◦φ= α▹). We define f: X →HW and g: X′→HW′ as the
+unique diagonals in the diagrams below.
+α◃
+S X
+′◃
+α
+S′ X′
+α▹
+′▹
+α
+f
+Qt
+g
+τ◃
+W′
+Qt
+β
+β
+mW
+HW P
+τ▹
+W′
+HW′ P
+Note that α◃ and eW are in E, and therefore so is f; similarly, since α′◃ and τ◃
+W′
+are in E, so is g [6, Proposition 14.9 via duality]. We now define ψ: HW→HW′
+eW
+
+PAGE 29
+
+Learning Generalised Tree Automata 29
+and ψ−1 : HW→HW′ as the unique diagonals in the diagrams below.
+f
+X HW
+g
+X′ HW′
+φ
+φ−1
+ψ
+ψ−1
+X′
+mW
+X
+τ▹
+W′
+g
+f
+τ▹
+W′
+HW′ P
+mW
+HW P
+It is a standard result that ψ and ψ−1 are inverse to each other [6, Proposi-
+tion 14.7], as suggested by their names. We define
+iW′ = I iW −−→HW
+ψ −→HW′ oW′ = HW′
+ψ−1
+−−−→HW
+oW −−→O
+d= HW′
+Fψ−1
+−−−−→FHW
+δW −−→HW
+ψ −→HW′.
+To show closedness and consistency, we will need the following two equations.
+oW◦f= ot ◦α▹ mW◦δW◦Ff= β◦δt ◦Fα▹
+. (2)
+Note that both α◃ and Fα◃ are in Ebecause F preserves E, and that they are
+therefore both epis. We use this to prove (2) with the commutative diagrams
+below.
+α◃
+S X
+α◃ 1
+f
+eW
+X HW
+2
+oW
+α▹
+ot
+Qt O
+1 definition of f
+2 consistency
+3 closedness
+4 definition of δW
+Now the diagrams below commute.
+it
+I Qt
+iW
+2
+HW
+1
+β
+mW
+ψ
+3
+HW′ P
+τW′▹
+Fα◃
+FS FX
+Fα◃
+1 Ff
+FeW
+FX FHW
+4
+Fα▹ δW
+closeW
+FQt HW
+3
+δt mW
+β
+Qt P
+iW′
+α
+′▹
+S′
+τ◃
+W′
+α
+′◃ 4
+g
+X′ HW′
+6
+φ−1
+ψ−1 5
+f
+X HW
+α▹ (2) oW
+7
+ot
+Qt O
+oW′
+
+PAGE 30
+
+β
+d
+30 Van Heerdt et al.
+1 definition of iW′ 5 subobject morphism
+2 closedness 6 definition of ψ−1
+3 definition of ψ 7 definition of oW′
+4 definition of g 8 definition of d
+Fα′◃
+FS′ FX′
+Fα′▹
+4 Fφ−1
+Fg 5
+Fτ◃
+W′
+6
+Fα▹
+δt
+FHW′ FX FQt Qt
+ψ−1
+Ff
+(2)
+δW
+FHW HW
+8 mW
+ψ 3
+τ▹
+W′
+HW′ P
+Using [32, Theorem 9], the existence of a d making the last diagram above
+commute shows together with the other two commutative diagrams that W′is
+closed and consistent.
+Lemma 24. Let {Wn = (αn,βn)}n∈N be a run. For all n ∈N, we have α▹
+n ≤
+α▹
+n+1 and β◃
+n+1 ≤β◃
+n. Moreover, if α▹
+n+1 ≤α▹
+n, then αn+1 = αn; if β◃
+n ≤β◃
+n+1,
+then βn+1 = βn.
+Proof. We consider each of the cases listed in the definition of a run of the
+algorithm. If Wn is not closed, then βn+1 = βn and α▹
+n ≤α▹
+n+1 by the definition
+of local closedness. Supposing α▹
+n+1 ≤α▹
+n leads by Lemma 43 to the contradiction
+that Wn is closed.
+If Wn is closed but not consistent, then αn+1 = αn and we have β◃
+n+1 ≤β◃
+n
+by the definition of local consistency. Supposing β◃
+n ≤β◃
+n+1 leads by Lemma 45
+to the contradiction that Wn is consistent.
+If Wn is closed and consistent and we obtain a counterexample ρ: S →FIS
+for Wn, then βn+1 = βn and α▹
+n+1 = [αn,[it,δt]ρ]▹. We have α▹
+n ≤[αn,[it,δt]ρ]▹
+using Lemma 42. Suppose α▹
+n+1 ≤α▹
+n. Then [αn,[it,δt]ρ]▹
+= α▹
+n+1 ≤α▹
+n, so α▹
+n
+and [αn,[it,δt]ρ]▹ are isomorphic subobjects. By Lemma 46 this implies that
+([αn,[it,δt]ρ],βn) is also closed and consistent, which by Theorem 18 contradicts
+the fact that ρ is a counterexample for Wn.
+If Wn is closed and consistent and correct up to all recursive FI-coalgebras,
+then we immediately have αn+1 = αn and βn+1 = βn.
+Theorem 25 (Termination). If Qt has finitely many subobject and quotient
+isomorphism classes, then for all runs {Wn = (αn,βn)}n∈N there exists n∈N
+such that Wn is closed and consistent and its hypothesis is correct. If At is
+minimal and for all k ∈N there exists a recursive ρk: Sk →FISk such that
+αk = [it,δt]ρk, then the final hypothesis is minimal.
+Proof. We will show that {Wn}n∈N converges, for which it suﬃces to show that
+both {αn}n∈N and {βn}n∈N converge. Suppose {αn}n∈N does not converge. By
+
+PAGE 31
+
+Learning Generalised Tree Automata 31
+Lemma 24 there exist in ∈N for all n∈N such that in+1 >in, α▹
+in
+≤α▹
+in+1, and
+α▹
+in+1 ̸≤α▹
+in
+for all n∈N. Note that isomorphic subobjects are ordered in both
+directions. Using transitivity of the order on subobjects we know that for all
+m,n∈N with m̸= n we have that α▹
+and α▹
+im
+in are not isomorphic subobjects.
+This contradicts the fact that Qt has finitely many subobject isomorphism classes.
+Thus, {αn}n∈N must converge.
+Now suppose {βn}n∈N does not converge. By Lemma 24 there exist in ∈N
+for all n ∈N such that in+1 >in, β◃
+in+1 ≤β◃
+in, and β◃
+in ̸≤β◃
+in+1 for all n ∈N.
+Note that isomorphic quotients are ordered in both directions. Using transitivity
+of the order on quotients we know that for all m,n∈N with m̸= nthe quotients
+β▹
+im
+and β▹
+in are not isomorphic. This contradicts the fact that Qt has finitely
+many quotient isomorphism classes. Thus, {βn}n∈N must converge. We conclude
+that {Wn}n∈N converges, and by Proposition 23 the algorithm terminates. By
+definition, it does so with a correct hypothesis.
+Now assume that At is minimal and that for all k∈N there exists ρk: Sk →
+FISk such that αk = [it,δt]ρk. Let n ∈N be such that Wn+1 = Wn, which by
+the above we know exists, and define W= Wn. We know from Proposition 44
+that HW is reachable. Together with correctness of HW and minimality of At
+there exists a unique automaton homomorphism h: HW →At. We show that
+βn ◦h= mW with the commutative diagram below, where we precompose with
+the epi eW and use that automaton homomorphisms commute with restricted
+reachability maps.
+eW=[iW,δW]ρn
+eW
+Sn HW
+αn=[it ,δt ]ρn
+mW
+h βn
+HW Qt Pn
+It follows that h∈M[6, Proposition 14.11]. Being an automaton homomorphism,
+h commutes with the reachability maps: h◦i♯
+W = i♯
+t . Because i♯
+W ∈E and
+i♯
+t ∈E, we have h ∈E[6, Proposition 14.9 via duality]. Since E∩Mcontains
+only isomorphisms [6, Proposition 14.6], it follows that h is an isomorphism of
+automata and therefore that the hypothesis is minimal.
+D Proofs for Section 6
+In some of the proofs below we will use the basic property that for all functions
+f: X →Y and elements x∈X we have:
+ef(x)= f ◦ex. (3)
+Lemma 47. For all T-algebras (X,x), p: I →X, and c∈T(I+X), the diagram
+below commutes.
+ˆ
+µX
+T(I+ T(I+ X)) T(I+ X)
+T(idI+ec)
+[p,e[p,idX]♯(c) ]♯
+T(I+ 1) X
+[p,idX]♯
+
+PAGE 32
+
+32 Van Heerdt et al.
+Proof. Given any set Y and a T(I + (−))-algebra (Z,z), the extension of a
+morphism f: Y →Z to the T(I+(−))-algebra homomorphsm f♮: T(I+Y) →Z
+is given by f♮ = z◦T(idI +f). We can supply X with the T(I+ (−))-algebra
+structure [p,idX]♯: T(I+ X) →X. Thus,
+[p,e[p,idX]♯(c)]♯ = [p,eid♮
+X(c)]♯
+= [p,idX]♯ ◦T(idI +eid♮
+X(c))
+= e♮
+id♮
+X(c)
+= (id♮
+X ◦ec)♮ (3)
+= id♮
+X ◦e♮
+c
+= [p,idX]♯ ◦e♮
+c
+= [p,idX]♯ ◦ˆ
+µX ◦T(idI +ec). ⊓⊔
+Proposition 30 (Computing wrapper morphisms). Given S ⊆TI with
+inclusion j: S →TI and E ⊆T(I+ 1) with inclusion k: E →T(I+ 1), we have:
+– The top observation table βE ◦αS: S →OE
+, s→LAt
+◦µI ◦T[ηI,j◦es]◦k;
+– The bottom observation table βE ◦δt ◦FαS: FS →OE
+, t →LAt
+◦µI ◦
+T[ηI,γI ◦Fj◦et]◦k;
+– The input rows βE ◦it : I →OE given by (βE ◦it)(x) = LAt
+◦T[idI,ex]◦k;
+– The row output ot ◦αS: S →O given by (ot ◦αS)(s) = LAt (s).
+Proof. We first claim that
+(βE ◦i♯
+t )(s) = LAt
+◦µI ◦T[ηI,es]. (4)
+(Here, and below, we omit the inclusion k.) To see this, first note that
+(βE ◦i♯
+t )(s) = ot ◦[it,ei♯
+t (s)]♯
+= ot ◦δ∗
+t ◦T[it,ei♯
+t (s)]
+= ot ◦δ∗
+t ◦T[it,i♯
+t ◦es]
+= ot ◦δ∗
+t ◦T[i♯
+t ◦ηI,i♯
+t ◦es]
+= ot ◦δ∗
+t ◦Ti♯
+t ◦T[ηI,es]
+
+PAGE 33
+
+It remains to show that ot ◦δ∗
+t ◦Ti♯
+t = LAt
+of the diagram below.
+Learning Generalised Tree Automata 33
+◦µI, which follows by commutativity
+LAt
+Ti♯
+t
+1 2
+i♯
+t
+δ∗
+t
+µI
+T2I TI
+T2 it
+3
+Tit
+1 µQt
+T2Qt TQt
+4
+Tδ∗
+t
+δ∗
+t
+TQt Qt O
+ot
+1 property of i♯
+t 2 definition of LAt
+3 naturality 4 (T,δ∗
+t ) is a T-algebra
+For the first equation, we derive
+(βE ◦αS)(s) = (βE ◦i♯
+t )(s) (def. of αS)
+= LAt
+◦µI ◦T[ηI,es] (by (4))
+For the second equation, we derive
+(βE ◦δt ◦FαS)(f) = (βE ◦δt ◦Fi♯
+t ◦Fj)(f) (def. of αS)
+= (βE ◦i♯
+t ◦γI ◦Fj)(f)
+(i♯ is an F-algebra homomorphism)
+= LAt
+= LAt
+◦µI ◦T[ηI,e(γI◦Fj)(f)] (by (4))
+◦µI ◦T[ηI,γI ◦Fj◦ef] (by (3))
+For the third equation, we derive
+(βE ◦it)(s) = (βE ◦i♯
+t ◦ηI)(s) (property of i♯)
+= LAt
+◦µI ◦T[ηI,eηI(s)] (by (4))
+= LAt
+◦µI ◦T[ηI,ηI ◦es] (by (3))
+= LAt
+◦µI ◦TηI ◦T[idI,es]
+= LAt
+◦T[idI,es] (monad law)
+Finally, for the fourth equation, we derive:
+(ot ◦αS)(s) = (ot ◦i♯
+t )(s) (definition of αS)
+= LAt (s) (definition of LAt ) ⊓⊔
+Lemma 32 (Local closedness for Set automata). Given S,S′ ⊆TI and
+E ⊆T(I+ 1) such that S ⊆S′
+, (αS′,βE) is locally closed w.r.t. αS if there exist
+k: I →S′ and ℓ: FS →S′ such that (1) αS′◦k= it and (2) αS′◦ℓ= δt ◦FαS.
+
+PAGE 34
+
+= eW◦ℓ
+ℓ
+iW
+β
+lcloseW,α′
+Fα′
+δt
+FS′ FQt Qt
+αS′
+S′
+β
+34 Van Heerdt et al.
+Proof. Let W= (αS′,βE), and choose
+iW= eW◦k lcloseW,αS
+The necessary diagrams now commute:
+it
+I Qt
+k
+αS′
+S′
+eW
+eW
+mW
+HW P
+mW
+HW P
+Note that αS ≤αS′ because S ⊆S′. Thus, Wis locally closed w.r.t. αS.
+Lemma 34 (Local consistency for Set automata). Let S ⊆TI and E ⊆
+E′ ⊆ T(I + 1), with S finite. Furthermore, suppose that for s,s′ ∈ S with
+(βE′ ◦αS)(s) = (βE′ ◦αS)(s′) we have: (1) (ot ◦αS)(s) = (ot ◦αS)(s′); and
+(2) βE ◦δt ◦F(αS ◦[idS,es]) = βE ◦δt ◦F(αS ◦[idS,es′]). Then W= (αS,βE′)
+is locally consistent w.r.t. βE.
+Proof. Since eW is surjective, so is FeW. We define the function
+lconsW,βE : FHW→OE
+, lconsW,βE(FeW(y)) = (βE ◦δt ◦FαS)(y).
+By definition this satisfies the local consistency condition. It remains to show
+that the function is well-defined. Denote by K the kernel
+{(s,s′) |s,s′∈S,eW(s) = eW(s′)}
+and let j: K →S×S be the inclusion. Consider y,z∈FS such that FeW(y) =
+FeW(z). Because F preserves weak pullbacks we can find x ∈FK such that
+F(π1 ◦j)(x) = y and F(π2 ◦j)(x) = z. Using that S is finite, write K=
+{(s1,s′
+1),...,(sn,s′
+n)}. For all 1 ≤m≤n we define fm: K →S+ 1 by
+    
+κ1(s′
+k) if k<m
+κ2( ) if k= m
+κ1(sk) if k>m.
+Furthermore, let cm = F(fm)(x) ∈F(S+ 1). We will prove that
+(βE ◦δt ◦F(αS ◦[idS,es1 ]))(c1) = (βE ◦δt ◦F(αS ◦[idS,esn]))(cn), (5)
+for which it suﬃces by induction to prove for all 1 ≤m<n that
+(βE ◦δt ◦F(αS ◦[idS,esm]))(cm)
+= (βE ◦δt ◦F(αS ◦[idS,esm+1 ]))(cm+1).
+fm(sk,s′
+k) =
+
+PAGE 35
+
+Learning Generalised Tree Automata 35
+Note that
+[idS,es′
+m]◦fm = [idS,esm+1 ]◦fm+1
+by the definitions of fm and fm+1, so
+(βE ◦δt ◦F(αS ◦[idS,esm]))(cm)
+= (βE ◦δt ◦F(αS ◦[idS,es′
+m]))(cm)
+(assumption)
+= (βE ◦δt ◦F(αS ◦[idS,es′
+m]◦fm))(x)
+(definition of cm)
+= (βE ◦δt ◦F(αS ◦[idS,esm+1 ]◦fm+1))(x)
+= (βE ◦δt ◦F(αS ◦[idS,esm+1 ]))(cm+1)
+(definition of cm+1).
+Then
+(βE ◦δt ◦FαS)(y) = (βE ◦δt ◦F(αS ◦π1 ◦j))(x)
+(definition of x)
+= (βE ◦δt ◦F(αS ◦[idS,es1 ]◦f1))(x)
+(definition of f1)
+= (βE ◦δt ◦F(αS ◦[idS,es1 ]))(c1)
+(definition of c1)
+= (βE ◦δt ◦F(αS ◦[idS,esn]))(cn)
+(5)
+= (βE ◦δt ◦F(αS ◦[idS,es′
+n]))(cn)
+(assumption)
+= (βE ◦δt ◦F(αS ◦[idS,es′
+n])◦fn)(x)
+(definition of cn)
+= (βE ◦δt ◦F(αS ◦π2 ◦j))(x)
+(definition of fn)
+= (βE ◦δt ◦FαS)(z)
+(definition of x).
+We conclude that lconsW,βE is well-defined.
+We define oW: HW→O by
+oW(eW(s)) = (ot ◦αS)(s).
+Again the local consistency condition is satisfied by definition, but we need to show
+that the function is well-defined. Consider s1,s2 ∈S such that eW(s1) = eW(s2).
+
+PAGE 36
+
+36 Van Heerdt et al.
+Then
+(βE′◦αS)(s1) = (mW◦eW)(s1)
+= (mW◦eW)(s2)
+= (βE′◦αS)(s2),
+so (ot ◦αS)(s1) = (ot ◦αS)(s2). Note that βE′ ≤βE because E ⊆E′. Thus, W
+is locally consistent w.r.t. βE.
+Proposition 36. Given finite S ⊆TI and E ⊆T(I+ 1), there exists a finite
+S′⊆TI such that (αS′,βE) is locally closed w.r.t. αS. If there exists a recursive
+ρ: S →FIS such that [ηI,γI]ρ: S →TI is the inclusion, then there exists a
+′
+recursive ρ′: S′→FIS′ such that [ηI,γI]ρ
+: S′→TI is the inclusion.
+Proof. Let j: S →TI be the inclusion map and define
+S′
+= S∪{([ηI,γI]◦FIj)(x) |x∈FIS}⊆TI.
+Since S and I are finite and F preserves finite sets, S′is also finite. We choose
+k: I →S′and ℓ: FS →S′by setting
+k(x) = ηI(x) ℓ(x) = (γI ◦Fj)(x)
+Note that k and ℓ are well-defined by construction of S′. Using the definitions of
+αS′ and k, we can then derive that
+(αS′◦k)(x) = i♯
+t (k(x)) = i♯
+t (ηI(x)) = it(x)
+Furthermore, we find that
+(αS′◦ℓ)(x) = i♯
+t (ℓ(x)) (def. of αS′)
+= i♯
+t (γI(Fj(x))) (def. of ℓ)
+= δt(F(i♯
+t )(Fj(x))) (i♯
+t is an F-algebra homomorphism)
+= δt(F(i♯
+t ◦j)(x))
+= (δt ◦FαS)(x) (def. of αS)
+Hence (αS′,βE) is locally closed w.r.t. αS, by Lemma 32.
+Given a recursive ρ: S →FIS such that [ηI,γI]ρ: S →TI is the inclusion
+map, define ρ′: S′→FIS′for all s∈S and x∈FIS by
+ρ′(s) = (FIj◦ρ)(s) ρ′(([ηI,γI]◦FIj)(x)) = FIj(x).
+To see that this is well-defined, note that [ηI,γI]◦FIj is injective. Moreover, if
+s∈S and x∈FIS are such that
+s= ([ηI,γI]◦FIj)(x),
+
+PAGE 37
+
+Learning Generalised Tree Automata 37
+we have
+([ηI,γI]−1
+◦j)(s) = FIj(x).
+Because the inclusion map j = [ηI,γI]ρ by assumption, it follows that
+(FIj◦ρ)(s) = ([ηI,γI]−1
+◦j)(s) = FIj(x).
+This completes the proof of ρ′being well-defined.
+Note that ρ is a subcoalgebra of [ηI,γI]−1 via the inclusion map j by as-
+sumption. The definition of ρ′makes ρ′also a subcoalgebra of [ηI,γI]−1 via the
+inclusion map S′→TI. This implies that it is recursive [7, Theorem 3.17],8 and
+′
+thus its inclusion map must be [ηI,γI]ρ
+: S′→TI by uniqueness.
+Proposition 38. Given finite S ⊆TI and E ⊆T(I+ 1), define E′⊆T(I+ 1)
+by E′
+= E ∪ {(ηI+1 ◦κ2)( )} ∪ {(ˆ
+µ1 ◦T(idI +cx))(e) |e∈E,x∈F(S+ 1)}
+where cx: 1 →T(I+ 1), with cx = γI+1 ◦F[Tκ1 ◦j,ˆ
+η1]◦ex, and j: S →TI is set
+inclusion. It holds that E′ is finite and (αS,βE′) is locally consistent w.r.t. βE.
+Proof. Note that since S is finite and F preserves finite sets we have that F(S+1)
+is also finite. Together with the fact that E is finite it follows that E′is finite.
+Suppose s1,s2 ∈S are such that (βE′◦αS)(s1) = (βE′◦αS)(s2). For all s∈S
+we have
+(ot ◦αS)(s) = (ot ◦eαS(s))( )
+= (ot ◦[it,eαS(s)]◦κ2)( )
+= (ot ◦[it,eαS(s)]♯ ◦ηI+1 ◦κ2)( )
+= (βE′◦αS)(s)((ηI+1 ◦κ2)( ))
+(definition of βE′),
+so
+(ot ◦αS)(s1) = (βE′◦αS)(s1)((ηI+1 ◦κ2)( ))
+= (βE′◦αS)(s2)((ηI+1 ◦κ2)( ))
+= (ot ◦αS)(s2).
+Furthermore, for all s∈S we have
+F[Tit ◦j,TeαS(s) ◦η1]
+= F[T[it,eαS(s)]◦Tκ1 ◦j,T[it,eαS(s)]◦Tκ2 ◦η1]
+= FT[it,eαS(s)]◦F[Tκ1 ◦j,Tκ2 ◦η1]
+= FT[it,eαS(s)]◦F[Tκ1 ◦j,ˆ
+η1]
+(definition of ˆ η1),
+8 As stated in the introduction of [7], preservation of inverse images is implied by
+preservation of weak pullbacks.
+
+PAGE 38
+
+38 Van Heerdt et al.
+so for all s∈S and x∈F(S+ 1) we have
+(δt ◦F[αS,eαS(s)])(x)
+= (δt ◦F[δ∗
+t ◦Tit ◦j,δ∗
+t ◦TeαS(s) ◦η1])(x)
+(definition of αS)
+= (δt ◦Fδ∗
+t ◦F[Tit ◦j,TeαS(s) ◦η1])(x)
+= (δ∗
+t ◦γQ ◦F[Tit ◦j,TeαS(s) ◦η1])(x)
+(δ∗
+t is an F-algebra homomorphism)
+= (δ∗
+t ◦γQ ◦FT[it,eαS(s)]◦F[Tκ1 ◦j,ˆ
+η1])(x)
+(shown above)
+= (δ∗
+t ◦T[it,eαS(s)]◦γI+1 ◦F[Tκ1 ◦j,ˆ
+η1])(x)
+= (δ∗
+t ◦T[it,eαS(s)]◦γI+1 ◦F[Tκ1 ◦j,ˆ
+η1]◦ex)( )
+= (δ∗
+t ◦T[it,eαS(s)]◦cx)( )
+(definition of cx)
+= ([it,eαS(s)]♯ ◦cx)( )
+= [it,idQ]♯((T(idI +eαS(s))◦cx)( )).
+Note that for all s∈S, x∈F(S+ 1) we have
+ˆ
+µQ ◦T(idI +e(T(idI+eαS(s) )◦cx)( ))
+= ˆ µQ ◦T(idI +(T(idI +eαS(s))◦ecx( )))
+(3)
+= ˆ µQ ◦T(idI +(T(idI +eαS(s))◦cx))
+(definition of ecx( ))
+= ˆ µQ ◦T(idI +(T(idI +eαS(s))))◦T(idI +cx)
+= T(idI +eαS(s))◦ˆ
+µ1 ◦T(idI +cx),
+
+PAGE 39
+
+Learning Generalised Tree Automata 39
+so for all s∈S, x∈F(S+ 1), and e∈E,
+(βE ◦δt ◦F(αS ◦[idS,es]))(x)(e)
+= (βE ◦δt ◦F[αS,eαS(s)])(x)(e)
+(3)
+= (ot ◦[it,e(δt ◦F[αS,eαS(s) ])(x)]♯)(e)
+(definition of βE)
+= (ot ◦[it,e[it ,idQ]♯((T(idI+eαS(s) )◦cx)( ))]♯)(e)
+(shown earlier)
+= (ot ◦[it,idQ]♯ ◦ˆ
+µQ ◦T(idI +e(T(idI+eαS(s) )◦cx)( )))(e)
+(Lemma 47)
+= (ot ◦[it,idQ]♯ ◦T(idI +eαS(s))◦ˆ
+µ1 ◦T(idI +cx))(e)
+(shown above)
+= (ot ◦[it,eαS(s)]♯ ◦ˆ
+µ1 ◦T(idI +cx))(e)
+= (βE′◦αS)(s)((ˆ µ1 ◦T(idI +cx))(e))
+(definition of βE′),
+and therefore for all x∈F(S+ 1) and e∈E,
+(βE ◦δt ◦F(αS ◦[idS,es1 ]))(x)(e)
+= (βE′◦αS)(s1)((ˆ µ1 ◦T(idI +cx))(e))
+= (βE′◦αS)(s2)((ˆ µ1 ◦T(idI +cx))(e)) = (βE ◦δt ◦F(αS ◦[idS,es2 ]))(x)(e).
+(assumption)
+Thus, it follows from Lemma 34 that (αS,βE′) is locally consistent w.r.t. βE.
+Proposition 39 (Language equivalence via finite recursion). Given an
+automaton A= (Q,δ,i,o), we have LAt
+= LA iﬀ Lρ
+= Lρ
+At
+A for all recursive
+ρ: S →FIS such that S is finite.
+Proof. Suppose that for all recursive coalgebras ρ: S →FIS such that S is finite
+we have ot ◦[it,δ]ρ = o◦[i,δ]ρ. Given t∈TI, note that (TI,[ηI,γI]) is the initial
+algebra of functor FI, which by being finitary is also the colimit of the initial
+sequence of FI [5] and hence isomorphic to ( n∈N Fn
+I ∅,a) for an initial algebra
+structure a: FI n∈N Fn
+I ∅ → n∈N Fn
+I ∅. Let φ: (TI,[ηI,γI]) →( n∈N Fn
+I ∅,a)
+be the isomorphism. There exists n ∈N such that φ(t) ∈Fn
+I ∅. The set Fn
+I ∅
+is finite by FI preserving finite sets and the carrier of a recursive coalgebra
+ρ: Fn
+I ∅→Fn+1
+I ∅by [18, Proposition 6], with aρ: Fn
+I ∅→ n∈N Fn
+I ∅being the
+inclusion. Then S= {φ−1(x) |x ∈Fn
+I ∅}is also finite and the carrier of a
+′
+recursive coalgebra ρ′: S →FIS, with [ηI,γI]ρ
+: S →TI being the inclusion.
+
+PAGE 40
+
+40 Van Heerdt et al.
+Moreover, t∈S. Thus,
+′
+LAt (t) = (LAt
+◦[ηI,γI]ρ
+)(t)
+= (ot ◦i♯
+′
+t ◦[ηI,γI]ρ
+)(t) (definition of LAt )
+′
+= (ot ◦[it,δt]ρ
+)(t) (i♯
+t is an FI-algebra homomorphism)
+′
+′
+= Lρ
+At (t) (definition of Lρ
+A)
+′
+= Lρ
+A(t) (assumption)
+′
+′
+= (o◦[i,δ]ρ
+)(t) (definition of Lρ
+A)
+′
+= (o◦i♯ ◦[ηI,γI]ρ
+)(t) (i♯ is an FI-algebra homomorphism)
+′
+= (LA◦[ηI,γI]ρ
+)(t) (definition of LA)
+= LA(t).
+The converse follows from Proposition 16.
+The following useful lemma shows how contextual wrappers arise from recur-
+sive coalgebras.
+Lemma 48. Let ρ: S →FIS be a recursive coalgebra, and let ι▹: S′ TI be
+the image of the unique coalgebra-to-algebra map ι: S →TI to the initial algebra.
+Then S′ is again a recursive coalgebra, ι▹ is the unique coalgebra-to-algebra
+morphism, and reachA◦ι▹ = αS′.
+Proof. We show the announced recursiveness property. Consider the factorisation
+ι▹ ◦ι◃ of the unique coalgebra-to-algebra map ι in:
+FIS FIι◃
+GG FIS′GG FIι▹
+GG FITI
+yy
+yy
+ρ
+S
+d
+GG GG S′GG ι▹
+∼
+=
+
+GG
+TI
+Our functor FI preserves weak pullbacks (since F does), and hence monos in
+particular. Thus FI(ι▹) is monic. Since the initial algebra is an isomorphism, the
+composition with its structure map is monic as well and we get the map d by
+the fill-in property of the factorisation system.
+Finally, again since FI preserves weak pullbacks it preserves intersections;
+and as a consequence, the coalgebra d: S′→FI(S′) is recursive by [8, Corollary
+5.6].
+ι◃

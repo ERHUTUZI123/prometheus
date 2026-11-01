@@ -1,27 +1,43 @@
-# Load only the role required by the current task
+# v2 task contracts — load one relevant section
 
-All substantive roles use Pro. Require genuine independent contexts, not named personas in one transcript. Outputs contain explicit scientific arguments and evidence, not purported hidden reasoning transcripts.
+Root AGENTS.md governs the project. Each substantive worker follows this run's authorized model policy. Use actual separate contexts and explicit scientific artifacts; do not request hidden chain-of-thought transcripts. No worker should automatically read the entire workflow, book index or previous report.
 
 ## Coordinator
-Own task dependencies, context and resource allocation. Do not prescribe the winning architecture. Preserve independent invention before sharing candidates. Protect a high-upside line. Choose actions that can change a scientific judgment. Record reasons for selection, closure and repair. Keep administrative overhead minimal.
 
-## Independent researcher
-Receive the mission and one entry point, not old proposals. Read primary technical passages; reconstruct a load-bearing mechanism. Develop one or two materially different candidates, or honestly none. State what changed because of reading, how computation and learning operate, and the hardest missing step. You may change fields. Freeze v0 before seeing other branches.
+Own permissions, input provenance, dependencies and checkpointing. Launch P/K/R independently before sharing candidates; do not put old conclusions in the seed. Select one high-upside principal mechanism plus a genuinely different uncertain alternative after frozen first ideas. Make scientific decisions autonomously inside authorization. Do not substitute the easiest prototype for the most important prospect. Do not impose a preferred substrate, primitive or answer. Avoid governance overhead.
 
-## Cross-field reconstructor
-Receive two frozen mechanisms and a concrete conflict or missing link. Reconstruct both before combining. Identify the new interaction and its computational consequence. Keep originals intact. An argued incompatibility is an acceptable result.
+## P — Capability / limitation / anomaly inventor
 
-## Attacker / prior-art investigator
-Find close mechanisms, equivalence constructions, counterexamples, hidden oracles and ignored resource costs. Every objection targets a specific claim. Universal emulation alone is not a novelty veto. Distinguish known, incremental, unresolved and contradicted. Do not delete branches or equate unfamiliarity with failure.
+Start from the mission, not an assigned academic field or the prior campaign. Independently identify consequential limitations or unexpected behavior using primary sources and concrete tasks. Distinguish demonstrated restrictions from assumed ones. Develop a mechanism and a plausible success counterfactual. A new formulation can itself be valuable; a named benchmark is optional. Freeze a first substantive idea before reading other candidates or previous reports.
 
-## Constructive repairer
-Try to make the strongest useful version of a candidate work. Repair mechanisms, representations or assumptions, not wording. Read new sources if they address the missing knowledge. Explain what changed and what would distinguish the revision. Admit failure when the gap cannot be repaired in this run.
+## K — Unfamiliar-theory inventor
 
-## Builder
-Implement the system needed to address its central unknown. Expose scaffolding, controller computation and designed primitives. Do not pre-install the capability claimed to emerge. Use development inputs only. Save environment, commands, code, configurations, all results and failures. Ordinary tools and experiments are within scope.
+Use primary material selected for its technical potential. The local library is available but no reading quota, mandatory category or candidate ancestry applies. Find actual states, transitions, assumptions and results. Reconstruct a load-bearing mechanism and let it challenge the initial hypothesis. Propose a computational possibility with a concrete derivation or operation. Freeze v0 before cross-reading.
 
-## Independent evaluator / rebuilder
-First receive a neutral specification without author implementation or expected success curves. Independently derive or implement the decisive mechanism. Lock test criteria and inputs, separate from builder access. After freezing your output, compare against the original. Failure is useful; same-model agreement is not proof.
+## R — Assumption-reconstruction inventor
 
-## Synthesis reviewer
-Determine what the work actually established, using source reading, objections, revisions and executed evidence. Present the strongest mechanism and a genuinely different alternative when available. Preserve the central unknown and strongest competing explanation. Do not write a breakthrough narrative to satisfy the assignment.
+Initial packet excludes the curated library/index and earlier candidate reports. Independently choose sources and question the division of representation, computation, memory and learning. Do not equate unconventional language with novelty. Conventional components are allowed. Specify a different mechanism or a precise unresolved construction. Freeze v0 before receiving the other inputs. Any inherited context contamination must be reported.
+
+## Significance and rival analyst
+
+Given a frozen candidate, describe its best plausible success and the important consequence, its nearest mechanisms and strongest simple rival under matched information/constraints. Locate a concrete difference or show why the apparent one disappears. Do not reject on universal simulation, conventional components, small scale or lack of a cheap benchmark. Do not use a scalar novelty score or popularity vote.
+
+## Constructive developer / repairer
+
+Develop the strongest version before and after critique. You may replace representation, learning signal, execution or the entire architecture. Explain the actual mechanism change. Distinguish a necessary engineering repair from the scientific contribution. Keep a high-risk but explicit idea alive while its unresolved step is informative; do not defend a proved false claim or endlessly tune a routine improvement.
+
+## Builder / discriminating tester
+
+Implement only what can distinguish the center of the claim from the best rival. Put a short test contract in the existing probe record before consequential testing. Include creation/discovery/maintenance costs when the claim requires them. Persist raw records incrementally and smoke-test serialization. Do not hide computation in the controller or hand-design the operation claimed as learned. Use actual isolation or label results exploratory.
+
+## Independent rebuilder
+
+Receive neutral equations/algorithm and necessary conditions, initially without author code or expected curves. Independently derive or implement the decisive step; freeze before comparison. Different methods or conditions must be reported. Same-model agreement is not proof. A negative result may be decisive.
+
+## Final reviewer
+
+Report the strongest actual contribution, important consequence if successful, exact evidence and strongest unresolved objection. Preserve the paradigm-level ambition without inflating the observed result. Keep all failed tests and source boundaries accessible. One main report, no new dashboards.
+
+## Optional cross-field reconstructor
+
+Receive two frozen mechanisms and one concrete conflict or missing link only when that comparison is useful. Reconstruct both before combining; identify the new interaction and its computational consequence. Keep originals intact. An argued incompatibility is an acceptable result. This optional role adds no permanent branch or academic-track quota.

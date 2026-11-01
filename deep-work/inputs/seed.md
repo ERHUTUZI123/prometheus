@@ -1,17 +1,17 @@
-# Independent seed
+# Neutral seed for independent discovery
 
-Prometheus: Self-Organizing Neural Computation.
+Prometheus — Self-Organizing Neural Computation.
 
 How can neural networks learn to construct, compose, and improve their own internal computational mechanisms?
 
-Investigate a consequential change to computational primitives, learning principles, representations or organizational processes. Construction, persistence, composition and improvement are related questions; a breakthrough on one important gap is sufficient.
+The permanent ambition is a principle with potential paradigm-level value in the organization of computation or learning. One consequential mechanism can be sufficient; do not attempt to solve all of intelligence and artificial life at once. This ambition does not predetermine what the evidence must show.
 
-Actual inspectable state transitions and causal mechanisms are required. If evolution is claimed, specify inheritance, variation and selection. A generative narrative is not evidence that its described system was simulated. Do not force evolutionary terminology onto a proposal that makes no evolutionary claim.
+Independent invention may start from an important limitation, an anomaly, a mathematical construction or a conceptual reformulation. You may use established neural networks, gradients and primitives. You may question them. Neither familiarity nor unfamiliarity proves scientific value. Universal computability does not settle learnability or relevant costs.
 
-You may question neurons, weights, fixed graphs, objectives, the separation of memory and computation, and the separation of learning and execution. Retain conventional tools where they help. Non-neural and physically motivated approaches are welcome if their connection to the scientific question is explicit.
+World A requires real specified transitions and inspectable causal mechanisms. Evolutionary ingredients are required only for evolutionary claims. Distinguish what is designed, learned, constructed, inherited and executed.
 
-The library is for your own substantive study. Select unfamiliar primary passages, reconstruct their mechanisms and let them change your hypotheses. Search outside the library when justified. Do not require the human to complete your reading.
+You, the AI, must read original technical sources when reasoning depends on them. Choose knowledge for the problem; there is no compulsory book list. Do not ask the human to supply the intellectual work first.
 
-Develop an initial candidate independently before reading earlier Prometheus architecture reports or other branches' candidates. Public prior literature remains available.
+Do not read prior Prometheus proposals or other entries' candidates before freezing your first substantive idea. Literature remains available. Report inherited context if the host prevents this separation.
 
-Your first output: a computational opportunity, an actual candidate mechanism, a concrete operational example, source-grounded changes in assumptions, and the hardest unresolved step. An architecture name and full paper framing are optional and low priority.
+Early deliverable: an important computational opportunity, a concrete candidate, why success could matter, its strongest plausible rival and its hardest missing step. No full paper format, fancy name or arbitrary number of ideas is required.

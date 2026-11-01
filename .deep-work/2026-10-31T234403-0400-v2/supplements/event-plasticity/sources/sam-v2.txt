@@ -1,0 +1,1411 @@
+How Biological Synapses Self-Assemble Gradient Learning
+Skip to main content
+Report GitHub Issue
+×
+Title:
+Content selection saved. Describe the issue below:
+Description:
+Submit without GitHub
+Submit in GitHub
+Why HTML?
+Report Issue
+Back to Abstract
+Download PDF
+Contents
+Reading mode
+Colour theme
+Abstract
+1 Introduction
+2 Related Work
+2.1 ML-style biologically plausible learning
+2.2 Models with stronger biological grounding
+3 Results
+3.1 A neural circuit architecture that self-assembles
+Notation
+3.2 Gradient Learning in Overparametrized Downstream Pathway
+Alignment errors
+3.3 SAM works efficiently in learning
+3.4 Overparameterization in the Downstream Pathway is Beneficial
+3.5 Learned Representations are Structurally Low-Rank
+3.6 Interconnection Plasticity is Crucial
+3.7 How to identify these circuits
+3.8 An Example Implementation of SAM in Cortex
+3.9 Self-Organization Beyond the Two-Stream Scaffold
+4 Discussion
+A Theory
+A.1 Setup
+A.2 One-step maps and telescoping target
+Upstream cotangent port (gℓ+1g^{\ell+1}).
+Downstream activity port (a¯ℓ+1\bar{a}^{\ell+1}).
+A.3 Main results
+A.4 Proof of Lemma and Theorem
+I1 (one-layer bridge).
+I2 (splice).
+I3 (projector on the pathway).
+I4 (product-difference lemma; T→ST\to S).
+I5 (SS-product induction).
+I6 (SAL update ↔\leftrightarrow generalized SGD).
+B Biological Evidence for Synaptic Plasticity Rules
+C Gradient Learning Without a Two-Stream Scaffold
+D Experimental Setup
+Datasets.
+Baselines.
+E Alignment Diagnostics
+Two error budgets.
+Measured quantities.
+Training hyperparameters.
+Three hidden layers (L=4L=4; stable regime).
+Four hidden layers (L=5L=5; illustrative divergent run).
+F Pseudo Code
+References
+License: arXiv.org perpetual non-exclusive license
+arXiv:2412.20018v2 [cs.NE] 12 Oct 2026
+How Biological Synapses Self-Assemble Gradient Learning
+Qianli Liao
+Affiliation: K. Lisa Yang Integrative Computational Neuroscience Center, Yang Tan Collective, Massachusetts Institute of Technology (MIT), Cambridge, MA 02139
+Affiliation: Center for Brains, Minds, and Machines, MIT
+Affiliation: McGovern Institute for Brain Research, MIT
+Liu Ziyin
+Affiliation: Research Laboratory of Electronics, MIT
+Yulu Gan
+Affiliation: Center for Brains, Minds, and Machines, MIT
+Affiliation: Computer Science and Artificial Intelligence Laboratory, MIT
+Brian Cheung
+Affiliation: Center for Brains, Minds, and Machines, MIT
+Affiliation: Computer Science and Artificial Intelligence Laboratory, MIT
+Mark T. Harnett
+Affiliation: K. Lisa Yang Integrative Computational Neuroscience Center, Yang Tan Collective, Massachusetts Institute of Technology (MIT), Cambridge, MA 02139
+Affiliation: McGovern Institute for Brain Research, MIT
+Affiliation: Department of Brain and Cognitive Sciences, MIT
+Tomaso Poggio
+Affiliation: K. Lisa Yang Integrative Computational Neuroscience Center, Yang Tan Collective, Massachusetts Institute of Technology (MIT), Cambridge, MA 02139
+Affiliation: Center for Brains, Minds, and Machines, MIT
+Affiliation: McGovern Institute for Brain Research, MIT
+Affiliation: Computer Science and Artificial Intelligence Laboratory, MIT
+Affiliation: Department of Brain and Cognitive Sciences, MIT
+Affiliation: Italian Institute of Technology, Genova 16163, Italy
+Abstract
+Existing models of learning in the brain explain how given circuits learn, but not how biology could assemble those circuits in the first place. To address this gap, we formulate Self-Assembling Learning (SAL)—the study of how learning systems can emerge from lower-level interactions—and introduce one example mechanism, the Self-Assembling Motif (SAM). SAM is self-assembling at two scales: the motif emerges from initially random connectivity under heterosynaptic plasticity rules, and networks of SAMs, composed hierarchically, self-organize into dynamics that provably approximate a generalized form of stochastic gradient descent—matching backpropagation-level performance. This suggests that biological learning need not be prescribed but can emerge from local rules—and to a far greater extent than previously thought.
+1 Introduction
+Deep neural networks have revolutionized computational neuroscience, where Artificial Neural Networks (ANNs) are increasingly used to model various aspects of information processing in the brain ([1]; [2]; [3]; [4], [5]; [6], [7], [8]). These models demonstrate remarkable success in capturing neural responses and cognitive functions. Yet a model’s value as an account of the brain rests on more than reproducing such responses. A model of learning in the brain is biologically plausible only if biology could actually produce it—a property we call biological realizability. Realizability is not a verdict to be read off surface resemblance, nor a checklist of forbidden mechanisms to avoid; it is a demonstration that a mechanism could come to exist. And because biological structure has no external designer, any mechanism that realizes it must, at bottom, organize itself. Realizability is therefore fundamentally a question of self-organization—and, crucially, a matter of degree.
+This reframing turns biological plausibility from a binary verdict into a graded axis (Figure 1): learning models differ in how much of their structure is stipulated in advance versus shown to emerge from local interactions. The axis runs deep. One may ask only that the weights self-organize, while the circuit that adjusts them is designed; or, going further, that the learning circuit itself assemble; further still, the scaffold that hosts it; and in principle, the developmental program that lays the scaffold down. The further down a model reaches, the more of what others simply assume it must instead derive—to move down the axis is to replace assumption with assembly. By this measure, most existing learning algorithms sit very near the top: they self-organize their inference weights, but under machinery that is otherwise fixed in advance. This is true even when training yields rich, interpretable structure—reusable dynamical motifs [9] or inhibitory microcircuits supporting working memory maintenance [10]—because such structure emerges in the inference weights being trained, while the learning rule that adjusts them remains designed.
+Figure 1: A model is biologically plausible only if biology could produce it on its own: biological plausibility/realizability as a graded axis of self-organization. Learning algorithms differ in how much of their structure self-assembles from local interactions rather than being stipulated in advance. The vertical axis is an ordinal ladder of organizational levels: the inference/forward weights, the circuit that adjusts them, the scaffold that hosts it, and beyond. We label the second level the credit-assignment circuit to be concrete, though more generally it is the learning circuit—the machinery that turns experience into inference weight changes, of which credit assignment is the canonical example. Backprop and feedback-alignment variants self-organize essentially only their weights, leaving this circuit fixed; SAM assembles the circuit itself from uniform rules, resting only on a minimal two-stream scaffold whose form is largely required for stable perception. The faded top indicates that the axis is open-ended.
+Nowhere is this stipulation more evident than in backpropagation, the standard
+method for computing gradients in stochastic gradient descent (SGD). It
+presupposes a precisely aligned architecture—forward and backward pathways tied
+together by weight transport and neuron-level correspondence—that is difficult
+to reconcile with biology [11, 5, 6].
+Biologically plausible alternatives loosen parts of this machinery: feedback
+alignment drops weight symmetry [12, 11], while weight
+mirroring and the Kolen–Pollack rule let the backward weights adapt
+[13]. Yet each still wires in a fixed one-to-one correspondence
+between the two pathways rather than letting it form, and, more broadly, assumes
+the prior existence of a specific learning-capable circuit that has not been
+shown to be biologically assemblable
+[14, 15, 16, 17, 18, 19, 20]. Such models explain how a fixed
+circuit can learn, but not how the circuit itself arises—presupposing the very
+structure whose origin is in question. We call this unresolved gap the
+architectural circularity of biologically plausible learning. A detailed
+discussion of related approaches is provided in Section 2.
+Stepping back from specific algorithmic proposals, we may instead ask a more
+fundamental question: if biological learning systems are not globally designed,
+what principles must govern their organization? Such a system must consist of
+many interacting components, each following local rules, yet collectively giving
+rise to coherent learning behavior at the system level. The problem is therefore
+not to design a learning algorithm top-down, as in previous attempts, but to
+understand how learning structure itself can emerge from distributed local
+interactions.
+This perspective leads us to formulate a scientific problem we call
+Self-Assembling Learning (SAL): how systems composed of interacting parts,
+governed only by local interaction rules rather than centralized design, can
+emerge from lower-level interactions into structures that implement effective
+learning algorithms. Biological neural circuits provide a particularly rich and
+concrete instantiation of this principle, though the SAL formulation is more
+general and applies to any distributed system in which learning must emerge
+rather than be imposed.
+Addressing SAL requires bridging multiple levels of analysis. At the
+computational level, one must specify what objective a self-organizing system
+ultimately optimizes; at the algorithmic level, the dynamical process by which
+parameters are updated; at the implementation level, the physical mechanisms
+through which such dynamics are realized. These explanatory levels must in turn
+connect to levels of biological organization—molecular processes, synaptic
+interactions, circuit motifs, large-scale networks, and distributed systems.
+These are, in effect, the same levels along which the self-organization axis
+runs: to ask how far self-assembly reaches is to ask how many of these levels
+emerge from local rules rather than being assumed.
+The central challenge of SAL is therefore to understand how local mechanisms at
+lower levels of organization can give rise to algorithmic learning dynamics at
+higher levels, which in turn implement coherent computational objectives. In
+neural systems, this means explaining how synaptic plasticity and cellular
+dynamics can self-organize into circuits whose collective behavior resembles
+principled optimization.
+As a constructive step toward this goal, we introduce a circuit building block,
+the Self-Assembling Motif (SAM). SAM consists of four synaptic pathways
+connecting two interacting information streams, all governed by uniform
+heterosynaptic plasticity rules. SAM is self-assembling at two scales: first, the
+motif itself emerges from initially random connectivity under local plasticity
+rules; second, when repeated hierarchically across layers, networks of SAMs
+self-organize into structured learning dynamics. In particular, the one-to-one
+correspondence between pathways that prior methods wire in is, in SAM, not
+assumed: its cross-stream connections are themselves randomly
+initialized and plastic, so the alignment between the two streams forms on its own.
+SAM is not assumption-free: it takes as given the existence of two
+interacting streams with only modulatory—not driving—interactions between
+them. This assumption is not arbitrary. Two segregated streams whose
+cross-interactions cannot drive one another are close to what any system
+performing stable perception requires: strong driving connections across streams
+would form closed driving loops, leading to runaway amplification and the
+contamination of inference by error signals. The two-stream scaffold is thus
+better understood as a stability constraint that bounds the space of viable
+architectures than as a designed blueprint, and it is exactly the kind of
+low-information prior that development can plausibly supply. Within these minimal
+constraints, everything in SAM that performs learning—the credit-assignment
+circuit and all of its connections—self-assembles from initially random
+connectivity under uniform local rules. SAM therefore sits further down the self-organization axis (Figure 1) than any prior biologically plausible learning algorithm.
+We theoretically prove that, up to a measurable approximation error, hierarchically composed SAM networks implement a generalized form of SGD whose effective learning rate is a matrix that itself emerges through plasticity and is asymptotically positive semidefinite. The emergence of such gradient dynamics from purely local rules shows
+that optimization behavior can arise without top-down architectural
+specification, making gradient-based learning compatible with biological
+self-organization—and to a far greater extent than previously thought.
+2 Related Work
+Our work is not the first to propose biologically plausible alternatives to backpropagation [11, 12, 14, 16, 15]. Recent efforts explore a variety of directions — top-down weight alignment [20], pseudoinverse feedback [21], and meta-learned plasticity rules over random feedback [22], as well as objective-minimization accounts such as the free-energy principle [23]. The most closely related approach to ours is the Kolen-Pollack algorithm [24, 13], a special case of our circuit in which the cross-connections are frozen and initialized to the identity. Very recently, [25] showed how learning can be integrated with other visual functions, such as visual guidance, by exploiting the interplay of ascending and descending cortical pathways. Below we examine several approaches in more detail, in two categories ordered by biological grounding.
+2.1 ML-style biologically plausible learning
+A substantial body of work (see [5, 6] for comprehensive reviews) has sought to make gradient-based learning more biologically plausible by modifying some specific aspects of backpropagation while retaining most of its machine learning oriented designs. Feedback alignment and its variants replace exact weight symmetry with fixed and random feedback connections [11, 12].
+Such approaches successfully eliminate the requirement of exact weight transport, but they typically rely on an artificial one-to-one correspondence between forward and backward neurons or pathways. The backward structure is assumed to mirror the forward structure and often derivatives of forward activations are re-used during the backward pass.
+Direct feedback alignment and related methods [14, 15] further relax the architectural symmetry constraints in forward and backward pathways. However, they still keep the global constraints such as fixed and non-plastic feedback pathways, and the overall credit-assignment structure is specified a priori rather than emerging through biological assembly. Contrary to the feedback alignment philosophy, there is substantial evidence that biological synapses are highly plastic in feedback pathways during adulthood (see section 3.7 for detailed discussion).
+Finally, these models are typically formulated at the algorithmic level and do not provide detailed correspondence to specific biological cell types or microcircuit organization.
+2.2 Models with stronger biological grounding
+More recent work has pursued tighter correspondence with cortical microcircuit structure by embedding credit assignment mechanisms directly within biologically grounded neuronal models. Examples include burst-based models such as BurstProp [18] and BurstCCN [19], as well as two-compartment neuron models such as Error-encoding Dendritic Networks (EDNs) [17] and [20].
+Unlike feedback alignment methods, these approaches attempt to resolve the artificial one-to-one duplication of forward and backward neurons by allowing feedback signals to propagate through the original feedforward neurons themselves. We refer to this strategy as original-pathway feedback. Rather than introducing a separate backward population that mirrors the forward pathway, credit assignment signals are multiplexed onto the same neurons that transmit activations.
+Two interesting mechanisms have been proposed within these models. In burst-based models, bursts are treated as distinct from ordinary spikes, enabling activation and error signals to coexist within the same neuronal pathway. This activation–error multiplexing is an elegant conceptual solution to the alignment problem. However, it assumes that bursts encode error-specific information, a hypothesis that remains to be firmly established biologically.
+Alternatively, in models such as EDN, small perturbations or “nudges” are introduced to neuronal activations, allowing discrepancies to propagate across layers through multi-compartment dynamics. While this avoids explicit weight transport, the approach may be sensitive to other sources of activity fluctuation. Moreover, in its current formulation, EDN retains a one-to-one correspondence between interneurons in layer
+kk and pyramidal neurons in layer k+1k+1, requiring a somewhat artificial alignment at the circuit level.
+Importantly, although these models achieve detailed biological correspondence at the cellular and dendritic levels, they generally assume the existence of a learning-capable microcircuit. The motif responsible for credit assignment is specified rather than shown to emerge through local assembly processes. As a result, they do not fully address the architectural circularity underlying the origin of learning-capable structure.
+In contrast, our approach employs what may be termed other-pathway feedback, in which error signals propagate through distinct pathways that do not reuse the original feedforward neurons as intermediate carriers. This separation avoids activation–error multiplexing and does not require distinguishing bursts from spikes. More importantly, the feedback-supporting circuit motif itself is self-assembling under local plasticity rules, addressing both credit assignment and architectural emergence within a unified framework. Biology may employ either or both strategies, but here we focus on end-to-end self-assemblability of the learning architecture.
+3 Results
+Figure 2: A synaptic motif for interactions between ascending and descending information streams. (a) Schematic of the upstream-downstream architecture. The upstream consists of a standard fully-connected neural network with multiple layers, roughly corresponding to a multi-region cortical processing pathway (e.g. V1-V2-V4-IT). The output of the upstream network goes to an error processing module (potentially corresponding to frontal cortices). This module computes a local error signal. This error signal is sent to the feedback (downstream) pathway, which processes information layer by layer downwards. The orange arrows represent non-learnable (identity) connections. Blue arrows represent learnable connections, each parameterized by a fully-connected weight matrix. (b) A detailed view of the smallest unit of the connection motif in panel a, indicated by grey dashed box. The neurons in panel b (as well as the abstract forms in A and C are illustrated as pyramidal neurons, the principal cell type of the cortex. Only apical dendrites are illustrated here for simplicity. (c) A mathematical description of the unit in panel b. Each arrow (which corresponds to a collection of axons, dendrites, and synapses) represents a set of full connections between two groups of neurons, parameterized by a weight matrix W or V . Every h in C is a vector and refers to the activations of a group of neurons. The connection matrix V allows upstream and downstream networks to have different number of hidden units in corresponding layers.
+3.1 A neural circuit architecture that self-assembles
+We propose a new ANN circuit architecture that is grounded in simple, biological synaptic motifs (Fig. 2). It is based on two interacting streams of information flow: an ascending stream representing forward pathways and a descending stream representing feedback pathways, mirroring cortical connectivity between areas. These streams are defined by a set of synaptic weights, which are subject to local heterosynaptic plasticity rules. Unlike the standard computer implementation of gradient descent – backpropagation – our model does not require the explicit computation of derivatives, and does not require weight symmetry between forward and feedback pathways.
+There are a number of key features that differentiate our new ANNs from other approaches:
+•
+Heterosynaptic Learning Rules: All synaptic updates are driven by the activity of the synapse itself and of other synapses on the same neuron. The latter do not need to be electrically close to the modifiable synapse, depending on the specific mechanism of heterosynaptic plasticity.
+•
+Biological Congruence: The architecture aligns with known anatomical and physiological properties of cortical circuits.
+•
+Reduced Assumptions: Our models do not require any weight symmetry and still achieve competitive performance on challenging datasets like CIFAR-10;
+•
+Structural Resilience: Our circuit motif works with a range of nonlinearities underlying the transduction from synaptic activities to neuron activity (and corresponding to the ReLU nonlinearity used in many neural networks) and for an arbitrary width of the forward and backward pathway. The network is therefore robust to small changes in the local configurations of pathways.
+Notation
+Let θ\theta be the parameters of the model. We will use Δ​f​(θ)\Delta f(\theta) to denote the difference of the quantity f⁡(θ)f(\theta) after one step of the learning algorithm: Δ​f​(θ):=f⁡(θt+1)−f⁡(θt)\Delta f(\theta):=f(\theta_{t+1})-f(\theta_{t}). Any vector without a transpose superscript is treated as a column vector (e.g. ∇F​(θ)\nabla F(\theta) is a column vector for a scalar function FF).
+We assume that each pathway is organized in layers indexed with ℓ∈{0,…,L}\ell\in\{0,...,L\}, with input at 00 and readout at LL (depth LL in weight hops/modules; motifs ℓ=0,…,L−1\ell=0,\ldots,L-1). Let hℓ∈ℝdℓh^{\ell}\in\mathbb{R}^{d_{\ell}} denote the neuron’s cell body electric potential (i.e., before applying nonlinearity) of the ℓ\ell-th layer upstream pathway and h¯ℓ∈ℝd¯ℓ\bar{h}^{\ell}\in\mathbb{R}^{\bar{d}_{\ell}} the downstream pathway. For reasons that will become clear, the upstream is also referred to as the forward pathway, and the downstream is the feedback pathway. Note that it is, in general, the case that the two pathways have different numbers of neurons, and so dℓd_{\ell} is not necessarily equal to d¯ℓ\bar{d}_{\ell}. The simplest such biological motif is shown in Figure 2, where four synaptic connection matrices connect two consecutive layers of the two pathways. Here, Wℓ∈ℝdℓ+1×dℓW^{\ell}\in\mathbb{R}^{d_{\ell+1}\times d_{\ell}} is the connection from the ℓ\ell-th layer upstream pathway to the ℓ+1\ell+1-th layer upstream pathway, W¯ℓ∈ℝd¯ℓ×d¯ℓ+1\bar{W}^{\ell}\in\mathbb{R}^{\bar{d}_{\ell}\times\bar{d}_{\ell+1}} the connection from ℓ+1\ell+1-th layer downstream to the ℓ\ell-th layer downstream. Vℓ∈ℝd¯ℓ×dℓV^{\ell}\in\mathbb{R}^{\bar{d}_{\ell}\times{d}_{\ell}} and V¯ℓ∈ℝdℓ+1×d¯ℓ+1\bar{V}^{\ell}\in\mathbb{R}^{d_{\ell+1}\times\bar{d}_{\ell+1}} are inter-stream connections: VV goes from the upstream to the downstream, and V¯\bar{V} from the downstream to the upstream. The algorithm pseudocode is in SI Pseudo Code.
+The computation of the two pathways takes place sequentially, where the upstream computation is performed first and eventually used for inference, and the downstream computation takes place after inference and is used for synaptic weight updates:11
+1
+This sequential ordering is consistent with, for example, the observation that inactivating V1 also leads to the inactivation of V2, while deactivating V2 has no effect on the activations of V1 ([26]).
+hℓ+1=Wℓ​Duℓ​hℓh^{\ell+1}=W^{\ell}D_{u}^{\ell}h^{\ell}, h¯ℓ=W¯ℓ​Ddℓ+1​h¯ℓ+1\bar{h}^{\ell}=\bar{W}^{\ell}D_{d}^{\ell+1}\bar{h}^{\ell+1},
+where DD matrices are diagonal matrices that function as the neuron nonlinearity and may be different for upstream (DuD_{u}, corresponding to hh) and downstream (DdD_{d}, corresponding to h¯\bar{h}) pathways and for different layers. The input layer is h0:=xh^{0}:=x, and hL:=y^h^{L}:=\hat{y} is the output of the network. The input to the downstream pathway is an error signal obtained from an objective function FF: h¯L:=ϵ⁡(y^)=−∇y^F​(y^)\bar{h}^{L}:=\epsilon(\hat{y})=-\nabla_{\hat{y}}F(\hat{y}), which is computed from the output of the upstream pathway. The downstream propagates this signal in the reverse direction. One example of FF is the MSE loss, where F⁡(y^)=‖y−y^‖2F(\hat{y})=\|y-\hat{y}\|^{2}, where yy is the correct label.
+For the first layer, DD is identity (i.e., no nonlinearity on the input). For later layers, we choose DuD_{u} to be a diagonal zero-one matrix:
+Duℓ=diag⁡(𝟏(hℓ)1,…,𝟏(hℓ)d)D_{u}^{\ell}={\rm diag}(\mathbf{1}_{(h^{\ell})_{1}},...,\mathbf{1}_{(h^{\ell})_{d}})
+where 𝟏x=1\mathbf{1}_{x}=1 if x>0x>0 and is zero if x≤0x\leq 0, corresponding to a ReLU nonlinearity. For DdD_{d}, we focus on the simplest case where Dd=ID_{d}=I is the identity matrix.
+Another common choice of DdD_{d} is the Jacobian of a ReLU nonlinearity based on forward activations, which requires V=V¯=IV=\bar{V}=I (namely a one-to-one correspondence between upstream and downstream neurons). With this choice of DdD_{d}, VV and V¯\bar{V}, our algorithm reduces to:
+1. standard backpropagation, if W¯\bar{W} is hardwired to WTW^{T} throughout training. 2. Feedback Alignment ([12]), if W¯\bar{W} is random and fixed. 3. the KP-algorithm ([24]), if W¯\bar{W} is learned using our learning rule, which converges to the exact gradient descent provably.
+Heterosynaptic Learning: our local learning rule takes the general form of Δ​W∝Sp​o​s​t∗Sp​r​e\Delta W\propto S_{post}*S_{pre}, where the change Δ​W\Delta W of a synapse is proportional to the product of postsynaptic signal Sp​o​s​tS_{post} and presynaptic signal Sp​r​eS_{pre}. This is similar to Hebbian learning, but we have extra emphasis that Sp​o​s​tS_{post} refers to the signals sent by feedback synapses to the postsynaptic neuron instead of those arising from self-activation due to forward synapses. Feedback signals are informative in learning while self-activation signals only lead to non-informative arbitrary self-strengthening.
+In most situations, Sp​r​eS_{pre} represents the presynaptic potential on an axon, mathematically taking the form of Dp​r​e∗hp​r​eD_{pre}*h_{pre}, where Dp​r​eD_{pre} is the nonlinearity and hp​r​eh_{pre} is the electric potential of the presynaptic cell body. For WW and W¯\bar{W}, the postsynaptic factor always includes a gain Dp​o​s​tD_{post}; for VV and V¯\bar{V}, whether the postsynaptic factor is gated (Sp​o​s​t∝Dp​o​s​t​hp​o​s​tS_{post}\propto D_{post}h_{post}) or left ungated (Sp​o​s​t∝hp​o​s​tS_{post}\propto h_{post}) is the main algorithmic variant, as noted below.
+This simple rule guides the learning of all four directions of synapses in our model:
+Δ​Wℓ=ηW​(Duℓ+1​(V¯ℓ​Ddℓ+1​h¯ℓ+1))​(Duℓ​hℓ)T−γ​Wℓ\displaystyle\Delta W^{\ell}=\eta_{W}(D_{u}^{\ell+1}(\bar{V}^{\ell}D_{d}^{\ell+1}\bar{h}^{\ell+1}))(D_{u}^{\ell}h^{\ell})^{T}-\gamma W^{\ell}
+∝(DW​p​o​s​t​SW​p​o​s​t)​(DW​p​r​e​SW​p​r​e)T,\displaystyle\propto(D_{Wpost}S_{Wpost})(D_{Wpre}S_{Wpre})^{T},
+(1)
+Δ​W¯ℓ=ηW¯​(Ddℓ​(Vℓ​Duℓ​hℓ))​(Ddℓ+1​h¯ℓ+1)T−γ​W¯ℓ\displaystyle\Delta\bar{W}^{\ell}=\eta_{\bar{W}}(D_{d}^{\ell}(V^{\ell}D_{u}^{\ell}h^{\ell}))(D_{d}^{\ell+1}\bar{h}^{\ell+1})^{T}-\gamma\bar{W}^{\ell}
+∝(DW¯​p​o​s​t​SW¯​p​o​s​t)​(DW¯​p​r​e​SW¯​p​r​e)T,\displaystyle\propto(D_{\bar{W}post}S_{\bar{W}post})(D_{\bar{W}pre}S_{\bar{W}pre})^{T},
+(2)
+Δ​Vℓ=ηV​(Ddℓ​h¯ℓ)​(Duℓ​hℓ)T−γ​Vℓ\displaystyle\Delta V^{\ell}=\eta_{V}(D_{d}^{\ell}\bar{h}^{\ell})(D_{u}^{\ell}h^{\ell})^{T}-\gamma V^{\ell}
+∝(DV​p​o​s​t​SV​p​o​s​t)​(DV​p​r​e​SV​p​r​e)T,\displaystyle\propto(D_{Vpost}S_{Vpost})(D_{Vpre}S_{Vpre})^{T},
+(3)
+Δ​V¯ℓ=ηV¯​(Duℓ+1​hℓ+1)​(Ddℓ+1​h¯ℓ+1)T−γ​V¯ℓ\displaystyle\Delta\bar{V}^{\ell}=\eta_{\bar{V}}(D_{u}^{\ell+1}h^{\ell+1})(D_{d}^{\ell+1}\bar{h}^{\ell+1})^{T}-\gamma\bar{V}^{\ell}
+∝(DV¯​p​o​s​t​SV¯​p​o​s​t)​(DV¯​p​r​e​SV¯​p​r​e)T,\displaystyle\propto(D_{\bar{V}post}S_{\bar{V}post})(D_{\bar{V}pre}S_{\bar{V}pre})^{T},
+(4)
+where η\eta is the time constant of learning (i.e., the learning rate), γ\gamma is the strength of local regularization terms that encourage the synapses to be weak when unused. Here SS denotes a general signal that may or may not already be gated (as Sp​r​eS_{pre} usually is); gating a gated signal changes nothing, as D2=DD^{2}=D for ReLU. This lets all four rules be written in the same symmetric gated form. The original benchmark experiments were run with the slightly simpler ungated interstream variant, which omits the postsynaptic nonlinearity on VV and V¯\bar{V} updates—equivalently DV​post=DV¯​post=ID_{V\mathrm{post}}=D_{\bar{V}\mathrm{post}}=I—as in SI Pseudo Code, Algorithm 1. We did not observe qualitative differences between the two variants in practice. The alignment diagnostics and SI Theory use the gated form, SI Pseudo Code, Algorithm 2, because it is the more symmetric presentation; the same interstream-alignment mechanism applies to either form when the paired VℓV^{\ell} and (V¯ℓ−1)T(\bar{V}^{\ell-1})^{T} updates use the same outer-product drive and matched learning rates. The four sets of rules are almost completely symmetric along all directions – the only asymmetry between WW/W¯\bar{W} and VV/V¯\bar{V} stems from the fact that WW and W¯\bar{W} have the overwriting effect on the neurons that they connect to, while VV and V¯\bar{V} only serve to provide learning signals but do not overwrite the target neurons’ activations. This design choice may be explored further in the future. We further discuss the biological plausibility of our learning rules in SI Biological Evidence for Synaptic Plasticity Rules.
+Both the learning rate and the regularization strength are labeled with a different subscript to emphasize that they could have different time constants. In this work, we always keep the regularization strengths uniform. We empirically search over 64 combinations of the learning rates and use the best one in the experiment.22
+2
+See SI Experimental Setup. We found it particularly beneficial to fix the ratio between the four learning rates, while tuning the overall factor for different tasks.
+A key feature of this algorithm is that it allows both the inference network and the learning circuit, in addition to all their connections, to be simultaneously self-assembled.
+Figure 3: Detailed analyses, variants and ablation studies of SAM. (a) The matrices V¯​V¯T\bar{V}\bar{V}^{T} (upper) and W​WTWW^{T} (lower) before and after training. Also, recall that V¯​V¯T=Hℓ\bar{V}\bar{V}^{T}=H^{\ell} determines the ideal aligned matrix learning rate HDℓH_{D}^{\ell} for WℓW^{\ell} at Evℓ+1=0E_{v}^{\ell+1}=0 (Theorem 1; more generally the prefactor is HDℓ+E~v,DℓH_{D}^{\ell}+\widetilde{E}_{v,D}^{\ell}). The neurons within the same layer become correlated after training. The spectra of the weight matrices of the two pathways are found to be effectively low-rank (right). This visualization used the SVHN dataset with a network having 8 hidden layers. (b) Ablation study on roles of V¯\bar{V}, W¯\bar{W} and VV on CIFAR-10. Here, we make a subset of the interconnections nontrainable. The legend labels indicate trainable components. “Linear” refers to a linear network trained with SGD. We see that (1) making V¯\bar{V} plastic is more important than making other connections plastic, and (2) making everything plastic significantly improves the performance further. (c) The impact of the width of the downstream pathway on performance. We use different activation functions in the forward pathway. The width of the upstream pathway was kept constant at 200, while varying the width of the downstream pathway. We find that having a wider downstream network improves the performance of the feedforward network up to an overparametrization ratio of 7.5. In biology, the ratios can also depend on biological constraints such as energy consumption or wiring volume and may be region-dependent.
+3.2 Gradient Learning in Overparametrized Downstream Pathway
+The circuits we describe can be viewed as a generalized version of SGD, with a matrix-form learnable learning rate—the algorithm learns the learning algorithm itself.
+The formal argument is organized around pathway alignment between the autograd route and the SAM feedback route at each layer.
+Alignment errors
+Fix layer ℓ\ell and sample xx.
+Let gℓ+1:=∂F/∂hℓ+1g^{\ell+1}:=\partial F/\partial h^{\ell+1} denote the backprop signal.
+Define the forward pathway operator ℱℓ:=Vℓ​Duℓ​(Wℓ)T\mathcal{F}^{\ell}:=V^{\ell}D_{u}^{\ell}(W^{\ell})^{T} and the feedback pathway operator ℬℓ:=Ddℓ​W¯ℓ​(V¯ℓ)T\mathcal{B}^{\ell}:=D_{d}^{\ell}\bar{W}^{\ell}(\bar{V}^{\ell})^{T}, both mapping ℝdℓ+1→ℝd¯ℓ\mathbb{R}^{d_{\ell+1}}\to\mathbb{R}^{\bar{d}_{\ell}}.
+The pathway alignment error is
+Epℓ:=ℱℓ−ℬℓ=Vℓ​Duℓ​(Wℓ)T−Ddℓ​W¯ℓ​(V¯ℓ)T;E_{p}^{\ell}:=\mathcal{F}^{\ell}-\mathcal{B}^{\ell}=V^{\ell}D_{u}^{\ell}(W^{\ell})^{T}-D_{d}^{\ell}\bar{W}^{\ell}(\bar{V}^{\ell})^{T};
+(5)
+ideal pathway alignment means Epℓ=0E_{p}^{\ell}=0.
+The interstream alignment error is
+Evℓ:=Vℓ−(V¯ℓ−1)T;E_{v}^{\ell}:=V^{\ell}-(\bar{V}^{\ell-1})^{T};
+(6)
+ideal interstream alignment means Evℓ=0E_{v}^{\ell}=0 (equivalently V¯ℓ−1=(Vℓ)T\bar{V}^{\ell-1}=(V^{\ell})^{T}).
+When ηV=ηV¯\eta_{V}=\eta_{\bar{V}}, the interstream updates imply Δ​Evℓ=−γ​Evℓ\Delta E_{v}^{\ell}=-\gamma E_{v}^{\ell}, so Evℓ→0E_{v}^{\ell}\to 0 exponentially from any initialization (SI Theory, Lemma 1).
+Interstream alignment requires only that the misalignment operator EvℓE_{v}^{\ell} tighten—driving V¯ℓ−1→(Vℓ)T\bar{V}^{\ell-1}\to(V^{\ell})^{T}—not that Δ​Vℓ\Delta V^{\ell} or Δ​V¯ℓ\Delta\bar{V}^{\ell} vanish during training.
+By contrast, EpℓE_{p}^{\ell} is pathway alignment ((5)): convergence of Epℓ→0E_{p}^{\ell}\to 0 is not proved from the learning rules alone, but in successful runs we typically observe ‖Epℓ‖\|E_{p}^{\ell}\| decrease on most layers.
+Because Epℓ=ℱℓ−ℬℓE_{p}^{\ell}=\mathcal{F}^{\ell}-\mathcal{B}^{\ell} is the difference between the forward and feedback pathway operators, we also report ‖Epℓ‖/‖ℱℓ‖\|E_{p}^{\ell}\|/\|\mathcal{F}^{\ell}\|: this asks how large that operator mismatch is relative to the forward pathway itself, giving a scale-free measure of whether ℬℓ≈ℱℓ\mathcal{B}^{\ell}\approx\mathcal{F}^{\ell} that is comparable across layers (Figure 4, panels C–D).
+Theorem 1 requires only that these errors stay small enough that the residual RℓR^{\ell} is negligible; when they instead grow—as at diverging layers in deeper networks—EpE_{p} becomes the dominant practical source of alignment error.
+We formalize the resulting weight update below; the full proof and explicit residual bounds in terms of ‖Epk‖\|E_{p}^{k}\| and ‖Evk‖\|E_{v}^{k}\| are given in SI Theory.
+Theorem 1.
+Consider a ReLU neural network in which each Vℓ∈ℝd¯ℓ×dℓV^{\ell}\in\mathbb{R}^{\bar{d}_{\ell}\times d_{\ell}} has full column rank (so d¯ℓ≥dℓ\bar{d}_{\ell}\geq d_{\ell}; a wider downstream is allowed).
+Fix sample xx and layer ℓ\ell.
+Suppose (V¯L−1)T=I(\bar{V}^{L-1})^{T}=I, ηV=ηV¯\eta_{V}=\eta_{\bar{V}},
+‖Epk​(x)‖≤ϵpk​(x)\|E_{p}^{k}(x)\|\leq\epsilon_{p}^{k}(x) for k=ℓ+1,…,L−1k=\ell+1,\ldots,L-1,
+and ‖Evk‖≤ϵvk\|E_{v}^{k}\|\leq\epsilon_{v}^{k} for k=ℓ+1,…,L−1k=\ell+1,\ldots,L-1.
+Then
+ΔSAL​Wℓ=ηW​(HDℓ+E~v,Dℓ)​Δsgd​Wℓ−γ​Wℓ+Rℓ​(x),\Delta_{\rm SAL}W^{\ell}=\eta_{W}\,\bigl(H_{D}^{\ell}+\widetilde{E}_{v,D}^{\ell}\bigr)\,\Delta_{\rm sgd}W^{\ell}-\gamma W^{\ell}+R^{\ell}(x),
+(7)
+where Hℓ=V¯ℓ​(V¯ℓ)TH^{\ell}=\bar{V}^{\ell}(\bar{V}^{\ell})^{T}, E~vℓ:=V¯ℓ​Evℓ+1\widetilde{E}_{v}^{\ell}:=\bar{V}^{\ell}E_{v}^{\ell+1},
+HDℓ:=Duℓ+1​Hℓ​Duℓ+1,E~v,Dℓ:=Duℓ+1​E~vℓ​Duℓ+1,H_{D}^{\ell}:=D_{u}^{\ell+1}H^{\ell}D_{u}^{\ell+1},\qquad\widetilde{E}_{v,D}^{\ell}:=D_{u}^{\ell+1}\widetilde{E}_{v}^{\ell}D_{u}^{\ell+1},
+Δsgd​Wℓ=−∇WℓF\Delta_{\rm sgd}W^{\ell}=-\nabla_{W^{\ell}}F, and Rℓ​(x)R^{\ell}(x) is a remainder term (bounded in SI Theory).
+When Epk=Evk=0E_{p}^{k}=E_{v}^{k}=0 on the chain, Rℓ=0R^{\ell}=0, E~v,Dℓ=0\widetilde{E}_{v,D}^{\ell}=0, and ΔSAL​Wℓ=ηW​HDℓ​Δsgd​Wℓ−γ​Wℓ\Delta_{\rm SAL}W^{\ell}=\eta_{W}H_{D}^{\ell}\Delta_{\rm sgd}W^{\ell}-\gamma W^{\ell}. Since Evℓ→0E_{v}^{\ell}\to 0 when ηV=ηV¯\eta_{V}=\eta_{\bar{V}} (SI Theory, Lemma 1), E~v,Dℓ\widetilde{E}_{v,D}^{\ell} decays during training and the prefactor approaches HDℓH_{D}^{\ell}, which is positive semidefinite.
+Remark 1.
+Theorem 1 separates two alignment notions.
+Interstream alignment (Evℓ→0E_{v}^{\ell}\to 0) is proved unconditionally when ηV=ηV¯\eta_{V}=\eta_{\bar{V}}: the streams become transpose-matched at each splice, V¯ℓ−1→(Vℓ)T\bar{V}^{\ell-1}\to(V^{\ell})^{T}.
+Pathway alignment (EpℓE_{p}^{\ell} small) is the conditional hypothesis under which the dual-stream motif implements generalized SGD with matrix learning rate HDℓ+E~v,DℓH_{D}^{\ell}+\widetilde{E}_{v,D}^{\ell}.
+Empirically ‖Epℓ‖\|E_{p}^{\ell}\| and ‖Epℓ‖/‖ℱℓ‖\|E_{p}^{\ell}\|/\|\mathcal{F}^{\ell}\| often decrease during stable training, but this is not proved from the rules alone; when and why EpℓE_{p}^{\ell} improves or instead increases (as in diverging runs) is left to future work (Figure 4).
+Early in training, finite ϵvk\epsilon_{v}^{k} inflates the depth-chain residual before EvE_{v} decays; as E~v,Dℓ\widetilde{E}_{v,D}^{\ell} and RℓR^{\ell} shrink, the update approaches SGD preconditioned by the learned matrix HDℓH_{D}^{\ell}, which is positive semidefinite and therefore does not oppose the SGD gradient.
+It is worth noticing that this algorithm is different from SGD. The effective learning rate on WℓW^{\ell} is the matrix HDℓ+E~v,DℓH_{D}^{\ell}+\widetilde{E}_{v,D}^{\ell}, not a scalar: it is explicitly time-dependent and is itself learned by the algorithm. In the aligned limit this reduces to the positive semidefinite matrix HDℓH_{D}^{\ell}. This is consistent with observed metaplasticity in biological systems ([27]; [28]) – though it extends the idea in a fundamental way since the learning algorithm itself is being learned during the training of the forward network. In Figure 3a, we show examples of the HH matrix after training.
+Another interesting aspect of the algorithm (see Theorem 1) is that it allows (but does not require) the backward pathway to be overparametrized. That is, the number of downstream connections can be larger than the number of forward connections. This matches observations in biological circuits ([29]), in which feedback connections can greatly outnumber feedforward ones—a flexibility that most prior biologically inspired learning algorithms do not accommodate because they require matched pathway sizes. Also, the backward pathway is flexible in the choice of DdD_{d}; the alignment framework and Theorem 1 apply for the Dd=ID_{d}=I case used here and more generally.
+When does the theorem apply in practice?
+Interstream alignment is automatic when ηV=ηV¯\eta_{V}=\eta_{\bar{V}}: EvℓE_{v}^{\ell} decays exponentially (SI Theory, Lemma 1).
+Pathway alignment is separate: Epℓ=ℱℓ−ℬℓE_{p}^{\ell}=\mathcal{F}^{\ell}-\mathcal{B}^{\ell} directly measures whether the feedback pathway tracks the forward Jacobian.
+In stable training, per-layer ‖Epℓ‖\|E_{p}^{\ell}\| and ‖Epℓ‖/‖ℱℓ‖\|E_{p}^{\ell}\|/\|\mathcal{F}^{\ell}\| typically decrease; when a run diverges, a sharp rise in ‖Epℓ‖\|E_{p}^{\ell}\| at an early layer often accompanies instability (SI Alignment Diagnostics, 4-hidden-layer example).
+Theorem 1 requires only that these quantities stay small enough that RℓR^{\ell} is negligible—and empirically, once interstream alignment has tightened, EpE_{p} is the main contributor to the gradient-approximation residual.
+Two limiting cases are instructive: if VℓV^{\ell} and V¯ℓ\bar{V}^{\ell} are aligned permutation matrices and DdD_{d} matches the forward nonlinearity, then Hℓ=IH^{\ell}=I, E~vℓ=0\widetilde{E}_{v}^{\ell}=0, and SAM reduces to SGD; if the downstream pathway is wide, ℬℓ\mathcal{B}^{\ell} has more capacity, which may help keep ‖Epℓ‖\|E_{p}^{\ell}\| decreasing during training.
+Simulations report per-layer ‖Epℓ​(x)‖F\|E_{p}^{\ell}(x)\|_{F} from (5) with sample-dependent ReLU gates DuℓD_{u}^{\ell} and Ddℓ=ID_{d}^{\ell}=I (the benchmark setting; SI Alignment Diagnostics).
+Figure 4 tests this alignment framework on CIFAR-10 for a stable three-hidden-layer run; panel-by-panel readout is in the caption.
+Full hyperparameters and a deliberately chosen divergent 4-hidden-layer illustration are in SI Alignment Diagnostics.
+Figure 4: Alignment diagnostics on CIFAR-10 (3 hidden layers; stable run).
+SAL vs. backprop during a 5050-epoch run (hyperparameters in SI Alignment Diagnostics).
+A: train and test cross-entropy and accuracy over epochs.
+B: cosine similarities between SAL and backprop gradients on WℓW^{\ell} increase during learning and reach high level.
+C–D: pathway error ‖Epℓ‖\|E_{p}^{\ell}\| and ‖Epℓ‖/‖ℱℓ‖\|E_{p}^{\ell}\|/\|\mathcal{F}^{\ell}\| (Epℓ=ℱℓ−ℬℓE_{p}^{\ell}=\mathcal{F}^{\ell}-\mathcal{B}^{\ell}, normalized by ‖ℱℓ‖\|\mathcal{F}^{\ell}\|); both decrease on most layers; EpE_{p} tracks pathway misalignment and dominates the residual once EvE_{v} is small.
+E–F: interstream gradient magnitudes |∇Vℓ||\nabla V^{\ell}| and |∇V¯ℓ||\nabla\bar{V}^{\ell}| remain at a stable positive level.
+G–H: interstream mismatch |Vℓ+1−V¯ℓ​T||V^{\ell+1}-\bar{V}^{\ell\mathrm{T}}| falls and junction cosine similarity approaches one, consistent with unconditional Evℓ→0E_{v}^{\ell}\to 0 even while interstream plasticity stays active.
+Together, tight interstream alignment and decreasing pathway error match the conditional main theorem and help explain why SAL gradients track backprop (panel B). These are early diagnostics; a systematic analysis of EpE_{p} is left to future work.
+Table 1: Performance of the proposed method compared with SGD and biologically plausible algorithm baselines. Bold denotes the best performing algorithm, and italics denote the best runner-up algorithm. We see SGD and SAM are comparable, while significantly outperforming existing biologically plausible learning algorithms. For each experiment, we conduct five runs and calculate the error bars.
+Acc. ↑\uparrow
+CIFAR10
+MNIST
+Fashion MNIST
+ChestMNIST
+PathMNIST
+SVHN
+STL10
+SGD
+50.36 ±\pm 0.16
+98.44 ±\pm 0.09
+88.63 ±\pm 0.26
+73.26 ±\pm 0.14
+70.11 ±\pm 0.10
+78.20 ±\pm 0.13
+41.00 ±\pm 0.07
+FA
+47.85 ±\pm 0.20
+97.80 ±\pm 0.19
+85.41 ±\pm 0.26
+70.44 ±\pm 0.27
+69.90 ±\pm 0.10
+78.03 ±\pm 0.15
+39.29 ±\pm 0.23
+WM
+49.35 ±\pm 0.13
+98.40 ±\pm 0.23
+88.34 ±\pm 0.36
+70.14 ±\pm 0.08
+70.00 ±\pm 0.15
+78.08 ±\pm 0.15
+39.48 ±\pm 0.19
+KP Algorithm
+48.16 ±\pm 0.09
+98.45 ±\pm 0.09
+88.52 ±\pm 0.25
+71.03 ±\pm 0.10
+69.51 ±\pm 0.05
+78.20 ±\pm 0.05
+40.32 ±\pm 0.11
+SAM (ours)
+51.91 ±\pm 0.21
+98.85 ±\pm 0.10
+88.86 ±\pm 0.17
+73.21 ±\pm 0.11
+70.23 ±\pm 0.15
+78.50 ±\pm 0.07
+41.50 ±\pm 0.10
+3.3 SAM works efficiently in learning
+We evaluate our algorithm on seven widely used image classification datasets: CIFAR10 ([30]), MNIST ([31]), Fashion MNIST ([32]), ChestMNIST ([33], [34]), PathMNIST ([33], [34]), SVHN ([35]), and STL10 ([36]). For details about these datasets, see SI Experimental Setup. We compare our algorithm’s performance against the standard backpropagation and other biologically plausible algorithms. These include Feedback Alignment (FA) ([12]), which uses random fixed weights for error propagation instead of transposed weights; Weight Mirroring (WM) ([13]), which learns transposed feedback weights from noise in a separate phase; and the KP algorithm ([13, 24]), which gives forward and feedback weights the same local update and weight decay, so they become transposes of each other during training. While the primary goal of this paper is not to pursue State-of-the-Art (SOTA) performance but to design a neural network algorithm that can be deployed in the brain, our approach achieves SOTA among biologically plausible algorithms on all datasets (see Table 1). Notably, our algorithm outperforms models trained with backpropagation on six out of the seven datasets. The only exception is ChestMNIST, where it performs 0.05% lower than backpropagation.
+3.4 Overparameterization in the Downstream Pathway is Beneficial
+In the nervous system, the number of backprojections can be much larger than that of the forward stream. For example, the feedback connections V1 to LGN can be roughly 10 times the RGC synapses from the retina ([29]). We have observed a potential computational explanation of this phenomenon in our simulations. Our models perform better as the feedback pathway becomes overparametrized and achieves the best performance across multiple datasets when the parameter count of the downstream pathway is approximately 5 to 8 times that of the upstream pathway. Specifically, as shown in Figure 3c for CIFAR10, performance peaks when the parameter count of the downstream pathway is 8 times that of the upstream pathway. We perform experiments on the three most challenging datasets from the seven datasets used in Table 1: CIFAR10 ([30]), SVHN ([35]), and STL10 ([36]).
+3.5 Learned Representations are Structurally Low-Rank
+Now, we show some examples of the learned weight matrices. We train a width-60 network on SVHN dataset for 50 epochs. See Figure 3a. As is common in deep learning, we plot the matrix W​WTWW^{T} and also V¯​V¯T\bar{V}\bar{V}^{T}. We see that before training, these matrices are primarily diagonal matrices due to i.i.d. Gaussian initialization. After training, correlations between neurons and weights appear. We characterize the rank of a matrix through a continuous metric referred to as the effective rank ([37]); the right panel of Figure 3a shows that these weight matrices also become effectively low-rank across layers.
+Figure 3a can be compared with similar matrices trained with SGD in [38] and [39], for example, and they seem to have similar high-level structures, suggesting that our algorithm can lead to a meaningful representation learning. Detailed analysis of the learned representation using our algorithm may be an interesting future problem.
+3.6 Interconnection Plasticity is Crucial
+A remaining question is whether learning at some of the interconnections is more important than at others, and if so, which is more important? Additionally, are any interconnections not important at all? We perform this ablation study on CIFAR-10, where we initialize all the parameters randomly but only update a subset of all the connections. See Figure 3b. Note that WW is always plastic. To gauge how much the network has learned about the nonlinear relations in the data, we also compare with the learning trajectory of a linear model trained with SGD.
+We discover the following phenomena:
+•
+Only updating WW works but only works as well as the linear model; making other parts plastic is thus important for learning nonlinear functions;
+•
+If only one additional connection is made plastic, V¯\bar{V} is the most important one, improving performance from 40%40\% to roughly 46%46\%;
+•
+Making V¯\bar{V} plastic is similar to making W,W¯,VW,\ \bar{W},\ V plastic together, suggesting that some loss of learning capabilities due to connection lesions can be compensated by other connections (but not all);
+•
+Making all four connections plastic improves the performance further, to the SGD level (cf. Table 1); this means that all connections need to be plastic to achieve the best performance.
+Therefore, none of the pathways we introduced are redundant, and this partially explains the outperformance of our proposed algorithm over the existing two-pathway biologically plausible learning algorithms. Another reflection of the fact that there is an asymmetry between different pathways is that different connections require different learning time constants to work. In particular, the V¯\bar{V} matrices require the largest learning rates, usually four times that of WW (see SI Experimental Setup).
+Table 2: The upstream-downstream table of biologically plausible learning, emphasizing the necessity for four types of connections between the two pathways: downstream to downstream (d→dd\to d), downstream to upstream (d→ud\to u), upstream to downstream (u→du\to d), and upstream to upstream (u→uu\to u). Each connection must exhibit plasticity. For a learning rule to be biologically plausible, it must demonstrate both connectivity and plasticity.
+Connectivity
+Plasticity
+u→uu\to u
+d→dd\to d
+u→du\to d
+d→ud\to u
+u→uu\to u
+d→dd\to d
+u→du\to d
+d→ud\to u
+SGD
+✓
+✗
+✗
+✗
+✓
+✗
+✗
+✗
+Feedback Alignment
+✓
+✓
+✗
+✗
+✓
+✗
+✗
+✗
+Weight Mirroring
+✓
+✓
+✗
+✗
+✓
+✓
+✗
+✗
+SAM
+✓
+✓
+✓
+✓
+✓
+✓
+✓
+✓
+3.7 How to identify these circuits
+A key question is whether and how one can identify the circuit we proposed in biological systems, especially how one can experimentally distinguish it from other algorithms of the feedback alignment type. In essence, this broad family of algorithms has four pathways (uu, ud, dd, du): (1) u (upstream) →\to u, (2) u (upstream) →\to d (down stream), (3) d →\to d, (4) d →\to u. The difference between these feedback type algorithms is in their prediction of the (a) anatomical structure and (b) plasticity of each of the pathways. See Table 2. For example, a biological circuit is compatible with Feedback alignment (1) if uu and dd are randomly connected, and ud and du are not (which could happen, for example, in the cerebellum) and if (2) only uu is plastic, while dd, ud and du are not. In contrast, a biological circuit where all pathways are random and plastic will be compatible with our proposal, and not with the feedback alignment. Therefore, our proposal implies an eight-category classification of plausible learning algorithms, and biologists can experimentally test all eight criteria to decide which category applies to their system.
+There should not be an a priori belief that biological brains only use one such algorithm throughout the brain, and it is fully possible that different parts of the brain use different types of connections. For example, the feedback alignment motif seems especially suitable for the Purkinje cells because the climbing fibers are one-to-one, but it is very unlikely to be the right motif for, say, the cortices. For example, the apical dendrites of the L5 neurons, receiving largely feedback inputs, are found to be very plastic during motor learning ([40]). Similarly, the axon boutons of L6 neurons are highly plastic, and these axons often attach onto the basal dendrites of the L5 neurons, which could provide a feedback signal ([40]). There is, in any case, substantial evidence that spines in layer 1 (where many feedback inputs make their synapses) on both L5 and L2/3 pyramidal neurons are reasonably plastic across the adult mouse cortex, and that they show enhanced plasticity during learning paradigms ([41]; [42]; [43]; [44]; [45]; [46]; [47]; [48]); at these same feedback-targeted compartments, [49] recently reported vectorized instructive signals at L5 apical dendrites during learning.
+3.8 An Example Implementation of SAM in Cortex
+Self-Assembling Motif (SAM) is defined in terms of four abstract pathway types—upstream-to-upstream (u→\tou), upstream-to-downstream (u→\tod), downstream-to-downstream (d→\tod), and downstream-to-upstream (d→\tou). These pathway types are functional constructs rather than claims about specific neuron morphologies or laminar structures. The defining architectural principles of SAM are (i) the existence of two interacting streams, (ii) driving interactions within each stream and modulatory interactions between streams, and (iii) the absence of closed loops composed entirely of driving connections within either stream. SAM itself makes no assumptions about the biophysical mechanisms by which these properties are implemented. When viewed through this functional lens, cortical lamination and its canonical connectivity patterns provide a useful and concrete example of how the SAM architecture could be realized in a biological system.
+In sensory cortex, many pathways that operate within the same functional stream—such as those carrying representational content—are strong and driving, whereas interactions between distinct streams often exert a modulatory influence on activity and learning. Importantly, the distinction emphasized by SAM is not between feedforward and feedback pathways per se, but between within-stream and cross-stream interactions. Under this interpretation, a number of well-established cortical pathways can be organized into the four SAM categories. Table 3 summarizes one such correspondence between canonical cortical pathways and SAM pathway types, together with a hypothesized relationship between dendritic targeting and the resulting driving or modulatory effects observed in cortex. Francioni et al. [49] report vectorized instructive signals at L5 apical dendrites during learning; this is consistent with the apical/distal targeting of the d→ud\to u pathway in the table.
+Interpretation and scope.
+The correspondence shown in Table 3 should be interpreted as an example of how SAM could be implemented in cortex, rather than as a claim that SAM must be implemented through cortical lamination or that cortical lamination evolved specifically to implement SAM. Cortical areas exhibit substantial variation in laminar structure, connectivity, and cellular properties, and exceptions to canonical patterns are well documented. In particular, some cortical neurons, such as large layer 5 pyramidal neurons, exhibit conditional or gated driving as a result of their dendritic biophysics. Such properties reflect details of a specific biological implementation and are not assumptions or requirements of the SAM framework itself. Other brain systems may satisfy the same SAM constraints using different cellular or circuit mechanisms.
+From the perspective of SAM, the central claim is therefore functional rather than morphological: learning systems that avoid unstable dynamics and signal contamination should exhibit two interacting streams, driving connectivity within each stream, modulatory connectivity between streams, and no closed loops of purely driving interactions within a stream. Cortical lamination provides one biologically plausible realization of these constraints, but not their only possible instantiation.
+Table 3: One possible correspondence between canonical cortical pathways and SAM pathway types.
+Dendritic targeting and observed influence type describe biological properties of the cortical implementation rather than assumptions of the SAL/SAM framework.
+“Conditionally driving” refers to a biophysical property observed in some layer 5 pyramidal neurons, arising from interactions between basal and apical compartments, and is not a requirement of SAM itself.
+SAM
+pathway
+Weight
+type
+Cortical pathway example
+Dendritic targeting
+Observed
+influence type
+u →\to u
+WW
+L4 →\to L2/3 (within area)
+Basal / proximal
+Driving
+L2/3 →\to L4 (higher area)
+Basal / proximal
+Driving
+u →\to d
+VV
+L2/3 →\to L5 (within area)
+Basal +\,+ apical
+Conditionally
+driving
+d →\to d
+W¯\bar{W}
+L5 →\to (thalamus →\to) L5 (inter-areal)
+Basal +\,+ apical
+Conditionally
+driving
+L6 →\to (thalamus →\to) L6 (inter-areal)
+Basal / proximal
+Driving
+d →\to u
+V¯\bar{V}
+L5 →\to L1 →\to L2/3 (inter-areal)
+Apical / distal
+Modulatory
+L5 →\to L2/3 (within area)
+Apical-biased
+Modulatory
+3.9 Self-Organization Beyond the Two-Stream Scaffold
+The core of SAM is its local heterosynaptic learning rule; the two-stream motif
+of the main text is only one setting in which we exercise it. In companion work
+[50] we apply the same rule in a far more general setting—a
+generalized SAM. A pool of neurons is randomly initialized and recurrently
+connected, with no two-stream organization at all, and an evolutionary process
+grows and prunes the connections. Driven by the same heterosynaptic plasticity,
+the connectivity self-organizes into circuits that learn well, with the evolved
+updates becoming aligned with the true gradient (see SI and [50]). This indicates that the heterosynaptic rule alone is enough to make a population of neurons self-organize into an effective learner, and that the SAL goal is achievable far beyond any specific scaffold—direct support for the broader SAL program.
+4 Discussion
+The theoretical and simulation results we present here demonstrate a new circuit architecture that not only emulates the computational abilities of conventional deep learning models but does so through mechanisms that align more closely with biological circuits. Specifically, our simulations show that a network trained with our algorithm achieves competitive performance on tasks such as image classification on CIFAR-10, closely matching or even surpassing traditional backpropagation systems in some cases. Theoretically, SAM implements generalized SGD when two explicit alignment conditions hold: interstream alignment Evℓ→0E_{v}^{\ell}\to 0 (proved unconditionally when ηV=ηV¯\eta_{V}=\eta_{\bar{V}}) and pathway alignment with ‖Epℓ‖\|E_{p}^{\ell}\| small—in successful runs typically observed to decrease, and empirically the dominant source of gradient-approximation error once EvE_{v} has tightened. Our proposed circuit does not pose any requirement on specificity of the connections. In fact, a surprising property of the architecture we propose is that the basic circuit self-assembles, emerging from random synaptic connections between the ascending and the descending stream. Intriguingly, the best computational performance is obtained when the number of backprojections is around 5 times the connections in the forward stream.
+Optimization algorithms that can adjust the inner weights of a deep network are critical for state-of-the-art machine learning. This does not necessarily imply, however, that the same statement holds true for the brain. We have introduced a biologically plausible learning architecture that self-assembles from random initial connectivity and achieves SGD-like performance through local plasticity rules. Self-assembly requires an ascending and a descending stream – known to exist in all cortices – and initial random connections between them with synapses obeying reasonable local plasticity rules. It is also possible to use other biologically plausible versions of the regularization term we introduced, such as a Winner-Takes-All form of regularization. Such a mechanism can lead to one-to-one synapses between ascending and descending streams. It remains an open problem whether the cortex uses this mechanism. A brief discussion of the biological plausibility of the associated plasticity rules is presented in SI Biological Evidence for Synaptic Plasticity Rules. It is also possible that this circuit motif can be made more flexible and can potentially enable a large variety of motifs to learn; companion work [50] already explores this in a scaffold-free setting (SI section Gradient Learning Without a Two-Stream Scaffold).
+Vectorized instructive signals in cortex. [49] recently reported vectorized instructive signals, including task error, at L5 apical dendrites during learning, with semi-independent somatic and dendritic computation; perturbing apical signaling disrupts learning. We take this as compatible with our example cortical SAM implementation (Table 3), where inter-areal feedback targets apical/distal compartments (d→ud\to u, L5→\toL1, modulatory).
+Temporal implementation and eligibility traces. SAM is formulated in discrete time, with upstream inference preceding downstream error propagation and synaptic update. This ordering isolates the self-assembly mechanism and makes its connection to gradient learning analyzable, but it should not be read as a complete real-time biophysical model. The local rule requires only that a transient trace of each synapse’s forward pre- and postsynaptic activity remain available when the feedback signal arrives—an eligibility trace, rather than a sustained copy of the full forward state—while the cross-stream weight that delivers the feedback signal is standing circuitry. The timing requirements of such continuous-time, biologically plausible learning are analyzed in [51, 52, 53]. A fully continuous-time treatment of SAM is left to future work.
+Inference and learning in the descending stream. The present implementation uses SAM in an error-feedback setting, with input supplied at one end of the motif and target or error information at the other. This is a useful controlled instantiation, but it is not a defining commitment of SAL/SAM. In cortex, descending pathways are recurrent and multiplexed, contributing to inference, attention, contextual modulation, and the resolution of sensory ambiguity. This motivates the broader aim of SAL: not to hand-specify one pathway as an inference stream and another as a special-purpose error-routing stream, but to let functional roles arise from uniform local rules. SAM is a step in this direction, because its two streams are homologous and governed by the same local plasticity principles; the present asymmetry comes from how the motif is driven, not from an internally distinct backward learning rule.
+This perspective resonates with the motivation behind biologically inspired approaches such as predictive coding, which likewise seek to move beyond a simple input–error dichotomy by introducing predictive pathways and tying them to learning. SAL/SAM, however, aims at something more general: the goal is not to reproduce a particular cortical phenomenon—error assignment, or prediction—but to let pathways and their functional roles emerge, rather than assigning them by design.
+Whether cortical feedback carries predictions, errors, or multiplexed combinations of them, and how such signals are read by other pathways, remains an open and substantial problem. Our claim is not that the present model already captures inference-bearing feedback, but that SAM provides a symmetric substrate in which inputs and errors are simply two kinds of signal that the motif does not handle differently. This opens a path: one could drive SAM with other signals in future work—for instance, to learn bidirectional symmetric associations—allowing the streams to acquire distinct representational, inferential, or credit-assignment roles. In the strongest form of the SAL ideal, even the predefined streams would be relaxed, with pathways, roles, and functional distinctions all emerging through self-organization. Companion work [50] takes a first step in this direction: with only the locus of error entry fixed, the same heterosynaptic rule in a randomly connected recurrent pool evolves credit-assignment circuitry without predefined inference or error-delivery streams (see SI). Further extending self-organization to fully multiplexed, inference-bearing feedback beyond the two-stream scaffold remains for future work, but these directions point to an appealing unification that the SAL perspective brings into view.
+Why “evolution did it” is not enough for realizability. A tempting objection is that any biologically plausible circuit is realizable because evolution could have produced it. But realizability asks whether a proposed path guarantees the structure we observe: EE explains XX only if EE would actually produce XX. “Evolution produced it” is equally compatible with the circuit we found, a different circuit, or none at all; because it fits every outcome, it singles out none, and so establishes no causal link to the particular circuit in front of us. This is the same failure as weight transport—which asserts a correspondence with no path to it—and as passing a plausibility checklist, which shows only the absence of violations, not the presence of a path. SAM is offered as an actual path: the credit-assignment circuit assembles from random connectivity under uniform local rules, so what others assume, it derives.
+Experimental predictions. Our results indicate that biologically plausible learning algorithms can rival established machine learning algorithms while respecting the brain’s biophysical constraints. Our work makes several predictions that are, at least in principle, experimentally verifiable: 1) Synaptic Motifs - Reciprocal synaptic connections between ascending and descending pathways with four plastic synapses (WW, W¯\bar{W}, VV, V¯\bar{V}) should be generally present in cortical networks; 2) Heterosynaptic Plasticity - Changes in synaptic strength should depend on the activity of other synapses (these synapses must be on the same neuron but do not need to be electrically close, depending on the specific mechanism of heterosynaptic plasticity); 3) Self-Assembly - The initially random connections between the two streams assemble over development/learning, guided by heterosynaptic plasticity rules; 4) Distinct Pathways - The back projections may exhibit different electrophysiological properties, such as nonlinearities depending on synaptic inputs, compared to feedforward pathways, also possibly with different time constants as the computational model is found to work the best when different connections have different learning time constants; 5) Relative size of the streams: Our results indicate that learning produces better performance when the feedback connections are more numerous than the feedforward. Experimental verification of these predictions may transform our understanding of learning in both biological and artificial systems.
+Materials and Methods
+Computational experiments were implemented in PyTorch on NVIDIA GPUs. The circuit architecture (upstream and downstream pathways with four synaptic connection matrices WW, W¯\bar{W}, VV, V¯\bar{V}) and heterosynaptic plasticity rules are given in the main text. Full experimental details (datasets, baselines, architectures, training schedules, hyperparameter selection, and hardware) are provided in SI Experimental Setup and SI Alignment Diagnostics. Proofs and algorithm pseudocode are provided in SI Theory and SI Pseudo Code. Further discussion is provided in SI Biological Evidence for Synaptic Plasticity Rules and SI Gradient Learning Without a Two-Stream Scaffold.
+Data, Materials, and Software Availability. All code and data are on GitHub at https://github.com/liaoq/SAM2026, including the 2024/2025 benchmark implementation (SI Algorithm 1) and the 2026 implementation used for theory and alignment diagnostics (SI Algorithm 2).
+Acknowledgments
+We thank the reviewers for their exceptionally constructive feedback. This work was supported by the K. Lisa Yang Integrative Computational Neuroscience (ICoN) Center, part of the Yang Tan Collective at MIT; the Center for Brains, Minds and Machines (CBMM, NSF STC award CCF-1231216); and the McGovern Institute for Brain Research at MIT. L.Z. acknowledges support from NTT Research. M.T.H. was additionally supported by the NIH (R01MH135141).
+Supporting Information
+Appendix A Theory
+This section supplements the main text with the full ReLU-only alignment proof.
+The argument is organized in three layers:
+Lemma 1 proves unconditional interstream decay Evℓ→0E_{v}^{\ell}\to 0 when ηV=ηV¯\eta_{V}=\eta_{\bar{V}};
+Lemma 2 telescopes the depth chain in the primitive errors Ep,EvE_{p},E_{v} (neither is assumed zero);
+Theorem 2 converts that chain into the SAL weight update with effective prefactor HDℓ+E~v,DℓH_{D}^{\ell}+\widetilde{E}_{v,D}^{\ell}.
+A.1 Setup
+SAL / SAM: dual-stream learning (main text).
+Layers 0,…,L0,\ldots,L; readout at LL.
+Upstream: hℓ+1=Wℓ​Duℓ​hℓh^{\ell+1}=W^{\ell}D_{u}^{\ell}h^{\ell} with Duℓ=diag⁡(𝟏hℓ>0)D_{u}^{\ell}=\operatorname{diag}(\mathbf{1}_{h^{\ell}>0}); define the upstream activity port aℓ:=Duℓ​hℓa^{\ell}:=D_{u}^{\ell}h^{\ell}.
+Downstream pre-activation h¯ℓ\bar{h}^{\ell} and post-activation a¯ℓ:=Ddℓ​h¯ℓ\bar{a}^{\ell}:=D_{d}^{\ell}\bar{h}^{\ell} obey
+h¯ℓ=W¯ℓ​a¯ℓ+1,a¯L=−gL.\bar{h}^{\ell}=\bar{W}^{\ell}\bar{a}^{\ell+1},\qquad\bar{a}^{L}=-g^{L}.
+(8)
+Interstream maps Vℓ,V¯ℓV^{\ell},\bar{V}^{\ell}; Evℓ:=Vℓ−(V¯ℓ−1)TE_{v}^{\ell}:=V^{\ell}-(\bar{V}^{\ell-1})^{T}.
+Cotangent at depth kk:
+gk:=∂F∂hk∈ℝdk.g^{k}:=\frac{\partial F}{\partial h^{k}}\in\mathbb{R}^{d_{k}}.
+(9)
+Composed maps from readout to motif ℓ\ell (superscript ℓ\ell = “from LL down to ℓ\ell”):
+JSGDℓ\displaystyle J_{\rm SGD}^{\ell}
+:=Tℓ+1⋯TL−1,\displaystyle:=T^{\ell+1}\cdots T^{L-1},
+(10)
+J¯SAMℓ\displaystyle\bar{J}_{\rm SAM}^{\ell}
+:=S¯ℓ+1⋯S¯L−1=∏k=ℓ+1L−1DdkW¯k,\displaystyle:=\bar{S}^{\ell+1}\cdots\bar{S}^{L-1}=\textstyle\prod_{k=\ell+1}^{L-1}D_{d}^{k}\bar{W}^{k},
+(11)
+JSAMℓ\displaystyle J_{\rm SAM}^{\ell}
+:=V¯ℓ​J¯SAMℓ.\displaystyle:=\bar{V}^{\ell}\,\bar{J}_{\rm SAM}^{\ell}.
+(12)
+Exact autograd: gℓ+1=JSGDℓ​gLg^{\ell+1}=J_{\rm SGD}^{\ell}g^{L}.
+Exact SAM: a¯ℓ+1=J¯SAMℓ​a¯L\bar{a}^{\ell+1}=\bar{J}_{\rm SAM}^{\ell}\bar{a}^{L}.
+A.2 One-step maps and telescoping target
+Maps are chosen so depth composition telescopes to J¯SAMℓ\bar{J}_{\rm SAM}^{\ell}:
+JSGDℓ=Tℓ+1⋯TL−1=?(Vℓ+1)+J¯SAMℓ,J¯SAMℓ=S¯ℓ+1⋯S¯L−1.J_{\rm SGD}^{\ell}=T^{\ell+1}\cdots T^{L-1}\;\stackrel{{\scriptstyle?}}{{=}}\;(V^{\ell+1})^{+}\bar{J}_{\rm SAM}^{\ell},\qquad\bar{J}_{\rm SAM}^{\ell}=\bar{S}^{\ell+1}\cdots\bar{S}^{L-1}.
+(13)
+Interior join in ∏Sk\prod S^{k} carries the splice (write Pk:=Vk​(Vk)+P_{k}:=V^{k}(V^{k})^{+}):
+(V¯k−1)T​(Vk)+=Pk−Evk​(Vk)+,Evk:=Vk−(V¯k−1)T.(\bar{V}^{k-1})^{T}(V^{k})^{+}=P_{k}-E_{v}^{k}(V^{k})^{+},\qquad E_{v}^{k}:=V^{k}-(\bar{V}^{k-1})^{T}.
+(14)
+Upstream cotangent port (gℓ+1g^{\ell+1}).
+Tℓ:=Duℓ​(Wℓ)T,ℬℓ:=Ddℓ​W¯ℓ​(V¯ℓ)T,Sℓ:=(Vℓ)+​ℬℓ,ℱℓ:=Vℓ​Tℓ.T^{\ell}:=D_{u}^{\ell}(W^{\ell})^{T},\qquad\mathcal{B}^{\ell}:=D_{d}^{\ell}\bar{W}^{\ell}(\bar{V}^{\ell})^{T},\qquad S^{\ell}:=(V^{\ell})^{+}\mathcal{B}^{\ell},\qquad\mathcal{F}^{\ell}:=V^{\ell}T^{\ell}.
+(15)
+Downstream activity port (a¯ℓ+1\bar{a}^{\ell+1}).
+S¯ℓ:=Ddℓ​W¯ℓ.\bar{S}^{\ell}:=D_{d}^{\ell}\bar{W}^{\ell}.
+(16)
+A.3 Main results
+Definition 1 (Primitive alignment errors).
+Evℓ\displaystyle E_{v}^{\ell}
+:=Vℓ−(V¯ℓ−1)T,\displaystyle:=V^{\ell}-(\bar{V}^{\ell-1})^{T},
+(17)
+Epℓ\displaystyle E_{p}^{\ell}
+:=ℱℓ−ℬℓ=Vℓ​Duℓ​(Wℓ)T−Ddℓ​W¯ℓ​(V¯ℓ)T.\displaystyle:=\mathcal{F}^{\ell}-\mathcal{B}^{\ell}=V^{\ell}D_{u}^{\ell}(W^{\ell})^{T}-D_{d}^{\ell}\bar{W}^{\ell}(\bar{V}^{\ell})^{T}.
+(18)
+Lemma 1 (Unconditional EvE_{v} decay).
+Fix motif ℓ\ell and sample xx.
+Recall Evℓ:=Vℓ−(V¯ℓ−1)TE_{v}^{\ell}:=V^{\ell}-(\bar{V}^{\ell-1})^{T} (17).
+Under the SAL interstream updates with matched rates ηV=ηV¯\eta_{V}=\eta_{\bar{V}}, every training step satisfies
+Δ​Evℓ=−γ​Evℓ,\Delta E_{v}^{\ell}=-\gamma E_{v}^{\ell},
+(19)
+hence Evℓ​(t)=(1−γ)t​Evℓ​(0)E_{v}^{\ell}(t)=(1-\gamma)^{t}E_{v}^{\ell}(0), and in the continuous-time limit Evℓ→0E_{v}^{\ell}\to 0 exponentially for every γ>0\gamma>0.
+Equivalently, at Evℓ=0E_{v}^{\ell}=0 one has V¯ℓ−1=(Vℓ)T\bar{V}^{\ell-1}=(V^{\ell})^{T}; this does not require Δ​Vℓ=0\Delta V^{\ell}=0 or Δ​V¯ℓ−1=0\Delta\bar{V}^{\ell-1}=0.
+Scope.
+The conclusion is independent of pathway alignment (EpℓE_{p}^{\ell}), the loss value, mini-batch noise, and depth-chain residuals.
+It uses only the outer-product structure of the interstream updates and matched learning rates.
+Neither Epℓ→0E_{p}^{\ell}\to 0 nor small ‖Δ​Vℓ‖\|\Delta V^{\ell}\| is assumed or implied.
+Proof.
+The SAL interstream plasticity rules are
+Δ​Vℓ\displaystyle\Delta V^{\ell}
+=ηV​a¯ℓ​(Duℓ​hℓ)T−γ​Vℓ,\displaystyle=\eta_{V}\,\bar{a}^{\ell}(D_{u}^{\ell}h^{\ell})^{T}-\gamma V^{\ell},
+(20)
+Δ​V¯ℓ\displaystyle\Delta\bar{V}^{\ell}
+=ηV¯​(Duℓ+1​hℓ+1)​(a¯ℓ+1)T−γ​V¯ℓ,\displaystyle=\eta_{\bar{V}}\,(D_{u}^{\ell+1}h^{\ell+1})(\bar{a}^{\ell+1})^{T}-\gamma\bar{V}^{\ell},
+(21)
+with the same local decay γ>0\gamma>0 on both streams.
+Transpose (21) at layer ℓ−1\ell{-}1:
+Δ​(V¯ℓ−1)T=ηV¯​a¯ℓ​(Duℓ​hℓ)T−γ​(V¯ℓ−1)T.\Delta(\bar{V}^{\ell-1})^{T}=\eta_{\bar{V}}\,\bar{a}^{\ell}(D_{u}^{\ell}h^{\ell})^{T}-\gamma(\bar{V}^{\ell-1})^{T}.
+Subtract from (20):
+Δ​Evℓ\displaystyle\Delta E_{v}^{\ell}
+=Δ​Vℓ−Δ​(V¯ℓ−1)T\displaystyle=\Delta V^{\ell}-\Delta(\bar{V}^{\ell-1})^{T}
+=(ηV−ηV¯)​a¯ℓ​(Duℓ​hℓ)T−γ⁡(Vℓ−(V¯ℓ−1)T).\displaystyle=\bigl(\eta_{V}-\eta_{\bar{V}}\bigr)\bar{a}^{\ell}(D_{u}^{\ell}h^{\ell})^{T}-\gamma\bigl(V^{\ell}-(\bar{V}^{\ell-1})^{T}\bigr).
+When ηV=ηV¯\eta_{V}=\eta_{\bar{V}}, the shared Hebbian term a¯ℓ​(Duℓ​hℓ)T\bar{a}^{\ell}(D_{u}^{\ell}h^{\ell})^{T} cancels and (19) follows from Evℓ=Vℓ−(V¯ℓ−1)TE_{v}^{\ell}=V^{\ell}-(\bar{V}^{\ell-1})^{T}.
+∎
+Assumption 1 (Standing hypotheses).
+rank⁡(Vℓ)=dℓ\operatorname{rank}(V^{\ell})=d_{\ell} (so (Vℓ)+​Vℓ=I(V^{\ell})^{+}V^{\ell}=I); ηV=ηV¯\eta_{V}=\eta_{\bar{V}};
+(V¯L−1)T=I(\bar{V}^{L-1})^{T}=I and a¯L=−gL\bar{a}^{L}=-g^{L}.
+Lemma 2 (Depth chain).
+Fix sample xx and motif ℓ∈{0,…,L−2}\ell\in\{0,\ldots,L-2\}.
+Suppose Assumption 1, ‖Epk​(x)‖≤ϵpk​(x)\|E_{p}^{k}(x)\|\leq\epsilon_{p}^{k}(x) for k=ℓ+1,…,L−1k=\ell+1,\ldots,L-1, and ‖Evk‖≤ϵvk\|E_{v}^{k}\|\leq\epsilon_{v}^{k} for k=ℓ+2,…,L−1k=\ell+2,\ldots,L-1.
+Then
+JSGDℓ=(Vℓ+1)+​J¯SAMℓ+Rchainℓ,J_{\rm SGD}^{\ell}=(V^{\ell+1})^{+}\bar{J}_{\rm SAM}^{\ell}+R_{\rm chain}^{\ell},
+(22)
+where Rchainℓ=RTℓ+RSℓR_{\rm chain}^{\ell}=R_{T}^{\ell}+R_{S}^{\ell} and the two exact transported-error bounds are given in (30) and (41).
+In particular, ‖Rchainℓ‖≤‖RTℓ‖+‖RSℓ‖\|R_{\rm chain}^{\ell}\|\leq\|R_{T}^{\ell}\|+\|R_{S}^{\ell}\| is linear in the displayed primitive-error bounds.
+Exact equality Rchainℓ=0R_{\rm chain}^{\ell}=0 holds when Epk=Evk=0E_{p}^{k}=E_{v}^{k}=0 at all relevant depths.
+Theorem 2 (SAL ≈\approx generalized SGD).
+Fix sample xx and motif ℓ∈{0,…,L−2}\ell\in\{0,\ldots,L-2\}.
+Suppose the hypotheses of Lemma 2.
+Suppose additionally that ‖Evℓ+1‖≤ϵvℓ+1\|E_{v}^{\ell+1}\|\leq\epsilon_{v}^{\ell+1}.
+Let Hℓ:=V¯ℓ​(V¯ℓ)TH^{\ell}:=\bar{V}^{\ell}(\bar{V}^{\ell})^{T} and E~vℓ:=V¯ℓ​Evℓ+1\widetilde{E}_{v}^{\ell}:=\bar{V}^{\ell}E_{v}^{\ell+1} (identified in Step I6 below), and define the effective weight-update operators
+HDℓ:=Duℓ+1​Hℓ​Duℓ+1,E~v,Dℓ:=Duℓ+1​E~vℓ​Duℓ+1.H_{D}^{\ell}:=D_{u}^{\ell+1}H^{\ell}D_{u}^{\ell+1},\qquad\widetilde{E}_{v,D}^{\ell}:=D_{u}^{\ell+1}\widetilde{E}_{v}^{\ell}D_{u}^{\ell+1}.
+Then the SAL rule satisfies
+ΔSAL​Wℓ=ηW​(HDℓ+E~v,Dℓ)​Δsgd​Wℓ−γ​Wℓ+Rℓ,\Delta_{\rm SAL}W^{\ell}=\eta_{W}\,\bigl(H_{D}^{\ell}+\widetilde{E}_{v,D}^{\ell}\bigr)\,\Delta_{\rm sgd}W^{\ell}-\gamma W^{\ell}+R^{\ell},
+(23)
+with Δsgd​Wℓ=−∇WℓF\Delta_{\rm sgd}W^{\ell}=-\nabla_{W^{\ell}}F.
+The residual is
+Rℓ:=−ηW​Duℓ+1​(ℛJacℓ​gL)​(Duℓ​hℓ)T,R^{\ell}:=-\eta_{W}D_{u}^{\ell+1}(\mathcal{R}_{\rm Jac}^{\ell}g^{L})(D_{u}^{\ell}h^{\ell})^{T},
+and obeys
+‖Rℓ‖≤ηW​‖Duℓ+1‖​‖gL‖​‖Duℓ​hℓ‖​(‖V¯ℓ​Vℓ+1‖​‖Rchainℓ‖+ϵvℓ+1​‖J¯SAMℓ‖),\|R^{\ell}\|\leq\eta_{W}\|D_{u}^{\ell+1}\|\,\|g^{L}\|\,\|D_{u}^{\ell}h^{\ell}\|\left(\|\bar{V}^{\ell}V^{\ell+1}\|\,\|R_{\rm chain}^{\ell}\|+\epsilon_{v}^{\ell+1}\|\bar{J}_{\rm SAM}^{\ell}\|\right),
+(24)
+where ‖Rchainℓ‖\|R_{\rm chain}^{\ell}\| is bounded by ‖RTℓ‖+‖RSℓ‖\|R_{T}^{\ell}\|+\|R_{S}^{\ell}\| via (30) and (41).
+Also,
+‖E~v,Dℓ‖≤‖V¯ℓ‖​ϵvℓ+1.\|\widetilde{E}_{v,D}^{\ell}\|\leq\|\bar{V}^{\ell}\|\,\epsilon_{v}^{\ell+1}.
+Here ‖Duℓ+1‖≤1\|D_{u}^{\ell+1}\|\leq 1 for a ReLU gate.
+When Epk=Evk=0E_{p}^{k}=E_{v}^{k}=0 at all relevant depths, Rℓ=0R^{\ell}=0 and
+ΔSAL​Wℓ=ηW​HDℓ​Δsgd​Wℓ−γ​Wℓ.\Delta_{\rm SAL}W^{\ell}=\eta_{W}H_{D}^{\ell}\Delta_{\rm sgd}W^{\ell}-\gamma W^{\ell}.
+The aligned preconditioner is positive semidefinite because
+HDℓ=(Duℓ+1​V¯ℓ)​(Duℓ+1​V¯ℓ)T⪰0.H_{D}^{\ell}=(D_{u}^{\ell+1}\bar{V}^{\ell})(D_{u}^{\ell+1}\bar{V}^{\ell})^{T}\succeq 0.
+If V¯ℓ\bar{V}^{\ell} remains bounded, Lemma 1 implies
+E~v,Dℓ→0\widetilde{E}_{v,D}^{\ell}\to 0, so the finite-error operator in (23) approaches this PSD matrix.
+Remark 2 (What is proved vs. conditional).
+Lemma 1: EvℓE_{v}^{\ell} decays unconditionally.
+Lemma 2: depth telescoping in Ep,EvE_{p},E_{v} (neither assumed zero).
+Theorem 2: SAL weight update from that chain.
+Early training with large ϵvk\epsilon_{v}^{k} inflates ‖Rchainℓ‖\|R_{\rm chain}^{\ell}\| through the transported interior-join terms in RSℓR_{S}^{\ell} before EvE_{v} decays.
+Decrease of EpℓE_{p}^{\ell} from the learning rules alone is not proved here, but in experiments ‖Epℓ‖\|E_{p}^{\ell}\| and ‖Epℓ‖/‖ℱℓ‖\|E_{p}^{\ell}\|/\|\mathcal{F}^{\ell}\| usually fall during stable training and can rise when a run becomes unstable; when and why EpℓE_{p}^{\ell} improves or worsens is left to future work.
+A.4 Proof of Lemma 2 and Theorem 2
+Assume ‖Epk‖≤ϵpk\|E_{p}^{k}\|\leq\epsilon_{p}^{k}, ‖Evk‖≤ϵvk\|E_{v}^{k}\|\leq\epsilon_{v}^{k}, and Assumption 1.
+Throughout, fix a sample xx and omit explicit dependence on xx.
+Write Pk:=Vk​(Vk)+P_{k}:=V^{k}(V^{k})^{+}.
+I1 (one-layer bridge).
+By Definition 1, ℱk=ℬk+Epk\mathcal{F}^{k}=\mathcal{B}^{k}+E_{p}^{k}.
+Left-multiply by (Vk)+(V^{k})^{+}:
+Tk=Sk+(Vk)+​Epk,Sk=(Vk)+​ℬk,‖(Vk)+​Epk‖≤‖(Vk)+‖​ϵpk.T^{k}=S^{k}+(V^{k})^{+}E_{p}^{k},\qquad S^{k}=(V^{k})^{+}\mathcal{B}^{k},\qquad\|(V^{k})^{+}E_{p}^{k}\|\leq\|(V^{k})^{+}\|\,\epsilon_{p}^{k}.
+(25)
+I2 (splice).
+The interstream splice is (14):
+(V¯k−1)T​(Vk)+=Pk−Evk​(Vk)+.(\bar{V}^{k-1})^{T}(V^{k})^{+}=P_{k}-E_{v}^{k}(V^{k})^{+}.
+When Evk=0E_{v}^{k}=0 this is the orthogonal projector onto col⁡(Vk)\operatorname{col}(V^{k}).
+I3 (projector on the pathway).
+Since ℱk=Vk​Tk∈col⁡(Vk)\mathcal{F}^{k}=V^{k}T^{k}\in\operatorname{col}(V^{k}), Pk​ℱk=ℱkP_{k}\mathcal{F}^{k}=\mathcal{F}^{k}. Write ℬk=ℱk−Epk\mathcal{B}^{k}=\mathcal{F}^{k}-E_{p}^{k}:
+Pk​ℬk=Pk​(ℱk−Epk)=ℱk−Pk​Epk=ℬk+(I−Pk)​Epk,P_{k}\mathcal{B}^{k}=P_{k}(\mathcal{F}^{k}-E_{p}^{k})=\mathcal{F}^{k}-P_{k}E_{p}^{k}=\mathcal{B}^{k}+(I-P_{k})E_{p}^{k},
+(26)
+or equivalently (I−Pk)​ℬk=−(I−Pk)​Epk(I-P_{k})\mathcal{B}^{k}=-(I-P_{k})E_{p}^{k}.
+I4 (product-difference lemma; T→ST\to S).
+Start from (10) and substitute the one-layer split (25) at every depth:
+JSGDℓ=Tℓ+1⋯TL−1=∏k=ℓ+1L−1(Sk+(Vk)+Epk).J_{\rm SGD}^{\ell}=T^{\ell+1}\cdots T^{L-1}=\prod_{k=\ell+1}^{L-1}\bigl(S^{k}+(V^{k})^{+}E_{p}^{k}\bigr).
+(27)
+Empty products in this and subsequent displays are identities.
+The two products are compared by the following product-difference lemma, which carries exactly one slot difference (Ak−Bk)(A_{k}-B_{k}) per summand.
+Lemma 3 (Product-difference lemma).
+For conformable matrix sequences Ak,BkA_{k},B_{k}, k=m,…,nk=m,\ldots,n,
+∏k=mnAk−∏k=mnBk=∑k=mn(∏j=mk−1Aj)​(Ak−Bk)​(∏j=k+1nBj).\prod_{k=m}^{n}A_{k}-\prod_{k=m}^{n}B_{k}=\sum_{k=m}^{n}\Bigl(\prod_{j=m}^{k-1}A_{j}\Bigr)\bigl(A_{k}-B_{k}\bigr)\Bigl(\prod_{j=k+1}^{n}B_{j}\Bigr).
+(28)
+Proof.
+Define the hybrid products
+Xj:=Am⋯AjBj+1⋯BnX_{j}:=A_{m}\cdots A_{j}\,B_{j+1}\cdots B_{n} for j=m−1,…,nj=m-1,\ldots,n, so that
+Xm−1=∏k=mnBkX_{m-1}=\prod_{k=m}^{n}B_{k} and Xn=∏k=mnAkX_{n}=\prod_{k=m}^{n}A_{k}.
+For each j=m,…,nj=m,\ldots,n the two hybrids XjX_{j} and Xj−1X_{j-1} differ in the single slot jj, whence
+Xj−Xj−1=Am⋯Aj−1(Aj−Bj)Bj+1⋯Bn.X_{j}-X_{j-1}=A_{m}\cdots A_{j-1}\,(A_{j}-B_{j})\,B_{j+1}\cdots B_{n}.
+Summing over j=m,…,nj=m,\ldots,n telescopes the left-hand side to Xn−Xm−1X_{n}-X_{m-1}, which is (28).
+∎
+Apply Lemma 3 with Ak=TkA_{k}=T^{k}, Bk=SkB_{k}=S^{k} over k=ℓ+1,…,L−1k=\ell+1,\ldots,L-1; by I1 (25) the slot differences are exactly Tk−Sk=(Vk)+​EpkT^{k}-S^{k}=(V^{k})^{+}E_{p}^{k}.
+This gives
+JSGDℓ=Sℓ+1⋯SL−1+RTℓ,RTℓ:=∑k=ℓ+1L−1Tℓ+1⋯Tk−1(Vk)+EpkSk+1⋯SL−1.J_{\rm SGD}^{\ell}=S^{\ell+1}\cdots S^{L-1}+R_{T}^{\ell},\qquad R_{T}^{\ell}:=\sum_{k=\ell+1}^{L-1}T^{\ell+1}\cdots T^{k-1}(V^{k})^{+}E_{p}^{k}S^{k+1}\cdots S^{L-1}.
+(29)
+Each summand of RTℓR_{T}^{\ell} is linear in a single EpkE_{p}^{k}.
+By submultiplicativity applied to each summand,
+‖RTℓ‖≤∑k=ℓ+1L−1(∏j=ℓ+1k−1‖Tj‖)​(∏j=k+1L−1‖Sj‖)​‖(Vk)+‖​ϵpk.\|R_{T}^{\ell}\|\leq\sum_{k=\ell+1}^{L-1}\Bigl(\prod_{j=\ell+1}^{k-1}\|T^{j}\|\Bigr)\Bigl(\prod_{j=k+1}^{L-1}\|S^{j}\|\Bigr)\|(V^{k})^{+}\|\,\epsilon_{p}^{k}.
+(30)
+It remains to telescope the SS-product to the SAM tail (Vℓ+1)+​J¯SAMℓ(V^{\ell+1})^{+}\bar{J}_{\rm SAM}^{\ell} (13).
+I5 (SS-product induction).
+Write Sk=(Vk)+​ℬkS^{k}=(V^{k})^{+}\mathcal{B}^{k}.
+The single join identity behind the induction is
+(V¯k−1)T​(Vk)+​ℬk=Pk​ℬk−Evk​Sk=ℬk+[(I−Pk)​Epk−Evk​Sk],(\bar{V}^{k-1})^{T}(V^{k})^{+}\mathcal{B}^{k}=P_{k}\mathcal{B}^{k}-E_{v}^{k}S^{k}=\mathcal{B}^{k}+\bigl[(I-P_{k})E_{p}^{k}-E_{v}^{k}S^{k}\bigr],
+(31)
+by the splice (14) followed by the projector expansion (26).
+Partial products.
+For m=ℓ+1,…,L−1m=\ell+1,\ldots,L-1 set
+Qm:=Sℓ+1⋯Sm,Am:=(Vℓ+1)+S¯ℓ+1⋯S¯m,Q_{m}:=S^{\ell+1}\cdots S^{m},\qquad A_{m}:=(V^{\ell+1})^{+}\bar{S}^{\ell+1}\cdots\bar{S}^{m},
+(32)
+so that Qm+1=Qm​Sm+1Q_{m+1}=Q_{m}S^{m+1} and Am+1=Am​S¯m+1A_{m+1}=A_{m}\bar{S}^{m+1}.
+Claim (induction on mm).
+For every m=ℓ+1,…,L−1m=\ell+1,\ldots,L-1,
+Qm=Am​(V¯m)T+ρm,ρℓ+1:=0,ρm+1:=ρm​Sm+1+Am​[(I−Pm+1)​Epm+1−Evm+1​Sm+1].Q_{m}=A_{m}(\bar{V}^{m})^{T}+\rho_{m},\qquad\rho_{\ell+1}:=0,\qquad\rho_{m+1}:=\rho_{m}S^{m+1}+A_{m}\bigl[(I-P_{m+1})E_{p}^{m+1}-E_{v}^{m+1}S^{m+1}\bigr].
+(33)
+Base case m=ℓ+1m=\ell+1.
+By the definitions (15) and (16),
+Qℓ+1=Sℓ+1=(Vℓ+1)+​ℬℓ+1=(Vℓ+1)+​S¯ℓ+1​(V¯ℓ+1)T=Aℓ+1​(V¯ℓ+1)T,Q_{\ell+1}=S^{\ell+1}=(V^{\ell+1})^{+}\mathcal{B}^{\ell+1}=(V^{\ell+1})^{+}\bar{S}^{\ell+1}(\bar{V}^{\ell+1})^{T}=A_{\ell+1}(\bar{V}^{\ell+1})^{T},
+so (33) holds with ρℓ+1=0\rho_{\ell+1}=0.
+The entry join ℓ+1\ell+1 therefore contributes no residual; this is why the interior-join sum below starts at k=ℓ+2k=\ell+2.
+Inductive step m→m+1m\to m+1 (for ℓ+1≤m≤L−2\ell+1\leq m\leq L-2).
+Assume (33) at mm. Then
+Qm+1\displaystyle Q_{m+1}
+=Qm​Sm+1=Am​(V¯m)T​(Vm+1)+​ℬm+1+ρm​Sm+1\displaystyle=Q_{m}S^{m+1}=A_{m}(\bar{V}^{m})^{T}(V^{m+1})^{+}\mathcal{B}^{m+1}+\rho_{m}S^{m+1}
+(34)
+=Am​[ℬm+1+(I−Pm+1)​Epm+1−Evm+1​Sm+1]+ρm​Sm+1\displaystyle=A_{m}\bigl[\mathcal{B}^{m+1}+(I-P_{m+1})E_{p}^{m+1}-E_{v}^{m+1}S^{m+1}\bigr]+\rho_{m}S^{m+1}
+(35)
+=Am​S¯m+1​(V¯m+1)T+[ρm​Sm+1+Am​((I−Pm+1)​Epm+1−Evm+1​Sm+1)]\displaystyle=A_{m}\bar{S}^{m+1}(\bar{V}^{m+1})^{T}+\bigl[\rho_{m}S^{m+1}+A_{m}\bigl((I-P_{m+1})E_{p}^{m+1}-E_{v}^{m+1}S^{m+1}\bigr)\bigr]
+(36)
+=Am+1​(V¯m+1)T+ρm+1,\displaystyle=A_{m+1}(\bar{V}^{m+1})^{T}+\rho_{m+1},
+(37)
+using Sm+1=(Vm+1)+​ℬm+1S^{m+1}=(V^{m+1})^{+}\mathcal{B}^{m+1} in (34), the join identity (31) at k=m+1k=m+1 in (35), and ℬm+1=S¯m+1​(V¯m+1)T\mathcal{B}^{m+1}=\bar{S}^{m+1}(\bar{V}^{m+1})^{T} in (36).
+Unrolling and closing at the readout.
+Solving the recursion in (33) from ρℓ+1=0\rho_{\ell+1}=0 gives
+ρL−1=∑k=ℓ+2L−1Ak−1[(I−Pk)Epk−EvkSk]Sk+1⋯SL−1.\rho_{L-1}=\sum_{k=\ell+2}^{L-1}A_{k-1}\bigl[(I-P_{k})E_{p}^{k}-E_{v}^{k}S^{k}\bigr]S^{k+1}\cdots S^{L-1}.
+(38)
+At m=L−1m=L-1, Assumption 1 gives (V¯L−1)T=I(\bar{V}^{L-1})^{T}=I, and AL−1=(Vℓ+1)+S¯ℓ+1⋯S¯L−1=(Vℓ+1)+J¯SAMℓA_{L-1}=(V^{\ell+1})^{+}\bar{S}^{\ell+1}\cdots\bar{S}^{L-1}=(V^{\ell+1})^{+}\bar{J}_{\rm SAM}^{\ell} by (11).
+Hence (33) at m=L−1m=L-1 reads
+Sℓ+1⋯SL−1=(Vℓ+1)+J¯SAMℓ+RSℓ,S^{\ell+1}\cdots S^{L-1}=(V^{\ell+1})^{+}\bar{J}_{\rm SAM}^{\ell}+R_{S}^{\ell},
+(39)
+where
+RSℓ:=ρL−1=∑k=ℓ+2L−1Ak−1[(I−Pk)Epk−EvkSk](Sk+1⋯SL−1),R_{S}^{\ell}:=\rho_{L-1}=\sum_{k=\ell+2}^{L-1}A_{k-1}\bigl[(I-P_{k})E_{p}^{k}-E_{v}^{k}S^{k}\bigr]\bigl(S^{k+1}\cdots S^{L-1}\bigr),
+(40)
+and Ak−1=(Vℓ+1)+S¯ℓ+1⋯S¯k−1A_{k-1}=(V^{\ell+1})^{+}\bar{S}^{\ell+1}\cdots\bar{S}^{k-1}.
+When Epk=Evk=0E_{p}^{k}=E_{v}^{k}=0 at every interior join, RSℓ=0R_{S}^{\ell}=0 and QL−1=AL−1=(Vℓ+1)+​J¯SAMℓQ_{L-1}=A_{L-1}=(V^{\ell+1})^{+}\bar{J}_{\rm SAM}^{\ell}.
+By submultiplicativity applied to each summand of (40),
+∥Ak−1[(I−Pk)Epk−EvkSk](Sk+1⋯SL−1)∥\displaystyle\bigl\|A_{k-1}\bigl[(I-P_{k})E_{p}^{k}-E_{v}^{k}S^{k}\bigr](S^{k+1}\cdots S^{L-1})\bigr\|
+≤|Ak−1|(ϵpk+ϵvk​‖Sk‖)​∏j=k+1L−1‖Sj‖,\displaystyle\qquad\leq\|A_{k-1}\|\bigl(\epsilon_{p}^{k}+\epsilon_{v}^{k}\|S^{k}\|\bigr)\prod_{j=k+1}^{L-1}\|S^{j}\|,
+with ‖I−Pk‖≤1\|I-P_{k}\|\leq 1.
+The ideal accumulator obeys ‖Ak−1‖≤‖(Vℓ+1)+‖​Mk−ℓ−1\|A_{k-1}\|\leq\|(V^{\ell+1})^{+}\|M^{k-\ell-1}
+for any M≥maxj⁡‖S¯j‖M\geq\max_{j}\|\bar{S}^{j}\|.
+Summing over interior joins,
+‖RSℓ‖≤‖(Vℓ+1)+‖​∑k=ℓ+2L−1Mk−ℓ−1​(ϵpk+ϵvk​‖Sk‖)​∏j=k+1L−1‖Sj‖.\|R_{S}^{\ell}\|\leq\|(V^{\ell+1})^{+}\|\sum_{k=\ell+2}^{L-1}M^{\,k-\ell-1}\bigl(\epsilon_{p}^{k}+\epsilon_{v}^{k}\|S^{k}\|\bigr)\prod_{j=k+1}^{L-1}\|S^{j}\|.
+(41)
+Combine RTℓR_{T}^{\ell} and RSℓR_{S}^{\ell}.
+Substitute (39) into (29):
+JSGDℓ=(Vℓ+1)+​J¯SAMℓ+RSℓ+RTℓ,Rchainℓ:=RSℓ+RTℓ.J_{\rm SGD}^{\ell}=(V^{\ell+1})^{+}\bar{J}_{\rm SAM}^{\ell}+R_{S}^{\ell}+R_{T}^{\ell},\qquad R_{\rm chain}^{\ell}:=R_{S}^{\ell}+R_{T}^{\ell}.
+(42)
+Adding (30) and (41) gives ‖Rchainℓ‖≤‖RTℓ‖+‖RSℓ‖\|R_{\rm chain}^{\ell}\|\leq\|R_{T}^{\ell}\|+\|R_{S}^{\ell}\|, which is linear in the primitive errors ϵp\epsilon_{p} and ϵv\epsilon_{v}.
+If in addition every ‖Tj‖\|T^{j}\| and ‖Sj‖\|S^{j}\| is bounded by the same MM, a coarse envelope is O⁡(ML−ℓ−1​∑(ϵp+ϵv))O\bigl(M^{L-\ell-1}\sum(\epsilon_{p}+\epsilon_{v})\bigr).
+I6 (SAL update ↔\leftrightarrow generalized SGD).
+Start from I5 (42):
+JSGDℓ=(Vℓ+1)+​J¯SAMℓ+Rchainℓ.J_{\rm SGD}^{\ell}=(V^{\ell+1})^{+}\bar{J}_{\rm SAM}^{\ell}+R_{\rm chain}^{\ell}.
+(43)
+I6.1 (left-multiply by Vℓ+1V^{\ell+1}).
+Left-multiply (43) by Vℓ+1V^{\ell+1} and set Pℓ+1:=Vℓ+1​(Vℓ+1)+P_{\ell+1}:=V^{\ell+1}(V^{\ell+1})^{+}:
+Pℓ+1​J¯SAMℓ=Vℓ+1​JSGDℓ−Vℓ+1​Rchainℓ.P_{\ell+1}\bar{J}_{\rm SAM}^{\ell}=V^{\ell+1}J_{\rm SGD}^{\ell}-V^{\ell+1}R_{\rm chain}^{\ell}.
+(44)
+I6.2 (keep the entry projector).
+SAL uses the full downstream Jacobian, so decompose it into its component in col⁡(Vℓ+1)\operatorname{col}(V^{\ell+1}) and its orthogonal leakage:
+JSAMℓ=V¯ℓ​Pℓ+1​J¯SAMℓ+V¯ℓ​(I−Pℓ+1)​J¯SAMℓ.J_{\rm SAM}^{\ell}=\bar{V}^{\ell}P_{\ell+1}\bar{J}_{\rm SAM}^{\ell}+\bar{V}^{\ell}(I-P_{\ell+1})\bar{J}_{\rm SAM}^{\ell}.
+(45)
+For the first term, use (44).
+For the second, Pℓ+1​Vℓ+1=Vℓ+1P_{\ell+1}V^{\ell+1}=V^{\ell+1} implies
+(Vℓ+1)T​(I−Pℓ+1)=0.(V^{\ell+1})^{T}(I-P_{\ell+1})=0.
+(46)
+Transposing Evℓ+1=Vℓ+1−(V¯ℓ)TE_{v}^{\ell+1}=V^{\ell+1}-(\bar{V}^{\ell})^{T} gives
+V¯ℓ=(Vℓ+1)T−(Evℓ+1)T\bar{V}^{\ell}=(V^{\ell+1})^{T}-(E_{v}^{\ell+1})^{T}, so by (46)
+V¯ℓ​(I−Pℓ+1)=−(Evℓ+1)T​(I−Pℓ+1).\bar{V}^{\ell}(I-P_{\ell+1})=-(E_{v}^{\ell+1})^{T}(I-P_{\ell+1}).
+(47)
+Therefore
+V¯ℓ​(I−Pℓ+1)​J¯SAMℓ=−(Evℓ+1)T​(I−Pℓ+1)​J¯SAMℓ.\bar{V}^{\ell}(I-P_{\ell+1})\bar{J}_{\rm SAM}^{\ell}=-(E_{v}^{\ell+1})^{T}(I-P_{\ell+1})\bar{J}_{\rm SAM}^{\ell}.
+(48)
+I6.3 (assemble JSAMJ_{\rm SAM}).
+Substituting (44) and (48) into
+(45) gives the exact relation
+JSAMℓ=V¯ℓ​Vℓ+1​JSGDℓ−V¯ℓ​Vℓ+1​Rchainℓ−(Evℓ+1)T​(I−Pℓ+1)​J¯SAMℓ.J_{\rm SAM}^{\ell}=\bar{V}^{\ell}V^{\ell+1}J_{\rm SGD}^{\ell}-\bar{V}^{\ell}V^{\ell+1}R_{\rm chain}^{\ell}-(E_{v}^{\ell+1})^{T}(I-P_{\ell+1})\bar{J}_{\rm SAM}^{\ell}.
+(49)
+I6.4 (split HℓH^{\ell} from Evℓ+1E_{v}^{\ell+1}).
+Define (as in Theorem 2)
+Hℓ:=V¯ℓ​(V¯ℓ)T,E~vℓ:=V¯ℓ​Evℓ+1.H^{\ell}:=\bar{V}^{\ell}(\bar{V}^{\ell})^{T},\qquad\widetilde{E}_{v}^{\ell}:=\bar{V}^{\ell}E_{v}^{\ell+1}.
+(50)
+With Vℓ+1=(V¯ℓ)T+Evℓ+1V^{\ell+1}=(\bar{V}^{\ell})^{T}+E_{v}^{\ell+1} (17),
+V¯ℓ​Vℓ+1=Hℓ+E~vℓ.\bar{V}^{\ell}V^{\ell+1}=H^{\ell}+\widetilde{E}_{v}^{\ell}.
+(51)
+Substituting into (49),
+JSAMℓ=(Hℓ+E~vℓ)​JSGDℓ−V¯ℓ​Vℓ+1​Rchainℓ−(Evℓ+1)T​(I−Pℓ+1)​J¯SAMℓ.J_{\rm SAM}^{\ell}=\bigl(H^{\ell}+\widetilde{E}_{v}^{\ell}\bigr)J_{\rm SGD}^{\ell}-\bar{V}^{\ell}V^{\ell+1}R_{\rm chain}^{\ell}-(E_{v}^{\ell+1})^{T}(I-P_{\ell+1})\bar{J}_{\rm SAM}^{\ell}.
+(52)
+I6.5 (Jacobian relation).
+Define
+ℛJacℓ:=−V¯ℓ​Vℓ+1​Rchainℓ−(Evℓ+1)T​(I−Pℓ+1)​J¯SAMℓ,\mathcal{R}_{\rm Jac}^{\ell}:=-\bar{V}^{\ell}V^{\ell+1}R_{\rm chain}^{\ell}-(E_{v}^{\ell+1})^{T}(I-P_{\ell+1})\bar{J}_{\rm SAM}^{\ell},
+(53)
+so
+JSAMℓ=(Hℓ+E~vℓ)​JSGDℓ+ℛJacℓ.J_{\rm SAM}^{\ell}=\bigl(H^{\ell}+\widetilde{E}_{v}^{\ell}\bigr)J_{\rm SGD}^{\ell}+\mathcal{R}_{\rm Jac}^{\ell}.
+(54)
+When Rchainℓ=0R_{\rm chain}^{\ell}=0 and Evℓ+1=0E_{v}^{\ell+1}=0, this reduces to JSAMℓ=Hℓ​JSGDℓJ_{\rm SAM}^{\ell}=H^{\ell}J_{\rm SGD}^{\ell}.
+Moreover,
+‖ℛJacℓ‖≤‖V¯ℓ​Vℓ+1‖​‖Rchainℓ‖+ϵvℓ+1​‖J¯SAMℓ‖,\|\mathcal{R}_{\rm Jac}^{\ell}\|\leq\|\bar{V}^{\ell}V^{\ell+1}\|\,\|R_{\rm chain}^{\ell}\|+\epsilon_{v}^{\ell+1}\,\|\bar{J}_{\rm SAM}^{\ell}\|,
+(55)
+since ‖I−Pℓ+1‖≤1\|I-P_{\ell+1}\|\leq 1.
+Remark 3 (Keeping J¯SAM\bar{J}_{\rm SAM} in the residual).
+The error residual expressions (e.g., (53) and (55)) retain J¯SAMℓ\bar{J}_{\rm SAM}^{\ell}, a defined downstream product rather than a primitive error.
+This is admissible because (48) multiplies it by Evℓ+1E_{v}^{\ell+1}: the contribution is O⁡(ϵvℓ+1​‖J¯SAMℓ‖)O\bigl(\epsilon_{v}^{\ell+1}\|\bar{J}_{\rm SAM}^{\ell}\|\bigr) and is therefore linear in that primitive error.
+Lemma 1 sends Evℓ+1→0E_{v}^{\ell+1}\to 0 unconditionally, so the term vanishes without a separate smallness hypothesis on ‖J¯SAMℓ‖\|\bar{J}_{\rm SAM}^{\ell}\| (bounded J¯SAMℓ\bar{J}_{\rm SAM}^{\ell} on the sample suffices).
+I6.6 (weight update).
+Apply (54) to −gL-g^{L}. The right-hand side uses gℓ+1=JSGDℓ​gLg^{\ell+1}=J_{\rm SGD}^{\ell}g^{L} and a¯L=−gL\bar{a}^{L}=-g^{L}. The left-hand side is JSAMℓ​a¯LJ_{\rm SAM}^{\ell}\bar{a}^{L}; with JSAMℓ=V¯ℓ​J¯SAMℓJ_{\rm SAM}^{\ell}=\bar{V}^{\ell}\bar{J}_{\rm SAM}^{\ell} and a¯ℓ+1=J¯SAMℓ​a¯L\bar{a}^{\ell+1}=\bar{J}_{\rm SAM}^{\ell}\bar{a}^{L},
+JSAMℓ​a¯L=V¯ℓ​J¯SAMℓ​a¯L=V¯ℓ​a¯ℓ+1.J_{\rm SAM}^{\ell}\bar{a}^{L}=\bar{V}^{\ell}\bar{J}_{\rm SAM}^{\ell}\bar{a}^{L}=\bar{V}^{\ell}\bar{a}^{\ell+1}.
+Hence
+V¯ℓ​a¯ℓ+1=−(Hℓ+E~vℓ)​gℓ+1−ℛJacℓ​gL.\bar{V}^{\ell}\bar{a}^{\ell+1}=-\bigl(H^{\ell}+\widetilde{E}_{v}^{\ell}\bigr)\,g^{\ell+1}-\mathcal{R}_{\rm Jac}^{\ell}g^{L}.
+(56)
+The SAL and SGD updates on the same sample are
+ΔSAL​Wℓ=ηW​Duℓ+1​V¯ℓ​a¯ℓ+1​(hℓ)T​Duℓ−γ​Wℓ,Δsgd​Wℓ=−gℓ+1​(Duℓ​hℓ)T.\Delta_{\rm SAL}W^{\ell}=\eta_{W}D_{u}^{\ell+1}\bar{V}^{\ell}\bar{a}^{\ell+1}(h^{\ell})^{T}D_{u}^{\ell}-\gamma W^{\ell},\qquad\Delta_{\rm sgd}W^{\ell}=-g^{\ell+1}(D_{u}^{\ell}h^{\ell})^{T}.
+Since DuT=DuD_{u}^{T}=D_{u}, the right-hand factor of the SAL rule is (hℓ)T​Duℓ=(Duℓ​hℓ)T(h^{\ell})^{T}D_{u}^{\ell}=(D_{u}^{\ell}h^{\ell})^{T}.
+Insert (56):
+Duℓ+1​V¯ℓ​a¯ℓ+1​(Duℓ​hℓ)T\displaystyle D_{u}^{\ell+1}\bar{V}^{\ell}\bar{a}^{\ell+1}(D_{u}^{\ell}h^{\ell})^{T}
+=Duℓ+1​[−(Hℓ+E~vℓ)​gℓ+1−ℛJacℓ​gL]​(Duℓ​hℓ)T\displaystyle=D_{u}^{\ell+1}\bigl[-\bigl(H^{\ell}+\widetilde{E}_{v}^{\ell}\bigr)g^{\ell+1}-\mathcal{R}_{\rm Jac}^{\ell}g^{L}\bigr](D_{u}^{\ell}h^{\ell})^{T}
+=Duℓ+1​(Hℓ+E~vℓ)​(−gℓ+1​(Duℓ​hℓ)T)−Duℓ+1​(ℛJacℓ​gL)​(Duℓ​hℓ)T\displaystyle=D_{u}^{\ell+1}\bigl(H^{\ell}+\widetilde{E}_{v}^{\ell}\bigr)\bigl(-g^{\ell+1}(D_{u}^{\ell}h^{\ell})^{T}\bigr)-D_{u}^{\ell+1}(\mathcal{R}_{\rm Jac}^{\ell}g^{L})(D_{u}^{\ell}h^{\ell})^{T}
+=Duℓ+1​(Hℓ+E~vℓ)​Δsgd​Wℓ−Duℓ+1​(ℛJacℓ​gL)​(Duℓ​hℓ)T.\displaystyle=D_{u}^{\ell+1}\bigl(H^{\ell}+\widetilde{E}_{v}^{\ell}\bigr)\Delta_{\rm sgd}W^{\ell}-D_{u}^{\ell+1}(\mathcal{R}_{\rm Jac}^{\ell}g^{L})(D_{u}^{\ell}h^{\ell})^{T}.
+For ℓ≤L−2\ell\leq L-2, exact autograd gives Duℓ+1​gℓ+1=gℓ+1D_{u}^{\ell+1}g^{\ell+1}=g^{\ell+1}, hence
+Duℓ+1​Δsgd​Wℓ=Δsgd​WℓD_{u}^{\ell+1}\Delta_{\rm sgd}W^{\ell}=\Delta_{\rm sgd}W^{\ell}.
+The principal term therefore sandwiches the right-hand gate:
+Duℓ+1​(Hℓ+E~vℓ)​Δsgd​Wℓ=Duℓ+1​(Hℓ+E~vℓ)​Duℓ+1​Δsgd​Wℓ=(HDℓ+E~v,Dℓ)​Δsgd​Wℓ,D_{u}^{\ell+1}\bigl(H^{\ell}+\widetilde{E}_{v}^{\ell}\bigr)\Delta_{\rm sgd}W^{\ell}=D_{u}^{\ell+1}\bigl(H^{\ell}+\widetilde{E}_{v}^{\ell}\bigr)D_{u}^{\ell+1}\Delta_{\rm sgd}W^{\ell}=\bigl(H_{D}^{\ell}+\widetilde{E}_{v,D}^{\ell}\bigr)\Delta_{\rm sgd}W^{\ell},
+where
+HDℓ:=Duℓ+1​Hℓ​Duℓ+1,E~v,Dℓ:=Duℓ+1​E~vℓ​Duℓ+1,H_{D}^{\ell}:=D_{u}^{\ell+1}H^{\ell}D_{u}^{\ell+1},\qquad\widetilde{E}_{v,D}^{\ell}:=D_{u}^{\ell+1}\widetilde{E}_{v}^{\ell}D_{u}^{\ell+1},
+(57)
+with HℓH^{\ell} and E~vℓ\widetilde{E}_{v}^{\ell} from (50).
+Multiply by ηW\eta_{W} and restore the decay:
+ΔSAL​Wℓ=ηW​(HDℓ+E~v,Dℓ)​Δsgd​Wℓ−γ​Wℓ+Rℓ,\Delta_{\rm SAL}W^{\ell}=\eta_{W}\,\bigl(H_{D}^{\ell}+\widetilde{E}_{v,D}^{\ell}\bigr)\Delta_{\rm sgd}W^{\ell}-\gamma W^{\ell}+R^{\ell},
+(58)
+Rℓ=−ηW​Duℓ+1​(ℛJacℓ​gL)​(Duℓ​hℓ)T.R^{\ell}=-\eta_{W}D_{u}^{\ell+1}(\mathcal{R}_{\rm Jac}^{\ell}g^{L})(D_{u}^{\ell}h^{\ell})^{T}.
+Combining (55) with submultiplicativity gives (24).
+Since ‖ℛJacℓ‖\|\mathcal{R}_{\rm Jac}^{\ell}\| is linear in the primitive errors and the local factors ηW\eta_{W}, Duℓ+1D_{u}^{\ell+1}, gLg^{L}, and Duℓ​hℓD_{u}^{\ell}h^{\ell} are bounded on the sample, ‖Rℓ‖\|R^{\ell}\| is likewise linear in those errors.
+This proves Lemma 2 (Steps I1–I5) and Theorem 2 (Step I6).
+Appendix B Biological Evidence for Synaptic Plasticity Rules
+The learning rules corresponding to the SAM dynamics in the main text are not strictly Hebb. In fact, the classical Hebb rule is an example of homosynaptic plasticity, whereas the proposed algorithm requires the plasticity of neighboring synapses through heterosynaptic interactions. One of the first examples of heterosynaptic facilitation is in [54].
+There is empirical evidence that reinforcement of a synapse based on its own input and nearby synaptic input can occur independently of large postsynaptic depolarization, often through localized biochemical signaling rather than direct electrical depolarization of the postsynaptic cell. In this case, synaptic plasticity is influenced by the activity of neighboring synapses without necessitating a strong postsynaptic action potential. A possible mechanism is Spike-Timing-Dependent Plasticity (STDP) with Local Modulation: in some forms of STDP, nearby synapses on the same dendrite can influence plasticity based on the timing of inputs. For example, the timing of presynaptic spikes at two nearby excitatory synapses can trigger local signaling cascades within the dendritic segment that reinforce or weaken synaptic strength without requiring a large postsynaptic potential. Another is calcium-dependent modulation: local increases in calcium concentration can drive synaptic reinforcement or weakening in a spatially restricted manner. When one synapse is active, it can cause a modest calcium influx that can extend to nearby synapses without significantly depolarizing the postsynaptic neuron. This local calcium increase can activate signaling pathways, such as CaMKII or other kinases, that modify the strength of nearby synapses proportionally to their own activity levels and those of neighboring inputs. A third possible mechanism is retrograde signaling, which involves retrograde messengers (e.g., endocannabinoids or nitric oxide) that are released by the postsynaptic neuron in response to local synaptic activity and can act on presynaptic terminals. These messengers can diffuse locally and affect only the nearby synapses that are also active, reinforcing or weakening them proportionally to their individual input activities. An interesting case study is by [55] on synaptic tagging in hippocampal neurons. It demonstrated that synapses can interact biochemically on a local level. When a strong input induces LTP at one synapse, it can create a "tag" that allows nearby synapses to capture plasticity-related proteins and reinforce their strength based on their activity, even if they don’t independently trigger large postsynaptic depolarization. These mechanisms allow synaptic connections to encode complex input patterns across local networks, effectively performing computations that go beyond simple, strict Hebbian principles33
+3
+There are a few different possibilities of how to implement them biologically. One special detail one needs to pay attention to is the time ordering of firing..
+In the main text, we have mainly focused on the simplest type of regularization. A more biologically plausible regularization is perhaps a Winner-Take-All regularization, and this could be a direction of future research.
+Biological evidence for competition among incoming synapses on a single neuron (or dendrite). Research does suggest a competitive process among synapses on the same dendritic branch, particularly when multiple inputs converge on a single location. This competition is thought to be governed by mechanisms of synaptic plasticity, where synapses that are frequently active and contribute to the cell’s firing are strengthened, while less active ones may weaken or even be pruned.
+One well-documented example of this competition is seen in activity-dependent plasticity processes, such as Hebbian plasticity and synaptic tagging and capture. When neighboring synapses are active at the same time, they may compete for limited resources, like proteins that help stabilize and strengthen synaptic connections. This often results in the selective strengthening of certain synapses and the weakening of others, a process referred to as heterosynaptic plasticity. In this way, some synapses are favored to persist, while others may diminish over time if they fail to “compete” effectively. This competitive mechanism is believed to play a crucial role in refining neural circuits, helping to maintain efficient and effective synaptic networks by eliminating redundant or less useful connections, especially during development and learning.
+Biological evidence for competition among synapses from a single neuron (or axon) onto different neurons. There is evidence supporting the idea of presynaptic competition between synapses originating from the same neuron when they connect to different target neurons.
+One of the most studied examples of presynaptic competition is in motor neurons and their connections to muscle fibers, especially during development. Motor neurons initially form multiple synapses on various muscle fibers, but over time, a pruning process occurs, often resulting in a single, stable connection with one muscle fiber. This phenomenon, known as synaptic pruning, is a process where less active synapses are eliminated while only the more effective and frequently active connections are maintained and strengthened.
+This presynaptic competition is driven by neuronal activity and molecular signals. Research on long-term synaptic plasticity (LTP and LTD) suggests that competing synapses can affect each other’s likelihood of survival, even when they connect to different cells. Synchronized activity at certain synapses tends to stabilize those connections, while less synchronized or less active synapses are gradually weakened and may be removed.
+Presynaptic competition is essential not only for refining neural networks but also for developing functional connections between neurons. It ensures that only the most efficient and relevant connections are maintained, optimizing neural circuitry for effective function.
+Appendix C Gradient Learning Without a Two-Stream Scaffold
+At its core, SAM is a local heterosynaptic learning rule that makes a population
+of neurons self-organize; the two interacting streams of the main text are one
+particular setting in which we exercise this rule, not a defining commitment.
+Companion work [50] applies the same rule in a much more general
+setting—a generalized SAM—and asks how far the self-organization reaches when
+the two-stream organization is removed entirely. A pool of neurons is randomly
+initialized and recurrently connected, with no partition into separate streams;
+every synapse follows the same local heterosynaptic rule; and an evolutionary
+process grows and prunes the connections, selecting only on task performance. The
+sole structure fixed in advance is where the error signal enters the circuit.
+From this scaffold-free setting, effective learning circuits self-organize
+(Fig. 5): driven by the heterosynaptic rule, the
+connectivity reorganizes across generations into circuits that learn well, with
+the evolved updates becoming increasingly aligned with the true gradient. Good
+credit-assignment circuitry therefore self-assembles from a generic pool of
+neurons, without any scaffold. We take this as evidence on two fronts: that the
+heterosynaptic rule introduced in this work is powerful enough, on its own, to
+make a population of neurons self-organize into an effective learner; and that the
+SAL goal—learning structure emerging from local rules rather than from
+design—is achievable across a broad range of settings, well beyond the
+particular two-stream instantiation analyzed in the main text. In this sense the
+result supports the general direction of SAL. We refer the reader to
+[50] for the learning rule, the evolutionary algorithm, and the full
+set of simulations.
+Figure 5: Effective learning circuits self-assemble from a randomly
+initialized pool of neurons under the heterosynaptic rule, with no two-stream
+scaffold. Reproduced from [50].
+(a) Examples of evolved four-neuron circuits trained on a linear
+regression task; synapses are grown and pruned over generations.
+(b) Snapshots of an evolving 100100-neuron network.
+(c) Quantities versus generation (rows: four-neuron sparse init.,
+100100-neuron sparse init., 100100-neuron dense init.), showing fitness,
+gradient alignment, heterosynaptic (HSP) density, Hebbian (HBP) density, and
+synapse density; shaded regions indicate variability across runs. As evolution
+proceeds, the evolved updates become increasingly aligned with the true
+gradient.
+Appendix D Experimental Setup
+Figure 6: Performance of a four-layer MLP for different choices of learning rates. Interestingly, the best performance is achieved when ηV\eta_{V} is the smallest of the four learning rates.
+All experiments are conducted with PyTorch on NVIDIA GPUs (mostly A100, occasionally L40S). The batch size is set to 256.
+Datasets.
+We use seven datasets to evaluate our method. CIFAR-10 [30] consists of 60,000 color images in 10 different classes, with each image having a resolution of 32x32 pixels. The dataset is divided into 50,000 training images and 10,000 testing images. The classes are mutually exclusive and include common objects such as airplanes, cars, cats, and dogs.
+The MNIST [31] contains 70,000 grayscale images of handwritten digits (0-9), each with a resolution of 28x28 pixels. The dataset is divided into 60,000 training images and 10,000 testing images. MNIST is known for its simplicity and has been a standard dataset for testing machine learning algorithms.
+Fashion MNIST [32] contains 70,000 grayscale images of clothing items like T-shirts, trousers, shoes, and bags, with each image having a resolution of 28x28 pixels. The dataset is also split into 60,000 training and 10,000 testing images. Fashion MNIST is considered more challenging than MNIST due to the variability in the visual features of clothing items.
+The SVHN [35] contains over 600,000 color images of digits (0-9), each with a resolution of 32x32 pixels. The dataset is divided into a training set of 73,257 images, a testing set of 26,032 images, and an additional 531,131 images for extra training. SVHN is challenging due to the varying digit sizes, orientations, and complex backgrounds.
+The ChestMNIST [33, 34] comprises chest X-ray images for multi-label classification tasks. Derived from the NIH ChestX-ray14 dataset, it includes images annotated with 14 different pathological labels, such as pneumonia and emphysema. It is widely used in medical imaging studies to develop and evaluate machine learning models capable of diagnosing multiple conditions from X-ray images.
+PathMNIST [33, 34] is a pathology image dataset designed for multi-class classification tasks. It originates from the NCT-CRC-HE-100K dataset and includes histological images of nine different types of tissue from colorectal cancer samples, such as colorectal adenocarcinoma epithelium and lymphocytes. This dataset is used primarily for training models to differentiate between various cancerous tissue types based on their histopathological features.
+STL-10 [36] consists of 13,000 labeled images across 10 different classes and 100,000 unlabeled images. Each image has a resolution of 96x96 pixels, which is significantly larger than CIFAR-10 images, making the dataset more challenging. The dataset has a training set of 5,000 labeled images and a test set of 8,000 labeled images.
+Baselines.
+We compare our method with four baselines, including SGD and three biologically-motivated algorithms.
+Stochastic Gradient Descent (SGD) is the standard optimization method that updates parameters iteratively using a subset of data to minimize the objective function.
+Weight Mirroring [13] learns feedback weights that approximate the transpose of the forward weights without weight transport: in a separate mirroring phase, noise is injected into the forward neurons and the feedback weights are updated with a local Hebbian rule, so they come to mirror the forward weights.
+Feedback Alignment [12] offers an alternative to traditional backpropagation by using random, fixed weights instead of transposed forward-pass weights to propagate error signals.
+Kolen-Pollack (KP) algorithm [24, 13] learns feedback weights without weight transport by applying the same local update (transposed) and the same weight decay to the forward and feedback weights during training, so their difference decays exponentially and the feedback weights converge to the transpose of the forward weights.
+Appendix E Alignment Diagnostics
+This section reports CIFAR-10 SAL vs. backprop alignment diagnostics that test the theory in §A.
+The runs follow Algorithm 2 with hyperparameters as below unless noted.
+Two error budgets.
+The diagnostics separate two alignment quantities from §A.
+Interstream alignment (Evℓ→0E_{v}^{\ell}\to 0) is proved unconditionally when ηV=ηV¯\eta_{V}=\eta_{\bar{V}} (Lemma 1); any residual junction mismatch in simulations reflects finite training time, stochastic sampling, or numerical precision.
+Pathway alignment (EpℓE_{p}^{\ell} small) is conditional: convergence Epℓ→0E_{p}^{\ell}\to 0 from the weight rules alone is not proved (Remark 2).
+In stable runs we often observe ‖Epℓ‖\|E_{p}^{\ell}\| and ‖Epℓ‖/‖ℱℓ‖\|E_{p}^{\ell}\|/\|\mathcal{F}^{\ell}\| decrease on most layers; when a run becomes unstable these quantities can instead grow.
+When and why EpℓE_{p}^{\ell} improves or worsens during training is left to future work.
+Measured quantities.
+For each layer ℓ\ell and sample xx we form the forward pathway operator ℱℓ​(x)=Vℓ​Duℓ​(x)​(Wℓ)T\mathcal{F}^{\ell}(x)=V^{\ell}D_{u}^{\ell}(x)(W^{\ell})^{T}, the feedback pathway operator ℬℓ​(x)=Ddℓ​(x)​W¯ℓ​(V¯ℓ)T\mathcal{B}^{\ell}(x)=D_{d}^{\ell}(x)\bar{W}^{\ell}(\bar{V}^{\ell})^{T}, and the pathway error Epℓ​(x)=ℱℓ​(x)−ℬℓ​(x)E_{p}^{\ell}(x)=\mathcal{F}^{\ell}(x)-\mathcal{B}^{\ell}(x) (Definition 1).
+Interstream alignment is proxied by junction mismatch |Vℓ+1−V¯ℓ​T||V^{\ell+1}-\bar{V}^{\ell\mathrm{T}}| and cosine similarity cos⁡(Vℓ+1,V¯ℓ​T)\cos(V^{\ell+1},\bar{V}^{\ell\mathrm{T}}).
+We also log SAL vs. backprop gradient cosine similarity on WℓW^{\ell}, interstream gradient magnitudes |∇Vℓ||\nabla V^{\ell}| and |∇V¯ℓ||\nabla\bar{V}^{\ell}|, per-layer ‖Epℓ‖F\|E_{p}^{\ell}\|_{F}, and ‖Epℓ‖F/‖ℱℓ‖F\|E_{p}^{\ell}\|_{F}/\|\mathcal{F}^{\ell}\|_{F}; since Epℓ=ℱℓ−ℬℓE_{p}^{\ell}=\mathcal{F}^{\ell}-\mathcal{B}^{\ell}, the ratio expresses operator mismatch relative to the forward pathway scale and is comparable across layers.
+V0V^{0} and W¯0\bar{W}^{0} are unused by the model yet enter Ep0E_{p}^{0}, and a fuller treatment is left to future work.
+Training hyperparameters.
+We train on CIFAR-10 with three or four hidden layers of width 200200 (readout index L=4L=4 and L=5L=5 respectively; h0h^{0} is the input), ReLU forward nonlinearity, identity backward nonlinearity (Dd=ID_{d}=I), no batch or layer normalization, batch size 256256, 5050 epochs, and alignment metrics recorded every five training steps.
+Optimization uses SGD with base learning rate η=5×10−3\eta=5\times 10^{-3} and momentum 0.90.9.
+Per-matrix SAL gradient scales are ηW=1.0\eta_{W}=1.0, ηW¯=0.8\eta_{\bar{W}}=0.8, and matched interstream rates ηV=ηV¯=0.8\eta_{V}=\eta_{\bar{V}}=0.8.
+Weight decay is 10−310^{-3} on WℓW^{\ell} and W¯ℓ\bar{W}^{\ell} and 0.010.01 on VℓV^{\ell} and V¯ℓ\bar{V}^{\ell}.
+The 4-hidden-layer (L=5L=5) divergent run differs only in depth.
+Three hidden layers (L=4L=4; stable regime).
+With three hidden layers, training remains stable for the full 5050 epochs (Figure 7).
+Interstream alignment (panels G–H): |Vℓ+1−V¯ℓ​T||V^{\ell+1}-\bar{V}^{\ell\mathrm{T}}| falls and cosine similarity approaches one on all layers, even though |∇Vℓ||\nabla V^{\ell}| and |∇V¯ℓ||\nabla\bar{V}^{\ell}| in panels E–F stay at a stable positive level.
+Transpose self-assembly (Evℓ→0E_{v}^{\ell}\to 0) therefore completes while interstream plasticity remains active—the central empirical distinction from requiring vanishing weight updates.
+Pathway alignment (panels C–D): ‖Epℓ‖\|E_{p}^{\ell}\| and ‖Epℓ‖/‖ℱℓ‖\|E_{p}^{\ell}\|/\|\mathcal{F}^{\ell}\| decrease on most layers; EpE_{p} tracks pathway misalignment in practice once EvE_{v} is small.
+Together with tight interstream alignment, this is consistent with the conditional main theorem (Theorem 2), under which moderate pathway error is the remaining hypothesis for SAL gradients on WℓW^{\ell} to track a preconditioned backprop direction (panel B).
+Figure 7: Alignment diagnostics on CIFAR-10 (3 hidden layers, L=4L=4; stable run).
+SAL vs. backprop comparison during training (hyperparameters above).
+A: train and test cross-entropy and accuracy over epochs.
+B: cosine similarity between SAL and backprop gradients on WℓW^{\ell}.
+C–D: pathway error ‖Epℓ‖\|E_{p}^{\ell}\| and ‖Epℓ‖/‖ℱℓ‖\|E_{p}^{\ell}\|/\|\mathcal{F}^{\ell}\| (Epℓ=ℱℓ−ℬℓE_{p}^{\ell}=\mathcal{F}^{\ell}-\mathcal{B}^{\ell}, normalized by ‖ℱℓ‖\|\mathcal{F}^{\ell}\|; typically decreasing).
+E–F: interstream gradient magnitudes |∇Vℓ||\nabla V^{\ell}| and |∇V¯ℓ||\nabla\bar{V}^{\ell}|.
+G–H: interstream mismatch |Vℓ+1−V¯ℓ​T||V^{\ell+1}-\bar{V}^{\ell\mathrm{T}}| and cosine similarity.
+Interstream self-assembly completes while plasticity remains active; pathway error falls on most layers; SAL tracks backprop on WℓW^{\ell}. These are early diagnostics; a systematic analysis of EpE_{p} is left to future work.
+Four hidden layers (L=5L=5; illustrative divergent run).
+With four hidden layers and the same default hyperparameters as above, training need not diverge: stability depends on the relative learning rates of WW, W¯\bar{W}, VV, and V¯\bar{V} and on the overall learning-rate scale, and can often be restored by tuning them.
+We deliberately report one divergent run (Figure 8) to illustrate that EpE_{p} and EvE_{v} can behave differently when training becomes unstable.
+Early in training this run can resemble the 3-hidden-layer (L=4L=4) case: loss decreases, V-alignment improves, and ‖Epℓ‖\|E_{p}^{\ell}\| on some layers often decreases.
+When the run diverges, ‖Epℓ‖\|E_{p}^{\ell}\| can rise on some layers, even if it had been decreasing earlier.
+Panels G–H show interstream alignment remains good on all layers when divergence begins, so the failure is not accompanied by a collapse of EvE_{v}.
+This is compatible with the theorem’s separation of the two error budgets.
+A theory of when and why EpE_{p} grows or decreases remains to be developed.
+Figure 8: Alignment diagnostics on CIFAR-10 (4 hidden layers, L=5L=5; deliberately chosen divergent run).
+Same panel layout and default hyperparameters as Figure 7, with four hidden layers; divergence is not inevitable at this depth and depends on learning-rate tuning.
+‖Epℓ‖\|E_{p}^{\ell}\| can decrease on some layers early, while rising around the time instability appears; interstream alignment in panels G–H can remain good on all layers when failure happens.
+Appendix F Pseudo Code
+We give two algorithmic presentations of SAM, corresponding to two code releases on GitHub.
+Algorithm 1 is the 2024/2025 training loop used for the benchmark experiments in the main text (Table 1, Figure 3 ablations, width study, and related runs).
+Algorithm 2 is the 2026 implementation: it matches the local plasticity rules in SI Theory (§A, (20)–(21) and (58)), and the alignment diagnostics in §E use this formulation.
+The two presentations differ in layer indexing, explicit ReLU gates (DuD_{u}, DdD_{d}), post-activation ports, and per-matrix learning rates; benchmark runs use Dd=ID_{d}=I on the downstream pathway (take D=ID=I in the backward pass of Algorithm 1).
+Algorithm 1 is the original benchmark implementation, which omits the postsynaptic nonlinearity on VV and V¯\bar{V} updates.
+Algorithm 2 is the more symmetric gated form used for the alignment-based theory and diagnostics.
+We did not observe qualitatively different behavior between the two variants. In Algorithm 2, the paired VℓV^{\ell} and (V¯ℓ−1)T(\bar{V}^{\ell-1})^{T} updates share the same outer-product drive, so Lemma 1 applies when ηV=ηV¯\eta_{V}=\eta_{\bar{V}}; in Algorithm 1, the two drives differ only by a term involving the negative part of the pre-activation, so the same mechanism applies approximately.
+Algorithm 1 SAM training loop (2024/2025 benchmark implementation; layer index starts at 11)
+1:
+Initialize: For each layer ℓ=1\ell=1 to LL, initialize weight matrices WℓW^{\ell}, VℓV^{\ell}, W¯ℓ\bar{W}^{\ell}, and V¯ℓ\bar{V}^{\ell}
+2:
+for each training example do
+3:
+Forward Pass (Upstream Pathway):
+4:
+h1←h^{1}\leftarrow input data xx
+5:
+for ℓ=1\ell=1 to L−1L-1 do
+6:
+hℓ+1←D⁡(Wℓ​hℓ)h^{\ell+1}\leftarrow D(W^{\ell}h^{\ell})
+7:
+Compute Loss:
+8:
+Compute loss FF based on output hLh^{L} and target yy
+9:
+Initialize Error Signal:
+10:
+h¯L←ϵ⁡(hL,y)\bar{h}^{L}\leftarrow\epsilon(h^{L},y) (e.g., h¯L=−∂F/∂hL\bar{h}^{L}=-\partial F/\partial h^{L})
+11:
+Backward Pass (Downstream Pathway):
+12:
+for ℓ=L−1\ell=L-1 down to 11 do
+13:
+h¯ℓ←D⁡(W¯ℓ​h¯ℓ+1)\bar{h}^{\ell}\leftarrow D(\bar{W}^{\ell}\bar{h}^{\ell+1})
+14:
+Update Synaptic Weights:
+15:
+for ℓ=1\ell=1 to LL do
+16:
+Δ​Wℓ←V¯ℓ​h¯ℓ+1​(hℓ)⊤−γ​Wℓ\Delta W^{\ell}\leftarrow\bar{V}^{\ell}\bar{h}^{\ell+1}(h^{\ell})^{\top}-\gamma W^{\ell}
+17:
+Δ​Vℓ←W¯ℓ​h¯ℓ+1​(hℓ)⊤−γ​Vℓ\Delta V^{\ell}\leftarrow\bar{W}^{\ell}\bar{h}^{\ell+1}(h^{\ell})^{\top}-\gamma V^{\ell}
+18:
+Δ​W¯ℓ←(h¯ℓ+1​(hℓ)⊤​(Vℓ)⊤−γ​(W¯ℓ)⊤)⊤\Delta\bar{W}^{\ell}\leftarrow\left(\bar{h}^{\ell+1}(h^{\ell})^{\top}(V^{\ell})^{\top}-\gamma(\bar{W}^{\ell})^{\top}\right)^{\top}
+19:
+Δ​V¯ℓ←(h¯ℓ+1​(hℓ)⊤​(Wℓ)⊤−γ​(V¯ℓ)⊤)⊤\Delta\bar{V}^{\ell}\leftarrow\left(\bar{h}^{\ell+1}(h^{\ell})^{\top}(W^{\ell})^{\top}-\gamma(\bar{V}^{\ell})^{\top}\right)^{\top}
+20:
+Wℓ←Wℓ+η​Δ​WℓW^{\ell}\leftarrow W^{\ell}+\eta\Delta W^{\ell}
+21:
+Vℓ←Vℓ+η​Δ​VℓV^{\ell}\leftarrow V^{\ell}+\eta\Delta V^{\ell}
+22:
+W¯ℓ←W¯ℓ+η​Δ​W¯ℓ\bar{W}^{\ell}\leftarrow\bar{W}^{\ell}+\eta\Delta\bar{W}^{\ell}
+23:
+V¯ℓ←V¯ℓ+η​Δ​V¯ℓ\bar{V}^{\ell}\leftarrow\bar{V}^{\ell}+\eta\Delta\bar{V}^{\ell}
+24:
+At ℓ=1\ell=1, omit Δ​V1\Delta V^{1} and Δ​W¯1\Delta\bar{W}^{1}; at ℓ=L\ell=L, omit Δ​V¯L\Delta\bar{V}^{L}
+Algorithm 2 SAM training loop (2026 implementation; SI Theory; layer index starts at 00; the network does not grow or lose a layer relative to Algorithm 1)
+1:
+Initialize: For each motif ℓ=0,…,L−1\ell=0,\ldots,L-1, initialize WℓW^{\ell}, VℓV^{\ell}, W¯ℓ\bar{W}^{\ell}, V¯ℓ\bar{V}^{\ell}
+2:
+for each training example (x,y)(x,y) do
+3:
+Forward pass (upstream):
+4:
+h0←xh^{0}\leftarrow x
+5:
+for ℓ=0\ell=0 to L−1L-1 do
+6:
+Duℓ←ID_{u}^{\ell}\leftarrow I if ℓ=0\ell=0, else diag⁡(𝟏hℓ>0)\operatorname{diag}(\mathbf{1}_{h^{\ell}>0}) (input gate is identity)
+7:
+aℓ←Duℓ​hℓa^{\ell}\leftarrow D_{u}^{\ell}h^{\ell} (upstream activity port)
+8:
+hℓ+1←Wℓ​aℓh^{\ell+1}\leftarrow W^{\ell}a^{\ell}
+9:
+DuL←ID_{u}^{L}\leftarrow I; aL←hLa^{L}\leftarrow h^{L} (linear readout port)
+10:
+Loss and readout cotangent:
+11:
+Compute loss FF from output hLh^{L} and label yy
+12:
+gL←∂F/∂hLg^{L}\leftarrow\partial F/\partial h^{L} (e.g. MSE F=‖y−hL‖2F=\|y-h^{L}\|^{2}: gL=2​(hL−y)g^{L}=2(h^{L}-y))
+13:
+Backward pass (downstream activity port):
+14:
+a¯L←−gL\bar{a}^{L}\leftarrow-g^{L}
+15:
+for ℓ=L−1\ell=L-1 down to 00 do
+16:
+h¯ℓ←W¯ℓ​a¯ℓ+1\bar{h}^{\ell}\leftarrow\bar{W}^{\ell}\bar{a}^{\ell+1}
+17:
+Ddℓ←diag⁡(𝟏h¯ℓ>0)D_{d}^{\ell}\leftarrow\operatorname{diag}(\mathbf{1}_{\bar{h}^{\ell}>0}) (or Ddℓ←ID_{d}^{\ell}\leftarrow I in default runs)
+18:
+a¯ℓ←Ddℓ​h¯ℓ\bar{a}^{\ell}\leftarrow D_{d}^{\ell}\bar{h}^{\ell}
+19:
+Heterosynaptic updates (local decay γ>0\gamma>0; rates ηW,ηW¯,ηV,ηV¯\eta_{W},\eta_{\bar{W}},\eta_{V},\eta_{\bar{V}})
+20:
+for ℓ=0\ell=0 to L−1L-1 do
+21:
+Δ​Wℓ←ηW​Duℓ+1​V¯ℓ​a¯ℓ+1​(aℓ)T−γ​Wℓ\Delta W^{\ell}\leftarrow\eta_{W}\,D_{u}^{\ell+1}\bar{V}^{\ell}\bar{a}^{\ell+1}\,(a^{\ell})^{T}-\gamma W^{\ell}
+22:
+Δ​W¯ℓ←ηW¯​Ddℓ​Vℓ​aℓ​(a¯ℓ+1)T−γ​W¯ℓ\Delta\bar{W}^{\ell}\leftarrow\eta_{\bar{W}}\,D_{d}^{\ell}V^{\ell}a^{\ell}\,(\bar{a}^{\ell+1})^{T}-\gamma\bar{W}^{\ell}
+23:
+Δ​Vℓ←ηV​a¯ℓ​(aℓ)T−γ​Vℓ\Delta V^{\ell}\leftarrow\eta_{V}\,\bar{a}^{\ell}(a^{\ell})^{T}-\gamma V^{\ell}
+24:
+Δ​V¯ℓ←ηV¯​aℓ+1​(a¯ℓ+1)T−γ​V¯ℓ\Delta\bar{V}^{\ell}\leftarrow\eta_{\bar{V}}\,a^{\ell+1}(\bar{a}^{\ell+1})^{T}-\gamma\bar{V}^{\ell}
+25:
+Wℓ←Wℓ+Δ​WℓW^{\ell}\leftarrow W^{\ell}+\Delta W^{\ell};
+W¯ℓ←W¯ℓ+Δ​W¯ℓ\bar{W}^{\ell}\leftarrow\bar{W}^{\ell}+\Delta\bar{W}^{\ell}
+26:
+Vℓ←Vℓ+Δ​VℓV^{\ell}\leftarrow V^{\ell}+\Delta V^{\ell};
+V¯ℓ←V¯ℓ+Δ​V¯ℓ\bar{V}^{\ell}\leftarrow\bar{V}^{\ell}+\Delta\bar{V}^{\ell}
+27:
+At ℓ=0\ell=0, omit Δ​V0\Delta V^{0} and Δ​W¯0\Delta\bar{W}^{0}; at ℓ=L−1\ell=L-1, omit Δ​V¯L−1\Delta\bar{V}^{L-1}
+References
+[1]
+R. M. Cichy, A. Khosla, D. Pantazis, A. Torralba, and A. Oliva (2016)
+Comparison of deep neural networks to spatio-temporal cortical dynamics of human visual object recognition reveals hierarchical correspondence.
+Sci. Rep. 6, pp. 27755.
+Cited by: §1.
+[2]
+D. L. Yamins and J. J. DiCarlo (2016)
+Using goal-driven deep learning models to understand sensory cortex.
+Nature Neuroscience 19 (3), pp. 356–365.
+Cited by: §1.
+[3]
+U. Güçlü and M. A. van Gerven (2015)
+Deep neural networks reveal a gradient in the complexity of neural representations across the ventral stream.
+Journal of Neuroscience 35 (27), pp. 10005–10014.
+Cited by: §1.
+[4]
+N. Kriegeskorte (2015)
+Deep neural networks: a new framework for modeling biological vision and brain information processing.
+Annual Review of Vision Science 1, pp. 417–446.
+Cited by: §1.
+[5]
+T. P. Lillicrap, A. Santoro, L. Marris, C. J. Akerman, and G. Hinton (2020)
+Backpropagation and the brain.
+Nature Reviews Neuroscience 21 (6), pp. 335–346.
+Cited by: §1,
+§1,
+§2.1.
+[6]
+J. C. Whittington and R. Bogacz (2019)
+Theories of error back-propagation in the brain.
+Trends in Cognitive Sciences 23 (3), pp. 235–250.
+Cited by: §1,
+§1,
+§2.1.
+[7]
+W. Sun, J. Winnubst, M. Natrajan, C. Lai, K. Kajikawa, A. Bast, M. Michaelos, R. Gattoni, C. Stringer, D. Flickinger, J. E. Fitzgerald, and N. Spruston (2025)
+Learning produces an orthogonalized state machine in the hippocampus.
+Nature 640 (8057), pp. 165–175.
+Cited by: §1.
+[8]
+J. Raugel, M. Szafraniec, H. V. Vo, C. Couprie, P. Labatut, P. Bojanowski, V. Wyart, and J. King (2025)
+Disentangling the factors of convergence between brains and computer vision models.
+arXiv preprint arXiv:2508.18226.
+Note: Accessed 31/08/2026
+Cited by: §1.
+[9]
+L. N. Driscoll, K. Shenoy, and D. Sussillo (2024)
+Flexible multitask computation in recurrent networks utilizes shared dynamical motifs.
+Nature Neuroscience 27 (7), pp. 1349–1363.
+External Links: Document
+Cited by: §1.
+[10]
+R. Kim and T. J. Sejnowski (2021)
+Strong inhibitory signaling underlies stable temporal dynamics and working memory in spiking neural networks.
+Nature Neuroscience 24 (1), pp. 129–139.
+External Links: Document
+Cited by: §1.
+[11]
+Q. Liao, J. Leibo, and T. Poggio (2016)
+How important is weight symmetry in backpropagation?.
+In Proceedings of the Thirtieth AAAI Conference on Artificial Intelligence (AAAI-16), D. Schuurmans and M. P. Wellman (Eds.),
+Palo Alto, CA.
+Note: arXiv:1510.05067
+External Links: Document
+Cited by: §1,
+§2.1,
+§2.
+[12]
+T. P. Lillicrap, D. Cownden, D. B. Tweed, and C. J. Akerman (2016)
+Random synaptic feedback weights support error backpropagation for deep learning.
+Nature Communications 7 (1), pp. 13276.
+Cited by: Appendix D,
+§1,
+§2.1,
+§2,
+§3.1,
+§3.3.
+[13]
+M. Akrout, C. Wilson, P. C. Humphreys, T. P. Lillicrap, and D. B. Tweed (2019)
+Deep learning without weight transport.
+In Advances in Neural Information Processing Systems, H. Wallach, H. Larochelle, A. Beygelzimer, F. d’Alché-Buc, E. Fox, and R. Garnett (Eds.),
+Vol. 32, Red Hook, NY.
+Cited by: Appendix D,
+Appendix D,
+§1,
+§2,
+§3.3.
+[14]
+A. Nøkland (2016)
+Direct feedback alignment provides learning in deep neural networks.
+In Advances in Neural Information Processing Systems, D. D. Lee, M. Sugiyama, U. von Luxburg, I. Guyon, and R. Garnett (Eds.),
+Vol. 29, Red Hook, NY.
+Cited by: §1,
+§2.1,
+§2.
+[15]
+A. Nøkland and L. H. Eidnes (2019)
+Training neural networks with local error signals.
+In Proceedings of the 36th International Conference on Machine Learning, K. Chaudhuri and R. Salakhutdinov (Eds.),
+Proceedings of Machine Learning Research, Vol. 97, pp. 4839–4850.
+Cited by: §1,
+§2.1,
+§2.
+[16]
+W. Xiao, H. Chen, Q. Liao, and T. Poggio (2019)
+Biologically-plausible learning algorithms can scale to large datasets.
+In International Conference on Learning Representations (ICLR),
+Note: arXiv:1811.03567
+Cited by: §1,
+§2.
+[17]
+J. Sacramento, R. Ponte Costa, Y. Bengio, and W. Senn (2018)
+Dendritic cortical microcircuits approximate the backpropagation algorithm.
+Advances in Neural Information Processing Systems 31, pp. 8721–8732.
+Cited by: §1,
+§2.2.
+[18]
+A. Payeur, J. Guerguiev, F. Zenke, B. A. Richards, and R. Naud (2021)
+Burst-dependent synaptic plasticity can coordinate learning in hierarchical circuits.
+Nature Neuroscience 24 (7), pp. 1010–1019.
+Cited by: §1,
+§2.2.
+[19]
+W. Greedy, H. W. Zhu, J. Pemberton, J. Mellor, and R. Ponte Costa (2022)
+Single-phase deep learning in cortico-cortical networks.
+Advances in Neural Information Processing Systems 35, pp. 24213–24225.
+External Links: Document
+Cited by: §1,
+§2.2.
+[20]
+K. Max, L. Kriener, G. P. García, T. Nowotny, I. Jaras, W. Senn, and M. A. Petrovici (2024)
+Learning efficient backprojections across cortical hierarchies in real time.
+Nature Machine Intelligence 6 (6), pp. 619–630.
+External Links: Link
+Cited by: §1,
+§2.2,
+§2.
+[21]
+M. Cameron, Y. Chen, and T. J. Sejnowski (2025)
+A biologically-plausible alternative to backpropagation using pseudoinverse feedback.
+Note: OpenReview preprint, https://openreview.net/forum?id=B5Dj4EhZPPAccessed 31/08/2026
+Cited by: §2.
+[22]
+N. Shervani-Tabar and R. Rosenbaum (2023)
+Meta-learning biologically plausible plasticity rules with random feedback pathways.
+Nature Communications 14 (1), pp. 1805.
+Cited by: §2.
+[23]
+T. Isomura, K. Kotani, Y. Jimbo, and K. J. Friston (2023)
+Experimental validation of the free-energy principle with in vitro neural networks.
+Nature Communications 14 (1), pp. 4547.
+Cited by: §2.
+[24]
+J. Kolen and J. Pollack (1994)
+Back-propagation without weight transport.
+In Proceedings of 1994 IEEE International Conference on Neural Networks (ICNN’94),
+Vol. 3, Piscataway, NJ, pp. 1375–1380.
+External Links: Document
+Cited by: Appendix D,
+§2,
+§3.1,
+§3.3.
+[25]
+R. Abel and S. Ullman (2024)
+Biologically inspired learning model for instructed vision.
+Advances in Neural Information Processing Systems 37, pp. 45315–45358.
+External Links: Document
+Cited by: §2.
+[26]
+J. C. Anderson and K. A. Martin (2009)
+The synaptic connections between cortical areas V1 and V2 in macaque monkey.
+Journal of Neuroscience 29 (36), pp. 11283–11293.
+Cited by: footnote 1.
+[27]
+W. C. Abraham and M. F. Bear (1996)
+Metaplasticity: the plasticity of synaptic plasticity.
+Trends in Neurosciences 19 (4), pp. 126–130.
+Cited by: §3.2.
+[28]
+W. C. Abraham (2008)
+Metaplasticity: tuning synapses and networks for plasticity.
+Nature Reviews Neuroscience 9 (5), pp. 387.
+Cited by: §3.2.
+[29]
+F. Briggs (2020)
+Role of feedback connections in central visual processing.
+Annual Review of Vision Science 6 (1), pp. 313–334.
+Cited by: §3.2,
+§3.4.
+[30]
+A. Krizhevsky (2009)
+Learning multiple layers of features from tiny images.
+Technical report
+University of Toronto, Toronto, ON.
+External Links: Link
+Cited by: Appendix D,
+§3.3,
+§3.4.
+[31]
+Y. LeCun, C. Cortes, and C. J. C. Burges (1998)
+The MNIST database of handwritten digits.
+Note: Online database
+External Links: Link
+Cited by: Appendix D,
+§3.3.
+[32]
+H. Xiao, K. Rasul, and R. Vollgraf (2017)
+Fashion-MNIST: a novel image dataset for benchmarking machine learning algorithms.
+arXiv preprint arXiv:1708.07747.
+Note: Accessed 31/08/2026
+Cited by: Appendix D,
+§3.3.
+[33]
+J. Yang, R. Shi, and B. Ni (2021)
+MedMNIST classification decathlon: a lightweight AutoML benchmark for medical image analysis.
+In 2021 IEEE 18th International Symposium on Biomedical Imaging (ISBI),
+Piscataway, NJ, pp. 191–195.
+External Links: Document
+Cited by: Appendix D,
+Appendix D,
+§3.3.
+[34]
+J. Yang, R. Shi, D. Wei, Z. Liu, L. Zhao, B. Ke, H. Pfister, and B. Ni (2023)
+MedMNIST v2—A large-scale lightweight benchmark for 2D and 3D biomedical image classification.
+Scientific Data 10 (1), pp. 41.
+Cited by: Appendix D,
+Appendix D,
+§3.3.
+[35]
+Y. Netzer, T. Wang, A. Coates, A. Bissacco, B. Wu, and A. Y. Ng (2011)
+Reading digits in natural images with unsupervised feature learning.
+In NIPS Workshop on Deep Learning and Unsupervised Feature Learning,
+Granada, Spain.
+Cited by: Appendix D,
+§3.3,
+§3.4.
+[36]
+A. Coates, A. Ng, and H. Lee (2011)
+An analysis of single-layer networks in unsupervised feature learning.
+In Proceedings of the Fourteenth International Conference on Artificial Intelligence and Statistics, G. Gordon, D. Dunson, and M. Dudík (Eds.),
+Proceedings of Machine Learning Research, Vol. 15, pp. 215–223.
+Cited by: Appendix D,
+§3.3,
+§3.4.
+[37]
+O. Roy and M. Vetterli (2007)
+The effective rank: a measure of effective dimensionality.
+In 2007 15th European Signal Processing Conference (EUSIPCO),
+Piscataway, NJ, pp. 606–610.
+Cited by: §3.5.
+[38]
+L. Ziyin, I. Chuang, T. Galanti, and T. Poggio (2025)
+Formation of representations in neural networks.
+In The Thirteenth International Conference on Learning Representations,
+Cited by: §3.5.
+[39]
+M. Huh, H. Mobahi, R. Zhang, B. Cheung, P. Agrawal, and P. Isola (2023)
+The low-rank simplicity bias in deep networks.
+Trans. Mach. Learn. Res..
+External Links: ISSN 2835-8856,
+Link
+Cited by: §3.5.
+[40]
+M. Fu and Y. Zuo (2011)
+Experience-dependent structural plasticity in the cortex.
+Trends in Neurosciences 34 (4), pp. 177–187.
+Cited by: §3.7.
+[41]
+M. Tjia, X. Yu, L. S. Jammu, J. Lu, and Y. Zuo (2017)
+Pyramidal neurons in different cortical layers exhibit distinct dynamics and plasticity of apical dendritic spines.
+Frontiers in Neural Circuits 11, pp. 43.
+External Links: Document
+Cited by: §3.7.
+[42]
+G. Yang, F. Pan, and W. Gan (2009)
+Stably maintained dendritic spines are associated with lifelong memories.
+Nature 462 (7275), pp. 920–924.
+External Links: Document
+Cited by: §3.7.
+[43]
+T. Xu, X. Yu, A. J. Perlik, W. F. Tobin, J. A. Zweig, K. Tennant, T. Jones, and Y. Zuo (2009)
+Rapid formation and selective stabilization of synapses for enduring motor memories.
+Nature 462 (7275), pp. 915–919.
+External Links: Document
+Cited by: §3.7.
+[44]
+A. J. G. D. Holtmaat, J. T. Trachtenberg, L. Wilbrecht, G. M. G. Shepherd, X. Zhang, G. W. Knott, and K. Svoboda (2005)
+Transient and persistent dendritic spines in the neocortex in vivo.
+Neuron 45 (2), pp. 279–291.
+External Links: Document
+Cited by: §3.7.
+[45]
+H. Makino and T. Komiyama (2015)
+Learning enhances the relative impact of top-down processing in the visual cortex.
+Nature Neuroscience 18 (8), pp. 1116–1122.
+External Links: Document
+Cited by: §3.7.
+[46]
+M. E. Larkum (2013)
+A cellular mechanism for cortical associations: an organizing principle for the cerebral cortex.
+Trends in Neurosciences 36 (3), pp. 141–151.
+Cited by: §3.7.
+[47]
+E. Abs, R. B. Poorthuis, D. Apelblat, K. Muhammad, M. B. Pardi, L. Enke, D. Kushinsky, D. L. Pu, M. F. Eizinger, K. K. Conzelmann, I. Spiegel, and J. J. Letzkus (2018)
+Learning-related plasticity in dendrite-targeting layer 1 interneurons.
+Neuron 100 (3), pp. 684–699.e6.
+External Links: Document
+Cited by: §3.7.
+[48]
+G. Doron, J. N. Shin, N. Takahashi, M. Drüke, C. Bocklisch, S. Skenderi, L. de Mont, M. Toumazou, J. Ledderose, M. Brecht, R. Naud, and M. E. Larkum (2020)
+Perirhinal input to neocortical layer 1 controls learning.
+Science 370 (6523), pp. eaaz3136.
+External Links: Document
+Cited by: §3.7.
+[49]
+V. Francioni, V. D. Tang, E. H. S. Toloza, Z. Ding, N. J. Brown, and M. T. Harnett (2026)
+Vectorized instructive signals in cortical dendrites.
+Nature 652, pp. 1254–1263.
+External Links: Document
+Cited by: §3.7,
+§3.8,
+§4.
+[50]
+L. Ziyin, I. Chuang, and T. Poggio (2025)
+Heterosynaptic circuits are universal gradient machines.
+arXiv preprint arXiv:2505.02248.
+Note: Accessed 31/08/2026
+Cited by: Figure 5,
+Appendix C,
+Appendix C,
+§3.9,
+§4,
+§4.
+[51]
+M. G. Bacvanski, L. Ziyin, and T. Poggio (2026)
+Does feedback alignment work at biological timescales?.
+Note: arXiv:2510.18808v2. Accessed 31/08/2026
+External Links: 2510.18808
+Cited by: §4.
+[52]
+M. G. Bacvanski, L. Ziyin, and T. Poggio (2026)
+Continuous-time heteroassociative memory at biological timescales.
+In New Frontiers in Associative Memory Workshop at ICLR,
+External Links: Link
+Cited by: §4.
+[53]
+M. G. Bacvanski, L. Ziyin, and T. Poggio (2026)
+Stabilizing continuous-time Kolen–Pollack learning with a scale-balance condition.
+In High-dimensional Learning Dynamics Workshop at ICML,
+External Links: Link
+Cited by: §4.
+[54]
+E. R. Kandel and L. Tauc (1965)
+Heterosynaptic facilitation in neurones of the abdominal ganglion of aplysia depilans.
+Journal of Physiology 181 (1), pp. 1–27.
+External Links: Document,
+Link
+Cited by: Appendix B.
+[55]
+C. D. Harvey and K. Svoboda (2007)
+Locally dynamic synaptic learning rules in pyramidal neuron dendrites.
+Nature 450 (7173), pp. 1195–1200.
+Cited by: Appendix B.
+Experimental support, please
+view the build logs
+for errors. Generated by
+L
+A
+T
+E
+xml
+.
+Instructions for reporting errors
+We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile
+support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the
+methods listed below:
+Click the "Report Issue" (
+) button, located in the page header.
+Tip: You can select the relevant text first, to include it in your report.
+Our team has already identified the following issues. We appreciate your time reviewing and reporting rendering errors we
+may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability
+should not be a barrier to accessing research. Thank you for your continued support in championing open access for
+all.
+Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a list of packages that need conversion, and welcome developer contributions.
+We gratefully acknowledge support from our major funders,
+member institutions, ,
+and all contributors.
+About ·
+Help ·
+Contact ·
+Subscribe ·
+Copyright ·
+Privacy ·
+Accessibility ·
+Operational Status (opens in new tab)

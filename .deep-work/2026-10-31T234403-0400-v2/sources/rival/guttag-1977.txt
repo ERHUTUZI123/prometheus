@@ -1,0 +1,1046 @@
+
+PAGE 1
+
+5. Thomas, J.C., and Gould, J.D. A psychological study of query-
+by-example. Proc. AFIPS 1975 NCC, Vol. 44, AFIPS Press, Mont-
+vale, N.J., pp. 439-445. (IBM Res. Rep. RC-5124, Nov. 1974).
+6. Zloof, M.M. Query-by-example. Proc. AFIPS 1975 NCC, Vol.
+44, AFIPS Press, Montvale, N.J., pp. 431-438 (IBM Res. Rep. RC-
+4917, July 1974).
+7. Zloof, M.M. Query-by-example: A data base management lan-
+guage. IBM Res. Rep., Dec. 1976; available upon request from
+Mosh6 Zloof, T.J. Watson Res. Ctr., Yorktown Heights, N.Y.
+Appendix A. SBA Programming Language Summary
+>ROGRAM ~ M ~
+I I
+;EQUENCE OPERATION
+SCHEDULE
+[ ACTION I [
+SEQUENCE OPERATION OBJECT CONDITION I
+(INFORMATION) (SEQUENCE) (SEND)
+oPj2A/,ON OPERAT,ON
+INVOCATION)
+( M A N U A L )
+(TRIGGER)
+)DELAY) )RESIDUE)
+XXX - c a n b e a n y p r o g r a m n a m e .
+Appendix B
+In this section we illustrate how typical Query-by-
+Example queries and SB A programs can be mapped
+into predicate-calculus-like expressions. The examples
+chosen are Q1, Q2 from Section 2 and program 4 from
+Section 4.
+Q I : {X: =IY(X,RED,Y)@TYPE}
+Q2: {X: = I Y ( ( X , Y ) ~ S A L E S A
+( Y , P A R K E R ) E SUPPLY)}
+Program 4: {(X,Y): ( X , Y ) @ C R E D I T A 3 z 3 w 3 u
+( ( U , Z ) E C R E D I T R A T I N G
+A ( X , U , W ) E O R D E R )
+A IF (Z = A1 A W < 1 0 0 0 0 )
+--> Y = YES}
+D E C I S I O N
+The formal syntax of the Query-by-Example database
+language is found in [7].
+396
+Data: Abstraction, B. Wegbreit
+Definition, and Structure Editor
+Abstract Data Types
+and the Development
+of Data Structures
+J o h n G u t t a g
+U n i v e r s i t y o f S o u t h e r n C a l i f o r n i a
+Abstract data types can play a significant role in the
+development of software that is reliable, efficient, and
+flexible. This paper presents and discusses the applica-
+tion of an algebraic technique for the specification of
+abstract data types. Among the examples presented is a
+top-down development of a symbol table for a block
+structured language; a discussion of the proof of its
+correctness is given. The paper also contains a brief
+discussion of the problems involved in constructing
+algebraic specifications that are both consistent and
+complete.
+Key Words and Phrases: abstract data type, cor-
+rectness proof, data type, data structure, specification,
+software specification
+CR Categories: 4.34, 5.24
+Copyright © 1977, Association for Computing Machinery, Inc.
+General permission to republish, but not for profit, all or part of
+this material is granted provided that ACM's copyright notice is
+given and that reference is made to the publication, to its date of
+issue, and to the fact that reprinting privileges were granted by per-
+mission of the Association for Computing Machinery.
+This work was supported in part by the National Science Foun-
+dation under grant number MCS76-06089.
+A version of this paper was presented as the SIGPLAN/SIG-
+MOD Conference on Data: Abstraction, Definition, and Structure,
+Salt Lake City, Utah, March 22-24, 1976.
+Author's address: Computer Science Department, University of
+Southern California, Los Angeles, CA 90007.
+Communications June 1977
+of Volume 20
+the ACM Number 6
+
+PAGE 2
+
+1. Introduction
+Dijkstra [4] and many others have made the point
+that the amount of complexity that the human mind can
+cope with at any instant in time is considerably less than
+that embodied in much of the software that one might
+wish to build. Thus the key problem in the design and
+implementation of large software systems is reducing
+the amount of complexity or detail that must be consid-
+ered at any one time. One way to do this is via the
+process of abstraction.
+One of the most significant aids to abstraction used
+in programming is the self-contained subroutine. At the
+point where one decides to invoke a subroutine, one
+can (and most often should) treat it as a "black box." It
+performs a specific arbitrarily abstract function by
+means of an unprescribed algorithm. Thus, at the level
+where it is invoked, it separates the relevant detail of
+"what" from the irrelevant detail of "how." Similarly,
+at the level where it is implemented, it is usually unnec-
+essary to complicate the "how" by considering the
+"why," i.e. the exact reasons for invoking a subroutine
+often need not be of concern to its implementor. By
+nesting subroutines, one may develop a hierarchy of
+abstractions.
+Unfortunately, the nature of the abstractions that
+may be conveniently achieved through the use of sub-
+routines is limited. Subroutines, while well suited to the
+description of abstract events (operations), are not par-
+ticularly well suited to the description of abstract ob-
+jects. This is a serious drawback, for in a great many
+applications the complexity of the data objects to be
+manipulated contributes substantially to the overall
+complexity of the problem.
+2. The Abstraction of Data
+The large knot of complexly interrelated attributes
+associated with a data object may be separated accord-
+ing to the nature of the information that the attributes
+convey regarding the data objects that they qualify.
+Two kinds of attributes, each of which may be studied
+in isolation, are:
+(1) those that describe the representation of objects
+and the implementations of the operations associ-
+ated with them in terms of other objects and opera-
+tions, e.g. in terms of a physical store and a proces-
+sor's order code;
+(2) those that specify the names and define the ab-
+stract meanings of the operations associated with
+an object. Though these two kinds of attributes are
+in practice highly interdependent, they represent
+logically independent concepts.
+The emphasis in this paper is on the second kind of
+attribute, i.e. on the specification of the operations
+associated with classes of data objects. At most points
+in a program one is concerned solely with the behav-
+ioral characteristics of a data object. One is interested
+in what one can do with it, not in how the various
+operations on it are implemented. The analogy with a
+closed procedure is exact. More often than not, one
+need be no more concerned with the underlying repre-
+sentation of the object being operated on than one
+is with the algorithm used to implement an invoked
+procedure.
+If at a given level of refinement one is interested
+only in the behavioral characteristics of certain data
+objects, then any attempt to abstract data must be
+based upon those characteristics, and only those char-
+acteristics. The introduction of other attributes, e.g. a
+representation, can only serve to cloud the relevant
+issues. We use the term "abstract data type" to refer to
+a class of objects defined by a representation-independ-
+ent specification.
+The class construct of S I M U L A 67 [3] has been
+used as the starting point for much of the more recent
+work on embedding abstract types in programming
+languages, e.g. [14, 16, 18]. While each of these offers
+a mechanism for binding together the operations and
+storage structures representing a type, they offer no
+representation-independent means for specifying the
+behavior of the operations. The only representation-
+independent information that one can supply are the
+domains and ranges of the various operations. One
+could, for example, define a type Queue (of Items)
+with the operations
+NEW: ~ Queue
+ADD: Queue × Item ~ Queue
+FRONT: Queue ~ Item
+REMOVE: Queue ~ Queue
+IS_.EMPTY?: Queue ~ Boolean
+Unfortunately, however, short of supplying a represen-
+tation, the only mechanism for denoting what these
+operations " m e a n " is a judicious choice of names.
+Except for intuitions about the meaning of such words
+as Queue and F R O N T , the operations might just as
+easily be defining type Stack as type Queue. The do-
+main and range specifications for these two types are
+isomorphic. To rely on one's intuition about the mean-
+ing of names can be dangerous even when dealing with
+familiar types [19]. When dealing with unfamiliar types
+it is almost impossible. What is needed, therefore, is a
+mechanism for specifying the semantics of the opera-
+tions of the type.
+There are, of course, many possible approaches to
+the specification of the semantics of an abstract data
+type. Most, however, can be placed in one of two
+categories: operational or definitional. In an opera-
+tional specification, instead of trying to describe the
+properties of the abstract data type, one gives a recipe
+for constructing it. One begins with some well-under-
+stood language or discipline and builds a model for the
+type in terms of that discipline. Wulf [24], for example,
+makes good use of sequences in modeling various data
+structures.
+397 Communications June 1977
+of Volume 20
+the ACM Number 6
+
+PAGE 3
+
+The operational approach to formal specification
+has many advantages. Most significantly, operational
+specifications seem to be relatively (compared to defi-
+nitional specifications) easily constructed by those
+trained as p r o g r a m m e r s - c h i e f l y because the construc-
+tion of operational specifications so closely resembles
+programming. As the operations to be specified grow
+complex, however, operational specifications tend to
+get too long (see, for example, Batey [1]) to permit
+substantial confidence in their aptness. As the number
+of operations grows, problems arise because the rela-
+tions among the operations are not explicitly stated,
+and inferring them becomes combinatorially harder.
+The most serious problem associated with opera-
+tional specifications is that they almost always force one
+to overspecify the abstraction. By introducing extra-
+neous detail, they associate nonessential attributes with
+the type. This extraneous detail complicates the prob-
+lem of proving the correctness of an implementation by
+introducing conditions that are irrelevant, yet never-
+theless must be verified. More importantly, the intro-
+duction of extraneous detail places unnecessary con-
+straints on the choice of an implementation and may
+potentially eliminate the best solutions to the problem.
+Axiomatic definitions avoid this problem. The alge-
+braic approach used here owes much to the work of
+Hoare [13] (which in turn owes much to Floyd [5]) and
+is closely related to Standish's "axiomatic specifica-
+tions" [22] and Zilles' "algebraic specifications" [25].
+Its formal basis stems from the heterogeneous algebras
+of Birkhoff and Lipson [2]. An algebraic specification
+of an abstract type consists of two pairs: a syntactic
+specification and a set of relations. The syntactic speci-
+fication provides the syntactic information that many
+programming languages already require: the names,
+domains, and ranges of the operations associated with
+the type. The set of relations defines the meanings of
+the operations by stating their relationships to one
+another.
+3. A Short E x am pl e
+Consider type Queue (of Items) with the operations
+listed in the previous section. The syntactic specifica-
+tion is as above:
+NEW: --~ Queue
+ADD: Queue x Item --~ Queue
+FRONT: Queue --~ Item
+REMOVE: Queue --~ Queue
+IS. EMPTY?: Queue -~Boolean
+The distinguishing characteristic of a queue is that it is a
+first in-first out storage device. A good axiomatic defi-
+nition of the above operations must therefore assert
+that and only that characteristic. The relations (or ax-
+ioms) below comprise just such a definition. The mean-
+ings of the axioms should be relatively clear. ( " = " has
+its standard meaning, "q" and "i" are typed free varia-
+398
+bles, and "error" is a distinguished value 'with the
+property that the value of any operation applied to an
+argument list containing error is error, e.g. f , , ( x l , • • • ,
+x,,'error, x,+2, • • • , Xn) = error.)
+(1) IS_EMPTY? (NEW) = true
+(2) IS_EMPTY? (ADD(q,i)) = false
+(3) FRONT(NEW) = error
+(4) FRONT (ADD(q,i)) = if IS_EMPTY? (q)
+then i
+else FRONT(q)
+(5) REMOVE(NEW) = error
+(6) REMOVE (ADD(q,i)) = if IS_EMPTY? (q)
+then NEW
+else ADD(REMOVE(q),i)
+Note that this set of axioms involves no assumption
+about the attributes of type Item. In effect Item is a
+parameter of type Type, and the specification may be
+viewed as defining a type schema rather than a single
+type. This will be the case for many algebraic type
+specifications.
+With some practice, one can become quite adept at
+reading algebraic axiomatizations. Practice also makes
+it easier to construct such specifications; see Guttag
+[11]. Unfortunately, it does not make it trivial. It is not
+always immediately clear how to attack the problem.
+Nor, once one has constructed an axiomatization, is it
+always easy to ascertain whether or not the axiomatiza-
+tion is consistent and sufficiently complete. The mean-
+ing of the operations is supplied by a set of individual
+statements of fact. If any two of these are contradic-
+tory, the axiomatization is inconsistent. If the combina-
+tion of statements is not sufficient to convey all of the
+vital information regarding the meaning of the opera-
+tions of the type, the axiomatization is not sufficiently
+complete.1
+Experience indicates that completeness is, in a
+practical sense, a more severe problem than consist-
+ency. If one has an intuitive understanding of the type
+being specified, one is unlikely to supply contradictory
+axioms. It is, on the other hand, extremely easy to
+overlook one or more cases. Boundary conditions, e.g.
+R E M O V E ( N E W ) , are particularly likely to be over-
+looked.
+In an attempt to ameliorate this problem, we have
+devised heuristics to aid the user in the initial presenta-
+tion of an axiomatic specification of the operations of
+an abstract type and a system to mechanically "verify"
+the sufficient-completeness of that specification. As the
+first step in defining a new type, the user would supply
+the system with the syntactic specification of the type
+and an axiomatization constructed with the aid of the
+heuristics mentioned above. Given this preliminary
+specification, the system would begin to prompt the
+user to supply the additional information necessary for
+the system to derive a sufficiently complete axiom set
+1 Sufficiently complete is a technical notion first developed in
+Guttag [8]. It differs considerably from both the notion of complete-
+ness commonly used in logic and that used in Zilles [25].
+Communications June 1977
+of Volume 20
+the ACM Number 6
+
+PAGE 4
+
+for the operations. A detailed look at sufficient-com-
+pleteness is contained in Guttag [8, 9].
+4. An Extended Example
+A common data structuring problem is the design of
+the symbol table component of a compiler for a block
+structured language. Many sources contain good dis-
+cussions of various symbol table organizations. Setting
+aside variations in form, the basic operations described
+vary little from source to source. They are:
+INIT: Allocate and initialize the symbol table.
+E N T E R B L O C K : Prepare a new local naming scope.
+L E A V E B L O C K : Discard entries from the most recent scope en-
+tered, and reestablish the next outer scope.
+IS_INBLOCK?: Has a specified identifier already been declared
+in this scope? (Used to avoid duplicate declara-
+tions.)
+A D D : Add an identifier and its attributes to the symbol
+table.
+R E T R I E V E : Return the attributes associated (in the most
+local scope in which it occurs) with a specified
+identifier.
+Though many references provide insights into how
+these operations can be implemented, none presents a
+formal definition (other than implementations) of ex-
+actly what they mean. The abstract concept "symbol
+table" thus goes undefined. Those who attempt to write
+compilers in a top-down fashion suffer from a similar
+problem. Early refinements of parts of the compiler
+make use of the basic symbol table operations, but the
+"meaning" of these operations is provided only by
+subsequent levels of refinement. This is infelicitous in
+that the clear separation of levels of abstraction is lost
+and with it many of the advantages of top-down design.
+By providing axiomatic semantics for the operations,
+this problem can be avoided.
+The thought of providing rigorous definitions for so
+many operations may, at first, seem a bit intimidating.
+Nevertheless, if one is to understand the refinement,
+one must know what each operation means. The fol-
+lowing specification of abstract type Symboltable sup-
+plies these meanings.
+Type: Symboltable
+Operations :
+INIT:
+E N T E R B L O C K :
+L E A V E B L O C K :
+A D D :
+I S J N B L O C K ? :
+R E T R I E V E :
+Symboltable
+Symboltable ~ Symboltable
+Symboltable --~ Symboltable
+Symboltable x Identifier x Attributelist
+Symboltable
+Symboltable x Identifier --~ Boolean
+Symboltable x Identifier --~ Attributelist
+Axioms:
+(1) L E A V E B L O C K ( I N I T ) = error
+(2) L E A V E B L O C K ( E N T E R B L O C K ( s y m t a b ) ) (3) L E A V E B L O C K ( A D D ( s y m t a b , id, attrs)) BLOCK(symtab)
+(4) IS_.INBLOCK? (INIT, id) = false
+(5) IS_JNBLOCK? ( E N T E R B L O C K ( s y m t a b ) , = symtab
+= L E A V E -
+id) = false
+399
+(6) I S J N B L O C K ? (ADD(symtab, id, attrs), idl) =
+if IS_SAME? (id, idl) z
+then true
+else I S J N B L O C K ? (symtab, id)
+(7) (8) R E T R I E V E ( I N I T , id) = error
+R E T R I E V E ( E N T E R B L O C K ( s y m t a b ) , id) =
+RETRIEVE(syrntab, id)
+(9) R E T R I E V E ( A D D ( s y m t a b , id, attrs), idl)=
+if IS_SAME? (id, idl)
+then attrs
+else R E T R I E V E ( s y m t a b , idl)
+This set of relations serves a dual purpose. Not only
+does it define an abstract type that can be used in the
+specification of various parts of the compiler, but it also
+provides a complete self-contained specification for a
+major subsystem of the compiler. If one wished to
+delegate the design and implementation of the symbol
+table subsystem, the algebraic characterization of the
+abstract type would (unlike the informal description in,
+say, McKeeman [15]) be a sufficient specification of
+the problem. In fact, the procedure discussed earlier
+can be used to formally prove the sufficient-complete-
+ness of this specification.
+The next step in the design process is to further
+refine type Symboltable, i.e. to provide implementa-
+tions of the operations of the type. These implementa-
+tions will implicitly furnish representation for values of
+type Symboltable.
+A representation of a type T consists of (i) any
+interpretation (implementation) of the operations of
+the type that is a model for the axioms of the specifica-
+tion of T, and (it) a function • that maps terms in the
+model domain onto their representatives in the abstract
+domain. (This is basically the abstraction function of
+Hoare [12].)
+It is important to note that dO may not have a proper
+inverse. Consider, for example, type Bounded Queue
+(with a maximum length of three). A reasonable repre-
+sentation of the values of this type might be based on a
+ring-buffer and top pointer. Given this representation,
+the program segment:
+x := E M P T Y . Q
+x := A D D . Q ( x , A)
+x := A D D . Q ( x , B)
+x := A D D . Q ( x , C)
+x := R E M O V E . Q ( x )
+x := A D D . Q ( x , D)
+would translate to a representation forx of the form:
+Top Pointer
+2 The definition of IS_SAME? is part of the specification of an
+independently defined type Identifier.
+Communications June 1977
+of Volume 20
+the A C M Number 6
+
+PAGE 5
+
+Similarly:
+x := EMPTY.Q
+x := ADD.Q(x, B)
+x := ADD.Q(x, C)
+x := ADD.Q(x, D)
+would yield a r e p r e s e n t a t i o n for x of the form:
+Top Pointer
+It is clear that these two r e p r e s e n t a t i o n s though not
+identical, refer to the same abstract value. That is to
+say, may the m a p p i n g from values to r e p r e s e n t a t i o n s , ~ - 1 ,
+be o n e - t o - m a n y .
+The r e p r e s e n t a t i o n of type S y m b o l t a b l e will m a k e
+use of the abstract data types Stack (of arrays) and
+A r r a y (of attributelists) as defined below.
+Type: Stack
+Operations:
+NEWSTACK: ~ Stack
+PUSH: Stack x Array ~ Stack
+POP: Stack ~ Stack
+TOP: Stack --~ Array
+IS_NEWSTACK?: Stack --~Boolean
+REPLACE: Stack x Array ~ Stack
+Axioms:
+(10) IS_NEWSTACK? (NEWSTACK) = true
+(11) IS_NEWSTACK? (PUSH(stk, arr)) = false
+(12) POP(NEWSTACK) = error
+(13) POP(PUSH(stk, arr)) = stk
+(14) TOP(NEWSTACK) = error
+(15) TOP(PUSH(stk, arr)) = arr
+(16) REPLACE(stk, arr) = if IS~EWSTACK? (stk)
+then error
+else PUSH(POP(stk), arr)
+Type: Array
+Operations:
+EMPTY:
+ASSIGN:
+READ:
+IS_UNDEFINED?:
+Axioms:
+Array
+Array x Identifier × Attributelist ~ Array
+Array x Identifier --~ Attributelist
+Array x Identifier ~Boolean
+(17) IS_UNDEFINED? (EMPTY, id) = true
+(18) IS_UNDEFINED? (ASSIGN(arr, id, attrs), idl) =
+if IS_SAME? (id, idl)
+then false
+else IS_UNDEFINED? (arr, idl)
+(19) READ(EMPTY, id) = error
+(20) READ(ASSIGN(arr, id, attrs), idl) = if IS_SAME? (id, idl)
+then attrs
+else READ(arr, idl)
+The general scheme of the r e p r e s e n t a t i o n of type
+S y m b o l t a b l e is to treat a value of the type as a stack of
+arrays (with index type Identifier), where each array
+contains the attributes for the identifiers d e c l a r e d in a
+single block. F o r every function f in the m o r e abstract
+d o m a i n (e.g. type S y m b o l t a b l e ) , a f u n c t i o n f ' is defined
+400
+in the lower-level d o m a i n ; thus we have:
+INIT': --~ Stack
+ENTERBLOCK': Stack--~ Stack
+LEAVEBLOCK': Stack ~ Stack
+ADD': Stack x Identifier x Attributelist ~ Stack
+IS_INBLOCK?': Stack x Identifier --* Boolean
+RETRIEVE': Stack x Identifier --+ Anributelist
+The " c o d e " for each of these functions is ( " : : " m e a n s
+"is defined as"):
+INIT' :: PUSH(NEWSTACK, EMPTY)
+ENTERBLOCK'(stk) :: PUSH(stk, EMPTY)
+LEAVEBLOCK'(stk) :: if IS_NEWSTACK? (POP(stk))
+then error
+else POP(stk)
+ADD'(stk, id, attrs) :: REPLACE(stk, ASSIGN(TOP(stk), id,
+attrs))
+ISJNBLOCK?'(stk, id) :: if IS_.NEWSTACK? (stk)
+then false
+else -7 IS_UNDEFINED? (TOP(stk),
+id)
+RETRIEVE'(stk, id) :: if IS_NEWSTACK? (stk)
+then error
+else -1 IS_UNDEFINED? (TOP(stk),id)
+then RETRIEVE'(POP(stk), id)
+else READ(TOP(stk), id)
+The i n t e r p r e t a t i o n function qb is defined by:
+(a) qb(error) = error
+(b) qb(NEWSTACK) = error
+(c) qb(PUSH(stk, EMPTY)) = if IS_NEWSTACK? (stk)
+then INIT
+else ENTERBLOCK(qb(stk))
+(d) ~(PUSH(stk, ASSIGN(arr, id, attrs))) = ADD(qbPUSH(stk,
+arr)), id, attrs))
+Before continuing to refine these o p e r a t i o n s , i.e.
+before supplying r e p r e s e n t a t i o n s for types A r r a y and
+Stack, let us consider the p r o b l e m of proving that the
+above i m p l e m e n t a t i o n of type S y m b o l t a b l e is correct.
+In the course of such a p r o o f two kinds of invariants
+may have to be verified: inherent invariants and repre-
+sentation invariants. The inherent invariants r e p r e s e n t
+those invariant relationships that must be m a i n t a i n e d
+by any r e p r e s e n t a t i o n of the type. T h e y c o r r e s p o n d to
+the axioms used in the specification of the type. A
+r e p r e s e n t a t i o n invariant, on the o t h e r hand, is peculiar
+to a particular r e p r e s e n t a t i o n of a type.
+The basic p r o c e d u r e followed in verifying the inher-
+ent invariants is to take each axiom for type S y m b o l t a -
+ble and replace all instances of each function a p p e a r i n g
+in the axiomatization with its i n t e r p r e t a t i o n . T h e n , by
+using the axiomatizations of the o p e r a t i o n s used in
+constructing the r e p r e s e n t a t i o n s , it is shown that the
+left-hand side of each axiom is equivalent to the right-
+hand side of that axiom. That is to say, they r e p r e s e n t
+the same abstract value.
+W h a t must be shown t h e r e f o r e is that for every
+r e l a t i o n f ' ( x * ) = z ( w h e r e x * is a list, possibly e m p t y , of
+a r g u m e n t s ) , derived from the axiomatization of type
+S y m b o l t a b l e ,
+(a) if the range of f is the type being defined (i.e.,
+S y m b o l t a b l e ) , d~(f'(x*)) = qb(z) for all legal assign-
+ments to the free variables of x* and z, or
+Communications June 1977
+of Volume 20
+the ACM Number 6
+
+PAGE 6
+
+(b) if the range of f is a type other than that being
+defined, f ' ( x * ) = z for all legal assignments to the
+free variables of x* and z.
+To show this, we have at our disposal a proof system
+consisting of the axioms and rules of inference of our
+programming language plus the axioms defining the
+abstract types used in the representation.
+The proof depends upon the assumption that ob-
+jects of type Symboltable are created and manipulated
+only via the operations defined in the specification of
+that type. (The use of classes as described in Palme [18]
+makes this assumption relatively easy to verify.) All
+that need be shown is that INIT' establishes the invar-
+iants and that if on entry to an operation all invariants
+hold for all objects of type Symboltable to be manipu-
+lated by that operation, then all invariants on those
+objects hold upon completion of that operation. More
+complete discussions of how this may be done are
+contained in Guttag [8], Spitzen [21], and Wegbreit
+[23] (where it is called generator induction).
+To verify that the implementation is consistent with
+Axioms 1 through 8 is quite straightforward. (It has, in
+fact, been done completely mechanically by David
+Musser [17] using the program verification system at
+the University of Southern California Information Sci-
+ences Institute [7]. Thus the proofs will not be pre-
+sented here. Axiom 9, on the other hand, presents
+some problems that make the portion of the proof
+pertinent to that axiom worth examining.
+The proof that the implementation satisfies Axiom
+9 is based upon an assumption about the environment
+in which the operations of the type are to be used. In
+effect, the assumption asserts that an identifier is never
+added to an empty symbol table, i.e. a scope must have
+been established (on a more concrete level, an array
+must have been pushed onto the stack) before an iden-
+tifier can be added. The concrete manifestation of this
+assumption is formally expressed:
+A s s u m p t i o n 1. For any term, ADD'(symtab, id,
+attrs), IS_NEWSTACK? (symtab) = false.
+The validity of the above assumption can be assured
+by adding to the implementation of A D D ' a check for
+this condition and having it execute an ENTER-
+BLOCK' if necessary. This would make it possible to
+construct a completely self-contained proof of the cor-
+rectness of the representation. In most cases, however,
+it would also introduce needless inefficiency. The com-
+piler must somewhere check for mismatched (i.e. ex-
+tra) "end" statements. Any check in A D D ' would
+therefore be redundant.
+This observation leads to a notion of conditional
+correctness, i.e. the representation of the abstract type
+is correct if the enclosing program obeys certain con-
+straints. In practice, this is often an extremely useful
+notion of correctness, especially if the constraint is
+easily checked. If, on the other hand, the environment
+in which the abstract type is to be used is unknown (e.g.
+if the type is to be includedin a library), this is probably
+401
+unacceptably dangerous. Given the above assumption,
+the verification of Axiom 9 is straightforward but
+lengthy and will therefore not be presented here. It
+does appear in Guttag [8].
+Now we know that, given implementations of types
+Stack and Array that are consistent with their specifica-
+tions, the implementation of type Symboltable is "cor-
+rect." Assuming PL/I-like based variables, pointers,
+and structures, the implementation of type Stack is
+trivial. The basic scheme is to represent a stack as a
+pointer to a list of structures of the form:
+1. stack elem based,
+2. val Array,
+2. prev pointer.
+The operations may be implemented as follows (PL/I
+keywords have been boldfaced):
+NEWSTACK' :: null
+PUSH'(symtab, newblock) ::
+procedure(symtab: pointer, newblock: Array)returns(pointer)
+declare elem_ptr pointer
+allocate(stack_elem) set(elem_ptr)
+elem_ptr ---> prev := symtab
+elem_ptr ---> val := newblock
+return(elem_ptr)
+end
+POP'(symtab) ::
+proeedure(symtab: pointer) returns(pointer)
+if symtab = null
+then return(error)
+else return(symtab ---> prey)
+end
+TOP'(symtab) ::
+procedure(symtab: pointer) returns(Array)
+if symtab = null
+then return(error)
+else return(symtab ---> val)
+end
+IS~,IEWSTACK?'(symtab) :: symtab = null
+REPLACE'(symtab, newblock) ::
+procedure(symtab: pointer, newblock: Array) returns(pointer)
+if symtab = null
+then return(error)
+else symtab --~ val := newblock
+return(symtab)
+end
+dp is defined by the mapping:
+qb(symtab) :: if symtab = null
+then NEWSTACK
+else PUSH(dP(symtab ~ prev), symtab --> val))
+The implementation chosen for type Array is a bit
+more complicated. The basic scheme is to represent an
+array as a PL/I-like array, hash_tab, of n pointers to
+lists of structures of the form:
+1. entry based,
+2. id Identifier
+2. attributes Attributelist,
+2. next pointer.
+The correct element of hash_tab is selected by perform-
+ing a hash on values of type Identifier. Therefore, in
+Communications June 1977
+of Volume 20
+the ACM Number 6
+
+PAGE 7
+
+addition to the ope ratio n s used in the code above, the
+i m p l e m e n t a t i o n of type A r r a y uses an o p e r a t i o n
+HASH:Identifier --* {1, 2 . . . . . n}
+which is assumed to be defined in the type Identifier
+specification. The " c o d e " i m p l e m e n t i n g type A r r a y is:
+declare hash_tab(n) pointer based
+EMPTY' ::
+procedure returns(pointer)
+declare new_hash_tab pointer
+allocate (hash_tab) set (newdaash_tab)
+do i := 1 to n
+new.ash_tab ~ hash_tab(i) := null
+end
+return(new_hash_tab)
+end
+ASSIGN'(arr, indx, atr) ::
+procedure(am pointer, indx: Identifier, atr: Attributelist)
+returns(pointer)
+declare new_entry pointer
+allocate(entry) set (new_entry)
+new_entry ~ id := indx
+new_entry --* attributes := atr
+new_entry ~ next := arr ~ hash_tab(HASH(indx))
+arr ~ hash_tab(HASH(indx)) := new_entry
+return(arr)
+end
+READ'(arr, indx) ::
+procedure(am pointer, indx: Identifier) returns(Attributelist)
+declare bucket_ptr pointer
+bucket_ptr := arr --* hash_tab(HASH(indx))
+do while(bucket_ptr 4; null & ~ IS_SAME?(bucket_ptr -~ id,
+indx))
+bucket_ptr := bucket_ptr --* next
+end
+if bucket_ptr = null
+then return(error)
+else return (bucket_ptr ~ attributes)
+end
+IS_UNDEFINED?'(arr, indx) ::
+procedure(am pointer, indx: Identifier) returns(Boolean)
+declare bucket_ptr pointer
+bucket_ptr := arr--~ hash_tab(HASH(indx))
+do while (bucket_ptr :k null & ~ IS_SAME? (bucket_ptr --~ id,
+indx))
+bucket_ptr := bucket_ptr --~ next
+end
+return (bucket_ptr = null)
+end
+A s one might expect, qb is a bit m o r e c o m p l e x for
+this r e p r e s e n t a t i o n . It is defined by using two interme-
+diate functions: qbl to construct a union over all the
+entries in the hash table, and ~ 2 to construct a union
+over the e l e m e n t s of an individual bucket.
+(a) a~(hash_tab_ptr) = ~l(hash_tab_ptr, EMPTY, 1)
+(b) a~l(hash_tab_ptr, arr, i) =
+if i > n
+then arr
+else ~bl (hash_tab_ptr, q~2(hash_tab_ptr ~ hash_tab(i), arr),
+i + l )
+(c) qb2(bucket_ptr,arr)=
+if bucket_ptr = null
+then arr
+else ASSIGN(qb2(bucket_ptr --~ next, arr), bucket_ptr --~ id,
+bucket_ptr --~ attributes)
+402
+The design of the symbol table subsystem of the
+compiler is now essentially c o m p l e t e . Given i m p l e m e n -
+tations of types Identifier and Attributelist and some
+obvious syntactic t r a n s f o r m a t i o n s , the a b o v e code
+could be c o m p i l e d by a PL/I compiler. Before doing so,
+h o w e v e r , it would be wise to prove that the i m p l e m e n -
+tations of types Stack and A r r a y are consistent with the
+specifications of those types. While such a p r o o f would
+involve substantial issues re la t ed to the general pro-
+gram verification p r o b l e m (e.g. vis ~ vis the integrity of
+the pointers and the question of modifying shared data
+structures), it would not shed further light on the role
+of abstract data types in p r o g r a m verification and is not
+p r e s e n t e d in these pages.
+The ease with which algebraic specifications can be
+a d a p t e d for different applications is one of the m a j o r
+strengths of the technique. Because the relationships
+a m o n g the various o p e r a t i o n s a p p e a r explicitly, the
+process of deciding which axioms must be a lter ed to
+effect a change is straightforward. Let us consider a
+rather substantial change in the language to be com-
+piled. A s s u m e that the language permits the inherit-
+ance of global variables only if they a p p e a r in a " k n o w s
+list," which lists, at block entry, all nonlocal variables
+to be used within the block [6]. The s y m b o l table
+o p e r a t i o n s in a compiler for such a language would be
+much like those al re a d y discussed. The only difference
+visible to parts of the c o m p i l e r o t h e r than the s y m b o l
+table m o d u l e would be in the E N T E R B L O C K o p e r a -
+tion: It would have to be al te r ed to include an a r g u m e n t
+of abstract type Knowlist. Within the specification of
+type S y m b o l t a b l e , all relations, ~nd only those rela-
+tions, that explicitly deal with the E N T E R B L O C K
+o p e r a t i o n would have to be altered. A n a p p r o p r i a t e set
+of axioms would be:
+ISANBLOCK?(ENTERBLOCK(symtab, klist), id) = false
+LEAVEBLOCK(ENTERBLOCK(symtab, klist)) = symtab
+RETRIEVE(ENTERBLOCK(symtab, klist), id) =
+if IS_IN?(klist, id)
+then RETRIEVE(symtab, id)
+else error
+Note that the a b o v e relations are not well defined.
+The u n d e f i n e d symbol I S _ I N ? , an o p e r a t i o n of the
+abstract type Knowlist, a p p e a r s in the third axiom. The
+solution to this p r o b l e m is simply to add a n o t h e r level
+to the specification by supplying an algebraic specifica-
+tion of the abstract type Knowlist. A n a p p r o p r i a t e set
+of o p e r a t i o n s might be:
+CREATE: --~ Knowlist
+APPEND: Knowlist × Identifier--~ Knowlist
+ISAN?: Knowlist x Identifier--~ Boolean
+These o p e r a t i o n s could then be precisely defined by the
+following axioms:
+IS_IN?(CREATE) = false
+ISAN?(APPEND(klist, id), idl) = if IS_SAME?(id, idl)
+then true
+else IS_IN?(klist, idl)
+Communications June 1977
+of Volume 20
+the ACM Number 6
+
+PAGE 8
+
+The implementation of abstract type Knowlist is
+trivial. The changes necessary to adapt the previously
+presented implementation of abstract type Symboltable
+would be more substantial. The kind of changes neces-
+sary can, however, be inferred from the changes made
+to the axiomatization.
+5. Conclusions
+We have not yet applied the techniques discussed in
+this paper to realistically large software projects.
+Nevertheless, there is reason to believe that the tech-
+niques demonstrated will "scale up." The size and
+complexity of a specification at any level of abstraction
+are essentially independent of both the size and com-
+plexity of the system being described and of the amount
+of mechanism ultimately used in the implementation.
+The independence springs in large measure from the
+ability to separate the precise meaning of a complex
+abstract data type from the details involved in its imple-
+mentation. It is the ability to be precise without being
+detailed that encourages the belief that the approach
+outlined here can be applied even to "very large"
+systems can and perhaps reduce systems that were
+formerly "very large" (i.e. incomprehensible) to more
+manageable proportions.
+Abstract types may thus play a vital role in the
+formulation and presentation of precise specifications
+for software. Many complex systems can be viewed as
+instances of an abstract type. A database management
+system, for example, might be completely character-
+ized by an algebraic specification of the various opera-
+tions available to users. For those systems that are not
+easily totally characterized in terms of algebraic rela-
+tions, the use of algebraic type specifications to abstract
+various complex subsystems may still make a substan-
+tial contribution to the design process. The process of
+functional decomposition requires some means for
+specifying the communication among the various func-
+t i o n s - data often fulfills this need. The use of algebraic
+specifications to provide abstract definitions of the op-
+erations used to establish communication among the
+various functions may thus play a significant role in
+simplifying the process of functional abstraction.
+The extensive use of algebraic specifications of ab-
+stract types may also lead to better-designed data struc-
+tures. The premature choice of a storage structure and
+set of access routines is a common cause of inefficien-
+cies in software. Because they serve as the main means
+of communication among the various components of
+many systems, the data structures are often the first
+components designed. Unfortunately, the information
+required to make an intelligent choice among the var-
+ious options is often not available at this stage of the
+design process. The designer may, for example, have
+poor insight into the relative frequency of the various
+operations to be performed on a data structure. By
+403
+providing a representation-flee, yet precise, descrip-
+tion of the operations on a data structure, algebraic
+type definitions enable the designer to delay the mo-
+ment at which a storage structure must be designed and
+frozen.
+The second area in which we expect the algebraic
+specification of abstract types to have a substantial
+impact is on proofs of program properties. For verifica-
+tions of programs that use abstract types, the algebraic
+specification of the types used provides a set of power-
+ful rules of inference that can be used to demonstrate
+the consistency of the program and its specification.
+That is to say, the presence of axiomatic definitions of
+the abstract types provides a mechanism for proving a
+program to be consistent with its specifications, pro-
+vided that the implementations of the abstract opera-
+tions that it uses are consistent with their specifications.
+Thus a technique for factoring the proof is provided,
+for the algebraic type definitions serve as the specifica-
+tion of intent at a lower level of abstraction. For proofs
+of the correctness of representations of abstract types,
+the algebraic specification provides exactly those asser-
+tions that must be verified. The value of having such a
+set of assertions available should be apparent to any
+one who has attempted to construct, a posteriori, asser-
+tions appropriate to a correctness proof for a program.
+A detailed discussion of the use of algebraic specifica-
+tions in a semiautomatic program verification system is
+contained in Guttag [10].
+Given suitable restrictions on the form that axioma-
+tizations may take, a system in which implementations
+and algebraic specifications of abstract types are inter-
+changeable can be constructed. In the absence of an
+implementation, the operations of the algebra may be
+interpreted symbolically. Thus, except for a significant
+loss in efficiency, the lack of an implementation can be
+made completely transparent to the user. Such a system
+should prove valuable as a vehicle for facilitating the
+testing of software.
+The ability to use specifications for testing is closely
+related to the policy of restricted information flow
+advocated in Parnas [20]. If a programmer is supplied
+with algebraic definitions of the abstract operations
+available to him and forced to write and test his module
+with only that information available to him, he is de-
+nied the opportunity to rely intentionally or acciden-
+tally upon information that should not be relied upon.
+This not only serves to localize the effect of implemen-
+tation errors, but also to increase the ease with which
+one implementation may be replaced by another. This
+should, in general, serve to limit the danger of choosing
+a poor representation and becoming inextricably
+locked into it.
+Before ending this paper, it seems fitting to mention
+some of the failings and problems associated with the
+work described. The specification technique presented
+here requires that all operations be specified as func-
+tions, i.e. as mappings from a cross product of values to
+Communications June 1977
+of Volume 20
+the ACM Number 6
+
+PAGE 9
+
+a single value. Most programs, on the other hand, are
+laden with procedures that return several values (via
+parameters) or no value at all. (The latter kind of
+procedure is invoked purely for its side effects.) The
+inability to specify such procedures is a serious prob-
+lem, but one that we believe can be solved with only
+minor changes to the specification techniques [10].
+The value of abstraction in general and abstraction
+of data types in particular has been stressed throughout
+this paper. Nevertheless, the process is not without its
+dangers. It is all too easy to create abstractions that
+ignore crucial distinctions or attributes. The specifica-
+tion technique presented here, for example, provides
+no mechanism for specifying performance constraints
+and thus encourages one to ignore distinctions based on
+such criteria. In some environments, such considera-
+tions are crucial, and to abstract them out can be
+disastrous.
+Another problem with algebraic specifications is
+that they supply little direction to implementors. Only
+experience will tell how easy it is to go from an alge-
+braic specification to an implementation. It is clear,
+however, that the transition is less easy than from an
+operational specification.
+Our most important reservation pertains to the ease
+with which algebraic specifications can be constructed
+and read. They should present no problem to those
+with formal training in computer science. At present,
+however, most people involved in the production of
+software have no such training. The extent to which the
+techniques described in this paper are generally appli-
+cable is thus somewhat open to conjecture.
+11. Guttag, J.V., Horowitz, E., and Musser, D.R. The design of
+data type specifications. Proc. Second Int. Conf. on Software Eng.,
+San Francisco, Oct. 1976, pp. 414-420.
+12. Hoare, C.A.R., Proof of correctness of data representations.
+Acta Informatica 1 (1972), 271-281.
+13. Hoare, C.A.R., and Wirth, N. An axiomatic definition of the
+programming language PASCAL. Acta lnformatica 2 (1973), 335-
+355.
+14. Liskov, B.H., and Zilles, S.N. Programming with abstract data
+types. Proc. ACM SIGPLAN Symp. on Very High Level Languages,
+SIGPLAN Notices (ACM) 9, 4 (April 1974), 50-59.
+15. McKeeman, W.M., Symbol Table Access. In Compiler
+Construction, An Advanced Course, T.L. Bauer, and J. Eichel, Eds.,
+Springer-Verlag, New York, 1974.
+16. Morris, J.H. Types are not sets. Conf. Rec. ACM Symp. on the
+Principles of Programming Languages, Boston, Mass., Oct. 1973,
+pp. 120-124.
+17. Musser, D. Private communication, 1975.
+18. Palme, J. Protected program modules in SIMULA 67. FOAP
+Rep. C8372-M3(E5), Res. Inst. of National Defense, Stockholm,
+1973.
+19. Parnas, D.L. A technique for the specification of software
+modules with examples. Comm. ACM 15, 5 (May 1973), 330-336.
+20. Parnas, D.L. Information distribution aspects of design
+methodology. Information Processing 71, North Holland Pub. Co.,
+Amsterdam, 1971, pp. 339-344.
+21. Spitzen, J., and Wegbreit, B. The verification and synthesis of
+data structures. Acta Informatica 4 (1975), 127-144.
+22. Standish, T.A. Data structures: An axiomatic approach. BBN
+Rep. No. 2639, Bolt, Beranek and Newman, Cambridge, Mass.,
+(1973).
+23. Wegbreit, B., and Spitzen, J. Proving properties of complex data
+structures. J. ACM 23, 2 (April 1976), 389-396.
+24. Wulf, W.A., London, R.L., and Shaw, M. Abstraction and
+verification in Alphard: Introduction to language and methodology.
+USC Inform. Sci. Tech. Rep., U. of Southern California, Los
+Angeles, 1976.
+25. ZiUes, S.N. Abstract specifications for data types. IBM Res.
+Lab., San Jose, Calif., 1975.
+Acknowledgment. The author is greatly indebted to
+J.J. Horning of the University of Toronto, who, as the
+author's thesis supervisor, provided three years of good
+advice.
+References
+1. Batey, M., Ed. Working Draft of ECMA/ANSI PL/I Standard
+Tenth Rev., ANSI, New York, (Sept. 1973).
+2. Birkhoff, G., and Lipson, J.D. Heterogeneous algebras. J.
+Combinatorial Theory 8 (1970), 115-133.
+3. Dahl, O.-J., Nygaard, K., and Myhrhaug, B. The SIMULA 67
+Common Base Language. Norwegian Comptng. Centre, Oslo, 1968.
+4. Dijkstra, E.W. Notes on structured programming. In Structured
+Programming, Academic Press, New York, 1972.
+5. Floyd, R.W. Assigning Meaning to Programs. Proc. Symp. in
+Applied Math., Vol. XIX, AMS, Providence, R.I., 1967, pp. 19-32.
+6. Gannon, J.D. Language design to enhance programming
+reliability. Ph.D. Th., Comptr. Syst. Res. Group Tech. Rep. CSRG-
+47, Dept. Comptr. Sci., U. of Toronto, Ontario, 1975.
+7. Good, D.I., London, R.L., and Bledsoe, W.W. An interactive
+program verification system. IEEE Trans. on Software Engineering
+SE-1, 1 (March 1975), 59-67.
+8. Guttag, J.V. The specification and application to programming
+of abstract data types. Ph.D. Th., Comptr. Syst. Res. Group Tecb.
+Rep. CSRG-59, Dept. Comptr. Sci. 1975, U. of Toronto, Ontario,
+1975.
+9. Guttag, J.V. and Horning, J.J., The algebraic specifications of
+abstract data types. Acta Informatica (to appear).
+10. Guttag, J.V., Horowitz, E., and Musser, D.R. Abstract data
+types and software validation. Tech. Rep., Inform. Sci. Inst., U. of
+Southern California, Los Angeles, 1976.
+404 Communications June 1977
+of Volume 20
+the ACM Number 6

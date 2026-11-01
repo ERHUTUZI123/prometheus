@@ -1,0 +1,7 @@
+# Direct original reading for learning-response probation
+
+## Javed and White, Meta-Learning Representations for Continual Learning (OML, 2019)
+
+Primary text: https://arxiv.org/html/1905.12588 , v2. Read §3 equation (2), Algorithms 1–2 and the accompanying split between representation network and prediction network. The representation is meta-trained using prediction loss after a bounded sequence of native online SGD updates; its parameters stay fixed during inner adaptation and later meta-test prediction learning. Algorithm 2 consumes sequential individual training observations before an outer test loss, unlike Algorithm 1's repeated minibatch inner updates. This is actual prior work for learning a representation that preserves/promotes later adaptation rather than current prediction alone. V3 borrows that valid objective and must compare to it using the same support/query data and work. Any remaining proposed contribution concerns dynamic physical return placement/read-set/cache formation under full live credit costs, not post-adaptation representation learning in general.
+
+Root/supervisor supplied the q_w=u+w+w²v witness and its cache-information warning. This worker reconstructed the explicit SGD/query calculation and integrated it into an operational probation rule. Agreement among agents is not independent empirical validation. No code or experiment was executed for this source entry.

@@ -1,0 +1,1719 @@
+
+PAGE 1
+
+Extending matchgate simulation methods to universal
+quantum circuits
+Avinash Mocherla1, Lingling Lao1,2, and Dan E. Browne1
+1Department of Physics and Astronomy, University College London, United Kingdom
+2School of Computer Science, Northwestern Polytechnical University, China
+arXiv:2302.02654v2 [quant-ph] 16 Jun 2024
+Matchgates are a family of parity-
+preserving two-qubit gates, nearest-
+neighbour circuits of which are known
+to be classically simulable in polynomial
+time. Inthiswork, wepresentasimulation
+method to classically simulate an n-qubit
+circuit containing N gates, m of which
+are universality-enabling gates and N−m
+of which are matchgates, in the setting
+of single-qubit Pauli measurements and
+product state inputs. The universality-
+enabling gates we consider include the
+SWAP, CZ, and CPhase gates. For fixed
+m as n →∞, the resource cost, T , scales
+as O en
+m+1
+2m+2 . For m scaling as a
+linear function of n, however, T scale as
+O 22nH(m+1
+n ) , where H(λ) is the binary
+entropy function.
+In quantum computing context, matchgates re-
+fertoagroupoftwo-qubitparity-preservinggates
+of the form:
+G(A,B) =
+    
+a 0 0 b
+0 e f 0
+0 g h 0
+c 0 0 d
+    
+A=
+a b
+c d ,B=
+e f
+g h
+where det(A) = det(B) = ±1. Gates of this type
+commonly occur in domains such as quantum
+chemistry [1], fermionic linear optics [2], quan-
+tum machine learning [3], and comprise part of
+the native gate set of several quantum computing
+architectures. An important fact about match-
+gatesisthatwhentheyarecomposedintonearest
+neighbour circuits, they are efficiently classically
+simulable. This was first discovered by Valiant [4]
+in the context of ‘perfect matchings’ of a graphi-
+cal representation of matchgate unitaries. It was
+then extended to a fermionic context by Terhal
+and DiVincenzo [5], and later Josza and Miyake
+[6], each of whom developed classical algorithms
+toefficientlysimulatematchgatecircuitsindiffer-
+ent input and output regimes. When confronted
+withthefactthatmatchgatesareefficientlysimu-
+lable,anaturalquestioniswhethersuchefficiency
+is maintained as small numbers of a universality-
+enablingprimitiveoutsideofthematchgategroup
+are added. For example, such primitives could in-
+clude CZ, SWAP and CPhase gates, which are all
+examples of ‘parity preserving non-matchgates’
+[7], (for brevity we refer to these as ZZ gates). Is
+it possible to develop a method to simulate these
+universal matchgate circuits, dubbed ‘matchgate
++ ZZ’ circuits?
+To answer this question we develop a Pauli-
+basis simulation method, which is able to simu-
+late an n-qubit ‘matchgate + ZZ’ circuit contain-
+ing mZZ gates, in time which is polynomial in n
+when m is fixed, and scales as O(22nH(m+1
+n )) for
+m ≤ n
+2 in general, where 0 < H(λ) ≤1 is the
+binary entropy function. The use of a Pauli-basis
+method stems from the equivalence of fermionic
+and Pauli operator descriptions of matchgates via
+the Jordan Wigner representation. This allows
+us to succinctly represent the ‘matchgate + ZZ’
+simulation problem in Liouville notation. In this
+notation, matchgate circuits manifest as block di-
+agonal super-operators acting on closed (mostly
+poly-sized) linear spans of Pauli-operators. On
+the other hand, ZZ gates manifest as superop-
+erators which act across several linear spans of
+Pauli operators. Given these two observations,
+classical simulation of matchgate + ZZ circuits is
+possible if, starting from a closed linear span, we
+adaptively keep track of the newly accessed Pauli
+basis elements as each ZZ gate is applied.
+The paper is structured as follows. In section
+1, we review the properties of matchgates rele-
+1
+
+PAGE 2
+
+vant to classical simulation. We introduce meth-
+odsforsimulatingmatchgatecircuitsfrom[6]and
+show how this formalism can be readily recast
+in Liouville notation. In Section 2, we extend
+these insights to non-matchgates and show how
+matchgates can in principle be simulated with
+any non-matchgate by considering the structure
+of the corresponding superoperators. In Section
+3, we introduce the Pauli-basis simulation tech-
+nique specifically for ‘matchgate + ZZ’ circuits,
+and in Section 4, determine its scaling in the
+regimes of fixed m and and variable m. Finally,
+in Section 5, we verify the asymptotic scalings
+by performing numerical simulations of ‘match-
+gate + ZZ’ circuits arising in the Fermi-Hubbard
+model.
+To begin, we introduce the salient properties of
+matchgates relevant to our discussion.
+operators as follows:
+c2k−1 =
+k−1
+i=1
+Zi Xk
+c2k =
+k−1
+i=1
+Zi Yk.
+(2)
+It is known that matchgates correspond
+to unitary operators generated from the
+set of nearest-neighbour operators X=
+{XkXk+1,XkYk+1,YkYk+1,YkXk+1,Zk,Zk+1}.
+Using equation 2 we can see each of the elements
+of X can be expressed as quadratic Majorana
+monomials:
+1 Review of Matchgate Simulation
+Matchgates, which in quantum computing are
+gates of the form G(A,B), where det(A) =
+det(B) = ±1, are closely associated with the
+dynamics of non-interacting fermions. This link
+stemsfromthefactthatmatchgatesaretheresult
+of mapping a subset of so-called fermionic Gaus-
+sian operations, which arise in fermionic physics,
+to quantum computation. The fermionic setting
+allows us to understand why circuits of nearest-
+neighbourmatchgatescanbeefficientlysimulated
+and is the starting point of further analysis.
+1.1 Gaussian operations
+Consider a system of nfermionic modes with the
+kth mode associated with a creation and anni-
+hilation operator, a†
+k and ak respectively. It has
+been shown that there exists a mapping between
+these fermionic operators and spin-1
+2 operators
+(Pauli matrices) via the Jordan Wigner represen-
+tation. To demonstrate this map succinctly, it
+is useful to define a set of 2nhermitian operators
+c2k−1 = a†
+k+ak and c2k =−i(a†
+k−ak), sometimes
+referred to as Majorana spinors, which pairwise
+satisfy the following anti-commutation relations
+for µ,ν = 1,...,2n:
+{cµ,cν}≡cµcν + cνcµ = 2δµνI. (1)
+Using the Jordan-Wigner representation, each
+spinor can be written in terms of strings of Pauli
+Zk =−ic2k−1c2k,
+for k∈[1,...,n], and
+XkXk+1 =−ic2kc2k+1
+YkYk+1 = ic2k−1c2k+2
+YkXk+1 = ic2k−1c2k+1
+XkYk+1 =−ic2kc2k+2
+This highlights that a matchgate is the Gaus-
+sian operation, UMG = eiHMG generated from a
+Hamiltonian HMG which is a linear combination
+of quadratic monomials:
+HMG =−i
+2k+2
+µ̸=ν=2k−1
+αµνcµcν, (3)
+where αµν is a real anti-symmetric ma-
+trix, and the spinors are drawn from the set
+{c2k−1,c2k,c2k+1,c2k+2}. The set consists of
+spinors that correspond to nearest-neighbour
+modes, specifically k and k + 1. How-
+ever, Gaussian operations can also be gener-
+ated from quadratic monomials connecting non-
+nearest neighbour modes, such as c1c5 or c2c6, ie.
+from a more general Hamiltonian:
+H=−i
+2n
+µ,ν
+αµνcµcν. (4)
+Such monomials, expressed in terms of Pauli
+operators, act non-trivially across multiple
+qubits. It can be shown, however, that the Gaus-
+sian operation eiH generated by H can be effi-
+ciently decomposed as a circuit of O(n3) nearest-
+neighbour matchgates [6], when expressed in
+terms of qubits. Hence we can consider a general
+Gaussian operation to correspond to a nearest-
+neighbour matchgate circuit.
+2
+
+PAGE 3
+
+k L(k)
+2 J-W-equivalent Paulis
+0 I 1 c1,c2,c3,c4 2 c1c2,c1c3,c1c4,c2c3,c2c4,c3c4 3 c1c2c3,c1c2c4,c1c3c4,c2c3c4 II
+XI,YI,ZX,ZY
+iZI,iYX,iYY,iXX,iXY,iIZ
+iIX,iIY,iXZ,iYZ
+4 c1c2c3c4−ZZ
+Table 1: Spinor basis L2 and Pauli basis P2 for all values of k∈[0,4].
+Figure 1: Subsets of P3. There are 5 subsets, denoted as P(k)
+3 each of size 6
+k. P(0)
+3 = III and P(6)
+3 = ZZZ, as
+well as factors of i have been omitted for clarity.
+1.2 PI-SO versus CI-MO simulation
+Nearest-neighbour circuits of matchgates are
+well-known for their efficient classical simula-
+bility in specific input-output settings. The
+two primary setting are known as the PI-SO
+(product-input, single-output) and CI-MO (com-
+putational input, multi-qubit output) settings, as
+coined by Brod in [8]. In the PI-SO setting,
+computations involve nearest-neighbour match-
+gate circuits with product state inputs and mea-
+surements of single qubits. The simulation of
+such computations was established by Josza and
+Miyake [6], who exploited the Clifford algebraic
+properties of spinors (to be shown) to enclose the
+dynamics in a poly-sized vector space.
+On the other hand, in the CI-MO setting,
+which focuses on computational basis states and
+measurements on subsets of output modes, it was
+demonstrated [5] that the marginal probability
+p(y|x) for input and output bitstrings x and y
+can be efficiently evaluated. This was achieved
+by reformulating the computation as the evalua-
+tion of the Pfaffian of an antisymmetric matrix,
+using Wick’s theorem. Although both settings
+allow for efficient classical simulation, the under-
+lying mechanisms behind their efficiency are not
+evidentlyrelated. Consequently, wedirectourat-
+tention to the fundamental insights derived from
+the PI-SO setting and explore their applicability
+to universal circuits.
+1.3 Clifford Algebra Formalism
+While the spinors underlying the definition of
+matchgates have a natural fermionic interpreta-
+tion, they can also be interpreted abstractly as
+the generators of a 22n dimensional Clifford alge-
+bra denoted C2n, as mentioned in [6]. The rele-
+vance of this observation to quantum computa-
+tion is that the basis of C2n:
+Ln = {I,cµ,cµν = cµcν,···,c12···2n = c1c2···c2n
+|1 ≤µ<ν <···≤2n}, (5)
+3
+
+PAGE 4
+
+econstructed from unique ascending order prod-
+ucts of spinors cµ, forms a basis for 2n ×2n her-
+mitian matrices [9] [10]. Interestingly, such a
+property is also realised by the 22n dimensional
+n-qubit Pauli basis Pn = {I,X,Y,Z}⊗n, and
+indeed, using the Jordan-Wigner representation,
+each element of Ln can be represented by an n-
+qubit tensor product of Pauli operators (up to a
+globalphase). ThisisdemonstratedinTable1for
+n = 2. An important consequence of this map-
+ping is that the Pauli basis elements inherit the
+same graded structure as the underlying Clifford
+algebra. To make this clear, it is useful to label
+subsets of Ln by the degree of their constituent
+spinors, k, which we denote by L(k)
+n . The size of
+each of these sets is 2n
+k . There are 2n+1 such
+sets (including L(0)
+n = I), and the linear span of
+the elements in L(k)
+n is written as L(k)
+n . We can
+see that as a vector space C2n = kL(k)
+n and
+thus is graded. Each span L(k)
+n can be identified
+with a Pauli basis vector space P(k)
+n such that
+Pn = kP(k)
+n . This structure is illustrated in
+Figure 1 for n= 3.
+1.4 PI-SO Matchgate Simulation
+We now show how this graded structure is ex-
+ploited for classical simulation. Let us consider a
+typical computation in the PI-SO setting as the
+evaluation of the following expectation value:
+⟨Zj⟩= ⟨ψ|U†(Zj)U|ψ⟩, (6)
+where Zj is the Z Pauli operator on the jth
+qubit, U is the unitary denoting matchgate cir-
+cuit with N∼ poly(n) gates, and |ψ⟩is a prod-
+uct state. For a generic unitary, the classical
+resources required for this computation a priori
+scales exponentially. For a matchgate circuit,
+however, we can exploit the following key prop-
+erty of Gaussian operations, as shown by Josza
+and Miyake, to evaluate this expression in time
+poly(n):
+Theorem 1 [6] Let H be a quadratic Hamiltonian
+as in 4 and U= eiH the corresponding Gaussian
+operation. Then for all µ:
+U†cµU=
+2n
+ν=1
+Tµνcν (7)
+where the matrix T ∈SO(2n), and we obtain all
+of SO(2n) in this way.
+Proof 1 Write cµ as cµ(0) and introduce cµ(t) =
+V(t)cµ(0)V(t)† with V(t) = eiHt. Then
+dcµ(t)
+dt= i[H,cµ(t)]
+(with square brackets [a,b] denoting the commu-
+tator ab−ba ). But [cν1 cν2 ,cµ] = 0 if µ̸= ν1,ν2
+and [cµcν,cµ] =−2cν (from Equation 1) so
+dcµ(t)
+dt=
+4hµνcν(t)
+ν
+cµ(t) =
+Tµν(t)cν(0).
+ν
+and the theorem follows by just setting t = 1.
+Theorem 1 implies that conjugation by a Gaus-
+sian operation maps individual spinors to the
+closed real linear span of all spinors. Alterna-
+tivelystated, conjugationbymatchgatemapsele-
+mentsofL(1)
+n toL(1)
+n . Thisappliestobothmatch-
+gate circuits, U, as well as individual matchgates
+U, as both are Gaussian operations. In each case,
+we will refer to the equivalent linear operator in
+SO(2n) as T and T respectively, and in general
+T=
+N
+i T(i) where T(i) is the linear operator for
+the ith gate in a circuit. As a corollary of The-
+orem 1, we can see that any degree monomial of
+spinors will be mapped to a linear span of the
+same degree, or equivalently the linear span L(k)
+n
+is preserved by conjugation of matchgates. Ex-
+plicitly:
+Corollary 1 Let H be a quadratic Hamiltonian as
+in 4 and U= eiH the corresponding Gaussian
+operation. Let S be any (ascending) order subset
+of [0,2n], and cS be the monomial of spinors with
+indices in S. Then for all S with cardinality |S|:
+U†cSU=
+S′∈([2n]
+|S|)
+det(T|S,S′)cS′, (8)
+where [2n]
+k denotes subsets of [0,2n] with cardi-
+nality k, and T|S,S′ indicates a minor of T whose
+rows and columns are indexed by S and S′
+respec-
+tively.
+The coefficients det(T|S,S′) follow from apply-
+ing the anti-commutation relations of the spinors,
+andareinfacttheelementsofacompound matrix
+R(|S|)
+n ∈SO( [2n]
+|S| ) for the given cardinality.
+4
+
+PAGE 5
+
+To understand how these results allow for ef-
+ficient classical simulation in the PI-SO setting,
+let us rewrite Equation 6 using the fact that
+Zj=−ic2j−1c2j:
+⟨Zj⟩=−i⟨ψ|U†c2j−1c2jU|ψ⟩.
+Of immediate consequence is that the measure-
+ment operator−ic2j−1c2j ∈L(2)
+n . This suggests
+by conjugating the measurement operator, other-
+wise known as a ‘Heiseburg picture’ approach, we
+can write:
+⟨Zj⟩=−i
+S,S′∈([2n]
+2 )
+det(T|{2j−1,2j},S′) ⟨ψ|cS′|ψ⟩,
+(9)
+which is an expression which can be evaluated
+in polynomial time. This is due to the fact the
+sum consists of∼ O(n2) terms, and for each
+term the determinant of constant-sized minors
+can be calculated efficiently from T. Similarly,
+each expectation in the sum is the product of n
+single-qubitoperatorexpectationvalues(as|ψ⟩is
+product state), which is also efficient. Hence by
+exploiting the fact that matchgates preserve the
+graded structure of the operator space, operators
+like−ic2j−1c2j which start in a poly-sized vector
+space will remain in a poly-sized vector space.
+1.5 Liouville notation
+On the contrary, non-matchgates do not preserve
+the graded structure of the clifford algebra of
+spinors. In general, they act across several lin-
+ear spans. To capture this behaviour, we recast
+the problem in the 4n dimensional Pauli-basis via
+Liouville notation. Specifically, we can express a
+state ρas a real column vector, which we refer to
+as an operator vector, |ρ⟩⟩∈R4n
+,
+|ρ⟩⟩= ··· ρσ···
+T
+where each vector element is the coefficient of the
+corresponding operator in its Pauli basis decom-
+position. That is,
+where each vector element is given by:
+Mσ = Tr(σM).
+In this notation, the action of conjugation on
+the operator vector |ρ⟩⟩is now given by a lin-
+ear operator R ∈SO(4n) acting on |ρ⟩⟩denoted
+|R|ρ⟩⟩. Furthermore, the expectation value of an
+observable M can be written:
+⟨M⟩= ⟨⟨M|R|ρ0⟩⟩, (10)
+which is equivalent to Tr(MU†ρ0U) for a circuit
+U. Given that the objects in equation 10 are ex-
+ponentially sized, a natural question is how such
+an expression can be evaluated efficiently. To do
+this, we introduce Algorithm A [see appendix A].
+Algorithm A uses a sparse representation of each
+object to simulate the entire circuit in time which
+scales linearly in a quantity called χt. We define
+this below.
+Definition 1 The Pauli rank of |ρ⟩⟩, denoted
+χ(ρ), is the number of non-zero coefficients in its
+Pauli-basis decomposition.
+Definition 2 The Total Pauli rank of a circuit-
+consisting of N gates, denoted χt, is the sum of
+the Pauli ranks obtained after applying each gate
+in the circuit. That is:
+χt =
+N
+i
+χ(ρi). (11)
+Using Algorithm 1 on a matchgate circuit in the
+PI-SO setting, for example, we see that the max-
+imum value of the Pauli rank (using a Heisen-
+berg approach to matrix-vector multiplication) is
+χ=
+2n
+2 . The total rank is, therefore, χt = Nχ,
+which implies the scaling is the same as shown
+by Josza and Miyake in [6]. We will also make
+use of Algorithm 1 in evaluating the more gen-
+eral ’matchgate + ZZ’ circuits introduced in the
+following sections.
+ρσ = Tr(σρ)
+Here, σ ∈Pn is an n-fold product of Pauli op-
+erators. We can also express an observable (i.e.
+Hermitian operator) M as a real row vector:
+⟨⟨M|= ··· Mσ···
+,
+2 Extension to non-matchgates
+We now consider how non-matchgates manifest
+in the context of the graded structure of the
+Pauli-operator basis. To do this, we consider how
+non-Gaussian operations (ie. those generated by
+H ∈L(d)
+n with d ̸= 2) transform elements of a
+linear span L(k)
+n under conjugation. From this,
+5
+
+PAGE 6
+
+we can deduce the structure of the correspond-
+ing super-operator R: C2n →C2n. What we find
+is that the application of such an operation in-
+ducetransformationsacrossmultiple linearspans.
+This leads to a predictable increase in the Pauli
+rank of the measurement operator vector, allow-
+ing us to quantify the computational cost of sim-
+ulating non-Gaussian operations. To relate non-
+Gaussian operations to unitary gates, we show
+that any single and two qubit gate: U(1) ∈U(2)
+and U(2) ∈ U(4) respectively, can be reduced
+to two specific types of non-Gaussian operation.
+Namely, those operations generate odd-degree ad
+quarticelementsofLn respectively. Wecanhence
+characterise the classical cost of simulating any
+gate of practical relevance in terms of its effect
+on the Pauli rank of a simulation.
+2.1 Transformations induced by non-Gaussian
+operations
+To start, we note we can simplify our notion of
+non-Gaussian operations to those generated from
+H ∈L(k)
+n , rather than H′ ∈L(k)
+n , without loss
+of generality. This is from the observation that
+we can generate any element H′
+as U†HU, us-
+ing Corollary 1 with a specially selected T. The
+non-Gaussian operation generated from this new
+Hamiltonian,givenbyeiU†HU isequaltoU†eiHU,
+which implies that all non-Gaussian operations
+generated from L(k)
+n are equivalent, up to conju-
+gation by a matchgate, to the non-gaussian op-
+eration generated from the set L(k)
+n. We refer to
+this property as matchgate-equivalence.
+Letusconsiderthetransformationofabasisel-
+ement c{k}∈L(k)
+n , where through abuse of nota-
+tion the subscript krefers to an (ascending order)
+subsetof[0,2n]withcardinalityk. Wespecifically
+consider the transformation V†c{k}V, where V is
+a non-Gaussian unitary of the form eiθ
+2 c{d}, and
+c{d}∈L(d)
+n . Now, we have:
+V†c{k}V = cos2 ( θ
+2 )c{k}+ sin2 ( θ
+2 )c{d}c{k}c{d}+
+isin
+θ
+2
+cos
+θ
+2 (c{d}c{k}−c{k}c{d}),
+(12)
+where it can be seen that the expression sim-
+plifies depending on whether the monomials c{d}
+and c{k}commute or anti-commute. Indeed, this
+depends on the number of sign flips induced by
+rearranging c{d}c{k}→c{k}c{d}, which is related
+tothevaluesd, kandaquantityl∈[0,min(k,d)],
+whichwedefineasl= |{k}∩{d}|(i.e. thenumber
+of spinors which occur in both c{d}and c{k}):
+Lemma 2 Let k and d be the degrees of c{k} and
+c{d}respectively. Let l= |{k}∩{d}|be the number
+of spinor indices common to both. Then c{d}c{k}
+= (−1)dk−lc{k}c{d}.
+Proof 2 Majorana spinors anti-commute under
+permutation. This induces a sign depending on
+the number of permutations needed to transform
+c{k}c{d} →c{d}c{k}. In the case l = 0 (no com-
+mon spinors), the sign after this transform is
+(−1)dk, as every spinor in c{k} is permuted past
+every spinor in c{d}. When l is non-zero, l permu-
+tations will induce no sign (as these spinors will
+commute). Hence the overall sign induced after
+the full permutation is (−1)dk−l
+.
+We can discern that in the commuting case
+(dk−l is even), the transformation simplifies
+to the identity channel. However, in the anti-
+commuting case (dk−l is odd), the following ro-
+tation occurs:
+V†c{k}V = cos(θ)c{k}+ isin(θ)c{d}c{k}, (13)
+From equation 13, we see that non-matchgates
+transform c{k} to a space spanned by both c{k}
+and a monomial of the form c{d}c{k}. For a given
+value of l, c{d}c{k} will simplify to c{d+k−2l}, as
+twospinorswiththesameindexwillsquaretothe
+identity. With these results, we can specify the
+linearspanofthetransformedmonomialV†c{k}V
+as follows, depending on the values of d, k and l:
+l parity kd odd kd even
+l even L(k)
+n ⊕L(k+d−2l)
+n L(k)
+n
+l odd L(k)
+n L(k)
+n ⊕L(k+d−2l)
+n
+Table2: Lookuptableforthelinearspantowhichc{k} ∈
+L(k)
+n istransformedbyanon-Gaussianoperatorofdegree
+d, depending on the parity of l.
+For a given d, L(k)
+n will be split into l subsets,
+each of which will be transformed differently by a
+non-Gaussian operation V, according to Table 2.
+For an element of a linear span L(k)
+n , which is a
+linear combination of basis elements c{k}∈L(k)
+n ,
+6
+
+PAGE 7
+
+we can say an element of L(k)
+n is transformed to
+the direct sum of the resultant linear spans of
+each transformed subset. To illustrate this, let us
+consider non-Gaussian operations corresponding
+to single- and two-qubit gates.
+2.2 One-qubit non-Gaussian operations
+Figure 2: Transformation of an element of L(k)
+6 under
+conjugation by an odd-degree non-Gaussian operation.
+Each arrow indicates the linear span to which a subset of
+L(k)
+n is transformed, corresponding to the possible values
+of l for that basis set. (a) d= 1, (b) d= 3, (c) d= 5
+(Coloured arrows are for visualisation only).
+Consider that any single-qubit gate can be
+decomposed, up to a global phase, as the
+product of three Euler rotations: U(1) =
+Rz(θ1)Ry(θ2)Rz(θ3), parameterised by angles
+θ1,θ2,θ3. The Rz(θ) rotations in this decompo-
+sition can be expressed as matchgates, because
+G(Rz(θ),Rz(θ)) = Rz(θ) ⊗1, which implies that
+the non-Gaussian component of a single-qubit ro-
+tation is contained in Ry(θ). We can say that
+single-qubit gates U(1) are matchgate equivalent
+to Ry gates.
+An Ry rotation applied to qubit j can be ex-
+pressed as cos θ
+2 I−isin θ
+2 Yj, where Yj=
+(−i)j−1 j−1
+i (c2i−1c2i)c2j. Itcanbeseenthatthe
+Ry rotation is generated by odd-degree fermionic
+operators. Consider the simplest case where j=
+1, whichcorrespondstoanon-Gaussianoperation
+of degree d= 1. The transformation induced on
+anelementofL(k)
+n isgiventhefollowingTheorem:
+Theorem 3 Let V= eiθc{1} be a degree 1 non-
+Gaussian operation. Then conjugation of an el-
+ement of L(k)
+n by V is realized by a linear map
+R(k)
+V :
+• For k odd:
+R(k)
+V : L(k)
+n ⊕L(k+1)
+n →L(k)
+n ⊕L(k+1)
+n
+• For k even:
+R(k)
+V : L(k)
+n ⊕L(k−1)
+n →L(k)
+n ⊕L(k−1)
+n
+Proof 3 For d= 1, the possible values of l are 0
+and 1. This implies each set L(k)
+n is composed of
+two subsets, each of which is transformed accord-
+ing to Table 2. Specifically, for d= 1,
+d = 1 k odd k even
+l= 0 L(k)
+n ⊕L(k+1)
+n L(k)
+n
+l= 1 L(k)
+n L(k)
+n ⊕L(k−1)
+n
+When k is odd, it can be seen that for each value
+of l, an element of L(k)
+n is transformed to the lin-
+ear span L(k) ⊕L(k+1)
+n . Similarly, when k is even,
+an element of L(k)
+n is transformed to the linear
+span L(k)
+n ⊕L(k−1)
+n.
+The structure of the linear operator RV : Ln →
+Ln, with the transformation due to each R(k)
+V is
+shown graphically in figure 2a. Here each arrow
+represents the transformation of a subset of L(k)
+n
+corresponding to a particular value of l (where
+a subset is transformed to its own linear span,
+no arrow is shown). It can be seen that under
+conjugation by a degree one non-Gaussian oper-
+ator (which is matchgate-equivalent to a single-
+qubitgateonthefirstqubit), Theorem3corrobo-
+rates a result in [11] which states that matchgates
+plus arbitrary single-qubit gates on the first qubit
+are efficiently classically simulable in the PI-SO
+setting. This can be seen by the fact that the
+measurementoperatorvectorwillcontaincontain
+terms in L(1)
+n ⊕L(2)
+n , as single-qubit gates will,
+under conjugation, induce transformations in the
+space L(1)
+n ⊕L(2)
+n . Separately, matchgates will in-
+duce transformations within the linear spans L(1)
+n
+and L(2)
+n , which means that the overall Pauli rank
+will be bounded as 2n
+1 + 2n
+2.
+For odd-degree non-Gaussian operations corre-
+sponding to single qubit gates on higher indexed
+qubits, thetransformationsinducedbecomemore
+complicated, as shown in Figure 2b (d = 3) and
+7
+
+PAGE 8
+
+Figure 2c (d = 5). In these cases, efficient clas-
+sical simulation is no longer possible as apply-
+ing multiple single qubit gates interspersed with
+matchgates will in general induce transformation
+inthedirectsumoflinearspanswhichencompass
+an exponentially scaling portion of Ln.
+2.3 Two-qubit non-Gaussian operations
+To understand the transformations induced by
+two qubit gates, we make use of the fact that
+U(2) ∈U(4) can be written (via a KAK decom-
+position [12][7]), in the following form:
+U(2) = (U1 ⊗U2) ei(aX⊗X+bY⊗Y+cZ⊗Z) (U3 ⊗U4).
+Here the parameters a, b and c satisfy a≥b≥c
+(to ensure the decomposition is unique.) Com-
+paring this to the KAK decomposition for an ar-
+bitrary matchgate:
+eiϕ1Z ⊗eiϕ2Z ei(aX⊗X+bY⊗Y) eiϕ3Z ⊗eiϕ4Z
+Comparing the two expressions, it can be seen
+that apart from the single qubit gates applied
+before and after the non-local core (which are
+matchgate-equivalent to Ry rotations), by elim-
+ination, the gate UZZ(θ)= eiθZZ must also in-
+duce non-Gaussian dynamics. Indeed, UZZ(θ)
+is a two-qubit parity-preserving gate which has
+been identified as enabling universal quantum
+computation when combined by Gaussian oper-
+ations in [13], and corresponds to the unitary
+evolution of a degree four product of Majorana
+spinors. Specifically, when acting on qubits a
+andb(notnecessarilynearestneighbour), onehas
+eiθZaZb = eiθc2a−1,c2a,c2b−1,c2b. It induces the fol-
+lowing transformation on elements of L(k)
+n :
+Theorem 4 Let UZZ(θ) = eiθZaZb =
+eiθc2a−1c2ac2b−1c2b be a non-Gaussian gate acting
+on qubits a,b. Then for n ≥3, conjugation of
+an element of L(k)
+n by UZZ is realized by a linear
+map R(k)
+ZZ:
+• For k∈[1,2] :
+R(k)
+ZZ : L(k)
+n ⊕L(k+2)
+n →L(k)
+n ⊕L(k+2)
+n
+• For k∈[3,2n−2] :
+R(k)
+ZZ : L(k−2)
+n ⊕L(k)
+n ⊕L(k+2)
+n →
+L(k−2)
+n ⊕L(k)
+n ⊕L(k+2)
+n
+• for k∈[2n−1,2n] :
+R(k)
+ZZ : L(k) ⊕L(k−2)
+n →L(k) ⊕L(k−2)
+n
+Proof 4 For d = 4, the possible values of l are
+0,1,2,3,4. Hence the set L(k)
+n consists of five sub-
+sets for each value of l. Given the product 4k
+is always even, we need only consider the even
+column of Table 2, for which we enumerate the
+following transformations:
+d= 4 4k even
+l= 0 L(k)
+n
+l= 1 L(k)
+n ⊕L(k+2)
+n
+l= 2 L(k)
+n
+l= 3 L(k)
+n ⊕L(k−2)
+n
+l= 4 L(k)
+n
+For the first case where k = 1 or 2, l is limited
+to be 0,1, or 2. For any of these values, L(k)
+n
+is transformed to the linear span L(k)
+n ⊕L(k+2)
+n.
+For k = 2n-1, 2n-2: l can be either l = 4, 3 or 2,
+which means L(k)
+n is transformed to L(k) ⊕L(k−2)
+n.
+Finally, in the general case where l can be 0,1,2,3
+or 4, L(k)
+n is transformed to L(k−2) ⊕L(k)
+n ⊕L(k+2)
+n.
+Figure 3: Transformation of an element of L(k)
+6 under
+conjugation by an even-degree non-Gaussian operation.
+Each arrow indicates the linear span to which a subset of
+L(k)
+n is transformed, corresponding to the possible values
+of l for that basis set. (a) d= 4, (b) d= 6, (c) d= 8
+(Coloured arrows are for visualisation only).
+A schematic of the overall operation RZZ :
+8
+
+PAGE 9
+
+Ln →Ln is shown in Figure 3a. We can see that
+starting with a measurement operator vector in a
+given linear span, the action of conjugation, via
+the linear operator RZZ will in general access ad-
+jacent equal parity spans. This gives the scheme
+to simulate ZZ gates - keep track of the new ba-
+sis elements which are accessed as each RZZ gate
+is applied, and update them as required. Such
+a method could be applied to any gate which is
+matchgate equivalent to UZZ including SWAP,
+CZ, and CPhase.
+As well as these, the transformations induced
+byhigherdegreenon-Gaussianoperations, specif-
+ically d = 6 and d = 8 are shown in Figure 3
+for completeness. In general, these would corre-
+spondtothreeandfour-qubitgatesintheJordan-
+Wigner mapping and hence are not necessarily of
+practical relevance.
+4 Bounds on simulation time costs
+4.1 General bounds for χt(N,n,m)
+To begin bounding χt for a ‘matchgate + ZZ’
+circuit, we assume that we apply the ’Heisen-
+berg picture’ approach to matrix multiplication
+and that our measurement vector contains terms
+solely in P(2)
+n . With these assumptions, the ap-
+plication of mZZ gates will at most access m+ 1
+linear spans of even parity, up to a maximum of
+⌊n
+2 ⌋−1. The simplest bound of χt is therefore
+Nχmax, where χmax is the sum of the sizes of
+each accessed linear span. Explicitly:
+χmax =
+m+1
+|L(2i)
+n |=
+m+1
+i=1
+i=1
+2n
+2i
+. (16)
+Such a partial sum has no closed form, and varies
+depending on whether m is fixed as a function
+of n or varies correspondingly. We consider both
+cases below.
+3 ClassicalSimulationofMatchgate+
+ZZ circuits
+In the previous section, we showed how it is pos-
+sible to simulate the action of a parity-preserving
+non-matchgate (a gate which is matchgate equiv-
+alent to UZZ) via the superoperator RZZ. Let us
+considerhowaddingsuchagatesaffectsthePauli
+rank, andthereforethedifficultofsimulation. We
+denote an n-qubit ‘matchgate + ZZ’ circuit con-
+taining N gates, of which mare parity-preserving
+non-matchgates and N−m are matchgates, as
+UMG+ZZ. This can be written in the following
+generic form:
+UMG+ZZ = U(m)
+MGU(m)
+ZZ ...U(1)
+MGU(1)
+ZZU(0)
+MG, (14)
+where there are m+ 1 nearest-neighbour match-
+gatecircuitsUMG interspersedwithmUZZ gates.
+A computation with this circuit in the PI-SO
+setting can then be written in Liouville notation
+as follows:
+1
+χmax =
+1−r
+, (17)
+⟨Zj⟩= ⟨⟨Zj|RMG+ZZ|ρ0⟩⟩. (15)
+where ρ0 is a product state and RMG+ZZ =
+R(m)
+MGR(m)
+ZZR(m−1)
+MG ...R(1)
+ZZR(0)
+MG are the correspond-
+ing superoperators. As has been mentioned, it is
+possible to evaluate an expression of the form of
+equation 15 using Algorithm 1. This will have a
+scaling of O(χt). Hence, to determine the overall
+scaling of simulating a particular ‘matchgate +
+ZZ’ circuit, we must find suitable bounds on χt.
+This is the subject of the next section.
+4.1.1 Bounds for fixed m
+If mis fixed in the above expression, we can show
+that the partial sum χmax scales polynomially in
+n as n→∞:
+Theorem 5 The following relation holds:
+m+1
+i=1
+2n
+2i <
+2n
+2m+ 2
+where r= ( 2m
+2n−2m−1 )2
+.
+Proof 5 Consider that for k<⌊p
+2 ⌋:
+p
+k + p
+k−2 +...
+= 1+ k(k−1)
+p
+k
+(p−k+ 1)(p−k+ 2) +...,
+(18)
+where the numerator of the left hand side is the
+partial sum we wish to bound. Notice that we can
+upper bound the right hand side above by:
+1 + ( k
+p−k+ 1 )2 + ..., (19)
+which is an infinite geometric series with ratio
+r = ( k
+p−k+1 )2. This series converges to 1
+1−r, for
+0 ≤r<1. Using the substitution that p= 2nand
+k = 2m+ 2, r = ( 2m+2
+2n−2m−1 )2 and the series con-
+verges as long as 0 ≤m≤⌊n
+2 ⌋−1. Rearranging
+equation 18 completes the proof.
+9
+
+PAGE 10
+
+Let us consider the asymptotic scaling as n→
+∞with fixed m. We can see that in this limit,
+r →0, and the scaling is dominated by 2n
+2m+2.
+Hence we can conclude the following results, us-
+ing the relation that 2n
+2m+2 < ne
+m+1
+2m+2, where e
+is Euler’s constant:
+Corollary 2 For fixed m<mc, as n→∞, χmax
+scales as O((ne
+m+1 )2m+2).
+This implies the total simulation cost of the
+algorithm, which is on the order of ∼O(χt) will
+intheworstcasescalepolynomiallyinn, forfixed
+m.
+4.2 Bounds for variable m
+Wehaveconsideredfixedmtothispoint. Wenow
+consider the scaling if mincreases as a function of
+nin the limit where n→∞. We make use of the
+following bound, proved in [14], for this purpose:
+Lemma 6 The following relation holds for 0 ≤
+k≤n:
+S=
+k
+i=0
+2n
+i ≤22nH( k
+2n)
+,
+where H(x) =−xlog2(x)−(1−x) log2(1−x)
+is the binary entropy function.
+As we are only concerned with even terms of
+this sum we can make the following modification.
+Split S into even and odd terms S= So + Se,
+where So =
+m+1
+i=1
+2n
+2i−1 and Se =
+m+1
+i=0
+2n
+2i.
+Here, Se is the quantity we wish to bound. The
+ratio S
+= 1 + So
+Se
+Se
+= 1 + O(n−1) to leading order,
+as the partial sum of . We can rearrange this
+expression to give a bound for Se :
+1
+Se ≤
+1 + O(n−1) 22nH( k
+2n) (20)
+Finally, noting that k= 2m+ 2, We can bound
+χmax in the asymptotic limit as follows:
+Theorem 7 For m≤⌊n
+2 ⌋−1 :
+χmax <22nH(m+1
+n ) (21)
+4.3 Tighter bounds for structured circuits
+It is possible to give some tighter bounds on the
+simulation time complexity, if we assume some
+natural structure in the circuit. The motiva-
+tion here is that the Pauli rank increases over
+the course of the circuit instead of being fixed
+at χmax. If the ZZ gates are equally spaced, we
+will have a staircase structure. Evaluating χt is
+then a question of splitting the staircase into hor-
+izontal steps and adding each section. In general
+the width of the kth step (starting from the bot-
+tom) each step will be kN
+m+1 , and the height will
+be |L2k|. Hence we can approximate χt in the
+following way:
+χt(n,m) ≈
+N
+m+ 1
+N
+=
+=
+m+ 1
+m+1
+(m+ 2−i)|L(2i)
+n |
+i=1
+m
+s=1
+(m+ 2−i) 2n
+2i ,
+(22)
+where N= mT+m, for some constant T which is
+the number of matchgates applied between each
+ZZ gate. This partial sum can be upper bounded
+by an arithmetico-geometric series as follows:
+Lemma 8
+m+1
+s=1
+(m+ 2−i) 2n
+2i <
+2n
+2m+ 2 [1 + 1
+(1−r)2 ],
+(23)
+where r= ( 2m
+2n−2m+1 )2
+.
+Proof 6 Consider that for k< p
+2 :
+p
+k + 2 p
+k−2 + 3 p
+k−4 +...
+p
+k
+= 1 + 2 k(k−1)
+(p−k+ 1)(p−k+ 2) +···
+We notice that we can bound this above by:
+Sn = 1 + 2( k
+p−k+ 1 )2 + ..., which is an infinite arithmetico-geometric series
+with ratio r= ( k
+p−k+1 )2:
+Sn = 1 +
+∞
+(i+ 1)ri (26)
+i=1
+The sum converges to [1 + 1
+(1−r)2 ], for 0 ≤r<
+1. Using the substitution that p = 2n and k=
+2m+ 2, r= ( 2m+2
+2n−2m−1 )2 and the series converges
+as long as 0 ≤m ≤⌊n
+2 ⌋−1. The numerator of
+the fraction in equation 24 is equal to the partial
+sum we wish to bound. Hence rearranging this
+expression gives us the desired result.
+(24)
+(25)
+10
+
+PAGE 11
+
+χmax(n,m) <
+We use this result in Theorem 9 to give a closed-
+form expression for a bound to χmax.
+Theorem 9 For m≤mc = ⌊n
+2 ⌋−1:
+N
+m+ 1
+2n
+2m+ 2 [1 + 1
+(1−r)2 ],
+(27)
+whichmeansforstructuredcircuitsthereisanap-
+proximately 1
+m improvementovertheloosebound
+derived in the previous section.
+5 Fermi-Hubbard Model Simulation
+using Pauli-basis Simulation
+In this section, we demonstrate how a ’match-
+gate + ZZ’ circuit arising in the context of the
+Fermi-Hubbard model can be simulated using Al-
+gorithm 1, and verify the above asymptotic scal-
+ings. The Fermi-Hubbard model is a widely used
+model in condensed matter physics to understand
+the properties of correlated fermionic systems. A
+1D model consists of p sites, arranged in a line,
+with q < 2p fermions distributed between these
+sites. Each site can contain a spin-up fermion, a
+spin-down fermion or both. Fermions can hop be-
+tween adjacent sites, characterised by an energy
+J, and interact with a coulombic repulsion each
+other if a site is doubly occupied, characterised
+by an energy U. The Hamiltonian of the system
+is given below:
+HFH =−J
++ U
+L−1
+j=1 ν=↑,↓
+L
+nj,↑nj,↓,
+j=1
+a†
+j,νaj+1,ν + h.c.
+(28)
+where the first term corresponds to hopping and
+the second term to the onsite interaction terms
+respectively.
+SimulatingthisHamiltoniancanbeachievedas
+follows. Firstly, the initial state is prepared us-
+ing a Givens rotation circuit as shown in Figure
+4c. This consists of a ladder of matchgates of the
+form G, for each electron being simulated. In this
+case, we consider two electrons. The parameters
+of each gate are chosen randomly for our pur-
+poses, though in practice they are carefully cho-
+sen to correspond to a Hartree-Fock state. Next,
+the dynamics induced by HFH are approximated
+using the Lie product formula:
+ei(Hhop+Hint)t = lim
+{eiHhop
+t
+NeiHint
+t
+T }T
+,
+T→∞
+which approximates the dynamics as the product
+of the individual hopping and interacting unitary
+operators,appliedforafractionalamountoftime.
+Each individual unitary can be decomposed as
+a circuit on 2n qubits, where the first and sec-
+ond register of n qubits correspond to spin up
+and spin down electrons respectively. The hop-
+ping terms are implemented as K rotations (also
+matchgate circuits) on each register, and the in-
+teraction terms is implemented as CPhase gates
+acting between registers. This is shown in Fig-
+ure 4b. This process is repeated for a particular
+number of steps known as the trotter number T.
+This gives an overall circuit structure as shown
+in Figure 4a.
+Writing the circuit explicitly, we can see
+that our circuit factorises into a form which
+is amenable to Algorithm 1: UFH =
+U(T)
+MGU(T)
+ϕ ...U(1)
+MGU(1)
+ϕ U(0)
+MG, where UMG are
+matchgate circuits corresponding to the Givens
+and K rotations, and Uϕ are CPhase gates. In-
+deed, CPhase gates are matchgate equivalent
+to UZZ = eiθZZ, specifically taking the form
+CPhase(θ)= eiθZZG(Rz(2θ),I). The fact that
+these gates act on distant qubits a and b poses
+no issue (in this case) as Ra
+z ⊗I and I ⊗Rb
+z be
+expressed as G(Rz(θ),Rz(θ))) G(Rz(θ),Rz(−θ))
+respectively, and the transformations induced by
+eiθZaZb hold for any qubits a and b, according to
+Theorem 4.
+To test Algorithm 1, we consider the simula-
+tion of Trotter circuits with limited interactions,
+where only a finite number of CPhase are present
+in each Trotter step. This corresponds to remov-
+ing on-site interaction for particular sites in the
+Fermi-Hubbard model. This paradigm may be
+useful for error mitigation methods which use ef-
+ficient simulation of ‘training circuits’ to under-
+stand and mitigate errors in a related univer-
+sal circuit [15]. Typically, such training circuits
+would have to be from gate sets which are classi-
+cally simulable but may not be functionally simi-
+lar to the circuit being implemented. By extend-
+ing the reach of classical simulation methods to
+universal circuits it is possible that such methods
+could perform better.
+In Figure 5 we show the scaling of χtot (per
+11
+
+PAGE 12
+
+Figure4: CircuitusedtosimulatetimeevolutionofHF H giveninEquation28, from[1]. (a)Overallcircuit, consisting
+of initialisation of Hartree-Fock state using Given’s rotations as shown in (c). This is followed by m Trotter steps,
+and finally, measurement (b) Trotter step, consisting of odd-even hopping gates, even-odd hopping gates (blue) and
+onsite interactions (orange). In the interaction-limited case, only one cPhase gate connects the top and bottom
+registers.
+gate) as a function of the number of Trotter
+steps (blue line), each step containing a single
+CPhase gate between the first qubit of the upper
+and lower register. In this case, the number of
+Trotter steps is equal to the number of parity-
+preserving non-matchgates. We simulate models
+consisting of nsites = 5,10,15 sites (correspond-
+ing to n = 10, 20, 30 qubits respectively), for
+a number of Trotter steps T in the range [0,10].
+We further normalise the rank and time by the
+number of gates, the number of which is given by
+N = 2nsites(T+ 1). From Figure 8, we verify our
+prediction that the simulator scales polynomi-
+ally in the qubit number n, but exponentially in
+the number of parity-preserving non-matchgates.
+Furthermore, ignoring transient effects for small
+circuitdepths, thetimetakenscalesinproportion
+with the total Pauli rank.
+5.1 Heuristic Improvements
+Wenowmentiontwomethodstoimprovethepro-
+posed simulation method. The first improvement
+is to use what is sometimes known as an interac-
+tion picture approach, which describes applying
+R operators to both |ρ0⟩⟩and ⟨⟨Zj|. This re-
+duces the number of iterations with a large num-
+ber of multiplications which often occur in the
+final gates of a layered circuit. It also introduces
+parallelism as the two directions of multiplica-
+tioncanbecomputedindependently. Toinitialise
+|ρ0⟩⟩usingthismethod,oneneedonlyconsiderel-
+ements in the linear spans which will be accessed
+following the application of m parity-preserving
+non-matchgates gates. For computational zero
+states, this will be Pauli operators containing up
+to m Z operators.
+The second method is to apply pruning, where
+coefficients from ⟨⟨M| which are below some
+threshold value ϵ are removed before the appli-
+cation of the next super-operator. At the cost
+of some error in the final expectation value, this
+heuristic has the potential to greatly reduce the
+timecostforcertaincircuits[seefigure5]. There-
+lationship between the incurred error (δ) and the
+total pruning-free (ϵ = 0) Pauli rank (per gate)
+is plotted in Figure 6. We consider the range
+of ranks accessed in our simulations, for different
+12
+
+PAGE 13
+
+nsites = 5
+nsites = 5
+Simulation = 0
+= 10
+Method
+= 6
+= 4
+104
+102
+= 8
+= 2
+10 1
+10 2
+10 3
+Total Pauli rank (per gate), t
+N
+0 1 2 3 4 5 6 7 8 9 10
+nsites = 10
+108
+105
+102
+0 1 2 3 4 5 6
+nsites = 15
+Total time taken (per gate) (s)
+0 1 2 3 4 5 6 7 8 9 10
+nsites = 10
+100
+10 2
+0 1 2 3 4 5 6
+nsites = 15
+100
+108
+105
+102
+10 2
+0 1 2 3 4
+Trotter steps
+0 1 2 3 4
+Trotter steps
+Figure 5: Total Pauli rank/Time (per gate) required to evaluate ⟨Zj ⟩as a function of the number of Trotter Steps
+of an interaction limited version of the circuit shown in Figure 6. The red dashed line indicates the saturated upper
+bound for χt for the particular number of Trotter steps. For simulations with a pruning threshold, we can greatly
+reduce the simulation cost, however, we incur an error δ which varies as shown in Figure 6.
+values of the pruning threshold (ϵ). Each point
+corresponds to a randomly initialised Trotter cir-
+cuit with a particular value of n and T in the
+ranges [4,7] and [0,8] respectively. The same cir-
+cuit is simulated for each value of the threshold
+ϵ.
+6 Discussion
+The motivating question for this research was
+whether the polynomial resource cost of nearest-
+neighbour matchgate circuit simulation tech-
+niques could be preserved for circuits supple-
+mented with a few universality-enabling gates.
+Algorithm 1 shows that at the very least, poly-
+nomial scaling is still possible for up to ⌊n
+2 ⌋−
+1 such gates. As could be expected, the
+scaling quickly becomes exponential as more
+universality-enabling resources are added. It is
+however still possible that the exponent with re-
+spect to m could be suppressed with more so-
+phisticated simulation techniques. For example,
+one line of research could be the use of ten-
+sor networks in simulating universal circuits [16].
+In particular there are several schemes which
+efficiently encode fermionic gaussian states (ie
+states formed from matchgate circuits) as low-
+rank matrix-product states [17] [18]. We make
+note that there have recently been approaches
+which make analogies to the stabilizer decompo-
+13
+
+PAGE 14
+
+100
+10 2
+Absolute Error
+10 4
+10 6
+10 8
+Threshold,
+0.01
+0.0001
+1e-06
+1e-08
+100 101 102 103 104 105 106 107
+Total Pauli rank (per gate) tot/N
+servation is that non-Gaussian operations induce
+transformationsacrossmultiple suchlinearspans.
+This gives a simple scheme to account for the ad-
+dition of non-matchgates: adaptively increase the
+size of the vector space encompassing the dynam-
+ics over the course of a circuit. Using a sparse
+simulation method, we show that the time com-
+plexity of simulating a ‘matchgate + ZZ’ depends
+on N, n, and m, the number of gates in total, the
+number of qubits and the number of ZZ gates.
+For m≤⌊n
+2 ⌋−1, we show the time cost scales as
+∼O(N(n
+m+1 )2m+2) for fixed m as n →∞. For
+variable m, however, we find a scaling of the form
+22nH(m+1
+2n ). Finally, We showcase this method in
+a simulation of Trotter circuits arising from sim-
+ulation of an interaction-limited Fermi-Hubbard
+model.
+Figure 6: Absolute Error of expectation value for differ-
+entvaluesofpruningthreshold, asafunctionofthetotal
+Pauli rank, χtot of a simulation. Each point corresponds
+to a Trotter circuit simulated with different values of n
+and T. The same set of circuits is used for each thresh-
+old value, and where the absolute error was zero, no
+point is shown.
+8 Acknowledgements
+We would like to thank Daniel Brod for helpful
+discussions. We acknowledge funding from the
+EPSRCProsperityPartnershipinQuantumSoft-
+ware for Modelling and Simulation (Grant No.
+EP/S005021/1).
+sition approach. We direct the reader to these
+papers. [19]
+We also mention here a few considerations
+for further investigation. Firstly, as the classi-
+cal simulation results and scaling properties de-
+rived here stem from the fermionic description
+of operators, we can reason that using a dif-
+ferent representation of these operators, such as
+the Bravyi-Kitaev, or a compact mapping for 2D
+fermionic grids [20], will lead to equivalent simu-
+lation methods for different sets of gates. Albeit
+such gates will no longer necessarily be nearest-
+neighbour matchgates or the identified parity-
+preserving non-matchgates. A detailed exposi-
+tion of such gate sets is an interesting question.
+7 Conclusion
+In this paper, we have shown that it is possi-
+ble to extend the PI-SO matchgate simulation
+method introduced by Jozsa and Miyake [6] to
+simulate a matchgate circuit containing a few
+parity-preserving non-matchgates (ZZ gates). At
+a high level, this is possible because of two obser-
+vations. The first observation is that Gaussian
+operations induce linear transformation within a
+linear span L(k)
+n , the vector space spanned by
+degree k majorana monomials. The second ob-
+References
+[1] Frank Arute, Kunal Arya, Ryan Bab-
+bush, Dave Bacon, Joseph C Bardin, Rami
+Barends, Andreas Bengtsson, Sergio Boixo,
+Michael Broughton, Bob B Buckley, et al.
+Observation of separated dynamics of charge
+and spin in the fermi-hubbard model. arXiv
+preprint arXiv:2010.07965, 2020.
+[2] Emanuel Knill. Fermionic linear optics
+and matchgates. arXiv preprint quant-
+ph/0108033, 2001.
+[3] Sonika Johri, Shantanu Debnath, Avinash
+Mocherla, Alexandros Singk, Anupam
+Prakash, Jungsang Kim, and Iordanis
+Kerenidis. Nearest centroid classification
+on a trapped ion quantum computer. npj
+Quantum Information, 7(1):1–11, 2021.
+[4] Leslie G Valiant. Quantum circuits that can
+be simulated classically in polynomial time.
+SIAM Journal on Computing, 31(4):1229–
+1254, 2002.
+[5] Barbara M Terhal and David P DiVincenzo.
+Classical simulation of noninteracting-
+14
+
+PAGE 15
+
+fermion quantum circuits. Physical Review
+A, 65(3):032325, 2002.
+[6] Richard Jozsa and Akimasa Miyake. Match-
+gates and classical simulation of quantum
+circuits. Proceedings of the Royal Society A:
+Mathematical, Physical and Engineering Sci-
+ences, 464(2100):3089–3106, Jul 2008. ISSN
+1471-2946. DOI: 10.1098/rspa.2008.0189.
+URL http://dx.doi.org/10.1098/rspa.
+2008.0189.
+[7] Daniel J. Brod and Ernesto F. Galvão. Ex-
+tending matchgates into universal quantum
+computation. Physical Review A, 84(2), Aug
+2011. ISSN 1094-1622. DOI: 10.1103/phys-
+reva.84.022310. URL http://dx.doi.org/
+10.1103/PhysRevA.84.022310.
+[8] Daniel J. Brod. Efficient classical simulation
+of matchgate circuits with generalized
+inputs and measurements. Physical Review
+A, 93(6), Jun 2016. ISSN 2469-9934.
+DOI: 10.1103/physreva.93.062332. URL
+http://dx.doi.org/10.1103/PhysRevA.
+93.062332.
+[9] David Hestenes and Garret Sobczyk. Clif-
+ford algebra to geometric calculus: a unified
+language for mathematics and physics, vol-
+ume 5. Springer Science & Business Media,
+2012.
+[10] Kianna Wan, William J Huggins, Joonho
+Lee, and Ryan Babbush. Matchgate shad-
+owsforfermionicquantumsimulation. arXiv
+preprint arXiv:2207.13723, 2022.
+[11] Richard Jozsa, Barbara Kraus, Akimasa
+Miyake, and John Watrous. Match-
+gate and space-bounded quantum compu-
+tations are equivalent. Proceedings of
+the Royal Society A: Mathematical, Phys-
+ical and Engineering Sciences, 466(2115):
+809–830, Nov 2009. ISSN 1471-2946. DOI:
+10.1098/rspa.2009.0433. URL http://dx.
+doi.org/10.1098/rspa.2009.0433.
+[12] Barbara Kraus and Juan I Cirac. Optimal
+creation of entanglement using a two-qubit
+gate. Physical Review A, 63(6):062309, 2001.
+[13] Sergey B Bravyi and Alexei Yu Kitaev.
+Fermionic quantum computation. Annals of
+Physics, 298(1):210–226, 2002.
+[14] F. Jessie MacWilliams and N. J. A. Sloane.
+The theory of error-correcting codes. In The
+Theory of Error-Correcting Codes, 1977.
+[15] Ashley Montanaro and Stasja Stanisic. Er-
+ror mitigation by training with fermionic lin-
+ear optics. arXiv preprint arXiv:2102.02120,
+2021.
+[16] Feng Pan and Pan Zhang. Simulating
+the sycamore quantum supremacy circuits.
+arXiv preprint arXiv:2103.03074, 2021.
+[17] Norbert Schuch and Bela Bauer. Ma-
+trix product state algorithms for gaussian
+fermionicstates. Physical Review B,100(24):
+245121, 2019.
+[18] Matthew T Fishman and Steven R White.
+Compression of correlation matrices and an
+efficient method for forming matrix product
+states of fermionic gaussian states. Physical
+Review B, 92(7):075132, 2015.
+[19] Oliver Reardon-Smith, Michał Oszmaniec,
+and Kamil Korzekwa. Improved simu-
+lation of quantum circuits dominated by
+free fermionic operations. arXiv preprint
+arXiv:2307.12702, 2023.
+[20] Charles Derby, Joel Klassen, Johannes
+Bausch, and Toby Cubitt. Compact fermion
+to qubit mappings. Physical Review B, 104
+(3):035118, 2021.
+A Algorithm 1
+In this section, we introduce an algorithm to evaluate an expression of the following form:
+⟨M⟩= ⟨⟨M|R|ρ0⟩⟩,
+where ⟨⟨M|is a measurement operator vector, R is a superoperator corresponding to conjugation by
+a circuit, and |ρ0⟩⟩is the initial density matrix vector. The algorithm can be shown to have a generic
+resource cost of O(χt), where χt is the total Pauli rank of the circuit, as defined in equation 11. This
+algorithm could in theory be applied to a computation with any measurement operator, initial state or
+circuit, however we consider in what follows matchgate + ZZ circuits simulated in the PI-SO setting.
+Such circuits take the generic form:
+15
+
+PAGE 16
+
+UMG+ZZ = U(m)
+MGU(m)
+ZZ ...U(1)
+MGU(1)
+ZZU(0)
+MG, (29)
+where there are m+ 1 nearest-neighbour matchgate circuits UMG interspersed with mUZZ gates. We
+remind the reader that many non-matchgates of practical relevance, such as SWAP, CZ and CPhase are
+matchgate equivalent to UZZ, and the matchgate components of these gates can be virtually absorbed
+into the neighbouring matchgate circuits, though in practice this isn’t necessary. Recasting in Liouville
+notation, we ca write the simulation problem explicitly as:
+⟨Zj⟩= ⟨⟨Zj|R(m)
+MGR(m)
+ZZ...R(1)
+MGR(1)
+ZZR(0)
+MG|ρ0⟩⟩, (30)
+where the superoperator corresponding to each matchgate circuit is written as RMG. Furthermore,
+each R(m)
+ZZ is the linear operator corresponding to a UZZ gate acting on arbitrary nearest neighbour
+qubits. To evaluate equation 30 efficiently, we use the ‘Heisenberg picture’ approach.. Furthermore,
+we use sparse data structures to ensure that no (initially) exponentially-sized object needs to be
+allocated to memory. Specifically, we can store ⟨⟨Z′
+j|during the computation as a dictionary of keys:
+⟨⟨Z′
+j|= {(P1 : v1),...,(Pχ : vχ)}, whereeachkey-valuepaircorrespondstoan-qubitPaulioperatorand
+its coefficient in a Pauli-basis decomposition. Matrix-vector multiplication ⟨⟨Z′
+jR|is then performed
+by (1), constructing the Pauli transfer matrix O∈SO(16) for each gate, (2) cycling through each key
+in ⟨⟨Z′
+j|and determining which basis elements are rotated by O, and (3) updating the corresponding
+values with matrix-vector multiplication.
+To do step (1) efficiently, we use the observation that each R matrix is fully characterised by a
+rotation matrix O ∈SO(16) acting on a two-qubit subspace of Pauli operators, stemming from the
+fact that each gate is two-qubit. For each operator constituting an RMG, the structure of Ois a sparse
+block-diagonal with 1,4,6,4,1 dimensional submatrices corresponding to a rotation of the basis of P(k)
+2.
+The submatrices are calculated as shown in Subroutine 1. For RZZ, the corresponding O matrix can
+be calculated in constant time. For SWAP, for example, this will simply be a permutation matrix.
+For step (2), we identify the elements of ⟨⟨Z′
+j|which are rotated by each O matrix. To do this, we
+split every key into its support and a stem on qubits j,j+ 1 denoted Pj,j+1 and Pn−j,j+1 respectively,
+describing the support of the key on the qubits j and j+ 1, and its complement. The rotation will
+be the same for all keys with the same support. Hence, if Pj,j+1 ∈P(d)
+2 , then the new basis elements
+following rotation are obtained by the tensor product of elements of P(d)
+2 with the stem (Subroutine
+2).
+As an example, consider a rotation supported on qubits 1 and 2. Then a key ZIXY is split into
+ZI (support) and XY (stem). As the support is in P(2)
+2 , the basis elements accessed in a rotation
+will be ZIXY,IZXY,XXXY,YYXY,XYXY,YXXY. We can store dictionary keys as integers by
+encoding n-qubit Pauli operator as a bitstring of size 2n, where I = 00, X = 01, Y = 10, and Z = 11.
+Find(P) can then be efficiently implemented as integer addition and subtraction. Finally, we perform
+an update of the identified key-value pairs by performing a matrix-vector multiplication between the
+multiplication of the coefficients ⃗v corresponding to⃗
+P (Subroutine 3).
+The overall matrix-vector multiplication uses these three subroutines as shown in Algorithm 1. As
+the measurement vector is constantly being updated, it is important to keep track of which keys have
+already been rotated to avoid redundant multiplication. For this purpose, a separate data structure
+with O(1) write/read cost, labelled temp (such as a hash table) is used to store the keys already
+accessed using ‘Find’.
+The total simulation cost is proportional to a quantity denoted χt = iχi which is the total sum
+of the Pauli ranks at each step of the circuit. The relevance of χt follows from the fact that the
+various contributions to the time cost are characterised by χi = χ(Z′
+j) at each iteration. Specifically,
+the number of ‘Find’ and ‘Update’ calls for each gate can be approximated by χi
+s , where s is the
+maximum sparsity of each R matrix (which for RMG is s = 6, and RZZ is s=1). Whereas ‘Find’ can
+be implemented as integer addition (which is efficient), matrix-vector multiplications during ‘Update’
+calls will cost ∼O(s2). Hence the dominant time cost for a single matrix-vector multiplication will be
+16
+
+PAGE 17
+
+O( χi
+s
+s2) = O(χis). Summing the costs across the entire circuit, the overall time cost will be O(χts).
+Hence, determining the overall time complexity of the algorithm reduces to finding suitable bounds for
+χt. Finally, we note that evaluating the final inner product scales as O(χmax).
+Subroutine 2: Find(P)
+Subroutine 1: Rotations(U)
+Input: U
+Output: 1,4,6,4,1 dim matrices
+R(0),R(1),R(2),R(3),R(4)
+For d∈[0,4] :
+For p(d)
+α , p(d)
+β in P(d)
+2 :
+[R(d)]αβ = Tr(U†p(d)
+α Up(d)
+β )
+Input: An n-qubit Pauli operator P, qubit
+indices j,j+ 1
+Output: Subset of P2, d
+⃗
+P= {P1,...,Pm}where m= |P(d)
+2 |,
+support ←Pj,j+1 ∈P(d)
+2
+stem ←Pn−(j,j+1)
+For p(d) ∈P(d)
+2 :
+Pα = Pn−(j,j+1) ⊗p(d)
+Subroutine 3: Update(⟨⟨M|,
+⃗
+P,Ri
+(d)))
+Input: A set of keys⃗
+P, DofK ⟨⟨M|
+Output: Updated DofK ⟨⟨M|
+For Pi ∈⃗
+P:
+If (Pi,vi) ∈⟨⟨M|: ⃗v←vi
+Else: ⃗v←0
+⃗
+′
+v
+←R(d)⃗v
+⟨⟨M|←(⃗
+P,⃗v)
+17
+
+PAGE 18
+
+Algorithm 1: Sparse Pauli-basis simulation for ’Matchgate+ZZ’ circuit
+Inputs: Observable M, ’matchgate + ZZ’ circuit: U= U(m)
+MGU(m)
+ZZ ...U(1)
+MGU(1)
+ZZU(0)
+MG on nqubits, Initial
+product state ρ0.
+Outputs: Expectation value ⟨M⟩= Tr(U†MUρ0)
+Procedure:
+Initialise measurement vector (e.g., ⟨⟨M|←(Zk : 1.0)) as a dictionary of keys.
+Matrix-vector Multiplication
+Inner Product
+For gates U(i)
+j,j+1 ∈ UMG acting on qubits j and j + 1: Rotations(U(i)
+j,j+1)
+temp ←{}
+For (P(m),v(m)) ∈⟨⟨M|:
+If P(m) / ∈temp:
+⃗
+P,d←Find(P(m))
+⟨⟨M|←Update(⟨⟨M|,
+⃗
+P,R(i)
+(d))
+temp ←⃗
+P
+For (P(m)
+n ,vm) ∈⟨⟨M|: ⟨M⟩+= Tr(ρ0P(m)
+n )vm
+R(i)
+(0),R(i)
+(1),R(i)
+(2),R(i)
+(3),R(i)
+(4) ←
+18

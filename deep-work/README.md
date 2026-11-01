@@ -1,30 +1,17 @@
-# Prometheus · Pro AI Deep Work
+# Prometheus Deep Work v2
 
-完整的自主研究工作流设计与本地部署交接。研究目标是形成有实质内容的新计算机制、学习原则或架构。
+本包修订科学调度，不另造执行平台。唯一宪法是项目根 AGENTS.md。`CONSTITUTION.md` 只作旧链接兼容指针。
 
-## 入口
+- `WORKFLOW.md`：探索/验证双模式；三个独立思考入口；成功后的价值检查；一主线与一个机制不同的高风险备选；证据与恢复。
+- `ROLES.md`：按需加载的任务合同，不全部塞入每个进程。
+- `DEPLOY.md`：运行准备和真实宿主交接。模型名称/供应商参数不硬编码。
+- `runtime.example.json`：本工作流的调度规格，不是 Codex 或供应商配置。
+- `inputs/seed.md`：不含旧答案和书单分类的共同输入。
+- `inputs/books.md`：保留的可选导航，不默认加载给所有入口。
+- `templates/`：简短的机制、候选、测试、运行记录。
+- `tools/audit.py`：记录检查；区分请求、观察、有效模式和本轮授权。
+- `tools/pro_probe.py`：上一版的可选 API 探针保留用于兼容，不是默认部署步骤。只有核查当前接口兼容性并获单独调用授权后才能使用 `--live`，不得拿它探测新收费路径。
 
-1. `WORKFLOW.md`：研究流程、创造性保护、工具研究、调度、预算和最终交付。
-2. `DEPLOY.md`：本地 Codex/Work 接手并执行的部署任务。
-3. `CONSTITUTION.md`：每个研究任务共享的短约束。
-4. `ROLES.md`：协调、独立研究、攻击、修复、实现、独立重建的任务合同，按需加载。
-5. `runtime.example.json`：工作流配置；**不是 Codex 原生配置或完整 API 请求**。
-6. `templates/`：原文机制、候选、测试、机器记录的最小结构。
-7. `tools/`：Pro API 调用核查、研究记录审计及离线测试。
-8. `inputs/seed.md`：不包含上一轮架构的共同问题。
-9. `inputs/books.md`：补充书目导航；不代表 PDF 已全部取得或读完。
-10. `SOURCES.md`、`VALIDATION.md`：平台依据、核查范围和包的实际测试状态。
+先使用[更新包 INSTALL.md](../prometheus-update/INSTALL.md) 安装/合并规则；再在新会话使用 [START.md](../prometheus-update/START.md)。设计与安装不等于研究已经执行。辅助工具的单元测试也不验证发现能力。
 
-## 使用
-
-把整个 `deep-work/` 放进 Prometheus 项目。在新的已选 Pro 会话发送：
-
-> 读取 deep-work/DEPLOY.md，部署并执行本轮自主研究。科研选择由你决定；先核查实质研究任务的 Pro 执行方式。保持原著只读、既有主 NOW 唯一、旧报告在独立构思结束前隔离。不要只交计划。
-
-**预算要求作用于研究运行。** 运行可以充分消耗已授权 Pro 额度，不设人为的三轮、三小时或节省 token 指标。不要为了部署这个工作流另造大型平台。
-
-这个包是可交接的完整研究协议与部署规格，附有辅助工具；不是已经连接本机、能自行调用所有模型与工具的独立研究服务。实际模型、会话、工具、进程存活与恢复由本地宿主提供。未核查到 Pro 时不能偷偷用 High 替代。
-
-## 纯 AI 的含义
-
-一次资源与权限授权后，AI 自主选文献、读原文、发明、推导、实现、实验、反驳、修订和总结。用户不承担中间科研选择或把书读完再教 AI 的责任。新增收费资源、账号认证、外部发布不由科研自主权自动授权。
+本地兼容：`pro_probe.make_receipt()` 与 v2 的 `receipt_from()` 都保留；旧回执字段仍可读。新运行显式设置 `mode_policy` 时，`authorization_receipt` 指向本运行内的 JSON 对象，必须包含与记录一致的 `run_id`、`requested_mode`、`authorization_scope: "this_run"` 和 `authorized_observed_modes`。这是授权记录的绑定检查，不是用户身份或同意的自动认证。模式回执能解析时核对模型、context、effort 与已声明模式；未提供可机读字段时明确警告，不将宿主选择推断成服务端 Pro。旧 campaign 使用其归档审计器，不回写旧证据来迁就新 schema。

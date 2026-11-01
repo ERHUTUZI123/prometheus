@@ -1,0 +1,1533 @@
+
+PAGE 1
+
+Initial Algebra Semantics and Continuous Algebras
+J. A. G O G U E N
+UCLA, Los Angeles, California
+A N D
+J. W. THATCHER, E. G. W A G N E R , A N D J. B. W R I G H T
+IBM Thomas J Watson Research Center, Yorktown Heights, New York
+ABSTRACT Many apparently divergent approaches to specifying formal semantics of programmmg languages
+are applications of mmal algebra semantics In this paper an overview of imtial algebra semantics ts provided
+The major technical feature ts an mmal continuous algebra which permits unified algebraic treatment of
+lteratlve and recurslve semantic features in the same framework as more basic operations
+KEY WORDS AND PHRASES algebraic semantics, algebras, free algebras, continuous algebras, posets, pro-
+grammmg language semantics, flow diagrams, syntax directed translation, solutions of equations
+CR CATEGORIES 5 23, 5 24
+1. Introduction
+In the past few years there has been quite a proliferation of formal semantics for
+programming languages, or at least of different descriptive terms, for example, opera-
+tional, interpretive, fixed point, predicate calculus, denotational, algebraic, mathemati-
+cal, synthesized, W-grammar, axiomatic, inherited, declarative, continuation, process,
+and now initial algebra semantics. Moreover, mathematical concepts, said to be deep, or
+strange, or new, are asserted to he relevant, for example, continuous lattices, lterative
+algebraic theories, infimtary logic, and bicategories This is quite perplexing. How do
+these things fit together, if at all? In fact, what is "syntax"; what is "semantics"?
+This paper is not going to answer all these questions. But we believe the subject cannot
+be said to be in very good shape when such questions are ignored or glossed over, and
+when "practical" and "theoretical" approaches have so little to say to each other. In this
+paper we offer a unified approach to these questions with some preliminary answers
+which expose a surprising and beautiful unity in the apparent diversity of approaches.
+The key concept is very simple: An algebra S is init:al in a class C of algebras lff for
+every A in C there exists a unique homomorphlsm ha : S ~ A. 1
+Copyright © 1977, Association for Computing Machinery, lnc General permission to repubhsh, but not for
+profit, all or part of this material ts granted provided that ACM's copyright notice is gwen and that reference lS
+made to the pubhcat~on, to its date of issue, and to the fact that reprinting privileges were granted by
+permission of the Assooatton for Computmg Machinery.
+This is a revised and expanded version of a paper entitled "Initial Algebra Semantics," which was presented at
+the 15th IEEE Symposmm on Switching and Automata Theory, October 1974
+The work of J A Goguen was partmlly supported by the Naropa Institute, Boulder, Colorado, and the
+University of Colorado, Boulder, Colorado.
+Authors' addresses: J A Goguen, Computer Soence Department, UCLA, Los Angeles, CA 90024, J W
+Thatcher, E G Wagner, and J B Wright, IBM Thomas J Watson Research Center, 'Yorktown Heights, NY
+10598
+i We are assuming that C comes with an "appropriate" class of homomorphisms which is dosed under
+assooative composition and includes an identity for each algebra More f~rmally, we assume that C ts a
+category. The reader seeking a more comprehensive algebraic context may want to consult [23] and/or [39]
+Journal of the Association for Computing Machinery, Vol 24, No 1, January 1977, pp 68-95
+
+PAGE 2
+
+Initial Algebra Semanttcs and Continuous Algebras 69
+In the cases we examine, syntax ts an initial algebra in a class of algebras, and any
+other algebra A in the class ts a possible semantic domain (or semantic algebra); the
+semantic function is the uniquely determined homomorphtsm hA : S ~ A, assigning a
+meaning hA(s) in A to each syntactic structure s in S. From this viewpoint it becomes clear
+that a major aspect of formal semantics (both practical and theoretical) is constructing
+mtended semantic algebras for particular programming languages. We believe that is
+what Scott and Strachey [65] and thetr followers are doing with the tools outlined by
+Scott [60] and more fully developed m [62-64].
+We use abstract syntax (cf. McCarthy [36]), but without employing any "concrete"
+verston such as in the Vienna Defmitlon Language [35] What is abstract about "abstract
+syntax" is captured by the following propositton.2
+PROPOSITION 1 1. I f S a n d S ' are both initial in a class C o f algebras, then S a n d S ' are
+isomorphic. I f S" is tsomorphic to an intttal algebra S, then S" ts also initial.
+PROOF z If S and S' are imtiai in the class C of algebras we have (unique) homomor-
+phtsms hs, : S ~ S' and hs : S' --> S. The composite of hs, followed by hs (denoted hs ohs ,)
+is a homomorphtsm from S to S. The tdentity function, ls, ts also a homomorphism; so
+hs ° hs, = ls by untqueness Similarly hs, ° hs = Is,, thus hs is an isomorphism.
+IfS ts tnittal and S" is tsomorphtc to S, then hs. • S --> S" must be the isomorphism. For
+any algebra A in C, we have hA : S ~ A so that ha o h~J is a homomorphism from S" to A.
+If g : S" ~ A is any other such homomorphism then g o hs, : S ~ A so g o hs, = ha and g =
+ha ° h ~ . Thus S" as initial. []
+Rather than assume "that programs are 'really' abstract, hierarchically structured data
+objects . . . ," as in Reynolds [53], we avoid troublesome questions of definition and
+notation by identifying "abstract syntax" with "initial algebra"; Proposition 1.1 says
+abstract syntax ~s independent of notational varmtlon - as it should be. For example, if
+as a ranked alphabet, 4 define a E-tree to be an element of an imtial Z-algebra. In this way
+we are not t~ed to any particular representatton of trees (Pohsh notation, infix terms,
+prefix parenthesized terms, functions defined on tree domains, or certain directed
+ordered labeled graphs). This abstract syntax for trees depends only on the essential
+algebraic-structural properties that characterize trees
+Because of the connection with abstract syntax, the initial algebra approach as implicit
+m McCarthy's [36] proposals for a "Mathematacal Science of ComputaUon" and tn Iron's
+pioneering paper [29] on syntax directed translation. The approach becomes more
+exphcit at least as far back as Landin [31] and Petrone [50], as well as in McCarthy and
+Painter [38], Knuth [30], Burstall and Landln [10], Nivat [48], and Morris [46, 47]. Of
+these, Burstall and Landin first use universal algebra (a la Cohn [13]) and (implicitly) the
+initiality property, Morris [46, 47] brings m many-sorted algebras, which are essential
+for any applications of algebraic semantics to mterestmg programming languages.
+This paper makes the mitml algebra approach to semantics completely explicit,
+providing the necessary algebraic background and several examples. Our principal new
+result is the existence of initial continuous algebras. This extends the applicabdity of
+mttial algebra semantics by combining the algebraic insights of Burstall. Landin, and
+Morris with the (lamce-) order-theoretic ideas of Scott and Strachey. We consider
+solutions of equations in continuous algebras and show, for example, how Scott's lattice
+of flow diagrams [61] is a specml case ~ an inttial continuous algebra.
+Section 2 makes the notion of many-sorted algebra precise. That material is not
+mathematically new and has a survey character. However, our presentation is different
+2 In order to prove existence of initial algebras, we have to employ a concrete construction, but once done, we
+can forget about that construction and rely solely on Proposition 1 1
+This proof depends exactly on the assumptions about C mentioned in the footnote to the deflmtlon of
+"Initial "
+4 A ranked alphabet is a family ( 2 , ) , ~ of disjoint sets indexed by the natural numbers 2~ is the set of operator
+symbols of rank k, There are more details in Section 2 Note that the assumption that the 2, are disjoint is not
+necessary (or even desirable m g e n e r a l - s e e Thatcher [67]), we adopt it here to sJmphfy the exposition
+
+PAGE 3
+
+7 0 J . A . GOGUEN, J. W. THATCHER, E. G. WAGNER, AND J. B. WRIGHT
+from the literature (we hope it is simpler) and seems to us to be of fundamental
+importance. A careful reading of Section 2 serves multiple purposes, because the
+material there can be extended to almost any initial algebra situation, including mttlal
+continuous algebras (Section 4).
+Section 3 contains applications (examples) of initial many-sorted algebras. Section 4
+defines "continuous algebra" and constructs initial continuous algebras. Apphcations of
+this, including Scott's lattice of flow dmgrams [61], are m Section 5. Section 6 contains
+some questions and problems.
+Some of the subject matter included here is being prepared for inclusion in the second
+part of the first report of the ADJ series [23] 5
+2. Many-Sorted Algebras
+An algebra in the sense of Birkhoff [6] (see also Cohn [13] and Graetzer [27]) is simply a
+set, called the carrier of the algebra, together with an indexed family of operations
+(functions) defined on (Cartesian powers of) that set. A many-sorted algebra consists of
+an indexed family of sets (called carriers) and an indexed family of operations defined on
+Cartesian products of those sets. Generalizing to many-sorted algebras is very natural for
+computer science. The index set for carriers is called the set of sorts, and might be, for
+example, {real, int, bool}. An algebra A of this kind would have three carriers, Areal, Aint,
+and A bool, together with some operations such as "1" . A real × A int ~ A real or ~ : A bool X
+A,e,~ × A,e,~ ~ A,,,~, which might be exponentiatlon or conditional, respectively.
+A finite automaton, in the sense of Rabin and Scott [52], is an algebra with two sorts:
+states named S and mputs named E, i.e. an {S, E}-sorted algebra. The transition function
+is an operation M of "type" (S~, S) ( M . S × E ~ S, using the sort symbols to denote the
+carrters, an ambiguous but common practice). The initial state is a constant So of sort S (So
+E S ) .
+The definition below is equivalent to Birkhoff and Lipson's [7] "heterogeneous
+algebra" and therefore (according to them) is equivalent to Hlggins' [28] "algebra with a
+scheme of operators." Btrkhoff and Ltpson show that the conventional theory of
+"universal algebra" (as in [6, 13, 27]) carries over "with undiminished force" to the
+theory of many-sorted algebras. In particular, the concepts of subalgebra, homomor-
+phlsm, quotient, congruence relation, product, word algebras, and free algebras general-
+lze naturally and easily. Although Birkhoff and Lipson give some computer science
+examples, the first explicit use for new results in computer science seems to be in
+Malbaum [41, 42]. The concept appears to have originated with B6nabou [5] in a
+category theoretic form.
+Let S be a set whose elements are called sorts. An S-sorted operator domain or
+stgnature ~ is a family (~w,8) of disjoint sets indexed by S* × S. ~w.8 is the set of operator
+symbols of type (w, s ), arity w, sort s, and rank lg (w ) (lg (w ) is the length of w, h ~ S* is the
+empty string, and lg(h) = 0). A E-algebra A consists of a famdy (As)~es of sets called the
+carriers o f A (A, is the career ofsorts E S); and for each (w, s) ~ S* × S and for each o-
+Ew,s, an operation O'A of type (w,s), i.e era : Aw, × • " • × Aw~ -->A~ where w = w~ • • •
+w~ and w, E S for t = 1, • • • , n. An operation era of type (h, s) is a constant of sort s, i.e
+O'A ~ As
+For fixed S and varying E we have the class of S-sorted algebras, and as S varies too,
+the class of many-sorted algebras.
+When # S = 1, we have the conventional case of (one-sorted) a l g e b r a s - h e r e the
+operator domain is just as well Indexed by to = {0, 1, 2, • • • }, and tr E E, names an
+operation era : A n ~ A m an algebra A (the single carrter and the algebra being
+ambiguously denoted by the same symbol).
+5 The set of authors of thJs paper ~s referred to as "ADJ". the series referenced here is devoted 1o an
+exploration of "the junction between category theory and computer scwnce "
+
+PAGE 4
+
+Initial A l g e b r a S e m a n t t c s a n d C o n t i n u o u s A l g e b r a s 71
+Returning to the general case, if A and A ' are both E-algebras, a E - h o m o m o r p h i s m
+h : A ~ A' is a family of functions (hs : A s ~ A~)s~s that preserve the operations, i.e.
+(0) if tr ~ `z~,s, then hs(O'A) = ora, ;
+(1) If ~ ~ E . . . . . . and (ai, "'" , a,) E As, × "'" × As,, then
+hs(tra(al, ' ' ' , a,)) = o'a, (hs I (al), "" ", hs, (a,)).
+The utility of iniUal algebra semantics rests heavily on being able to handle many-
+sorted algebras with as much clarity and notational simplicity as the one-sorted (conven-
+tional) case. Indeed, the generalization from sets and functions to S-indexed families of
+sets and S-indexed famflms of functions ~s not that great a jump. If A is an S-indexed
+family of sets (A = (,4s)s~s) and w = s l • • • s, E S*, then generalizing A n, define A w to be
+the Cartesian product A,, × . ' . × As,. Similarly, for an S-indexed family of functions
+h : A --->A' ((hs : As---~A~)sEs), defineh w : A t e - - - ) A ' U ' b y h W ( a l , • "" ,an) = (hs, (al), "" • ,
+hs. (a,)), which generahzes h" : A " ~ A ' " , The special case w = h (n = 0) is handled
+uniformly by A ° = A ~ = {~.}, and a function o'a with source A ~ IS identified with the
+"constant" which IS ItS value (ra(X) at ItS single argument?
+Now with this notation, an S - s o r t e d "Z-algebra A consists of: a carrier (ambiguously
+denoted) A, which is an S-indexed family of sets; and, for each operator symbol (r ~ Ew.s,
+a function tra: A w ~ A s . An S - s o r t e d ~ h o m o m o r p h i s m h from A to A ' IS an S-indexed
+family of functions (hs : As --~ A~) such that hs (O'a (a)) = o'A, (h ~ (a)), i.e.
+(/'4
+A u • A,
+cr A ,
+A TM ~ A',
+commutes for all o" ~_ Ew.s and a ~ A w. This has now become only a minor varmtmn on
+the one-sorted definition.
+Letting A l g z denote the class of Z-algebras with E-algebra homomorphism, we state
+the first basic result concerning initml algebras.
+PROPOSITION 2.1 T h e class A l g z o f ` z - a l g e b r a s has an mitlal algebra; call tt T~. []
+This IS a well-known result, at least for the one-sorted case (see Blrkhoff [6] or Cohn
+[13] or Graetzer [27]), and the many-sorted case is treated in Birkhoff and Llpson [7].
+T z is often called the Z - w o r d algebr a and the carriers are sometimes callod the H e r b r a n d
+u n t v e r s e for `Z. The set T~,s (the carrier of T~ of sort s) can be thought of as the set of well-
+formed expressions (or trees) of sort s built up m the usual way (to be made preose in a
+moment) from the operator symbols of `Z. But we emphastze that this characterization is
+(mathematically) mlportant o n l y for the proof of Proposition 2.1. Once proved, we do
+not n e e d to know how a particular initial algebra was constructed-we use only initiality.
+Comments about expressions (or pictures of trees) occur only to aid understanding.
+Let E (ambiguously) denote the set of all operator symbols in the S-sorted operator
+domain E. Now let (T~.s)ses be the smallest family of sets contained in (E t./ {(,)})*
+satisfying the following two condmons (here {(,)} is a two-element set disjoint from E):
+(0) E~,s c T_~,s;
+( 1 ) l f o - ~ E ..... w = s, ' ' ' s , , n > 0 , a n d T , ~ Tz,s ,, t h e n o-(t~ . . . tn) ~ Tz,s
+Then make the family (Tz,s) into a Z-algebra T z by defimng the operations:
+(0) for cr ~ `Z~,~, o-, = o" ~ T,=,s; ~
+(1) for cr @ Ew.s, w = sl • • • sn, and t, @ T~ .... o'v(tl, • • • ,ta) = o'ffl • • • tn) E Tz,s.
+A l t h o u g h this u n i f o r m i t y ~s m a t h e m a t m a l l y race, it Is often m o r e c o n v e n i e n t to f r o m the m o r e g e n e r a l o p e r a t o r s , for the m o s t part this wdl be d o n e in the sequel
+We are writing o-r instead of O-cr~
+s e p a r a t e o u t the c o n s t a n t s
+
+PAGE 5
+
+72 J . A . GOGUEN, J. W. THATCHER, E. G. WAGNER, AND J. B. WRIGHT
+Under the natural identification of elements of A w with strings aw, • • • am. such that
+aw, E Aw,, (1) immediately above can be rewritten:
+for all (r ~ Ew,s and t E T~, (rr (t) = tr(t).
+As an artificial example, S = {a, b}, Z~,a = {xa}, Ex.b = {Xb}, E~b,a = {f}, and Eb,b =
+{g}. Then T~., contains terms xa, f(XaXb),f(xag (Xb)), f ( f ( x j b ) X b ) , etc., while T~,b contains
+Xb, g(Xb), g(g(xD), etc. Much less artificial is the correspondence, in Section 3, of any
+context-free grammar to an imtial N-sorted algebra (where N is the set of nontermmals).
+In any algebra A in the class Alga, if cr E ~ ,~ and a ~ A w, then crA(a ) ~ As. This
+algebraic structure on the set T~ (making it the initial E-algebra) seems to be "synthetic
+syntax" [36], and o-r is familiar as the "constructor function" denoted m k - or in Reynolds
+[53].
+On the other hand, "analyUc syntax" [36] is based on
+PROPOSITION 2.2. For any t ~ T~, s there exist unique n -> O, s~ • • • sn E S*, o" E
+E<s, s,.s>, and t, E Tz,s. (1 -< i -< n) such that t = o'r(q, • • • , tn). [] s
+The notation in Reynolds [53] can be generalized to many sorts as follows: For each o-
+E, is - o" tests whether its argument is of the form o'r(q, • • • , t,), taking values in the
+set {true, false}; is - s tests whether Its argument could be of sort s; and for each pair (o',
+i) with 1 _< i -< rank(o-), s<~,,> is the "selector function" defined iff i s - o " is true by
+s<~,,> (o-r(q, " • , t,,)) = t,. These functions are well defined by Proposition 2.2, and ff
+is - tr(t) is true, then
+m k - - t r (s~o,,>(t), " ' " , S<a,n>(t)) = t .
+Moreover, if o- ~ X<, . . . . ,> and if is - s,(t,) is true for 1 -< z -< n, then
+s < , ~ , d m k - o'(t~ , . . . , t , ) ) = t , .
+In [53] the various selector funcaons are given names (e.g. opr, opnd, etc.), but of
+course this isn't necessary. In fact, as an example below illustrates, the "language" of
+synthetic and analytic syntax is unnecessary with the mittal algebra approach to abstract
+syntax.
+We now introduce "freely generated" X-algebras in order to get a concise definition of
+"derived operator"; for notatmnal simplicity we consider the one-sorted case first.
+Let X be a set (whose elements are called variables) disjoint from E. We form a new
+ranked alphabet, denoted E(X), by adjoining the varmbles as new constant symbols:
+E(X)o = Eo t.J X and ~(X)k = Ek for all k > 0. By Proposition 2.1, Tx(x) ts the tmtial
+X(X)-algebra. The trees whtch are m its carrier differ from those in Tx only m that they
+may have variables on the leaf nodes as well as constants from Eo Now Tx(x> has E(X) as
+tts signature, whereas we want to thmk of Tx<x) as a X-algebra Since the operations (and
+constants) named by X(X) include those named by E, we can do thts just by "forgetting"
+that the variables have names in the stgnature; that is, we define a new X-algebra,
+denoted Tx(X). wtth carrier that of T,~x) and with operations those named by ~ in T.~x). It
+~s the free X-algebra generated by X , in the following sense.
+PROPOSITmN 2 3. I f h : X ~ A ts any function mapping X into the carrter o f a X-
+algebra A , then there exists a unique Z - h o m o m o r p h i s m tt : Tx(X) ~ A extending h, t.e
+~ ( x O = h ( x ) ?
+PROOf. A is a E-algebra. Given h : X --> A, make A mto a E(X)-algebra by having x
+name h(x) in A (xa = h(x)). By Proposition 2.1, there ~s a unique E(X)-homomorpbism
+/t . Tx<x)~ A, and (by clause (0) of the definition of hornomorphism) [t(XT) = Xa = h(x);
+because /~ is a E(X)-homomorphtsm, ~t ts immediately a E-homomorph~sm. For the
+untqueness part, ifg : T~(X) ~ A ts a E-bomomorph~sm with g(x~) = h(x), then tt IS also
+a E(X)-homomorphism, and thus g = h. []
+a This is familiar for well-formed expressions a n d / o r Z-trees, and that is sufficient proof because of Proposition
+1 1
+a Note that xT is whatever the zero-ary symbol x ~ X names m the mlual algebra T ~ r ) - m the above concrete
+c o n s t r u c t i o n ~ r = x, but we can't assume that since we are depending o n l y on the mflmhty of T~a)
+
+PAGE 6
+
+Initial A l g e b r a Semantics a n d C o n t m u o u s A l g e b r a s 73
+This construction is typical of initial algebra semanucs. The phrase, " m a k e B into a Z-
+algebra by • • . , " is fundamental because making B into a Z-algebra gives the unique
+h o m o m o r p h i s m hB : T~ --* B by lnitiality. In the proof of Proposition 2.3 this was
+particularly e a s y - A was already a Z-algebra and we made it a Z(X)-algebra In general,
+if B ts any set (later, any family indexed by S), we make B into a E-algebra by defining
+appropriate operations cr B : B" ~ B for each (r ~ E.; then (zap!) h9 : T~ ~ B.
+We are now m a position to define the very important notion of derived operator. The
+intmtive idea is that the terms m Tz(X) (like polynomials m ordinary algebra) do not
+have values, since they contain variables, but they do define functions on any Y-algebra
+by assigning values to the variables. Because this gives rise to new operators on E-
+algebras A c o m p o u n d e d out of those named by E, the new operators are called derived
+operators
+First, let X , = {x~, • • • , x,,}, and call t E T ~ ( X , ) a E-term m n varmbles or an n-ary E-
+term. Now given a E-algebra A and t E T~(X,,), we want to define its corresponding
+derived operator on A , ta : A " ---> A. This employs Proposition 2.3 as follows: Given
+(al, • • • , an) E A " , let a . Xn --~ A be defined by s e n d i n g x , ~ a~ for 1 -~ t -~ n; then, by
+Proposition 2.3, there exists a unique E - h o m o m o r p h l s m d : T~(Xn) ~ A extending
+a : Xn ~ A; now we define tA(a~, " " " , an) to have value d(t). Thus we are letting a vary in
+the expression d(t), while keeping t fixed; d(t) ts the " e v a l u a t i o n " in A of the n-ary term t
+in which the variable x, is given the value a, m A, using the operations of the E-algebra A .
+For the special cases when A is of the form A = Tz(Xm), the above gives us a precise
+formulation of the operation of substitution of m-ary E-terms for variables. (When
+variables are assigned to terms, " e v a l u a t i o n " ~s just substitution.)
+That is, given t ~ Tz(Xn) and an n-tuple of m-ary E-terms t' = (t~, - . . , t~)
+(T~(Xm)) n, we again identify t' with the mapping from Xn to Tz(Xm) which sends x, to t;
+for 1 ~- i -< n. The result of simultaneously substituting t,' for x, in t for i = 1, • • • , n is
+precisely F(t). We write t ~-- t' for the substitution of (the n-tuple of m-ary Z-terms) t' in
+the n-ary term t.
+If we take t to be a p-tuple of n-ary E-terms t = (t~, • • • , tp) E ( Z ~ ( X n ) ) p rather than just
+a single n-ary E-term, then we could define t ~-- t' as (6 ~ t', • • • , tp ~-- t'). H o w e v e r ,
+by exploiting the correspondence between p-tuples t E (Tz(Xn)) p and mappings
+t : X p ---> T z ( X n ) , we can more succinctly define t ~-- t' as i'ot ("o" is a function com-
+position).
+x, x,
+t'
+T~(X,,) • Tz(X,. )
+Then t ~ t' = i' ot : Xp ~ T~(Xm) and the "lth c o m p o n e n t " of this " p - t u p l e " is (t ~-- t')(x,)
+= (i' o t)(x,) = i'(t(x,)) = i'(t,) = t, ~-- t' just as before.
+With th~s definition it is easy to show that substitution is associative. For given
+t : X p - - * T x ( X n ) , t : X . ~ Tz(Xm), and t": Xm--~ T z ( X q ) ,
+we have
+X. X. X,.
+| ~ t'
+T~(X.) ) T~(X,.) • T~(X.)
+
+PAGE 7
+
+74 J . A . GOGUEN, J. W. THATCHER, E. G. WAGNER, AND J. B. WRIGHT
+(t + - t ' ) + - t " = ([' ot) + - t " = i" o ([, ot) = ([, o/,) ot by definition o f + - . But t h e n / " or' and
+?'oi' are both h o m o m o r p h i s m s Tz(X,~) ~ T~(Xa) extending t"ot', and so Proposition 2.3
+says they are equal, whence q + - t ' ) +-t" = (i"oi')ot = ( i " ~ ) o t = t +- (i"ot') = t +- (t' +-t")
+as desired. Thus we have
+PROVOSXTION 2.4. S u b s t i t u t i o n is assoctattve F o r t : X v ~ T~(Xn), t' : Xn ~ T~.(Xm)
+a n d t" : Xm --+ T~(Xq), t h e n (t +- t') +- t" = t +- (t' +- t"). [] lo
+Just as we can extend substitution to p-tuples, so we can extend the notion of derived
+operators to p - t u p l e s of n-ary S-terms. Given t = (q, • • • , t o) : X p --+ T_~(Xm), we define
+tA : A m ~ A p to be such that, for each a ~ A 'n (i.e. a : X,n ~ A ) , ta(a) = ci o t, which, for t
+= ( t l , " ' " , tp), g i v e s t a ( a ) = ( t ( x ~ ) a ( a ) , " ' " , t ( x p ) a ( a ) ) = ( ( t l ) A ( a ) , " ' " , ( t v ) A ( a ) ) . NOW
+given
+X~ X, X,.
+T~(X.) ) F~(X,.) I. A
+which is a trtwal modification of the dmgram for substitution, the proof of Proposition
+2.4 Is immediately modified to yield
+PROPOSITION 2.5. (t +- t')A = ta °t] ( w h e r e the r i g h t - h a n d side ts f u n c t i o n c o m p o -
+sition a n d the l e f t - h a n d side is s u b s t i t u t i o n ) . []
+Some famflmr funcnons on trees or expressions are further examples of initial algebra
+semantics
+Frontter. Make E~ into a Z-algebra.
+(0) For o- ~ ~o, let o- be o- ~ Eo*.
+( 1 ) F o r ~ r E E , , wa, " . , w , E E g , letcr(w~, " " ,w,~) = wl " ' " w,.
+The unique E - h o m o m o r p h i s m f r : Tz --) E~ is the frontier (or yield) function.
+Generally Ws clear and ntce to write era to specify what ~r names m the algebra A, but
+th,s gets tiresome, and m fact it is not conventional practice For Abelian groups one
+doesn't see +c and 0G, but Just + and 0, the symbols indeed name the functions and
+constants.
+Whtle the convention of using the operator symbols to denote the functions m
+(different) algebras can lead to some rather strange looking expressions (cf. case (0) in
+the example above and m the two that follow), it Js a recogmzed c o n v e m e n c e and avotds
+naming algebras m these examples and the resulting complex subscrtpts.
+H e i g h t . Make o) = {0, 1 , 2 , • - .}11 into a Z-algebra:
+(0) For ~r ~ E0, let o- = 1.
+(1) For o- E E,,, k~, .. • , k, ~ w, let o'(k,, - . . , k,,) = max,(k,) + 1.
+The unique ~ - h o m o m o r p h i s m hg : Tz ~ co is the height f u n c t i o n - i n tree terminology,
+the length of the longest path from the root to a terminal node ( + 1).
+S y m b o l s . M a k e ~2 p(E) into a Z-algebra:
+(0) For o- ~ E0, let (r = {~r}.
+(1) For o- ~ En, n > 0, and u,, • • • , un ~ p ( E ) , let o-(u,, • • • , un) = {o'} O I.Lu,.
+The unique E - h o m o m o r p h i s m s y m : T z -+ p ( E ) is the set of symbols that occur in an
+expression.
+We fimsh off thts section by showing how the important process of defining derived
+operators works for many-sorted algebras. Whereas m the conventtonal case we gener-
+to From a categorical point of view what we have here is a category T~ (the algebraic theory [32] freely
+generated by ~ ) with set of ob)ects oJ; morphlsms from m to n are functions from Xm to T~(X,~), composition is
+substitution; and for each n ~ ~o, the mapping X n ---, T ~ ( X , ) taking x, to x, is the identity for n
+n Throughout we use ~ to denote the nonnegatwe integers.
+~ p(E) is the set of subsets of the set of operator symbols E (p is for "power set").
+
+PAGE 8
+
+Inittal Algebra Semantics and Contmuous Algebras 75
+ated a free algebra from a single set, now we must have generators for each sort, i.e an
+S-indexed family X Given an S-sorted operator domain E, define an operator domain
+E(X) by E(X)x,, = X~ tO E~,~ and E(X)~,~ = E ..... for w ~ ~; that is, the generators are
+adjoined as symbols of arity h and sort s. Again T~x~ is viewed as a Z-algebra Tz(X), and
+we have the "freeness" proposition proved exactly as Proposition 2 3.
+PROPOSmON 2.6. For an S-sorted operator domain ~ and an S-mdexed faintly X,
+T~(X) is the ~algebra freely generated by X in the sense that any S-indexed family o f
+functions, h : X ~ A, to the carrter o f a Z-algebra A , extends untquely to a ~-homomor-
+phtsm I~ : T~(X) ~ A . []
+For u = s~ • • • s. E S*, define X~ (the analogue of X . is the one-sorted case) by X . =
+{x~ .... x2 .... • • • , x .... }. X . ts a set of n " s o r t e d " or " t y p e d " variables and can be viewed
+as an S-indexed family with (X.)s = {X~,s, [ s, = s}. This specifies, for each s, the countable
+set {x~,~, xz,~, x3,,, • • • } of s-sorted vartables via conventent fimte subsets X . for u E S*.
+For example, with S = {a, b} again, Xa~b~b = {Xl,~, Xz,a, X4,a, X3,b, Xs,b}.
+In an algebra A , a term t ~ (T~(X~))s defines a derived operator ta : A ~ ~ As
+analogously to the one-sorted case: View a U A ~ as an indexed family of functions a : X .
+A bya,(X,,s,) = a~ ~ A~, and, using Proposition 2.6, define tA(a) = ~(t).
+Again, substitution is a special case. A family of maps t : X~ ~ Tz(X.) is like an n-
+tuple of terms m variables X, except that t(x,.~,) has to be m T~(X~)~, so that variables of
+sort s, are assigned terms of sort s,. Also given t' : X~ ~ T~(Xw), S-sorted substitution is
+defined by t ~ t' = t ° / ' ; t ~ t' is again the result of simultaneously substituting t~
+= t'(X,,~,) forx,,~, in each c o m p o n e n t o f t . Associativity of substitution and its relationship
+to derived operators go through exactly as in Propositions 2.4 and 2.5.
+3. Applications o f lnitial Many-Sorted Algebras
+3.1 CONTEXT-FREE GRAMMARS. The most important and general example of
+initial many-sorted algebra semantics ~s semanttcs for context-free grammars
+Let G = (N,E,P> be a content-free grammar 13 with nonterminals N , terminals E
+(N N E = ~ ) , and productions P C N × (N U E) +. Let V = N to E; for any w ~ V*, define
+nt(w) to be the string of nonterminals in w, in the same order. (More precisely, nt : V* --~
+N* is the umque extension to a monold h o m o m o r p h t s m of the map V ~ N* which is the
+identity on N and takes each o" ~ E to h E N* )
+Now make G into an N-sorted operator domain where, for each (w, A) E N* × N ,
+Gw,a = {p E P ] p = (A, w') and nt(w') = w}.
+Thus a production A o--* uoA lulA2 • • • u . _ i A nU. (A, E N, u, ~ 5;*) is an operator symbol
+of type (A~ • • • A . , A0) The imtial G-algebra TG has carriers Tc.,a which are parse trees
+for derivations m G from A E N.
+Regarding the generality of this situation, we have just seen that any context-free
+grammar gives rtse to an inttial N-sorted algebra. Conversely (because we allow mfm~te
+grammars), If E is any S-sorted operator domain, then there is a context-free g r a m m a r
+which gives us the initial Z-algebra back again under the construction above. In parttcu-
+lar, take
+= (S,E tO {(,)}, P) with P = {(s, o-(s, . . . s.)) I o- ~ Es . . . . s}.
+T h e n one can check that, under the identification of the operator symbol (s, or(s1 • • • s.))
+m ~ with cr in E, T~ and T z are isomorphic.
+The impact of initial algebra semantics here is that any G-algebra whatsoever (a set Sn
+for each n o n t er m m al A and a function ps : Sa, × • • • × Sa. ~ SA for each production p
+13 Usually N, E, and P are fimte (see [19]) We don't have (or want) that restriction here We believe that the
+context-free grammar for the abstract syntax of many programming languages will have an infinite number of
+terminals, nontermmals, and productions We don't consider the effective presentation of such systems here
+(see van Wljngaarden [77]), but this must be carefully thought out
+
+PAGE 9
+
+76 J A. GOGUEN, J. w. THATCHER, E. G. WAGNER, AND J. B. WRIGHT
+of type (Aa • • • An, A)) provides a semantics for the context-free language generated by
+G. TG, being initial, gives the unique homomorphism h s : TG ~ S which assigns " m e a n -
+ings" in S to all syntactically well-formed phrases of the language (not just to the
+"sentences" generated from some specified start symbol in N).
+For example, we make X* into a G-algebra (with every carrier X*) by lettingp(vl, • • •,
+V n ) = U o V i U l V 2 " " " Un-lVnU a for p = (Ao, u o A l u l A 2 • • • u,~_lA,,u,~). T h e n the unique
+homomorphism d : TG---> ~* assigns to a derivation t ~ TG.A the string which is derived)4
+Note that d : T~ ~ (X U {(,)})* gives exactly the well-formed X-expressions correspond-
+ing to parse trees in T~; this is the basis for proving the isomorphism of T~ and T~.
+G might be ambiguous (d not injective), but that is not a problem since initial algebra
+semantics (the abstract syntax point of view) factors out the parsing problem (without, of
+course, eliminating it)? 5
+Thus even "string generated" is an initial algebra semantzcs for context-free gram-
+mars. K n u t h ' s [30] synthesized attributes (following Irons'~ [29] ideas) really do what we
+describe here, but Knuth's definitions and notation seem more complex than is neces-
+sary. In our formulation, K n u th constructs a G-algebra S in which each carrier Sa is itself
+a Cartesian product of sets. The components of that product are called "synthesized
+attributes" o f A . Then K n u t h ' s "semantic rules" define (by the components) operations
+of the appropriate type for each production. Of course, semantics of the language is the
+unique homomorphlsm hs • TG ~ S ) 6
+3.2. DENOTATIONAL SEMANTICS Scott [63] begins with the motto "Extend BNF to
+semantics " In fact, that is the " m or a l " of the previous discussion We now know that
+BNF ~7 yields an initial many-sorted algebra, that semantics arises from an algebra of the
+same type, and that " m e a n i n g " is the unique homomorphism. We view the principal
+achievement of Scott and Strachey (say [60, 64, 65]) as providing mathematical tools for
+constructing semantic domains (many-sorted algebras with operations corresponding to
+the productions of a context-free grammar) so that the um q u e homomorphlsm is the
+intended (denotational) meaning of the language.
+Scott and Strachey seem to say (e.g. [65, p. 17]) that they don't care if the syntax of
+the language is context-free. ("The last thing we want to be dogmatic about ts lan-
+guage.") But their semantics does depend on the context-free character of the source
+language, because the meaning of a phrase is a function of the meanings of its constituent
+phrases. (From [65, p. 12], "The semantical definition is syntax directed m that it follows
+the same order of clauses and transforms each language construct into the intended
+operations on the meanings of the parts.") This essentially says that syntax is context-
+free and semantics is a homomorphism. 18
+In general, the "semantic equations" (typical of [65, 26], etc.) define the meani ng of a
+syntactic construct C as a function Fc of the meanings of the components to that
+construct, and in so doing the semantic equations describe an algebra (the function Fc is
+the operation corresponding to the syntactic construct C) and say that semantics is a
+~4 This is actually a generalization of the frontier function defined in Section 2
+~5 As Schwartz [59] puts it, "We have sufficwnt confidence in our understanding of syntactic analysis to be
+wdhng to make the outcome of syntactic analys~s, namely the syntax tree representaUon of program, into a
+standard starting point for our thinking on program semantics "
+18 Knuth's [30] reheated attributes are not treated in this paper, but Goguen and Zamfir (unpubhshed) have
+suggested treating them as variables (that is, new unmterpreted constants) in free algebras whose operator
+domain contains, in addition to these varmble symbols for inherited atmbutes, all the operatzons and constants
+which are employed m semantic definmons Burstall (personal communication) has suggested using [1 ~ S] as
+the carrier of a generalized semantic algebra These issues will hopefully be explored elsewhere On the other
+hand, Knuth's [30} mare result, an algorithm testing for c~rcularity of a semantic defmmon mvolwng both
+inherited and synthesmed attributes, lies outside the domain of mterest of this paper
+~7 Backus-Naur Form, a well-known and convement formulation for context-free syntax
+~8 The homomorph~c character of the semantic function must have been clear to Scott In fact, he uses the
+phrase "continuous algebraic homomorphlsm" [61, p 46] for the semantic funcUon on the lattice of flow
+diagrams (See Section 5.3)
+
+PAGE 10
+
+Initial Algebra Semantics and Contmuous Algebras 77
+homomorphism. Usually semantic equations give the meaning with respect to an "envi-
+ronment," for example [65, p. 27],
+"where p ts an environment; ~ is the semantic function for commands with target, say, F;
+and ~ is the semantic function for expressions wtth target T = {true, false}. The initial
+algebra "translation" of that semantic equation abstracts the environment variable to get
+c ~ ~ To, V,~ = hp cond(C~%i~(p), c~Vl~ (p)) * ~ e ~ .
+Now this has exactly the form of the homomorphism condition,
+and the operation (in the semantic target algebra) ts F ~ : T x F z ~ F, defined for all ~ @
+T and 'y0, 'yi ~ F in terms of cond, *, and abstraction:
+F~ (~, q/o, ~i) = kp cond (~o (P), ~, (P)) * E.
+The point is that one need only define the target algebra; mmality yields the semantic
+homomorphism.
+We illustrate this m more detail with a simple apphcative language which we call
+SAL, drawn (and modified) from Reynolds [53]. TM Let X = {xi, x2, "" "} be a set of
+variables 0dentiflers). In specifymg SAL syntax we give each rule a name m order to
+have mnemonics for defining a semantic algebra; those with subscript x represent
+families, one member for each x ~ X. There ts one nonterminal, (exp), and all boldfaced
+symbols are terminals. Thus varmbles occur as terminal symbols, just as, say, if does.
+The (context-free) productions of SAL are the foliowmgZ°:
+(%) (exp) ::= x
+(cond) (exp) ::= if (exp) then (exp) else (exp)
+(apply) (exp) ::= (exp) ((exp))
+(abs~) (exp) ::= lamhda x ((exp))
+(lets) (exp) ::= l e t x be (exp) in (exp)
+(let-reck) (exp) :: = let recursive x be (exp) in (exp)
+From Scott [63 ] there is a complete lattice 21 V of values satisfying the isomorphism,
+v ~ 1 + n + [ V ~ V], (*)
+where I and B represent respectively the mtegers and the Boolean values {true, false} as
+lattices with ~ and -1- adjoined, and [V ~ V] is the complete lattice of continuous
+functions from V to V. The +-operation on the right-hand side of (*) is the "coalesced
+lattice sum ''22 (disjoint union with mimmum (and maximum) elements identified). For X
+{1, B, [V--~ V]}, letj~ be the injecttonja : X--~ I + B + [V---~ V], and let ~b be the
+isomorphism ¢b : V "~ I + B + [V---~ V]. Then V ts equipped with injection tx : X---~ V (Ix
+= qb -I Olx ) and also "proJections" 7rx : V ~ X such that
+f~b(V) If ~b(V)EX,
+~ x ( V ) = otherwise
+19 O u r language differs substanhally from Reynolds's m that his employs a call-by-value interpretation of
+application
+20 The fact that this is an ambiguous g r a m m a r Is irrelevant for our purposes
+21 We dISCUSS completeness, continuity, and alternatives to lattices in Section 4 For now, a complete lattice is a
+partmlly ordered set where every subset has a least upper bound, a function is continuous lff it preserves least
+upper bounds of directed subsets, and D is directed lff every finite subset of D has an upper bound in D The
+minimum and maximum elements of a complete lattice are denoted ~ and * , respectively
+~2 For lattices (and analogously for posets, with only ~ ) . the coalesced ~um of two lattices Lj and L2 consists of
+the disjoint union (say) L1 x { 1 } U L2 × {2} with (-% 1) and (-r, 1) identified respectively with (_t_, 2), (-% 2) u n d e r
+the obvious ordering The separated sum is the disjoint union with new x and -1- adlomted, x C (1, z) C_ -r for all 1
+E L, and i ~ {1, 2}.
+
+PAGE 11
+
+78 J . A . GOGUEN, J. W. THATCHER, E. G. WAGNER, AND J. B. WRIGHT
+We wish variables to have values in V. Thus let E be the set of environments, 1.e. of all
+total functions from X to V, E = V x as a complete lattice with componentwise ordering
+e E_ e' iffe(x) ~ e'(x) in V for allx ~ X. Finally, meanings of expressions are continuous
+functions from environments to values, M = [E ~ V].
+M becomes a semantic algebra when we define an operation on M for each production
+of SAL; letx, let-recx, and apply are of rank 2, functions M 2 ~ M; cond is rank 3; absx is
+rank 1; and vx is rank 0, a constant.
+To carry this out, we define some auxdiary continuous functions (and functionals).
+Our presentation here is rather sketchy since this development Is what Scott, Strachey,
+and followers do anyway, and our aim here is just to show that the relation to the mitml
+algebra framework.
+(3.1) access~ : E ~ V is the evaluation function on V x at x ~ X: access~(e) = e(x).
+(3.2) c : V 3 ~ V is some conditional, say:
+i -r if vl =-r,
+c(v~, v2, v3) = v× ffv~ = true,
+v3 flY1 = false,
+_L otherwise.
+(3.3) ap : V 2 -~ V is application: ap(vl, v2) = (~'~v--,v~(vl))(v2), where 7rfwvl is the in-
+dicated projection; see discussion following (*) above.
+(3.4) assign~ : E × V ~ E is our friend the assignment operator:
+{~ ify = x,
+assigns (e, v) = e' where e'@) = e@) otherwise.
+All o f the above have etther been shown to be continuous or can eastly be shown to be
+such. In addttion, Scott 1-63] defines
+(3.5) abstract : [D × D' ~ D"] ~ [D ~ [D' ~ D"]] by ((abstract(f))(x))(y) = f(x,y)
+for a l l f ~ [D × D' ~ D"], x ~ D, a n d y E D'.
+Here we too enjoy some notational amblgmty by writing "abstract" instead of
+"abstracto.D,,o,"; and similarly in other cases.
+(3.6) The least fixed point operator Y : [D ~ D] ~ D is continuous.
+(3.7) If m, : E ~ V, (1 -< i -< k) are continuous, then [ml, "'" , mk] : E --~ V1 × "" ×
+V~ defined by [ml, "'" , mk](e) = (ml(e), "" , ink(e)) Is continuous (called target-tupling)
+(3.8) For continuous functions f : D ~ D' and f ' : D' ~ D", the composite f ' o f is
+continuous; and so is composition itself, o : ([D' --~ D"] z [D ~ D']) ~ [D ~ D"].
+Now make M = [V x ~ V] into a SAL-algebra by gwmg an appropriate operation for
+each production of SAL:
+v x = access ~
+cond(ml, ms, m3) = c o Ira1, m2, m3]
+apply(m1, m2) = ap o [ml, mz]
+abs z(m ) = t[v~vl o abstract(m o assign x)
+letx(ml, m2) = ms ° asstgnx o [1E, ml]
+let-recx(ml, m2) = letx(y ° abstract(ml o assign×), m2)
+Actually the defimtions of most of these operations seem to be clearer as dmgrams,
+since the source and target of each funcuon is exphot. "Abstraction" is regarded as a
+way of getting one function from another The funcUon "assumed" (or given) appears on
+the top, the function "deduced" appears below it, and the process is represented by a
+line between them; thus
+D × D ' - f ~ D "
+D ---~ [ D' ---~
+~' D"]
+for g = abstract(f). Then the first five definitions are:
+
+PAGE 12
+
+lnittal Algebra Semantics and Contmuous Algebras 79
+(1) vx = E ...... ~V
+(2) cond(ml, m2, m3) = E ["!: . . . . . J~, V 3 ..5_, V
+(3) apply(m,, rn2) E ~ V 2 "p '~ g
+E x V .... g"~ ' E ~ V
+(4) abs~(m) = E --~ [ V --* V] ...... , V
+(5) letz(ml, m~) E I-I~'m~1, E X V .... u,~ ,,~
+= E - - - - ~ V
+With M a SAL-algebra, tlae unique homomorphlsm hu : TG --~ M is a semantics for
+SAL. There is no claim for great gains in perspicuity, but our mode of definition does
+illuminate the places where semantic choices are made. It is through the Introduction of
+standard mathematical functions-composiUon, tupilng, injecUon, and the l i k e - t h a t
+these choices are clarified, and this process has the addmonal benefit of getting nd of the
+need for-"dragging along" the variable for environments.
+Given the particular conditional and application functions ((3.2) and (3.3) respec-
+tively), then the functions cond and apply ((2) and (3) respectively) on the semantic
+carrier M are essentially the only choices possible; this differs from Reynold's meta-
+circular interpreters in that he presumes a "defining language" m which the Interpreters
+are written and the semantic choices have not been completely made for that meta-
+language. In the semantic career E---~V, there is simply no way to make a distinction
+between order of evaluation of operator and operand in (2), for example. If expressions
+had side effects and E---~ExV were taken as carrier, then the two orders of evaluation
+would be clearly represented in
+m2 mlXl~)
+E ~ E x V E x V x V - k . ~ - ~ E x V
+and
+E - - 4 E x V ,,,,×1, E x V x V z'×a.P'~ExV,
+where ap'(vl, v2) = ap(v2, vl) = v2(vl) and f x g ( a , b) = (f(a), g(b))
+3.3. SYNTAX DIRECTED TRANSLATION. The noUon of syntax directed translation
+pioneered by Irons [29] has been mathematically treated by several authors [1-3, 30, 35,
+50, 63, 73]. We can wew these technical interpretations of syntax directed translation as
+special cases of initml algebra semantics with the "semantic algebra" nearly flee. There
+are two problems: First, we aren't yet sure how best to treat "nondetermimstic"
+translation and therefore don't. Second, we only formulate various concepts, giving
+neither new results nor simplified proofs We hope that the reader, faced with these
+remarkably simple definmons, may be moved to simplify and expand the theoretical
+development.
+Just as generahzed sequentml machines [19] map E* to X'* (for alphabets ~, and
+X'), syntax directed maps go from T~ to T x, (for operator domains X and X'). Just as
+one later restricts a generalized sequential machine to a subset of X* (e.g. a context-free
+language), one can later consider a syntax directed map on a subset of T~, say a set of
+derivation or parse trees
+Thatcher [69] shows that many prior formulations of syntax translation are special
+cases of a general algebrmc formulaUon. So do we here, but with even greater simplioty,
+if less mtumve transparency.
+Definition 3.1 A k-state root to frontier syntax map from T x into T x, is the unique
+homomorphlsm h : Tx ~ (T~,) k guaranteed by lnltmhty of Tx after making (Tx,) k into a
+E-algebra. The set [k] = {1, 2, • • • , k} is the set of states. Ifh(t) = (It, • • • , tk), then t, is
+the image of t under the syntax map from start state t. []
+The standard example (cf. Rounds [57], Thatcher [69]) is polynomial derivative.
+Take X0 = {0, 1, x}, Xz = {+, x} and define a (2-state) syntax map (from Tx to T~) by
+placing the following X-structure on (Ts)Z:
+
+PAGE 13
+
+8 0 J A GOGUEN, J. W THATCHER, E. G. WAGNER, AND J B. WRIGHT
+(t'l, t i ) + (t~, t 2 ) = (t~ + t~,ti + t2)
+(t'l, tl) × (t~, t2) = ((t~ × t2) + (tl × t~),tl × tz)
+o = <o, o)
+i = <o, 1)
+x = (1, x )
+These " e q u a t i o n s , " especially the last three, may be somewhat confusing; of course the
+symbols + , × , 0, 1, x are from X and, for e x a m p l e , the last equation says that x in X
+names the pair (1, x) in (T~) 2 of objects n a m e d by 1 and x (each m Tx).
+Now h : Tx--~ (T=) 2 yields h(t) = (t', t); the left m e m b e r of the pair is the (unsimplified)
+derivative and the right m e m b e r is lust t again.
+The defimtion simphfies and encompasses Thatcher's [69] " r o o t to frontier automa-
+ton with o u t p u t " (called "finite state transformation" in [68]). Intuitively, if t = or(t', t"),
+t~ is the translation of t' from root (start) state t, and t~' is the translation of t" from state
+:, then o'((t~, . . - , t~>, (t~, . - . , t~))~ is the translation of or(t', t") from state 1.
+I f k = 1 and the E-structure on T~, is u n i f o r m m the sense that for each o- ~ E,, there ts
+a term t , in T x , ( X , ) such that for all t' ~ Tz,, or(t~, • • • , t;,) = t , ,,-- (t~, • • • , t~,), then the
+resulting syntax m a p is called a h o m o m o r p h t s m , generalizing the h o m o m o r p h i s m s of
+ordinary formal language theory If, m addition, each t , is hnear (no repetitions of
+variables), then the resulting maps include the "syntax directed translations" of Lewis
+and Stearns [34] and the syntax directed translation schemes of A h o and UIlman [1]. If
+k >- 1 and the X-structure on (Tx,) k is uniform in the above sense, our syntax maps include
+the generahzed syntax directed translation schemes of A h o and Ullman [2].
+The other case of syntax directed translation we want to consider is frontier to root
+translation. Outside tree a u t o m a t a theory (1.e. outside B a k e r [3], Magidor and M o r a n
+[40], Thatcher [69], etc.) we d o n ' t seem to find frontier to root translation as much as
+root to frontier maps, except when they coincide (k = 1). But the definition of finite state
+fronUer to root syntax map is remarka bly simple and particularly interesting in that it ~s
+obtained by replacing " k t h p o w e r " in Definition 3.1 by " p r o d u c t with k . " (More
+technically, we replace the "k-fold product of Tx," wxth its category theoretic dual, the
+"k-fold coproduct of Tx,.")
+D e f i m t t o n 3 2. A k-state frontier to root syntax m a p from Tx to Tx, Is the unique
+h o m o m o r p h i s m h : T~ ~ [k] × T~, guaranteed by mltiahty of T~ after making [k] × T~,
+into a E-algebra. The set [k] = {1, 2, • • • , k} is the set of states. If h(t) = (:, t'), then t' is
+the image of t and the terminating state is i. []
+For example, a tree a u t o m a t o n ( D o n e r [15], Thatcher and Wright [70]) with transi-
+tion function M : X × [k]" ~ [k] is imitated as a frontier to root syntax m a p by making
+[k] x T z into a E - a l g e b r a with or(<i~, t,), • - • , (i,, t,)) = (M(or, i,, • • • , i~), or(t, • • • t,)),
+the second component is the ~dentlty.
+3 4. SYSTEMS or EQUATIONS. If A is a E-algebra, we m a k e p A (the set of subsets
+of A ) into a Z-algebra with the "subset construction":
+(0) F o r or ~ Xo, OvA = {orA}.
+(1) F o r n > 0 , or G X,, and ut, . . . , u , ~ p A ,
+o r ~ ( u , , . - . , u , ) = {ora(t,, " - " , t,) i t , ~ u,, 1 -< ~ - n}.
+Associated with each t ~ T x ( X , ) is a derived o p e r a t o r tEA : ( p A ) " - + p A ; extending this
+idea to sets of terms, if r C_ p T ~ ( x , ) , define
+rvA(U,, " ' " , Un) = I,.J{tea ( U , , " - " , Un) i t ~ r } .
+E : Xn ~ p T z ( X , ) is called a system o f equat:ons (in n variables) which determines a
+function Epa : (pA)" ~ (pA) ", by E~A = [E(XOeA, " " " , E(xn)pa] (target-tupling), called the
+system f u n c t i o n by Mezel and Wright [45], who show that EeA is o-continuous, i.e.
+least upper bounds of o-chains in (pA)" are preserved. Therefore Epa has a m i n i m u m
+fixed point, called its solution, say (s~, • • • , s,) G WA)"; in fact,
+(s,, . . . , s , ) = tJkE~A(O, " ' " , ~ ) .
+
+PAGE 14
+
+Initial Algebra Semantics and Contmuous Algebras 81
+A subset of A is equational iff it is a component of a solution of a system of equations.
+The entire theory of equational sets (cf. Mezel and Wright [45], Eilenberg and Wright
+[16], Bhkle [8], and Nlvat [48]) flows from these definitions, from mitiality (to get
+derived operators) and from the fixed-point theorem (to get solutions).
+4 Continuous Algebras
+We begin with some prehmlnartes on partially ordered sets (posets) and the poset of
+partial functions in particular. Ordered structures have played an important role in many
+different approaches to the semantics of programming; see Beki6 [4], Gordon [26],
+Manna [43], Nivat [48], Park [49], Reynolds [53, 54], Scott [61-64], Scott and Strachey
+[65], Wagner [73, 74], and Wand [75], among others. This diversity of effort has
+resulted m a diversity of terminology, leading to a certain amount of c o n f u s i o n -
+heightened by the fact that the various key words have been used by different authors for
+different concepts. "Complete" sometimes refers to the existence of least upper bounds
+of arbitrary sets [62], or of directed sets [26[; and "continuous" modifies lattices [62],
+algebraic theories [11], categories [23], algebras here, and most often, functions Scott
+[64] and Reynolds [53, 54] speak of "domains" as complete, countably based, continu-
+ous lattices, but then Gordon [26] argues that "semidomains" are more appropriate
+than "domains," where his domains are complete lattices and his semidomalns are
+directed-set-complete posets.
+In addition, it ~s not clear that there is just one "right" order structure for semantics.
+Thus in this paper we suggest a terminology and mathematical development which
+hopefully eliminates confusion and permits the expression of general theorems about
+varied forms of completeness and conhnulty. Our presentation ts admittedly biased
+toward posets over lattices, ~3 based in part on the sometimes greater complexity of the
+structures which the lattice approach generates, as well as upon the difficulty of gtwng
+concrete computational interpretations to these additional elements when they arise. At
+first stght ~t might seem that there is no real difficulty, because one can merely add
+enough "overdefined" elements to a sufficiently complete poset to get a complete lattice
+(and often one element "-r" will do; see (4.3) below). But more sophisticated construc-
+tions, when constrained to start with lattices, may produce far more than one additional
+element. For example, coproducts (over index set I) produce free (generated by I )
+Boolean algebras of overdefined elements, and our initial continuous algebra construc-
+tion produces an infinite and unruly collection of objects revolving substitution instances
+of -1- m mflmte trees (see discussion after Proposition 4.2)
+The reader should bear in mind, however, that the algebraic approach does not impose
+any choice between (say) directed complete posets and lattices. It is the marriage
+between the algebraic and the order theoretic approaches that is important.
+Following Scott, we use E_ for the order in a poset P, u (read "cup") for binary (or
+finite) least upper bounds, and H (read "mug") for least upper bounds of arbitrary sets.
+We assume all posets have a minimum element denoted .a_ ("bottom"), whde -r ("top")
+denotes the maximum element if it exists. A subset S of P is directed fff every finite subset
+of S h a s a n upper bound in S A f u n c t i o n f : P ~ P' from a p o s e t P t o a p o s e t P ' i s
+monotonic iff for allp0 E_ p~ in P,f(Po) ~- f(P~) in P'.
+In order to be able to introduce concepts such as "complete" and "continuous" in a
+uniform manner, it is convenient to introduce the following notation. We say a subset S
+of P is a
+u-set
+to-set
+~-set
+A-set
+H-set
+If S if fimte nonempty,
+if S is an to-chain,
+if S is nonempty, and linearly ordered (i.e. a chain),
+if S is directed,
+if S t s nonempty
+23 For further discussions of the relative merits of lattices versus posets see after Corollary 4 12 and also
+Gordon [26] and Lewis and Rosen 133, Pt 2]
+
+PAGE 15
+
+8 2 J . A . GOGUEN, J. W. THATCHER, E. G WAGNER, AND J. B WRIGHT
+For each symbol Z E {u, co, g, A, I.I}, a function f : P ~ P' is Z-continuous iff it preserves
+all least upper bounds (that exist) of Z-sets in P; a poset P is Z-complete iff all Z-sets
+have least upper bounds in P. Each of these symbols can be modified by a " d o t " to
+indicate boundedness: A Z-set is a Z-set with an upper bound in P and, e.g., a poset is Z-
+complete iff each bounded Z-set has a least upper bound in P. P IS Z-bounded tff every
+Z-set has an upper bound in P (is a Z-set). Finally we need the modifier "strict": P is
+strict iff P contains a minimum element a_ (we only consider strict posets here): f : P
+P' is strict iff it preserves _c.
+Examples of the use of these conventions are:
+(4 1) A function f : P ~ P' is Z-continuous iff it is Z-continuous.
+(4.2) A poset is g-complete iff it is A-complete (cf. [13] and [44]).
+(4.3) Let pT be the poset P with -1- adjoined (i .e. -i- ~ p and p ~ -1- for all p ~ P). Then
+P" is H-complete (a complete lattice) lff P is H-complete; and P" is u-complete (an
+upper-semilattice) iff P is u-complete.
+(4.4) Some of the modifier symbols are ordered (oJ C g C A C H), so P U-complete
+implies P A-complete implies P g-complete implies P w-complete.
+(4.5) S C P is directed lff S is nonempty and u-bounded.
+(4.6) For each of our Z, f Z-continuous lmphes f monotonic, because p0 c_pl in P
+implies {po, Pl} is a Z-set having at least upper bound (namelypl). Thusf(p0 u Pl) = f ( P 0
+= f(Po) of(p,), sof(p0) c f(Pl).
+(4.7) Least upper bounds of Z-sets work by components on Cartesian products, i e.
+H ( p , . , , . ' . , p k , , ) = ( H p , , , , ' ' ' , II Pk,,)
+IEI t e l t e l
+for any Z-set {(P1,,, " • " , Pk.,)},~, in P~ × • • • × Ph
+(4.8) For Z ~ {to, g, A}, f : P~ × • • • × Pk --* R is Z-continuous ifff is Z-continuous
+componentw~se, i.e. iff
+f(U p, .... . - . , H p k , , , ) = H f(P, .... "'" ,Pk.,,).
+For sets A, B, let [A ~ B] be the poset ofpartMl functions z4 from A to B. Since we
+have fixed source and target, the elements of [A --o-, B] correspond to functtonal subsets
+o f A x B; i.e. if(a, b ) ~ f a n d (a, b')Ef, then b = b'. The order relation on [A ~ B] is
+simply set inclusion, and the least upper bound (when it exists) is set union; it exists iff
+the set union is a function F o r f : A - * ~ B and C C _ A , f 1 C = {(a,b) l a E C a n d
+(a, b) ~ f} is the restriction o f f to C; def(f) = {a { (a, b) ~ f} is the domain ofdefifinttion of
+f. The following are well-known facts about [A ~ B].
+(4 9) [A ~ B] is strict A-complete and H-complete.
+(4.10) Iff.~H,atf in [A ~ B] where def(f) is fimte and {f},~1 is directed, thenfc_f~ for
+somejE1. This says the finite partial functions are A-compact
+So much for preliminaries We now turn to the definition of "X-trees" which provide
+the carriers of mi0al "continuous algebras " The idea is based on the well-known device
+of representing a X-tree as a function defined on a prefix closed subset of to* (called a
+tree domain; see [67]) taking values in X In Figure l(a) (Xo = {b, xo, x~}, Xz = {f}, and
+X, = ~5 for i # 0, 2}), the tree (expressJonf(tlflxoxi)b)xo)) is represented by the function
+t : {h. 0, 1, 00, 01,000,001}-~ {f, b, xo, x,} where h, 0, 00 ~ f ; 1,000 ~ x o : 01 ~ b; and
+001 ~ x~. The first generalization considers the representation as a partial function on
+to* for which the domain of definition has the tree domain property. This subsumes the
+previous formulation and immediately includes infinite trees. Figure l(b) is such,
+represented by t : to* ~ {f, b} with 0* ~ f ; 0"1 ~ b; and t undefined otherwise. (This
+example solves the equation x = f(x, b); see Section 5.1 .) Finally we allow trees to be
+partial, the effect being that leaves can be unlabeled (or labeled with .a_; see Proposition
+4.4). The third tree in the sequence (chain) of Figure 2 is the partial function t : to* -o-,
+a4 F A--O-, B designates a function A to B with a possible "hole "
+
+PAGE 16
+
+lnitial A l g e b r a S e m a n t i c s a n d C o n t m u o u s A l g e b r a s
+83
+(a) (b)
+FIG 1
+f f
+b
+b
+FIG 2
+{f, b} with h, 0, 00 ~ f ; 1, 01,001 ~ b, and undefined otherwise. The natural order
+relation on these trees is the one obtained from [~o* ~ {b, f}], and the least upper
+bound of the chain of Figure 2 is the tree of Figure 1 (b).
+We now give the precise definmon of Z-tree m the simpler one-sorted case and
+consider many-sorted operator domains at the end of this section
+Let (E,),~o be a one-sorted operator domain (i e a ranked alphabet) A Z - t r e e is a
+partial function t : co* ~ E such that, for all u ~ oJ* and t ~ o~,
+(a) ui E deist) implies u E deist);
+(b) ui E deflt) implies t(u) ~ E,, and i < n for some n > 0. (Note that ui E def(t) does
+n o t imply u k E deflt) for any other k.)
+Let C T ~ denote the set of Z-trees: and let FF~ denote the subset of all finite ~-trees
+(those trees t for which deflt) is fimte ) The ordering on [oJ* ~ E] Induces an ordering =_
+on C T z (and F , ) . If a set of parttal functions sahsfying (a) and (b) has a least upper
+bound (set u n l o n ) f m [o~* -~, E], t h e n f a l s o sahsfles (a) and (b); so least upper bounds
+in [w* ~ E] are least upper bounds in C T ~ Thus, from (4.9),
+PROPOSITION 4.1 CT,: is a strict b - c o m p l e t e a n d U - c o m p l e t e p o s e t . []
+Let oJ (') be the subset of oo* contaimng strings of length less than n; then I..In~,~o~ (') = ~o*.
+And taking t ('~ = t 1 ~o ('), then t = I.l,~oot ~') By condition (b), each t (') is finite (even
+though oo ~") Is infinite); thus
+PROPOSITION 4.2 F o r a n y t E C T z , t = Une~o t (') a n d t ('> E F~. []
+Now make C T x into a I - a l g e b r a .
+(0) For o- ~ ~0, let o-<.r = {(X, o')}.
+(1) For o- ~ Z,,, n > 0, and t~, . • • , t,, ~ C T ~ , let
+o-~.(t,, . - . , t,,) = {(x, o-)} t3 u , < , {(iu, o")1 (u, o-') ~ t,+,}.
+Ift~, . . . , t,, E C T ~ and o- ~ E,,, then O-cr(t~, "'" , t,,) U C T , ; in fact, If the t, are finite,
+then so ~s O'CT(tl, "'" , t,,). Thus we have also given Z-structure to F~
+The ordering on C T ~ is related to this algebraic structure as follows
+PROPOSITION 4.3. I n C T ~ , t .~ t' t f f t = ~ o r t = t' = O ' c r ~ ~o o r there exist o- E E,,
+a n d t~, • . • , tn, t'~, • . • , t~ m C T z s u c h that t = ~rcr(t~, • • • , t~), t' = O'cr(t~, • " • , t¢,),.
+a n d t , E t l f o r l <_t ~ _ n .
+PROOF. Both dtrections are qu~te clear from the definitions, especmlly sufficiency
+For necessity, if def(t) = ~ , then t = _t_. If def(t) ¢ 0 , then X ~ def(t) and t(h) = t'(X);
+
+PAGE 17
+
+84 J . A . G O G U E N , J. W. T H A T C H E R , E G. W A G N E R , A N D J. B. W R I G H T
+so if t(h) ~ X,,, define t, = {(u, ~r') [ (m, or') ~ t} and t', = {(u, ~r'> I (iu, o"> E t'}. By the
+definition of operations O'cr and the order relation on [to* ~ 2], t = O'cr(tt, • • • , t,),
+t' = O'er(rE, "" • , t[,), and t, c t~. []
+PROPOSITION 4.4. Fz is the free S-algebra on one generator 2_; i.e. it is ann imtial
+X(2_)-algebra. []
+We won't burden the reader with a proof of Proposition 4.4 here because it is fairly
+obvious and a good exercise. It can be done in two ways: either show there is a unique
+X(2_)-homomorphism hA : Fx --~ A for any other X(2_)-algebra A, or show that Fx is
+isomorphic to (say) the usual algebra of Z(2_)-expressions (defined in Section 2) and then
+use Proposition 1,1. Either way, the result depends on the uniqueness of decomposition
+inFx; either t = 2_, t ~ 20, or there exist unique n > 0, ~r ~ Z,, and tl, ... , t, E F x such
+that t = O'cT(tl, "'" , tn).
+PROPOSITION 4.5 The operations o f CTx are [i-continuous.
+PROOF. ASSURe [i,stqL,, "'" , t,,,) exists in CTE. Then by (4.7) it equals
+iU~ttl,,, " " , [i~sltn,,), and we need
+O'CT ( U t I t, " ' " U tB,,) = U 10gCCT(tl,1, " ' " , in.i).
+IEI ' ' te l z
+The left-hand side is
+{ix, o-)} u u {<ju, o")l /u, o-'>~ U t~+,,,}
+= {iX, or)} U U U {(ju, o-'> I lu, o-'> ~ t++,,,}
+-J<a t e l
+-- u i{<~., o->} u u {(ju, o-'> I <u, o-'> e t,+,.,}),
+which is the right-hand side. []
+Because everything in the proof of 4.5 is finite when restricted to F~, the same proof
+yields:
+PROPOSITION 4.6 The operations o f Fx are [l-continuous. []
+Let an ordered E-algebra be a E-algebra whose carrier is a poset with 2_ and whose
+operations are monotonic. A homomorphism of ordered E-algebras is a strict monotonic
+Z-homomorphism. Let Palgx be a class of ordered E-algebras. Since the operations of
+Fx are monotonic (Proposition 4.6 and (4,6)), Fx is an ordered X-algebra. In fact,
+PROPOSmON 4.7. Fz is initial in Palgx.
+PROOF. L e t A be an ordered X-algebra; make it into a X(2_)-algebra by letting 2_a be
+the minimum element. Then by Proposition 4.4 there is a unique X(2_)-homomorphlsm
+h : F z ~ A which, of course, is also a X-homomorphism Fz ~ A preserving 2_. We show
+h is monotonic. Ift c t ' in Fx, then by Proposition 4.3 either t = 2_ (in which case h(t) = 2_a
+c_h(t')), or t = t' = crcr E X0 (in which case h(t) g h(t')), or there are o- ~ X, and t~, . . . , tn,
+• t .. ~ • ~ t ,,, t ¢
+h, -, t, in CT~ such that t = ¢rcr(h, "" , t,) _O'er(h, , t~) = and t+ gt~. By induction
+on the cardinality of def(t), we can assume h(t,) c h(t~). But h(t) = h(~rcr(h , " . ' , t,)) =
+o'a(h(h), " " , h(t,)) c (monotomclty of O'A) ~ra(h(t~, . ' . , h(t~)) = h(~rcr(t'~, " " , t[3) =
+h(t'). []
+A X-algebra is to-continuous iff its carrier IS strict to-complete and its operations are to-
+continuous. By Propositions 4.1 and 4.5, CTx IS an w-continuous algebra.
+THEOREM 4.8. CTx is initial in the class o f to-continuous I-algebras with strict A-
+continuous X-homomorphtsms.
+PROOF. The main idea is that every to-continuous Z-algebra A is in Palgz so there is a
+unique homomorphism hA : Fx ~ A which can be extended using Proposition 4.2 : kth(t)
+= u,~o,,a~,' i. (,o,)~]. We must prove h A is a X-homomorphlsm,, is A-continuous, and is unique .
+L e t A be an to-continuous X-algebra. It is also m P a l g x , so by Proposition 4.7 there is a
+unique (monotonic) X-homomorphism ha : Fx ~ A. We show it has a unique A-
+continuous extension/~a : CTx ~ A which is a X-homomorphism. In fact, define ha(t) =
+
+PAGE 18
+
+Imtial Algebra Semantics and Contmuous Algebras 85
+H~hA(t (')) which exists because A is to-complete. 25 Now umqueness: If h' extends ha and
+is A-continuous (even to-continuous), then h'(t) = h'(Hnt tm = Hnh'(# m) = H,~ha(t in)) =
+hA(t).
+Next, hA is monotonic Assume to E t~ in CT x with to = I.l,,t~ ") and t~ = Hdl'° . For each
+k, t(0 k) E_ t~k); by monotonicity of hA, ha(t~ I'') E hn(t~k)); and thus/~a(t0) = Hk-hn(t(0 k)) g-
+Hkh A(t(1 h)) = ]~A(tl).
+Now we show/~a is A-continuous. Assume t = I.l,~lt, for some directed set {t~}~z in
+CTx. We must show that/~a(t) = U~lha(tt). First, t, c t for all t, so by monotontcity of
+]~A, ]~a(t,) ~- ha(t) for all t; i.e. ha(t) is an upper b o u n d for {l~A(t,)},e~. L e t b be any other
+upper bound/~a(t,) ~ b for all t ~ I. For each n, t t') c t = I.l,~tt, and {t~} ~s directed; so
+by (4.10), t TM 7_ t~ for some/. Thus for each n there is s o m e / w i t h hA(t (")) g l~a(t~) g.b; 1.e.
+I-I,/~a(t (')) = ,~A(t) g. b. Thus we have l~A(t) = Hl~lha(tt) as required. (This may be
+surprising; since A is only w-complete, there is no a priori reason for LI ,etha(t,) to exist.)
+Now we have only to show that h a is indeed a X-homomorphism. First check that
+~cv(t ~, " , t,) (~) ff cv(t(~ - ' , ", , . =
+. . . . . t(~-~q for k > 1 and that t (°) ~. T h e n
+ha(O'CT(t,, """, tn)) = kH hA(O'cr(t~, " " , tn) (e')
+(definition of/~a)
+= H ha(o.cv(t~k-1), . . . , tntk-,))
+k
+= H ~A(ha(t~h-'), " " , ha(t(nh-~'))
+k
+(definition of t (k))
+(ha a homomorphism)
+= tra(~l ha(t~k-~)), -'" , U hA(t(n#-~'))
+k
+(to-contmmty of O'A)
+= O ' a ( h h ( t ~ ) , . ' - , h a ( t . ) )
+(definition of/~A). []
+The following result is a corollary of the proof of Theore m 4.8. We proved there was a
+unique strict w-continuous Z - h o m o m o r p h i s m from CTx to A , and then we were able to
+show (surprisingly) that m fact that homomorphism was A-continuous.
+COROLLARY 4.9. CTx ts initial in the class o f w-continuous E-algebras with strict w-
+continuous homomorphisms. []
+A n algebra is A-continuous iff its carrier is A-complete and its operations are A-
+continuous. Let &algz be the class of A-continuous E-algebras with strict A-continuous
+X-homomorph~sms. Since CTz is in this class, which is a subclass of that described in
+Theorem 4.8, we have
+COROLLARY 4.10. CT~ ts inttial in class &alg z of A-continuous I-algebras with strtct
+A-continuous homomorphisms. []
+There are confusingly many initiality results for CT~. For example, the following
+neither implies nor is implied by T h e o r em 4.8; details will be provided elsewhere when
+the relevance of the result is better understood.
+THEOREM 4.1 1. CTx is mitial in the class o f Z-algebras with to-complete carrters,
+operations that are both to-contmuous and u-continuous and homomorphisms that are
+strict U-continuous E-homomorphisms. []
+Since the following is a subclass of that in Theorem 4.l i and contains CTx, we have
+COROLLARY 4.12. CTx is mittal in the class o f E-algebras with strict A-complete
+carriers, H-continuous operattons and strict H-continuous homomorphtsms []
+Before considering properties of derived operations on Initial continuous algebras, we
+can now offer a bit more to the lattice versus poset "dispute " Since Tz ts t.l-complete
+(Propositmn 4.1), it follows that CT~ is a complete lattice (4.3) Make CT~ into a E-
+algebra by requiring that if any argument to Crcv IS -r, the value is -r (the operations
+preserve -r). It follows immediately from Corollary 4.10 that CT~ is initial in the class of
+Z-algebras with carriers which are complete lattices, operations which are A-continuous
+and preserve ± , and homomorphisms whtch are doubly strict A-continuous (also pre-
+2s When the range of the index ~s obvious (as m th~s proof, n E to), we delete that extra notation, e g LI~ =
+~.Jn Eoo
+
+PAGE 19
+
+8 6 J A. GOGUEN, J W. THATCHER, E. G. WAGNER, AND J. B. WRIGHT
+serve -r). It Is fairly clear that the homomorphisms of lattice algebras should be doubly
+strict A-continuous, but it is equally clear that once the "overdefined" element -r IS
+introduced (we would say, artificially) to make the poset H-complete, then we do not
+necessarily want the operations to preserve -r. In order to get the initial algebra in the
+class of lattice-E-algebras with A-continuous operations and doubly strict A-continuous
+homomorphisms, one hag to put the obvious (though cumbersome) order on the algebra
+CTx(-r) (the algebra freely generated by {T}). A c o m m o n argument in support of lattices
+is that the only cost of using complete lattices is the occasional addition of an extra "over-
+defined" -r to the domain. This initlality discussion shows that the argument is somewhat
+of an oversimphficatlon, since many curious terms in CTx(T) involving 7- have been
+added and are of dubious interpretation.
+Having established the existence of imtml continuous algebras, we can, as in Section 2,
+consider derived operators. Let A be any Z-continuous algebra (strict Z-complete
+carrier, Z-continuous operations) and let a : X,, ~ A ; then d : CTx(X,,) ~ A is the
+unique homomorphism determined by making A into a E(X~)-algebra. As before tA(a) =
+ti(t). O n e can check that if a ~ a' (i.e. a(x,) c a'(x,), 1 -< j ~- n). then d g_ ci' (i.e d(t) :_
+,~'(t), t ~ T~(X.)).
+PROPOSITION 4.13. For each n ~ to, t E C T x ( X , ) , and Z-continuous E-algebra A , the
+derived operator t 4 : A n --~ A is Z-continuous f o r Z ~ {to, A, ~}.
+PROOF. Let {a,},~i be a Z-set in A"; then by the observation above, {5~(t)}~1 is also a
+Z-set, and by Z-completeness of A we can define 6(t) = H,~6,(t), We want to show that ti
+is a homomorphlsm.
+5(O'cT(tl, "'" , t,,)) = LI d ~ ( O ' c T ( t l , " ' " , t,,)) (definition of 5),
+= LI o'a(h,(h), "'" , ,~,(t,)) (6, a homomorphism),
+= cr4(I.I h,(tO, "'" ,H 5,(t,)) ( Z- co n tlnm ty , (4.8)),
+~1 1~1
+= ora(h(ti), "'" , 5(tn)) ( Z - c o n t m m t y , d)
+Clearly, 5 extends Ll,~1a,, and now we know 5 is a E-homomorphlsm, so 5 = Ll~la,.
+Thus ta(Ll,~ta~) = ti(t) = U~la~(t) = 13,~tta(a~). []
+Exactly as m Section 2, substitution is defined as a specml case of derwed operators,
+and ~t ~s assocmtive; in fact. substitution IS itself A-continuous. and this depends on
+mitiality of CTx.
+tR
+PROPOSITION 4.14. Substitution is A-continuous, i.e. ~-- : C T x ( X n ) x CT~(Xk)
+CT~(Xk) ts a A-continuous functton on the (A-complete) Cartesian product o f A-complete
+sets.
+PROOF. For t • Xm ~ CTx(X,~) and t' : X,, ~ CTx(Xk), recall from Section 2 that
+t ~--t' : Xm--'~ CTx(Xk) is defined by (t ~-t')(x,) = i'(t(x,)); Le. t ~---t' = i' ot where i' is
+the unique homomorphic extension of t'. For A-continuity we can consider each argu-
+ment separately. Let {t,}~el be a A-set Then (I-L~l,t~) ~-- t' = (definition) i' o (U,~lt,) = (i'
+is A-continuous) I.l,~(t' o t,) = (definition) Ll,~t(t, ~-- t'). For the other argument, t (--
+(U~t~) = (definition) U~tt~ o t = (as in proof of Proposition 4.13) (U,~t/~) ° t = (by
+3.8) U,~t(/~ o t) = (defimtion) U,~(t ~ t;). []
+A simple example (arrived at wtth Steve Bloom) exemplifies substituuon and shows
+that it is not u-continuous. Let X~ = {a} and take I = {1, 2} with ta = a(z-xO and ts =
+a ( x ~ ) ; then t~ u t~ = a(x~x~), and (t~ u tz) ~ (t~ u tz) = a(a(x~x~)a(x~x~)); but
+(h ~--h) u (tz ~--t~) = a(~a(-a-xO) u a(a(x~-~)~) = a ( a ( x ~ ) a ( ~ x l ) ) v ~ a(a(x~x~)a(x~xO).
+The promised S-sorted initial continuous E-algebra is a simple modification of the one-
+sorted case. A E-tree o f sort s ~ S ~s a partml function t : o* --~ E such that:
+(0) If h ~ deflt), then t(h) has sort s.
+(1) If w ~ to*, i G to, and wi ~ deflt), then
+(a) w ~ deflt);
+(b) ff t(w) has arity s~ --. s,,, then i < n and t(wi) has sort s,+l.
+
+PAGE 20
+
+Imtial Algebra Semantics and Continuous Algebras 87
+Then CT~ has carriers C T ~ consisting of all s-sorted Z-trees (including .a_) It gets E-
+structure just as in the one-sorted case, and we have
+THEORE~ 4.15 CT~ is mitlal m the class o f w-contmuous E-algebras with strtct A-
+continuous E-homomorphtsms []
+5. Apphcattons o f Initial Continuous Algebras
+Initlality of CT~ has Important consequences in the theory of computation Just as
+lnltiallty of 7",- clarifies and simplifies "tree manipulation," CT,~ clarifies and simplifies
+work with infinite trees which, for example, arise in the semantics of flow diagrams,
+recurslve schemes, and other data structures.
+CTz has advantages in its abstract form (an lmtial A-continuous E-algebra) and in its
+concrete form (we can visualize elements of CT~ as (infinite) E-trees). The abstract
+formulation facilitates defining derived operations and solving e q u a h o n s m A-continu-
+ous E-algebras; m fact, this is easier than the conventional formulation employing the
+subset construction. The concrete representation permits clear understanding of the
+objects in CT,; for example, our formulation of the lattice of flow diagrams is simpler, as
+well as more convincing than the inverse limit construction employed by Scott [61].
+We know three papers 26 with general notions related to initial continuous algebras:
+Wand's [75] free tz-clones, Nlvat's [48[ algebra of schematic languages, and B l o o m and
+Elgot's [9] free iterative algebraic theories. The diversity of these approaches, plus the
+somewhat sketchy character of the first two references and the novelty of initial continu-
+ous algebras, make it hard to describe all relationships between these approaches, but we
+do point out several connections
+The discussion and examples below focus on the class Aalg~ of A-continuous E-
+algebras with strict A-continuous ]~-homomorphisms, thus we use Corollary 4.10, that
+CT,: is initial in Aalg~ Although what we say applies to other classes of algebras (e.g
+those mentioned in T h e o r e m s 4.8 and 4.1 l, and Corollaries 4.9 and 4.12), we don't give
+applications for these
+5.1. SYSTEMS OF (REOuLAR) EQUATIONS. Section 3 4 related imtial algebra seman-
+tics to solving equations in the initial many-sorted E-algebra We used the phrase " m a k e
+pA into a E-algebra by . . ." to define a derived operator tpa : (pA) '~ --~ pA for each t E
+T~(X,,). An apparently ad hoc step then followed: extending derived operators to sets of
+terms by taking unions of values. For a A-continuous E-algebra, this isn't necessary since
+its order structure permits equations expressed in CT~ to be solved directly
+A system o f n equations (expressed) m CT~_ is a function E : X,, ~ CT~(X,,). This
+simplifies the informal deflmtlon " . a sequence or set of equations of the form x, = t,
+where t, is a term in n variables, x~, ... , xn." To read our system that way, write x, =
+E(x,); E(x,) is the rtght-hand side of the tth equation. 27
+For any A-continuous algebra A, EA : A n ~ A" IS the derived operator of E over A ;
+recall from Section 2 that (El(a)), = E(x,)~(a) = ~(E(x,)) for alia ~ A ~ and 1 -< i -< n. By
+Proposition 4.1 3, each co mpo n en t , E(X,)A " A ~ --> A, of E4 is A-continuous, and by (3.7)
+so is their target-tuple EA = [E(x04, " " , E(X,,)A] : A" ~ A".
+Thus E4 has a minimum fixed-point denoted I EA [ E A" and called the soluuon of E
+o v e r A We know thatl E4[ ~ ±
+= I.IAe~oE~( , " ' " , ~); that EA(I EA I) = I Ea I; and that for all
+a ~ A ~, lfEA(a) = a, then I EA [ 7_a. For the special case A = CT~, we write I E I for the
+solution of E over CT,~.
+Familiar results in the theory of equational sets follow nicely in this setting Recalhng
+that ha " CT~ ~ A is the unique A-continuous Z - h o m o m o r p h i s m from CT~ to the A-
+continuous E-algebra A , we write [ E [A for h~(] E I).
+26 Reynolds's work [55] employing some methods of this paper wdl probably also interest the reader, and
+should appear soon after thzs paper does
+27 The notahon E(x,) is correcl because E is a function with source X,, = {x~, , x,,}, but note that E(x,) is an
+element of CT~(X,) possibly revolving all the varnables x~, , x,
+
+PAGE 21
+
+8 8 J . A . GOGUEN, J W. THATCHER, E. G. WAGNER, AND J. B. WRIGHT
+The following analogue of Mezei and Wright [45, Th. 5.5] says that solving equations
+in the initial algebra, then interpreting the solution; and interpreting the equations, and
+then solving in the algebra, give the same answer. (Engelfriet and Schmldt [18] appropri-
+ately refer to these as "Mezei-Wright-like results"; cf. the following proposition.)
+PROPOSITION 5.1. For any system o f equations E : Xn ---> CTx(X,,) and any A-
+c o n t o , u o u s X-algebra A , I E IA = I EA I"
+PROOF. By induction on k and Proposition 2.5, hA( E k (.a_, . . . , - ) ) = E~ (XA, "'" , a-A)
+where, for clarity, .a_ is minimum in CTx and "A is minimum in A (In general,
+h~(E(t,, ... , t,)) = Ea(hA(t,), " " , hA(t,)).) Then ha(I E [) = hA(UkE~( -a-, . . . , 2_)) = (by
+c o n t i n u i t y o f ha) U k h A ( E k ( ~ , " " , ~ ) ) = LJtcEak(-a-A, • • " , -a-A) = ] E A 1. []
+Call a system E : Xn ~ CTx(Xn) Meal (cf. Elgot [17]) lff each E(x3 is nontnvial, i.e.
+for some m > 0, ¢r E Xm, and G, "'" , t,n E CTx(X,), E(x,) = crcT(G, "'" , t,3.
+THEOREM 5.2. Solutions o f Ideal systems o f equations over C T x are unique
+PROOF. We indicate the method of proof; full detail will appear elsewhere. If t =
+(tl, • • • , t~) is a solution for a system E : Xn --> CT~(Xn), then for all k, t = E~r(t) =
+~E ~-- E ~ .~. ~ E ~ E~-- t. By induction on length of strings m to*, one shows for ideal
+k
+E, if w E def(t,) has length k, then w ~ def(Ek(x, ... , .a_)~); i.e. def(t,) C_ def([ E I,); but
+IEl~t, solEl=t. []
+This rather surprising result seems to say the order relation on CTx is superfluous once
+solutions are obtained. Th~s suggests a strong connection with Elgot's [17] lteratlve
+algebraic theories where, in effect, ideal equations must have unique solutions and no
+ordering Is involved.
+A system E of equations lsfimte lff each right-hand side is fimte; i.e. E : X,, ---> F~(X,).
+Now EA can be defined over any ordered algebra A (Proposmon 4 7) and a ~ A" is the
+solution of E over A iff it is the minimum fixed point of EA.
+An ordered algebra A is equattonally complete iff everyfintte system of equations has a
+solution over A Obviously every A-continuous (even to-continuous) algebra is equation-
+ally c o m p l e t e - m fact, complete with respect to arbitrary systems of equations-but an
+ordered X-algebra can be equationally complete without having an to-complete carrier.
+The following important case dlustrates this
+Let Rx denote the set of equational elements o f C T x ; i e Rx = { [ E I s [ E : X , - - ~
+F~(X,,), n > 0 and 1 -< i -< n}. The " R " in Rx stands for "rccogmzable" or "regular" as
+applied to sets of finite trees in Doner [15] and m Thatcher and Wright [70]. (For
+appropriate X discussed below, Scott [61] calls Fx rational, Rx algebraic, and CTx - Rx
+transcendental ) The following two propositions indicate the connection.
+PROPOSITION 5.3. For each t ~ Rx, there emsts a recogmzable subset Rt o f F x such
+that t = LIRt
+PROOF Using Proposition 4.4, we transform a system E : X,, --> Fx(X,) of equations
+over CTx to the system E : X,, ---> p(Fx(X,,)) in the Mezel-Wnght sense 145] by E(x,) =
+{E(x,), x} (cf. Section 3.4) Let I ~ I be the solution of E over FFx as in Mezel-Wnght,
+each I ~ I(x0 is a recogmzable subset of Fx These recognizable sets are called "schematic
+languages" by Nlvat [48], who shows that every schematic language is d~rected (m fact a
+lattice) with respect to the ordering on F~. So U I E [ exists in CT~ (Proposition 4.1) and
+we want to show I E I = U I E I. We know [ E I = UkEk( 2-, "'" , ~) and, by reduction on k,
+{Ek(x, . - . , x)} C_ I/~ [, so that [ E I g U I/~ I. On the other hand, for each t E I E t there
+exists k such that t c Ek(~, • • • , _L) (by induction on the definition of [ ~7 t = UmE~F~ (~5,
+• .- , ~ ) ) , s o l e l ~ U l e l , , . e . l E l = U , l ~ t . []
+The second result relating the equational elements to recogmzabihty uses the concrete
+construction of C T gwen in Section 4; we leave its proof to the reader.
+PROPOSITION 5.4. In the concrete construction o f CTz, if t E Rx, then f o r each ~
+X, t-l(o ") C_ to* is a regular subset o f {0, 1, " . , k}* f o r some k. []
+As indicated m the proof of Proposition 5 3, a schematic language (N~vat [48]) is a
+recognizable subset of Fx (viewed as the initial X(x) algebra) defined by equations (in
+
+PAGE 22
+
+lnttial Algebra Semantics and Continuous Algebras 89
+the Mezei-Wright sense) whose right-hand sides are of the form {t, ±} C Fz By reversing
+the translation in the proof of Proposition 5 3, it is easy to see that the least upper bound
+of any schematic language is an equational element of CTx. Nlvat [48] shows that the
+schematic languages form a l~-algebra, and his proof also shows that R~ is a subalgebra of
+CT x. Because R~ is equatlonally complete by definition, we have
+PROPOSmON 5.5. R z is the smallest equationally complete subalgebra of CTz. []
+5.2 THE LATTICE OF FLOW DIAGRAMS. Our construction of initial continuous alge-
+bras permits simple alternative formulations of Scott's [61] lattice of flow diagrams.
+Since those alternatives are specific initial algebras, the lattice of flow diagrams appears
+as a special case of a very general situation. Our comparison is shghtly encumbered by
+the fact that Scott uses complete lattices (H-complete posets), while we favor strict A-
+complete posets.
+Most simply put, Scott's lattice of flow diagrams is the solution to the domain equatton
+E ~ {I} + F + E x E + B x E x E , (*)
+where + is the coalesced lattice sum, × is the usual lattice product, and {I}, F, and B are
+the ("flat") lattices which result from adjoining ± and -r to, respectively," the set
+consisting of a single function symbol I denoting the Identity function, a set F of function
+symbols (operations occurring in boxes of a flow diagram), a set B of predicate symbols
+(occurring as tests in flow diagram). So if the set F = {fl, " " " , fn}, then the lattice for F
+lS:
+T
+Scott's Inverse limit construction provides a solution for E as a complete lattice.
+However, Gordon [26] argues the advantages of A-complete posets (calling them
+semldomalns) over complete lattices (domains) and shows the inverse limit construcUon
+(using separated sum) works just as well in that context. Passing over pragmatic and
+aesthetic points discussed earlier (Section 4), we make our comparison with Gordon's
+solution to (*), thinking of it as the semtdomain of flow dtagrams.
+We describe three semldomains of flow diagrams; each is simply CTx for a natural
+choice of I~. The first two are different in interesting ways; the third differs from the
+second trivially and is included for completeness while providing an example of an initial
+many-sorted A-continuous 1E-algebra
+For all three the algebraic approach (as opposed to the pure ordered structure
+approach) leads directly to algebras of flow diagrams rather than ordered sets of flow
+diagrams. (Nlvat [48] stresses this point, and it seems that Scott also saw it [61, Sec. 41.)
+We hope this creates a stronger position from which to consider the questions about
+equivalence of flow dmgrams raised by Scott [61, Secs. 8 and 9].
+(I) Let £ = ({I},F,B) (that is, E0 = {I}, E1 : F, ~2 = B, and Ek = O for k > 2). CT~
+(see (4.3)) is a lattice of flow diagrams, with every flow diagram represented by its
+unfoldment. But (quite aside from questions about -r) CT~ doesn't have quite the
+algebraic, or the order theoretic, structure of Scott's lattice. The equational elements (in
+Rx) represent the flow diagrams. The idea, to be developed formally elsewhere, is to
+take a variable x,.for each node t of a flow diagram, and an equation x~ = b(x, xk), x, =
+f(x~), or x, = I if node i Ls a b-test, an f-application, or a halt, respectwely.
+For example, the while loop is the solution to the system (xl = b(x~, x3), x2 = f(xl), x3 =
+/), which can be collapsed to x~ = b(f(x~), I), and is written x~ = (b ~ (f; x~), 1) by Scott.
+
+PAGE 23
+
+90 J . A . GOGUEN, J W. THATCHER, E. G. WAGNER, AND J . ' B. WRIGHT
+The element of R~ which is the component for the start node is the unfoldment of the
+given flow diagram (cf. Goguen [20]). Conversely, any finite system of equations over
+CT~ can be reduced to "primitive" equations of the above form (much as in Mezei and
+Wright [45] or in Wand [75, Th. 2]), from which a standard flow diagram can be
+retrieved.
+Wand [75] takes Scott's construction "trivially modified" as a starting point, calling
+E(~) the lattice of flow diagrams with operator symbols ~. He says this follows Elgot's
+[17] idea of handling tests (rank 2 or greater) and operations (rank 1) uniformly. His
+E(~) seems to be our CT~; his "finite diagrams" to be our F~(X,), with "return codes"
+{xl, " " , xn} (also paralleling Elgot [17] because of the n "exits"); and his "loop-
+representable" flow diagrams to be our R~(Xn) (that is, equational elements of CT~xn)).
+Wand [75] IS rather informal, but seems to miss the distinction brought out by our second
+formulation for the lattice of flow diagrams below
+One can define context-free sets over initial algebras (Rounds [57]), and this apphes to
+initial continuous algebras as well. Alternatively (Maibaum [41, 42], Turner [71], and
+Wand [76]), one can make the function symbols zero-ary and introduce a symbol for
+composition; then the context-free sets are equational in this modified algebra
+(II) In that spirit, let ~' = (17 U {I},O,B U {;}). Again, every flow diagram (over F a n d
+B) is represented in CTz, by an unfoldment. But now the algebraic structure corresponds
+to Scott's idea: Every element of CTz, is either I, an element of F, (d; d'), or b(d, d')
+(written b ~ d, d') for diagrams d and d'.
+However, the equauonal elements of this algebra correspond to unfoldings of recurstve
+flow diagrams. For example, the solution to the equation xl = b(f;(xl;f),I), problematic
+m Scott [61, Fig. 21], is the unfolding of the recursive flow diagram,
+xl : if b then (f; call xl; f') else halt.
+Nwat's [48] program schemes over (F U {/}, B~ are reformulated in this setting as
+pnmltwe 2s systems of equations E : Xn ~ Fx,(X~), which are connected (meaning xl < xi
+for 1 < i -< n, where < is the transitive closure of x, "calls"x,, i.e. if x, occurs in E(x,)).
+The program schemes form a ~'-algebra, say PSx,, with E, E', and b ~ E;E' defined
+as needed in the proof of ProposiUon 5.5. The function E ~ [ E I1 is a homomorphlsm
+from PSi, to Rw, but of course many program schemes give rise to the same unfoldment
+in Rz.
+(III) For our last formulation, let E" be a {b,d}-sorted operator domain with ~i'~,~ =
+B, ~'~.a> = {I} 0 F, ~'~ad,a> = {;}, and ~aa,d> = {--~}. Then CTx,,,b contains only B U {.a_},
+but CT~,,a is lsomorphtc 2~ (in both order and algebraic structure) to Scott's lattice E of
+flow diagrams. (This corresponds, as m [41, 42, 71, 76], to making all the function
+symbols of ({I}, F, B) zero-ary; the "composmon symbols" are ";" and "---;'.) But all that
+has been added are diagrams such as (_u ~ d, d'), which seem to be of little interest at
+this point. Because there are no operations of sort b, equations m CTz~ yield the same
+solutions as m the previous formulaUon
+5.3. SEMANTICS OF FLOW DIAGRAMS Theorem 4.8 says that any A-continuous E-
+algebra is a possible semantic algebra for CT x. Looking at the second formulation for the
+lattice of flow diagrams E' = (F tA {1},f~,B tA {;}), take. as Scott does, the A-complete
+(4.9) poset [S -o S] of "partial state transformations" as carrier of a semantic algebra
+ambiguously denoted S Given (Scott's [61]) mterpretatmns of the function symbols
+~: : F ~ [S -o S] and predicate symbols ~ : B ~ [S-o {0, 1}], make IS -o S] into a E'-
+algebra by: Is = ls; Fs = ~ ( f ) ; b~(tr, o") = c o [~(b), o-, cr']; and ;s(tr, o-') = o-'o o'. These
+operations (bs and ;s) are A-contmuous.(cf. 3.2, 3.7, 3.8), so initmlity of CTx, gives a
+unique homomorphism ~s : CT~, ~ S, Scott's [61] "semanttcs" of flow dmgrams. Note,
+however, that ~ and ~ umquely determine ~s only msofar as the intended meanings of
+tests and composition are fixed
+2s Much as used above, each E(x,) is either f E F, 1, (al, az), or (b ~ a j , t~), where a, ~ F U {1} O X,,
+Ignoring the extra overdefined elements discussed in Secuon 4
+
+PAGE 24
+
+Initial Algebra Semantics and Continuous Algebras 91
+To get the intended semantics of flow diagrams when expressed in CT~ (X = ({I}, F,
+B)), appeal to contmuattons of C. Wadsworth and L. Morris (see Reynolds [53] and
+Strachey and Wadsworth [66]) seems inevitable. Taking the same carrier for the
+semantic algebra, operations ( f E F) are of type [S -o~ S] --* [S -~ S],, or equivalently
+[S ~ S] × S ~ S taking a "continuation" in [S ~ S] and a state in S giving a new state.
+The extent to which continuations can be treated from an initial algebra point of view,
+and the relationship between continuation semantics for CT~ and the semantics de-
+scribed above for CTz, are interesting subjects for further investigation, a°
+5.4. SYSTEMS OF (REOuLAR) EQUATIONS WITH PARAMETERS. Equational functions
+can be defined much as equational elements of an algebra were. In the spirit of Wagner
+[73, 74] and Wand [75], a function 31 E : Yn ~ CT~xp~ (Yn) is a system of n-equations with
+p parameters {xl, " " , xp}. For any algebra A lnAalg~ and for each a E A v, make A into
+an Z(Xp)-algebra A(a) by having x, name a, The derived operator over A(a) is then
+EA(a) :A" --+ A " , which has a minimum fixed point ] EA(a) I" The funetmn ] E a [ : A p ---) A n
+determined by system E is defined by [ EA I (a) = [ EA,a)[.
+The equation of Proposition 5.1 holds for equational functions as well. Given E as
+above, I E I : Y , -+ CTz,xp~ (solving in CT~(xp,), so I E la : A p + An, and
+PROPOSITION 5.1'. For a system o f equations E : Yn -+ CTx,x,)(Y~) with p parameters
+and any A-contmuous X-algebra A , I EA I = I E IA : AP ~ A".
+PROOV. By definition of solution, lEA I(a) = lEA(a)]. But Proposition 5.1 gives
+I EA(a, I = I E IA(a), and from the definition of derived operator, I E IA(a, = I E la(a). []
+Solving a finite system of equations with parameters E : Yn "-+ Fx(x,)(Y,) over CT~(x,)
+yields ] E ] ~ R~(x,), by defimtlon. But as sets Rx(x~) = Rx(Xp), so we can talk about
+solving a system of equations whose right-hand sides are m Rx(xp) ; this gives nothing new.
+(As proved by Nlvat [48] within his schematic language formulation, it is a consequence
+of the substitution theorem for context-free languages [19].)
+PROPOSITION 5 6 (Nlvat). Systems o f equations with right-hand sides m Rx(X p) have
+solutions in R~. []
+We believe the principal connections with Wand [75] and with Bloom and Elgot [9]
+are to be found here. First, it seems clear that (R~_(Xp))vE~ is the free/x-clone generated
+by E, the construction of which is Wand's principal result. Next, let/~x(Xp) be the set of
+maximal elements of Rx(Xp). (In the concrete construction of CT~x,~, t is maximal ifft(u)
+E Xk implies ut E def(t), 0 <- t < k.) The algebraic structure of (/~x(Xp))o~ under
+substitution (t : X , ~ R~(Xv), t' : Xp --~ R~(Xq); t <-- t' . Xn ~ Rz(X~); see Section 2)
+gives rise to an algebraic theory (cf. Elgot [17]). Theorem 5.2 and Proposition 5.6 say
+this algebraic theory is iterative, which means that every ~deal system of equations E : X ,
+/~Z(Xp)(X,) has a unique solutmn ] E I : Xn ~ / ~ x ( X p ) (called E? in [17]) in the sense'
+that E *-- ] E ] = [ E ] (this is the definition of fixed point in CT~ since EcT( ] E ] ) = E
+I E [). We believe z2 that this algebraic theory is the "free iteratwe theory generated by
+X," the construction of which is the principal result of Bloom and Elgot [9].
+6 Conclusion
+Sections 3 and 5 applied initial algebra semantics to a number of areas, with the
+applicability of initial continuous algebras exceeding even our expectations. We have
+only skimmed the surface of what might be called the equational theory of continuous
+algebras, and we hope to develop it fully elsewhere. The following questions and
+problem areas are among those we would like to answer or see answered.
+(A) How is the conventmnal theory of equatmnal sets (e.g. Mezei and Wright [45])
+expressed in the (s~mpler) continuous algebra setting?
+(B) If every finite system of equations has a solution in an ordered (not necessarily oo-
+~0 Reynolds [55] considers this in careful and interesting detad
+a~ X~ and Y~ = {y~, , y~} are, technically, assumed to be disjoint copies of the respective sets of variables
+32 S Gmah proves this in her forthcoming University of Chicago dissertation
+
+PAGE 25
+
+92 J. A. GOGUEN, J. W THATCHER, E. G. WAGNER, AND J. B. WRIGHT
+complete) algebra, does it follow that lEA [ = UkE](~) anyway9
+(C) How do the works of Maibaum [42], Turner [71], and Wand [76] (which identify
+context-free sets over one algebra with recognizable sets in another) relate to the two
+ranked alphabets E and E' in the discussion of the lattice of flow diagrams, or more
+generally to the solution of regular equations versus the solution of context-free equa-
+tions? Engelfnet and Schmidt [18] tackle this area (and (A) above) m their typically
+precise way.
+(D) Gordon [26] proves the equivalence of a denotational (Scott-like) semantics and
+an interpretative semantics for pure LisP. The proof is very long. Why? Could methods
+here contribute to further slmphficatlon?
+(E) Our initial algebra formulation of denotational semantics (Section 3) differs
+significantly from previous formulations. The "structural reduction" and "finite approxi-
+mation" proof techniques used by Gordon are implicit in initial continuous algebras
+Could these yield a more workable semantics for "real" programming languages?
+(F) We know that T~ is imtial m the class of E-algebras, that CT~ is lmtial m the class
+of A-continuous E-algebras, and that these results bear fruit On either side of CT, we
+ask the question: In what class of algebras is R~ (and / ~) initial, and in what class of
+algebras in Nivat's PSz, initial9 The latter is essentially the question posed in Burstail and
+Thatcher [11].
+(G) Chandra [12] uses mfinite tree flow diagrams which are outside R~ but contained
+in CT z (for appropriate E); a clean mathematical semantics is determined by picking
+appropriate A-continuous E-algebras. But can the translations from finite counter
+schema, finite stack schema, etc. into infinite tree diagrams be made more mathemati-
+cal? Most relevant, how are his "meanings" defined from an inmal algebra point of
+view?
+(H) Can the questions raised by Scott in [61] be answered in the initial continuous
+algebra setting? Should they?
+(I) The practical aspects of the work reported in this paper should be further ex-
+plored. Pottenger [51] has programmed a system which acts as a compder generator:
+Given ~ and o-~ for each o" in E, the function ha becomes available. The implementation
+is somewhat inefficient, but is useful as it is, and can presumably be improved in various
+ways Also, there seem to be a number of imphcations for programming language design
+which should be followed up.
+(J) What is the connection of the present formulation (that is, CT~, etc.) with the V-
+category formulation suggested in Goguen [20], where syntax is an "algebraic theory"
+whose horn-sets are sufficiently nice posets, and semantics is a sufficiently nicely ordered
+algebra of this theory?
+(K) In fact, it would be interesting to give a thorough development of semantics in
+terms of algebraic theories [32]; we have restricted ourselves to imtial algebras primarily
+to avoid imposing odious mathematical prerequisites. The question ~s, could more than
+convenience and conciseness be achieved? We are proposing some suggestions in this
+direction in [25].
+These are just a few questions; if the reader has faced infinite structures from
+semantics of programs or data structures, he may well have many others. We hope this
+paper will stimulate such questions and that the imtml algebra viewpoint will be fruitful
+in answering them) z
+ACKNOWLEDGMENTS. We individually and jointly are grateful for stimulating discqsslon
+on these matters with R.M. Burstall and R. Mllner of Edinburgh University, and D.
+Berry, R. Pottenger, and C. Lucena of UCLA. We want to thank M. Gordon, S.
+MacLane, B. Rosen, and M. Wand for their suggestions and crmcisms. R.M. Burstall
+aa This has actually happened to the authors of th~s paper, who have, subsequent to the work reported here,
+proposed an mmal algebra approach to abstract data types [24]
+
+PAGE 26
+
+Initial Algebra Semantics and Continuous Algebras a n d the J . C . c o n t e n t R e y n o l d s a n d d e s e r v e p r e s e n t a t i o n special of the g r a t i t u d e m a t e r m l .
+for their e x t e n s w e e f f o r t s to i m p r o v e 93
+b o t h
+REFERENCES
+(Note References [14, 21, 22, 37, 56, 58, 72] are not cited in the text )
+1 AHO. A V • AND ULLMAN, J D Properties of syntax directed translations J Computer and Syst, Scts. 3
+(1969), 319-334
+2 AHo, A B , ANn ULEMAN, J D Translations of a context-free grammar Inform and Contr 19 (1971),
+439-475
+3 BAKER, B S Tree transductlons and famdles of tree languages Tech Rep TR9-73, Center for Research
+in Computing Technology, Harvard U , Cambridge, Mass , 1973
+4 BEKI~, H Definable operations in general algebra and the theory of automata and flowcharts Research
+Rep, IBM Laboratory, Vienna, Austria, 1969
+5 B~NABOU, J Structures algGbrlques darts les catdgorles Th~se, fac SCl , Unlverslt6 de Paris, March 1966
+Also, Cahters de Topologte et Gdom~tne Diff~rentlelle 10 (1968), 1-126
+6 BIRKHOFF, G Structure of abstract algebras Proc Cambridge Phd Soc 31 (1938), 433-454
+7 BIRKHOFF, G , AND LIPSON• J D Heterogeneous algebras J Combinatorial Theory 8 (1970), 115-133
+8 BLIKLE, A Equational languages Inform and Contr 21 (1972). 134-147
+9 BLOOM, S L , AND ELGOT, C C The existence and construction of free iteratlve theories. Research Rep
+RC-4937, IBM Thomas J Watson Research Center, Yorktown Heights, N Y , 1974
+10 BURSTALL, R M , ANO LANDIN, P J Programs and their proofs An algebraic approach Machine lntelh-
+gence, Vol 4, B Meltzer and D Michle, Eds , Edinburgh U Press, Edinburgh, Scotland, 1969, pp 17-
+43
+11 BURSTALL, R M , AND THATCHER, J W The algebraic theory of recurslve program schemes. Lecture Notes
+m Computer Science, Vol. 25 Category Theory Apphed to Computation and Control, Springer, Berlin,
+1974, pp 126-131.
+12 CHANDRA, A K Degrees of translatability and canonical forms of program schemes Pt I Proc Sixth
+Ann ACM Symp on Theory of Computing, Seattle, 1974, pp 1-12
+13 COHN, P M UmversalAIgebra Harper and Row. New York, 1965
+14 COURCELLE, B , AND VUILLEMIN, J, Semantics and axlomatlcs of a simple recurslve language, Proc Sixth
+Ann ACM Symp on Theory of Computing, Seattle, 1974, pp 13-26
+15 DONER, J E Tree acceptors and some of their applications J Computer and Syst Scts 4 (1970), 406-
+451
+16 E1LENBERG. S , AND WRIGHT, J B Automata in general algebras Inform and Control 11 (1967), 452-
+470
+17 ELGOT, C C Monadlc computation and ~teratlve algebraic theories Research Rep, RC-4564, IBM
+Thomas J Watson Research Center, Yorktown Heights, N Y , 1973, also Proc Logic Colloqumm '73,
+Bristol, England, North-Holland Pub Co , Amsterdam, 1975, pp 175-230
+18 ENGELFRIET, J , AND SCHMIDT, E M IO and O1 Dataloglsk Afdehng Rep , DAIM1 PB-47, Aarhus U ,
+Aarhus, Denmark, July 1975
+19 GINSBURG, S The Mathematical Theory of Context-Free Languages McGraw-Hill, New York, 1962
+20 GOGUEN, J A On homomorphlsms• correctness, termination, unfoldments and equivalence of flow
+diagram programs Proc 13th Ann IEEE Symp on Switching and Automata Theory, 1972, pp 52-60
+A portion of this paper appears m expanded form in J Computer and Syst Scls 8 (1974), 333-365
+21 GOOUEN, J A Semantics of computation Lecture Notes tn Computer Science, Vol 25 Category Theory
+Apphed to Computation and Control, Spnnger, Berlin, 1974, pp 151-163
+22 GOGUEN, J A , AND THATCHER. 1 W lmttal algebra semantics Extended Abstract, Research Rep RC-
+4865, IBM Thomas J Watson Research Center, Yorktown Heights, N Y , May 1974, also, Proc 15th
+Ann IEEE Symp on Switching and Automata Theory, 1974, pp 63-77
+23 GOOUEN, J A , THATCHER, J W , WAGNER, E G , AND WRIGHT, 1 B A junction between computer science
+and category theory, I Basic definitions and examples Pt 1, Research Rep RC-4526, Pt 2, Research
+Rep RC-5908, IBM Thomas J Watson Research Center, Yorktown Heights, N Y , 1973, 1976
+24 GOGUEN, J A , THATCHER, J W . WAGNER, E G , AND WRIGHT, J B Abstract data-types as initial algebras
+and correctness of data representations Proc. Conference on Computer Graphics, Pattern RecogmUon
+and Data Structure. May 1975, pp 89-93
+25 GOGUEN, J A , THATCHER, J W , WAGNER, E G , AND WmGHT, J B. Programs lncategorles (summary), in
+preparation
+26 GORDON, M Models of pure LISP Ph D Th , Edinburgh U , Edinburgh, Scotland, 1973
+27 GRAETZEa, G UmversalAlgebra Van Nostrand, Princeton, N J , 1968
+28 HIGGINS, P J Algebras with a schema of operators Math Nachr 27 (1963), 115-132
+29. IRONS, E T A syntax directed compder for ALGOL 60 Comm ACM 4 (1961), 51-55
+30 KNUTn, D E Semantics of context-free languages Math Syst Theory 2 (1968), 127-145
+
+PAGE 27
+
+94 J. A. GOGUEN, J, W. THATCHER, E G. WAGNER, AND J. B. WRIGHT
+31 LANDIN, P J A program machine symmetric automata theory Machine Intelligence 5, B Meltzer and D
+Mlchle, Eds, Edinburgh U. Press, Edinburgh, Scotland, 1970, pp 99-120.
+32. LAWVERE, F W Functorlal semantics of algebraic theories. Proc. Nat Acad Sci. 50 (1963), 869-872.
+33 LEWIS, C H , AND ROSEN, B K Recurswely defined data types, Pt. 1 Proc ACM Symp on Principles of
+Programming Languages, 1973, pp 125-138, Pt 2, Research Rep. RC-4713, IBM Thomas J Watson
+Research Center, Yorktown Heights, N Y , 1974
+34 LEWIS, P.M II,AND STEARNS, R E Syntax-directed transduction J ACM 15, 3 (July 1968), 465-488
+35 LUCAS, P , LAUER, P , AND STIGLEITNER, H Method and notation for the formal definition of program-
+mmg languages Tech Rep TR 25 087, IBM Laboratory, Vienna, Austria, 1968
+36 McCARTHY. J Towards a mathematical science of computation Proc IFIP Cong. North-Holland Pub
+Co, Amsterdam, 1962, pp 21-28
+37 McCARTHY, J A formal descrlpUon of a subset of ALGOL In "Formal Language Description Languages
+for Computer Programming," Proc IFIP Working Conf 1964, T B Steel, Jr , Ed , North-Holland Pub
+Co , Amsterdam, 1966, pp 1-12
+38 MCCARTHY, J , AND PAINTER, J Correctness of a compiler for arithmetic expressions In "Mathematical
+Aspects of Computer Science," Proc of Symposia in Applied Mathematics, Vol 19, J T Schwartz, Ed ,
+Amer Math Soc , Providence, R I , 1967, pp 33-41
+39 MACLANE, S Category Theory for the Working Mathematician Springer, New York, 1971
+40 MAGIDOR, M , AND MORGAN, G Finite automata over finite trees Tech Rep 30, Hebrew U , Jerusalem,
+Israel, 1969
+41 MAIBAUM, T S E The characterization of the derivation trees of context-free sets of terms as regular sets
+Proc 13th Ann IEEE Symp on Switching and Automata Theory, 1972, pp. 224-230
+42 MAIBAUM, T S E Generalized grammars and homomorphic Images of regular sets Research Rep CS-73-
+30, U of Waterloo, Waterloo, Ontario, Canada, 1973
+43 MANNA, Z Properties of programs and the first-order predicate calculus J ACM 16, 2 (April 1969),
+244-255
+44 MARKOWSKY, G Chain-complete posets and directed sets with applications Research Rep RC-5024,
+IBM Thomas J Watson Research Center, Yorktown Heights, N Y , Aug 1974
+45 MEZEI, J , AND WRIGHT, J B Algebraic automata and context-free sets Inform and Contr 1l (1967), 3-
+29
+46 MORRIS, F L Correctness of translations of programming languages Ph D Th , Computer Science
+Memo CS72-303, Stanford U , Stanford, Cahf, 1972
+47 MORRIS, F.L Advice on structuring compilers and proving them correct Proc Symp on Principles of
+Programming Lanugages, Boston, 1973, pp 144-152
+48 NlVAT, M Languages alg6braic sur le magna hbre et s6mantique des schdmas de programme In
+Automata, Languages and Programming, M Nlvat (Ed), North-Holland Pub Co , Amsterdam, 1972,
+pp 293-308
+49 PARK, D FIxpomt induction and proofs of program properties Machine Intelligence, Vol 5, B Meltzer
+and D Mlchle, Eds , Edinburgh U Press, Edinburgh, Scotland, 1970. pp 59-78
+50 PETRONE, L Syntactic mappings of context-free languages Proc IFIP Cong 1965, Vol 2, North-
+Holland Pub Co, Amsterdam, pp 590-591
+51 PorrENGER, R ARBOL, a system for defining functions on trees A I Memo 3, UCLA, 1976
+52 RABIN, M P , AND SCOTT, D Finite automata and their decision problems IBM J Res Develop 3
+(1959), 114-125
+53 REYNOLDS, J C Definitional interpreters for higher-order programming languages Proc 25th National
+ACM Conference, Boston, Mass , Aug 1972, pp 717-740
+54 REYNOLDS, J C On the relation between direct and continuation semantics Lecture Notes in Computer
+Science, Vol 14 Automata, Languages and Programming, Springer, Berlin, 1974, pp 141-156
+55 REYNOLDS, J C. Semantics of the lattice of flow diagrams. Manuscript, Syracuse U , Syracuse, N Y ,
+submitted for publication, July 1975
+56 ROSEN, B K Program equivalence and context-free grammars Proc 13th Ann IEEE Symp on Switch-
+ing and Automata Theory, 1972, pp 7-18, revised as Research Rep RC-4822, IBM Thomas J Watson
+Research Center, Yorktown Heights. N Y , 1974
+57 ROUNDS, W C Mappings and grammars on trees Math Syst Theory 4 (1970), 256-287
+58 SCHDTZENBERGER, M P Context-free languages and push down automata Inform and Contr 6 (1963),
+246-264
+59 SCHWARTZ, J T Semantic definition methods In Formal Semantics of Programming Languages, R
+Rustm, Ed , Prentice-Hall, Englewood Cliffs, N J , 1972, pp 1-23
+60 SCOTI, D Outline of a mathematical theory of computation Proc 4th Ann Princeton Conf on
+Information Sciences and Systems, 1970, pp 169-176
+61 ScoTr, D The lattice of flow diagrams Tech Monograph PRG 3, Oxford U Computing Lab , Oxford
+U , Oxford, England, also, Lecture Notes in Mathematics, Vol 182 Semantics of Algorithmic Languages,
+E Engeler. Ed , Springer. Berlin, 1971, pp 311-366
+62 Scott, D Continuous lattices Tech. Monograph PRG 7, Oxford U Computing Lab , Oxford U ,
+
+PAGE 28
+
+lnittal Algebra Semantics and Continuous Algebras 95
+Oxford, England, 1971, also, Lecture Notes m Mathemattcs, Vol 274, Springer, Berhn, 1971, pp
+97-136
+63 ScoTt, D Data types as lattices Unpublished notes, Amsterdam, 1972
+64 SCOTI, D Data types as lattices Unpublished notes, Oxford, 1974
+65 Scott, D , AND SXRACHEY, C Towards a mathematical semantics for computer languages Tech Mono-
+graph PRG 6, Oxford U. Computing Lab., Oxford U., Oxford, England, 1971, also, Computers and
+Automata, J Fox, Ed , Wiley, New York, 1971, pp 19-46
+66 STRACHEY, C , AND WADSWORTH, C P Contmuatlons-A mathematical semantics for handhng full jumps
+Tech Monograph PRG-11, Programming Research Group, Oxford U Computing Lab , Oxford, Eng-
+land, 1974
+67. THATCHER, J.W. Characterizing derivation trees of context free grammars through a generahzatlon of
+finite automata theory J Computer and Syst Scis 1 (1967), 317-322
+68 THATCHER, J W Generahzed ~ sequential machines J Computer and Syst. Scts 4 (1970), 339-367
+69 THATCHER, J W Tree automata' An informal survey In Currents In Computing, A V. Aho, E d ,
+Prentice-Hall, Englewood Chffs, N J , 1973, 143-172
+70. THATCHER, J W., AND WRIGHT, J B. Generahzed flmte automata theory with an apphcatlon to a decision
+problem of second-order logic Math Systems Theory 2 (1968), 57-81
+71 TURNER, R Doctoral Dlss , U of London, London, England, 1973
+72. VUILLEMIN, J Syntaxe, S6mantlque et Axlomatlque d'un Langage de Programmation Simple These
+d'Etat, Umverslt6 Paris 6, France, 1974
+73 WAGNER, E.G An algebraic theory of recurstve defimttons and recurstve languages. Proc. Tlurd Annual
+ACM Symposium on Theory of Computing, 1971, pp 12-23
+74 WA6NER, E G Languages for defining sets in arbitrary algebras. Proc 1 lth Ann IEEE Symp on
+Switching and Automata Theory, 1971, pp 191-201
+75 WAND, M A concrete approach to abstract recurslve definitions In Automata, Languages and Program-
+ming, M Nivat, Ed , North-Holland Pub Co., Amsterdam, 1972, pp 331-341.
+76 WAND, M An algebraic formulation of the Chomsky hierarchy Lecture Notes in Computer Science, Vol
+25 Category Theory Apphed to Computation and Control, Springer, Berlin, 1974, pp 209-213
+77 VAN WIJNGAARDEN, A., Ed Report on the algorithmic language ALGOL 68 Numer Math 14 (1969),
+79-218
+RECEIVED JANUARY 1975, REVISED MARCH 1976
+Journal of the Association for Computing Machinery, Vol 24, No 1, January 1977

@@ -1,0 +1,21 @@
+# Central construction check: coefficient migration + protected old gates + new gate
+
+Frozen before execution; exploratory mechanism check, not neural training or novelty.
+
+QUESTION: Does the explicit sheet-growth rule create a new noncommuting executable operation while retaining the old operation under the proved coefficient corridor? What actual branch separation/control sensitivity/work is required, and does retention fail outside the corridor?
+
+STATE/RULE: root-growth-v1.md. P=z²-u, Q=(z-3)(z²-u)-epsilon. Add inert branch3, then migrate ALL initial labels(-1,+1,3) at resting u1 via epsilon0->target. Predictor uses dz=((z-3)du+depsilon)/Q_z; bounded Newton corrector realizes Q0. State is carried continuously, not reseeded between gates. Independent polynomial roots are verification oracles only, never branch selectors for the predictor/corrector.
+
+INFORMATION CLARIFICATION BEFORE FREEZE: roots(u,e) is a verification-only state-root oracle. Separately, one polynomial solve of the explicit critical equation per epsilon DESIGNS the new loop center/radius; that is paid constructor information/computation, available to the strong control, not a verification-only oracle or learned gate discovery. Record that critical solve separately. P read-only code audit checked derivatives/state/path binding; no core blocker remains after the declared unsafe migration fix.
+
+FROZEN CONFIG: epsilon[.005,.05,.2], coefficient homotopy64segments; old unit control circle256segments. New isolating circles at the computed upper critical value, radius min(.2,nearest-critical-separation/5), safe straight handle128segments each way. Compare old A, new B, actual concatenations AB/BA, doubled old A. Three fixed seeds4401/4402/4403 make smooth closed circle deformations of <=5% radius, handles fixed. Unsafe epsilon4 checks a predeclared outside-corridor case; failure of the sufficient bound alone is not assumed to imply failure. Root-label permutation tolerance1e-6; Newton tolerance1e-11, up to12correctorsteps, maxadaptive subdivisiondepth12, predictor move cap .08, bounded total stepcalls200000. Record failures without re-tuning.
+
+PRE-FREEZE FIX: migrate unsafeepsilon4 on epsilon(t)=4t+.3i sin(pi t), not the real segment which crosses a resting-control discriminant. Safeepsilons use the straightreal homotopy. Both old and new gates also run finer512segment contours (newhandles256segments) and must return the same permutation. This is an exploratory numerical consistency check, not certifiedcontinuation. All three startingbranches are explicitlytracked and charged in the harness; no one-state work claim.
+
+VERIFIER: exact rational Rouché bounds49/64and105/64 and epsiloninterval; independently calculated critical equations; per-step residual/scale-invariant Newton correction; endpoint roots and permutations; duplicate/refined-path consistency; minimum tracked root separation and |Q_u/Q_z|. Raw |Q_z|/|Q| are not invariant conditioning metrics. Actual coefficient homotopy labels must match every operation. Finite sampling is not certified numeric continuation; exact lemma is the analytic retention argument.
+
+SOURCE/FAMILY LIMIT: Rouché applies here to the holomorphic complex-polynomial mutation family, not arbitrary smooth real neural maps. A later neural constructor must output admissible coefficients or supply a stronger C1/properness certificate. No learned cover, useful gate discovery or physical energy claim is tested.
+
+CONTROLS: no coupling(epsilon0 gives disconnected branch); unsafeepsilon4; reset/reseed not treated as legitimate state retention; same-information classical continuation is the implemented executor itself. A learned-growth/efficiency comparison to a finite-state constructor is NOT executed and no advantage may be claimed. Count all prediction/corrector calls, oracle calls and saved paths; no hardware energy inference.
+
+BUDGET/STOP: one inspected Python process externally capped90seconds, existing numerical environment, network denied and writes confined to this new probe directory. No installs or training. Stop on timeout/nonfinite/stepbudget; preserve append-only partial output. After actual outcomes send independent supervisor a raw evidence packet; child completion does not end MAIN. The central test is structural extension and retention, not a loss-number optimization.
