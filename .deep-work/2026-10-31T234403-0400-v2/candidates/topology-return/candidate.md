@@ -61,9 +61,9 @@ RECONSTRUCTION, analytic proof, not machine verified. Suppose H* and H are Hermi
 
 The inequality follows by integrating dV and unitary invariance of operator norm. It includes leakage in the full modeled space. If the ideal restricted gate is the certified G_a in the common idle code, this bounds worst-input gate-state error by epsilon_a; state infidelity is at most epsilon_a^2 (capped by1). This is a conservative sufficient bound, not an exact cost/fidelity prediction.
 
-For an executed word w=a_L...a_1, a telescoping product of unitary differences gives
+For an executed word w=a_L...a_1, let V embed the common logical idle code into the modeled full Hilbert space, and suppose ||U_a V-V G_a||<=epsilon_a for every generator. A telescoping product gives
 
-    ||U_w-G_w|| <= sum_(j=1)^L epsilon_(a_j).
+    ||U_w V-V G_w|| <= sum_(j=1)^L epsilon_(a_j).
 
 Thus finite generator certificates can cover arbitrary old words ALGEBRAICALLY, but a demanded maximum word length/error is essential for useful execution. Preparation/readout errors add to the bound. If shared parameter updates physically move the stored code and each migration has error mu_k, add sum_k mu_k and all migration work. Pinned idle is a concrete way to avoid that particular migration, not a theorem that all continual costs vanish.
 
@@ -105,3 +105,38 @@ The rotating-spin example gives an exact elementary check on this distinction:
 Thus T*Delta >= 2pi/sqrt(p_budget) suffices uniformly without exploiting lucky resonant zeros. Increasing a SHARED gap can make a shorter execution meet the same error budget while preserving the path geometry. This is a real allowed adaptation direction in that model, but not free learning/retention: with H=(Delta/2)n·sigma, the control proxy integral ||H||² dt = Delta²*T/4 increases as1/T when the sufficient fidelity product T*Delta is held fixed. It exchanges latency for amplitude/work rather than proving a TOTAL-cost reduction. The proxy is explicitly a modeled control functional, not measured quantum energy consumption.
 
 This calculation changes the next test design: compare resource frontiers at matched amplitude, error and old-task criteria; do not call faster execution cheaper if the cost moved into a growing gap/correction field, and do not reject useful learning solely because an overly coarse safe bound stays large. K's fixed-torque phase-pump construction and P's exact shared-chart construction can help isolate these two issues before hardware-scale claims. All are topology-main technical support, not autonomous changes of MAIN.
+
+## Actual independent-review correction during construction
+
+Supervisor checked the root derivations and identified two scope clarifications, now applied: the word bound is stated on the common idle code via its embedding V (not by subtracting a logical-code operator from a full-space operator); and fixed idle projector plus a spectral gap alone do NOT fix a generic Berry holonomy. C_top must certify a genuine protected braid/transport family with the specified operation correspondence. Arbitrary gapped Hamiltonian loops are not admitted by that sentence. The quantum realization needs that concrete family before implementation; K's phase-map degree/tube construction already supplies its own concrete topology and dynamical law.
+
+Likewise global-phase equivalence above assumes operation contexts are classically selected. If a task invokes gates coherently under quantum control, a formerly global phase may become observable and must be retained/charged in the declared semantics. These are mathematical/interface repairs, not evidence against MAIN or unreported experimental failures.
+
+## Selected concrete development: K phase pump, with continuing retention of newly acquired interfaces
+
+Root read both complete support constructions and their ledgers. K's actual finite-time dynamics/certificate is selected for the next concrete subquestion inside topology because a fixed-torque DEADLINE is an observable that cannot be deferred to a new endpoint decoder. P's anchored-coupling result remains useful support: it establishes nonzero safe learning directions, and demonstrates when endpoint deferral removes a claimed economic benefit. No cubic/chart experiment is allocated. Neither choice changes MAIN.
+
+Root independently checked K's tube boundary signs, exact initial-failure displacement, shared update recurrence and 355/768<1/2 calculation. This is analytic verification, not new training or an executed trajectory. K supplies degree-one map h_lambda=exp(i phi_lambda), epsilon=.01, old T=1000pi, new T=6pi, delta=pi/6. At lambda0=0 the short operation cannot advance a decoder well; lambda_n=1-2^(-n) gives a strict finite-rate tube at n8. All parameters truly share the same force map; home force is unchanged during writes.
+
+A further ROOT RECONSTRUCTION addresses continuing retention rather than counting only the original long commands. If a newly acquired fast command of duration T is later treated as old, its SAME finite-rate/noise certificate requires
+
+    (2pi/T)[lambda+(1-lambda)/epsilon] + nu < sin(delta).
+
+Let D=sin(delta)-nu>0. For epsilon in(0,1), this is the simple lower-bound constraint
+
+    lambda > ell(T) := [epsilon^(-1) - T*D/(2pi)]
+                       / [epsilon^(-1)-1].
+
+Use a declared positive slack for strict inequalities and arithmetic uncertainty. For the noiseless K example, the new T=6pi contract gives ell=197/198. The actually derived lambda8=255/256 exceeds it. The original T=1000pi requirement adds no active lower bound on lambda in[0,1]. Thus registering the short command really DOES constrain later shared learning; its future retention is not supplied by winding alone.
+
+All certified past +/- commands at their declared durations can be summarized for this family by L=max_j ell(T_j), plus the common margin/noise assumptions. A continuing provisional update is
+
+    lambda_trial = Proj_[L+slack,1](lambda - eta*dL_task/dlambda),
+
+followed by actual new-task evaluation and any new-interface admission. Update L when a new deadline is genuinely acquired; do not count the analytically predicted endpoint as a received success query. The existing degree-one/home architecture handles semantic identity, while this aggregated constraint handles finite-time performance. One scalar summary replaces replay of all past deadlines in this particular known model. Actual state is carried in the tube, with any specified dwell/readout cost; no old state reset is assumed.
+
+This supplies a complete retention consequence but also a resource/plasticity boundary: as deadlines tighten, L approaches1 and the useful editable interval shrinks. Under this SUFFICIENT delta-tube certificate, T must exceed2pi/D to leave an interior. A rejected shorter deadline is not proof the actual plant cannot do it; a sharper executor/certificate or different control may work. Certificate conservatism and remaining plasticity are part of the cost frontier.
+
+The conventional direct controller can choose lambda=1 immediately and satisfy all feasible certificates in this one-weight family. Therefore neither the eight-step trajectory nor constant-size retention summary establishes a relative economic win here. This is a specific matched-family limitation, not a reason to switch MAIN or dismiss topological protection. The next consequential technical unknown is whether a useful shared-controller family with task-dependent/calibration-dependent geometry can retain a cheap and permissive certificate when no single hand-chosen waveform solves every new demand. The topology must still do actual protection work; mere additional weights or a repeated increment example would not answer it.
+
+CURRENT STATUS: useful shared adaptation and continued admission/retention are explicitly constructed under stated model assumptions; central comparative TOTAL-cost hypothesis remains untested. No new experiment after topology return. Old quantum/global-holonomy and digital-output boundaries retained. Root remains authorized to develop this in-scope unknown without a finished novelty verdict or per-stage human approval.
