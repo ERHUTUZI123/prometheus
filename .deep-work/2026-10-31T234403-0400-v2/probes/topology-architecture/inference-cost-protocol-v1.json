@@ -1,0 +1,36 @@
+{
+  "frozen_before_execution": true,
+  "version": "same-checkpoint-inference-cost-v1",
+  "MAIN": "TOPOLOGY human_only",
+  "M0": "NOT_PASSED",
+  "M3": "ultimate",
+  "primary_baseline": "Transformer",
+  "models": [
+    "topo continuous fused step1200",
+    "Transformer LR.003 step800",
+    "Replay LR.003 step800",
+    "Adapter LR.003 step800"
+  ],
+  "purpose": "Measure actual sameinput inference costs, separate neural/CPUgraph/continuouscold/warm cached maps; no learning efficiency claim fromunmatchedtrainedaccuracy",
+  "information": "originaltokens/start/task only no target labels",
+  "repeats": "5warmup30timed; continuouscold1warmup5timed",
+  "inputs": "N8seed0 task2 originalsavedarrays B1/64 length7/12/16",
+  "limits": {
+    "external_seconds": 120,
+    "internal_seconds": 100,
+    "AS_GiB": 512,
+    "file_MiB": 100,
+    "gpu_fraction": 0.3
+  },
+  "source_sha256": {
+    "benchmark_inference_cost.py": "5e90dcc115d4cc79cd394d7650b5c74009641460ea1190d5999a1e6b141e9738",
+    "train.py": "a8b7d5a9650c72e3aff1fd9b779c1f28e93ae655ed29716c92491bfbbd66eee6",
+    "tasks.py": "dbca2935925f713e2f5716d8ac5faf4892464918eed6b2e0a66b45680ec5d9bc",
+    "torch_baselines.py": "c22f59c4dd68385910f7df7f5c8be5d0268a479e6d5820ef6a636ce8efbde176",
+    "topology_model.py": "48f8f7aa5efe96297bef04e29ca6c52b8bd8bc38a2af409ce772619679e77acd",
+    "semantic_promotion_model.py": "d569785c90e02189ced289d043563ce8c08d97ecda04903e77494771f256035e",
+    "integrate_native_repair.py": "076ec180fc6331b21359935028ab64f933be6c741853a8edee4ab6ba1e86c613",
+    "train_monodromy_extension.py": "8d0f3a3ce0e4bcd3added02bb69f1dc8aef060f1527011dcae5ebef88f090706",
+    "continuous_monodromy.py": "ad1852bba88393b85db8aa44553d5c85183a0dce5ada4a62460f52b3a52c2936"
+  }
+}

@@ -22,7 +22,7 @@ from continuous_monodromy import (BIASES, FREQUENCIES, SPACING,
                                   ConfigurationLoop, lift_sequence)
 from semantic_promotion_model import SemanticPromotionModel
 from topology_model import assignment
-from train_monodromy_extension import (INITIAL_OMEGA, PATH_WEIGHT,
+from train_monodromy_extension import (PATH_WEIGHT,
                                        QUADRATURE_PER_SEGMENT, kinetic_moments)
 
 
@@ -34,7 +34,7 @@ def _new_costs():
         geometry_class_bank_assignments=0, geometry_class_check_seconds=0.,
         geometry_moment_rebuilds=0, geometry_quadrature_point_strands=0,
         geometry_moment_seconds=0., geometry_torch_objective_seconds=0.,
-        hard_eval_calls=0, hard_bank_assignment_batches=0,
+        hard_eval_calls=0, hard_eval_total_seconds=0., hard_bank_assignment_batches=0,
         hard_bank_hungarian_assignments=0, hard_bank_assignment_seconds=0.,
         hard_cache_signature_checks=0, hard_cache_signature_seconds=0.,
         hard_cache_generations=0, hard_cache_class_hits=0,
@@ -48,7 +48,7 @@ def _new_costs():
 class ContinuousNativeModel(SemanticPromotionModel):
     geometry_loss_weight = PATH_WEIGHT
 
-    def __init__(self, *args, initial_omega=INITIAL_OMEGA,
+    def __init__(self, *args, initial_omega=(0., 0., 0., 0.),
                  continuous_lift_seconds=110., **kwargs):
         super().__init__(*args, **kwargs)
         value = self.encoder.new_tensor(initial_omega)
@@ -57,6 +57,7 @@ class ContinuousNativeModel(SemanticPromotionModel):
         if not 0 < float(continuous_lift_seconds) <= 120:
             raise ValueError("continuous hard-call cold realization cap must be<=120seconds")
         self.path_omega = nn.Parameter(value)
+        self._initial_path_omega = tuple(float(w) for w in initial_omega)
         self.continuous_lift_seconds = float(continuous_lift_seconds)
         self._geometry_deadline = None
         self._geometry_costs = _new_costs()
@@ -186,6 +187,7 @@ class ContinuousNativeModel(SemanticPromotionModel):
 
     @torch.no_grad()
     def hard_eval(self, tokens, starts, task_ids):
+        hard_started = time.perf_counter()
         if tokens.ndim != 2 or tokens.shape[0] > 128 or tokens.shape[1] > 18:
             raise ValueError("native evaluation shape/process bound exceeded")
         self._geometry_costs["hard_eval_calls"] += 1
@@ -226,7 +228,9 @@ class ContinuousNativeModel(SemanticPromotionModel):
             self._geometry_costs["warm_native_execution_seconds"] += time.perf_counter()-warm_start
             self._geometry_costs["warm_native_primitive_calls"] += uses
         logits = self.encoder.new_full((len(starts), self.n), -30.)
-        return logits.scatter_(1, predictions[:, None], 0.)
+        result = logits.scatter_(1, predictions[:, None], 0.)
+        self._geometry_costs["hard_eval_total_seconds"] += time.perf_counter()-hard_started
+        return result
 
     def geometry_resource_report(self):
         moments = None if self._moments is None else dict(
@@ -237,6 +241,8 @@ class ContinuousNativeModel(SemanticPromotionModel):
             active_learned_classes=[list(p) for p in self._moment_signature[1]])
         return dict(costs=copy.deepcopy(self._geometry_costs),
             current_omega=self.path_omega.detach().cpu().tolist(),
+            current_path_omega_gradient=(None if self.path_omega.grad is None
+                                         else self.path_omega.grad.detach().cpu().tolist()),
             current_latent_states=int(self.d), bank_size=int(self.n_ops),
             moments=moments, current_cache_realizations=copy.deepcopy(self._last_realizations),
             execution="cold unordered-configuration lifts; exact cached maps for warm learned calls",
@@ -250,6 +256,7 @@ class ContinuousNativeModel(SemanticPromotionModel):
         extra["continuous_monodromy"] = dict(
             kind="shared_endpoint_fixed_nonlinear_vertical_shear", state_key="path_omega",
             dimensions=4, frequencies=FREQUENCIES.tolist(), biases=BIASES.tolist(), spacing=SPACING,
+            initial_omega=list(self._initial_path_omega),
             kinetic_weight=PATH_WEIGHT, quadrature_per_segment=QUADRATURE_PER_SEGMENT,
             continuous_lift_seconds=self.continuous_lift_seconds,
             checkpoint_loader="continuous_native_model.ContinuousNativeModel",
@@ -270,6 +277,7 @@ class ContinuousNativeModel(SemanticPromotionModel):
             if not 0 < cap <= 120:
                 raise ValueError("saved continuous execution wall cap invalid")
             self.continuous_lift_seconds = cap
+            self._initial_path_omega = tuple(float(w) for w in metadata.get("initial_omega", self._initial_path_omega))
             saved_costs = metadata.get("resource_report", {}).get("costs", {})
             for name in self._geometry_costs:
                 if name in saved_costs:

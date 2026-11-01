@@ -137,7 +137,14 @@ def source_model(checkpoint, device):
     if vocab != 7 or n_tasks != 3 or slots != 2:
         raise ValueError("checkpoint differs from current native architecture")
     settings = extra.get("promotion_settings", {})
-    model = SemanticPromotionModel(n, vocab=vocab-1, max_len=18, n_tasks=n_tasks,
+    model_class = SemanticPromotionModel
+    if "path_omega" in state:
+        # Runtime import avoids a module-initialization cycle with the shared
+        # kinetic-action utility. A stripped-omega legacy extension load still
+        # deliberately follows the original SemanticPromotionModel route.
+        from continuous_native_model import ContinuousNativeModel
+        model_class = ContinuousNativeModel
+    model = model_class(n, vocab=vocab-1, max_len=18, n_tasks=n_tasks,
         latent_factor=d//n, protection=True, seed=int(checkpoint["args"]["seed"]),
         n_ops=count, slots=slots, emb_dim=emb_dim,
         max_bank=int(extra.get("max_bank", 24)), **settings).to(device)
@@ -182,6 +189,7 @@ def evaluate(model, datasets, alphabets, device, batch, recorder, costs):
     synchronize(device)
     began, result = time.perf_counter(), {}
     model.eval()
+    continuous = callable(getattr(model, "geometry_resource_report", None))
     for task in sorted(datasets):
         graph = model.graph(task, alphabets[task])
         result[task] = {}
@@ -194,8 +202,9 @@ def evaluate(model, datasets, alphabets, device, batch, recorder, costs):
                     if a:
                         selected = words[:, column] == a
                         native[selected] = graph["trans"][int(a)][native[selected]]
-            hard_correct = int(np.count_nonzero(graph["dec"][native] == arrays["targets"]))
-            count, loss, soft_correct = len(native), 0., 0
+            native_predictions = graph["dec"][native]
+            hard_correct = int(np.count_nonzero(native_predictions == arrays["targets"]))
+            count, loss, soft_correct, continuous_correct = len(native), 0., 0, 0
             for start in range(0, count, batch):
                 recorder.check()
                 b = {k: torch.as_tensor(v[start:start+batch], device=device, dtype=torch.long)
@@ -205,12 +214,36 @@ def evaluate(model, datasets, alphabets, device, batch, recorder, costs):
                     raise FloatingPointError("nonfinite actual neural evaluation")
                 loss += float(F.cross_entropy(logits, b["targets"], reduction="sum").item())
                 soft_correct += int((logits.argmax(-1) == b["targets"]).sum().item())
+                if continuous:
+                    synchronize(device)
+                    continuous_start = time.perf_counter()
+                    actual_hard = model.hard_eval(b["tokens"], b["starts"], b["task_ids"])
+                    synchronize(device)
+                    costs["evaluation_continuous_native_seconds"] = (
+                        costs.get("evaluation_continuous_native_seconds", 0.)
+                        + time.perf_counter()-continuous_start)
+                    predictions = actual_hard.argmax(-1)
+                    if (not torch.isfinite(actual_hard).all()
+                            or not np.array_equal(predictions.cpu().numpy(), native_predictions[start:start+batch])):
+                        raise RuntimeError("ACTUAL continuous neural execution differs from learned native graph")
+                    continuous_correct += int((predictions == b["targets"]).sum().item())
+                    costs["evaluation_continuous_native_episodes"] = (
+                        costs.get("evaluation_continuous_native_episodes", 0) + len(predictions))
             result[task][split] = dict(n=count, CE=loss/count, soft_acc=soft_correct/count,
                                       native_acc=hard_correct/count)
+            if continuous:
+                result[task][split].update(continuous_native_acc=continuous_correct/count,
+                    actual_continuous_execution_matches_graph_native=True)
             costs["evaluation_soft_episodes"] += count
             costs["evaluation_native_transition_uses"] += int(np.count_nonzero(words))
     synchronize(device)
     costs["evaluation_seconds"] += time.perf_counter()-began
+    if continuous:
+        recorder.emit("continuous_neural_evaluation_resources",
+            source_model_class=type(model).__module__+"."+type(model).__name__,
+            actual_neural_parameters=sum(p.numel() for p in model.parameters()),
+            geometry_resources=model.geometry_resource_report(),
+            continuous_seconds_are_part_of_total_evaluation_seconds=True)
     model.train()
     return result
 
@@ -226,6 +259,7 @@ def save_checkpoint(model, optimizer, original, recorder, completed, provenance,
         numpy_rng=np.random.get_state(), python_rng=random.getstate(),
         cuda_rng=torch.cuda.get_rng_state_all() if torch.cuda.is_available() else [],
         no_automatic_resume_or_retry=True, M0="NOT_PASSED",
+        source_model_class=type(model).__module__+"."+type(model).__name__,
         native_repair_integration=dict(provenance=provenance, completed_additional_updates=completed,
             original_training_args_preserved=True, original_stage_step=original["step"],
             additional_updates_are_NOT_retroactive_original_training=True))
@@ -305,6 +339,21 @@ def main():
                 or original.get("model_name") != "topo" or int(original.get("stage", -1)) != 2):
             raise ValueError("trusted current stage2 topo checkpoint required")
         model = source_model(original, device)
+        continuous = callable(getattr(model, "geometry_resource_report", None))
+        source_class = type(model).__module__+"."+type(model).__name__
+        provenance["source_model_class"] = source_class
+        provenance["actual_neural_parameters"] = sum(p.numel() for p in model.parameters())
+        if continuous:
+            for filename in ("continuous_native_model.py", "continuous_monodromy.py",
+                             "train_monodromy_extension.py"):
+                pathname = Path(__file__).with_name(filename)
+                provenance["actual_code_sha256"][filename] = sha256(pathname)
+            model.set_geometry_deadline(time.monotonic()+max(.001, recorder.deadline-time.perf_counter()))
+        source_omega = model.path_omega.detach().clone() if continuous else None
+        recorder.emit("actual_source_model_loaded", source_model_class=source_class,
+            parameters=provenance["actual_neural_parameters"], continuous_execution=continuous,
+            provenance=provenance, restored_path_omega=source_omega,
+            source_checkpoint_stage=int(original["stage"]), source_checkpoint_step=int(original["step"]))
         if "torch_rng" in original:
             torch.set_rng_state(original["torch_rng"])
         if "numpy_rng" in original:
@@ -324,6 +373,7 @@ def main():
         before_params = {n: p.detach().clone() for n, p in model.named_parameters()}
         recorder.emit("source_verified", actual_graphs=[graph_summary(g) for g in actual_before.values()],
             latent_states=model.d, bank_size=model.n_ops, parameters=sum(p.numel() for p in model.parameters()),
+            source_model_class=source_class, actual_continuous_model_restored=continuous,
             current_temperature=model.temperature, old_reference_count=len(old_references),
             provisional_current_references_to_replace=len(replaced_references))
         datasets, input_sources = load_datasets(args.datasets, alphabets, recorder)
@@ -366,6 +416,8 @@ def main():
             changed_experts=[int(u["expert"]) for u in repair["admitted_bank_updates"]],
             changed_operation_scalars=int(torch.count_nonzero(model.operations-before_params["operations"]).item()),
             other_parameter_tensors_unchanged=True, old_certificates=old_certificates,
+            shared_geometry_parameters_unchanged=(None if not continuous else torch.equal(model.path_omega, source_omega)),
+            geometry_resources=(None if not continuous else model.geometry_resource_report()),
             replaced_provisional_reference_count=len(replaced_references), new_current_reference=admission,
             reference_revision_source="previously admitted training-terminal repair; no teacher states")
         optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
@@ -380,6 +432,8 @@ def main():
             task=2, data="original task2-train.npz only", all_parameters_trainable=True,
             sample_indices_sha256=sha256(recorder.out / "repair-training-batch-indices.npz"),
             additional_budget_not_original800=True,
+            geometry_objective_used=False,
+            geometry_policy="preserve source shared omega; terminal CE only, no geometry gradient or reset",
             optimizer_state_not_rolled_back_on_guard_rejection=True)
         curves = []
         for step in range(args.updates+1):
@@ -393,6 +447,9 @@ def main():
                     parameter_bytes=sum(p.numel()*p.element_size() for p in model.parameters()),
                     representation_state_bytes=model.representation_state_bytes(),
                     gpu_peak_bytes=torch.cuda.max_memory_allocated(device) if device.type == "cuda" else 0,
+                    source_model_class=source_class,
+                    geometry_resources=(None if not continuous else model.geometry_resource_report()),
+                    shared_geometry_parameters_unchanged=(None if not continuous else torch.equal(model.path_omega, source_omega)),
                     guard_counts=costs.copy())
                 curves.append(curve)
                 recorder.emit("curve", **curve)
@@ -430,7 +487,12 @@ def main():
             costs["training_current_episodes"] += args.batch
             completed = step+1
             recorder.emit("actual_parameter_update", step=completed, terminal_CE=float(loss.item()),
-                          preclip_gradient_norm=float(gradient.item()), guard=guard)
+                          preclip_gradient_norm=float(gradient.item()), guard=guard,
+                          geometry_objective_used=False,
+                          path_omega_gradient=(None if not continuous or model.path_omega.grad is None
+                                               else model.path_omega.grad.detach()))
+        if continuous and not torch.equal(model.path_omega, source_omega):
+            raise RuntimeError("terminal-only repair continuation unexpectedly changed shared path geometry")
         final_path = recorder.out / f"topo-stage2-step{int(original['step'])+completed}-repair-trained.pt"
         recorder.json("summary.json", dict(schema="neural-native-repair-integration-v1",
             status="REAL_NEURAL_REPAIR_AND200_ADDITIONAL_UPDATES_COMPLETED", provenance=provenance,
@@ -439,6 +501,11 @@ def main():
             installed_checkpoint=installed_checkpoint.name, final_checkpoint=final_path.name,
             costs=costs, wall_seconds=time.perf_counter()-recorder.started,
             params=sum(p.numel() for p in model.parameters()), M0="NOT_PASSED",
+            source_model_class=source_class,
+            geometry_resources=(None if not continuous else model.geometry_resource_report()),
+            source_and_final_path_omega=(None if not continuous else source_omega),
+            shared_geometry_parameters_unchanged=(None if not continuous else torch.equal(model.path_omega, source_omega)),
+            geometry_objective_used_in_additional_training=False,
             evidence_boundary="actual neural weights, native execution, terminal SGD and old/current semantic guard; one development instance"))
         print(json.dumps(dict(status="REAL_NEURAL_REPAIR_AND200_ADDITIONAL_UPDATES_COMPLETED",
                               out=str(args.out), updates=completed, costs=costs), sort_keys=True))

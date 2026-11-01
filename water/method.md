@@ -17,14 +17,14 @@ $$
 \theta=(E,R,\{W_k\},\{e_a\},\{t_c\},\mathrm{Call}).
 $$
 
-$D$ 是内部状态数，$K$ 是原语数；$\mathcal B$ 保存学得的原生操作，$\mathcal P$ 是调用程序，$\mathcal R_{\rm old}$ 是旧行为关系；$\omega$ 是正在接入的共享连续路径参数。
+$D$ 是内部状态数，$K$ 是原语数；$\mathcal B$ 保存学得的原生操作，$\mathcal P$ 是调用程序，$\mathcal R_{\rm old}$ 是旧行为关系；$\omega$ 是已注册在同一神经模型与优化器中的四维共享连续路径参数。
 
 | 部分 | 当前状态 |
 |---|---|
 | 终端训练、可学习表示/操作/调用、原生原语形成、三阶段续训 | 已实现、已执行 |
-| 旧输入绑定与转移闭包保护、经验触发 $D:8\to16$ | 已实现、已执行 |
-| 历史区分见证驱动的置换修订 | 已执行；已安装真实神经 checkpoint 并追加 200 次训练 |
-| 连续配置回路、共享形变与路径提升 | 接入模块代码已写，尚待执行及训练集成 |
+| 旧输入绑定与转移闭包保护、经验触发 $D:8\to16$ 及 $16\to32$ | 两规模均已实现、已执行；保护以实际准入合同为范围 |
+| 历史区分见证驱动的置换修订 | 较早checkpoint已安装并训练；当前v7仅保存图修订执行，神经安装尚未运行 |
+| 连续配置回路、共享形变与路径提升 | 已从stage0接入真实神经模型，完成N8/N16三阶段训练和强基线比较 |
 | 同伦保护降低持续获取的总体成本 | 中心待验证假说；M0 尚未通过 |
 
 ## 2. 拓扑对象、执行语义与保护原理
@@ -53,7 +53,7 @@ $$
 
 采用**右作用**：置换矩阵满足 $[\Pi]_{q,\Pi(q)}=1$，状态分布按 $\alpha\mapsto\alpha\Pi$ 更新。先执行 $b_1$ 再执行 $b_2$ 对应 $\rho_D(b_1)\rho_D(b_2)$，一般不可交换。
 
-数学定义依据 [González-Meneses2011 §1.1/1.3、§2.1 Eq2.1](https://www.numdam.org/article/AMBP_2011__18_1_15_0.pdf)。当前已训练执行器使用这个作用的**置换商**；连续层将回路和路径提升接入原生执行。
+数学定义依据 [González-Meneses2011 §1.1/1.3、§2.1 Eq2.1](https://www.numdam.org/article/AMBP_2011__18_1_15_0.pdf)。当前执行器使用这个作用的**置换商语义**，并已通过连续配置回路的实际路径提升生成原生执行映射。
 
 ### 2.2 同伦保护与完整能力合同
 
@@ -235,9 +235,21 @@ $$
 \omega\leftarrow\omega-\eta_\omega\nabla_\omega\mathcal J_{exec}.
 $$
 
-第一条由第3–5节获得、修订离散操作；第二条在同伦类内学习执行质量。$\mathcal J_{exec}$ 将针对明确的路径工作、时延或数值执行误差冻结定义，并与同信息直接实现比较。旧调用绑定仍遵守第2.2节。
+第一条由第3–5节获得、修订离散操作；第二条在同伦类内学习执行质量。现已执行的目标为当前学得原语路径的几何 kinetic action：
 
-**接入状态：** `continuous_monodromy.py` 已有代码，连续层的执行、真实共享权重训练和成本优势按各自实际完成情况标记；它是现行模型原语的执行层扩展，不另起方法。最初假说的关键检验是：类内共享适应能否减少额外参数、重训或验证，同时新类仍能持续获得。
+$$
+\mathcal A(\omega)=\sum_{k\in\mathcal B_{active}}\int_0^{T_k}\sum_j|\dot z_{k,j,\omega}(t)|^2dt
+\simeq c+2b^T\omega+\omega^TH\omega,
+\qquad \mathcal L_{fused}=\mathcal L_{term}+.01\,\frac{\mathcal A(\omega)}{\max(1,c)}.
+$$
+
+每交换段16点 midpoint quadrature，按当前已学类重建矩；这是几何工作目标的数值积分。终端梯度更新表示、操作与调用，工作梯度更新共享路径形状，两者进入同一 Adam 与 checkpoint。旧调用绑定仍遵守第2.2节。
+
+同信息的执行成本对照为零剪切 $\omega=0$ 及四维二次优化 $\omega_*=-H^+b$（需检查可行域及驻点残差）。它们与神经优化使用相同的工作模型，后续比较其发现、维护和执行成本。
+
+**实际接入：** 修订后的同一神经模型已注册 `path_omega`，真实追加200步联合训练，参数3606→3610。共享权重由 $(.7,-.5,.4,-.3)$ 变为 $(.179184,-.052156,-.031577,.093362)$；全部三阶段15个数据划分的 soft/native/连续执行保持100%，实际重载验证通过。此段在三阶段获取之后接入。当前 `continuous_native_model.py` 已将同一机制接入从stage0开始的形成、调用、保护及扩容流程，N8与N16完整三阶段训练均已执行；默认零剪切初始化。
+
+冷执行通过无标签配置提升获得每个原语的映射，随后已学调用使用这些实际提升映射的精确缓存。缓存签名包含维数、原语类及共享路径参数；变化后重新构造。几何工作、冷构造及热调用分别计价。最初假说的关键检验是：类内共享适应能否减少额外参数、重训或验证，同时新类仍能持续获得。
 
 ## 8. 完整学习过程
 
@@ -252,14 +264,14 @@ for 每个新阶段：
         当前完整行为达到形成门槛时：
             复用/形成原生原语，更新真实权重与调用头
             接入该原语的连续回路；验证旧合同并保存 checkpoint
-        若经验见证仍被合并：
+        若启用配套见证修订事务且历史仍被合并：
             生成置换修订候选 → 终端训练反馈选择 → 验证准入
             安装真实参数并继续训练，保留修订前后记录
         连续层接通时：在保护的同伦类内学习共享实现参数
     评价新任务、全部旧任务及未见组合；保存完整资源账目
 ```
 
-已执行主循环为 native-v6；见证修订和连续层是正在融合的开发增量，其执行状态见第1节及直接产物。
+`continuous_native_model.py` / `train.py --continuous-monodromy` 已完成从第一阶段开始的同一三阶段流程。原语形成、增长、连续执行与联合学习已进入v7主循环；见证修订通过配套显式事务调用，当前v7未自动安装该修订。
 
 ## 9. M0：能力、时间、增长和完整资源共同计量
 
@@ -299,34 +311,45 @@ Transformer 是主要架构基线；Replay、Adapter 使用同一 backbone。相
 
 Adapter 最终新任务 32.81%，旧任务 98.44%/47.66%；普通 program-v2 最终新任务 51.56%，旧任务均100%。原始 .01 Transformer 结果仍保留在历史记录。
 
-**同一 checkpoint 的实际修订续训：** 在16状态内搜索15个见证驱动候选，接受一次原语像交换，训练错误111→0；随后更新真实 $W_{10}$、保留调用与编码、修订当前任务合同，保存实际神经 checkpoint 并追加200次 Adam。最终原三阶段全部 train/validation/IID/OOD/length16 的 soft 与 native 均为100%。参数仍3606；新增训练3.1178s、保护0.6550s、安装0.0229s。此新增预算单独记账，上表保留原800步对比，后续同预算基线需得到对应增量机会。
+**较早 checkpoint 的实际修订续训（独立预算）：** 在16状态内搜索15个见证驱动候选，接受一次原语像交换，训练错误111→0；随后更新真实 $W_{10}$、保留调用与编码、修订当前任务合同，保存实际神经 checkpoint 并追加200次 Adam。最终原三阶段全部 train/validation/IID/OOD/length16 的 soft 与 native 均为100%。参数仍3606；新增训练3.1178s、保护0.6550s、安装0.0229s。此新增预算单独记账，上表保留原800步对比，后续同预算基线需得到对应增量机会。
 
-修订前 Native 第三阶段 OOD90.63%、length16为83.59%；实际误差分析与修订均针对有训练区分证据的状态别名。现有 topo_off 只关闭逐步/温度 guard，共同形成与扩容仍保持旧语义；该消融边界与详细反例集中在证据记录。
+修订前 Native 第三阶段 OOD90.63%、length16为83.59%；实际误差分析与修订均针对有训练区分证据的状态别名。
+
+**v7规模扩展实测：** N16三阶段新任务IID为100%→59.38%→31.45%；最后旧任务为100%/59.38%，其中第二项任务未被正式准入。关闭逐步guard的臂为100%→95.51%→46.09%，最后旧任务均100%。Transformer最终新任务38.87%、旧任务34.18%/38.28%；Replay32.03%、旧任务96.09%/55.86%；Adapter22.85%、旧任务94.73%/40.23%。
+
+当前具体开发缺口是终端软计算到稳定原生操作的形成/准入。N16失败阶段800次保护提案全部完整接受，不能把失败直接解释成保护拒绝；实际单步训练数据已足够区分新操作。完整诊断及IID重复比例见证据报告，数值/匹配敏感性仍待参数级因果检验。现有 topo_off 只关闭逐步/温度 guard，共同形成与扩容仍保持旧语义；该消融边界与详细反例集中在证据记录。
 
 ### 9.3 已记录的资源与待补测量
 
-| 方法 | 三阶段训练时间 | 实际模型调用总时间 | 最终参数 | 优化器 / 保持数据字节 |
-|---|---:|---:|---:|---:|
-| Native ON | 22.728 s | 79.449 s | 3,606 | 28,876 / 1,728 |
-| Transformer | 17.544 s | 24.770 s | 40,280 | 322,372 / 0 |
-| Transformer+Replay | 19.321 s | 23.601 s | 40,280 | 322,372 / 1,376,256 回放 |
-| Transformer+Adapter | 21.599 s | 30.976 s | 50,664 | 32,624 / 模块含在参数内 |
+| 规模 / 方法 | 三阶段训练 s | 模型调用总 s | 阶段参数增长 | 最终优化器 / 保持数据 B |
+|---|---:|---:|---|---|
+| N8 Native ON | 28.233 | 80.005 | 1220→1448→3610 | 28,912 / 1,728 |
+| N8 Transformer | 17.544 | 24.770 | 40,280固定 | 322,372 / 0 |
+| N8 Replay | 19.321 | 23.601 | 40,280固定 | 322,372 / 1,376,256回放 |
+| N16 Native ON | 43.261 | 93.709 | 2642→2642→8836 | 70,720 / 640 |
+| N16 Transformer | 16.389 | 23.847 | 41,056固定 | 328,580 / 0 |
+| N16 Replay | 14.876 | 18.988 | 41,056固定 | 328,580 / 1,376,256回放 |
+| N16 Adapter | 20.823 | 26.739 | 52,224固定，最终活跃4080 | 35,760 / 模块含在参数内 |
 
-Native 参数为 $1102\to1216\to1444\to3606$；三阶段逐步保护共4.266s、温度保护3.327s、材料化0.0503s、状态见证及扩容0.2868s。这些是实际开发调用成本，评估、恢复过程不同；保留原口径，后续以统一测量比较增长前沿。独立推理延迟、完整内存及等准确率成本尚待测量。
+Native ON从N8到N16，完整模型调用80.005→93.709s；第三阶段几何矩重建新增323次、63,003,648个point-strands、12.959s，已成为主要额外成本。已付费缓存峰值768→1536B；N16全程逐步保护3.066s、温度保护1.802s、连续冷提升2.512s。几何矩、提升和维护计时包含于训练/评估等字段，不能与总时间重复相加。
+
+**实际独立推理测试：** 同一L40S、共同输入、batch1/长度16，神经前向p50：Native soft4.895ms、Transformer0.672ms、Replay0.666ms、Adapter1.327ms。完整连续原语库冷构造后调用p50为96.785ms，缓存实际提升映射后的CPU调用为0.112ms；前者包含全部唯一原语构造，后者依赖已付费缓存，分别报告。此项有48组batch/长度/接口计时，全部权重前后哈希保持；使用较早step1200融合checkpoint，未冒称在新v7权重上重新测过。
+
+这些是实际开发成本，当前不同方法准确率及训练过程仍不同；下一轮比较统一阶段流程与增长趋势。完整内存、硬件能耗和等能力生命周期成本仍由相应测量决定。
 
 ## 10. 实现与证据
 
 同一 V2：[`2026-10-31T234403-0400-v2`](../.deep-work/2026-10-31T234403-0400-v2/)。以下路径相对此目录：
 
 - 核心：`probes/topology-architecture/{topology_model.py,semantic_promotion_model.py,workspace_refinement.py,train.py}`；Transformer 为 `torch_baselines.py`。
-- 融合增量：同目录 `witness_operation_repair.py`、`integrate_native_repair.py`、`continuous_monodromy.py`；真实 checkpoint 与续训见 `runs/native-neural-repair-integration-v1/`。
+- 融合增量：同目录 `witness_operation_repair.py`、`integrate_native_repair.py`、`continuous_monodromy.py`、`train_monodromy_extension.py`、`continuous_native_model.py`；真实 checkpoint 与续训见 `runs/native-neural-repair-integration-v1/`、`runs/native-continuous-integration-v1/`。
 - 冻结协议：`protocol-v1.md`、`native-promotion-protocol-v5.json`、`native-continuation-protocol-v5b.json`、`native-workspace-protocol-v6.json`、`baseline-supplement-protocol-v6b.json`。
 - 原始训练、失败、曲线与收据：`probes/topology-architecture/runs/`；源码快照在 `versions/`。远端 overlay 持续同步本地。
-- 成本原值和来源哈希：`probes/topology-architecture/resource-extraction-v6b-20261101.json`。
-- 架构演变、数学反例、消融范围与详细审查：`candidates/topology-architecture/root-routing-mechanism.md`、`supervision/reviews/review-029-architecture.md`。
+- 本批完整结果、两规模曲线、时间/参数/存储、机器可读表格：[`final/topology-architecture/result.md`](../.deep-work/2026-10-31T234403-0400-v2/final/topology-architecture/result.md)。历史成本及本批来源哈希继续保留。
+- 架构演变、数学反例、消融范围与详细审查：`candidates/topology-architecture/root-routing-mechanism.md`、`supervision/reviews/review-029-architecture.md`、`review-030-architecture-integration.md`、`review-031-continuous-integration.md`、`review-032-primary-v7-results.md`。
 
-当前架构从初版协议起即采用置换商简化；native-v5 修复原生操作形成，v6 加入经验状态增长。连续层尚未接通并非已记录的连续 monodromy 实验失败；其学习—几何接口正按第7节接回。
+当前架构从初版协议起即采用置换商简化；native-v5 修复原生操作形成，v6 加入经验状态增长。连续层原先未接通并非已记录的连续 monodromy 实验失败；其学习—几何接口现已按第7节实际融合。
 
 原文依据：路由与均衡见 [Shazeer2017 §4](https://arxiv.org/pdf/1701.06538)，连续匹配松弛见 [Mena2018 pp2–3](https://arxiv.org/pdf/1802.08665)，终端前后向信用见 [Rabiner1989 pp262–265](https://www.fceia.unr.edu.ar/prodivoz/Rabiner_1989.pdf)。实际阅读边界及与当前更新的区别留在来源记录。
 
-**当前科学判断：** 已有三阶段学习和可执行原语形成证据。拓扑保护对完整资源和持续增长的贡献，由连续层融合、真实参数更新、机制消融及强 Transformer 比较共同检验；M0–M3 按既定标准判定。
+**当前科学判断：** 连续层与真实学习已接通，N8获取/保持较好；N16暴露形成失败及几何维护变贵。M0未通过。下一项方法发展针对获取—保护接口的稳定形成与成本，而不以单项准确率代替原始假说。

@@ -1,3 +1,15 @@
+## RECOVER HERE — completed continuous-primary v7 batch / M0 not passed — 2026-11-01T21:40:00.150094+00:00
+
+MAIN=TOPOLOGY human_only; M3 ultimate; Transformer primary; unique current method water/method.md. Human requested fullresults. Saved final/topology-architecture/result.md with actualtwo-scale seed0 3stage results, resource/time/growth/latency tables, CSV/JSON, visuallycheckedPNG/SVG. This is completed BATCH evidence, NOT campaign success/completion/PARK. Allscience original/olderreports preserved.
+
+ACTUAL: v7NNcontinuouspathlayer fromstage0,4sharedomega, nativebirth/calls/oldclosedrelation andwitnessgrowth. N8 ON/OFF finalold1/1,new.974609375,OOD.90625,L16.8359375; params3610,ONmodelwall80.0047s. N16 ON final1/.59375/.314453125,params8836,93.7091s; OFF1/1/.4609375,params10984,80.9564s. Sameinfo strongesttestedN16Transformer .341796875/.3828125/.388671875,41056params,23.8474s; Replay.9609375/.55859375/.3203125;Adapter.947265625/.40234375/.228515625. Dataarrays/batcheshashmatched. N16 ON secondtaskNEVERADMITTED; unchanged.59375 NOTallwordprotection. All800phase1ONguardfullaccept,zerotempreject; donotclaimguardblockedplasticity. Assignment/formation sensitivity open, currentdatahasall16one-stepstarts. N16thirdstage63Mgeometryquadraturepoint-strands/12.9589s extra; fullcostadvantageunknown.
+
+Review032 COMPLETE aftercode/rawindependent864accuracymatches+75admittedrelations; M0A/Bpartial,C/D/Eunmet. Actualindependentlatencycoldcontinuous96.785ms,warmmapcache.112ms,NativeNN4.895ms,TFNN.672ms atB1L16; scopesNOTinterchangeable. Earlierstep1200fusioninferencecheckpointdistinctfromv7newtraining. Fullall48latencyraw saved.
+
+V7CPUwitnesssavedGRAPHrepair DIDrun15candidates andachieveall15graphsplit1; noactualv7NNinstallationyet. Updatedintegrate_native_repair.py sourceSHAda326 is CODEONLY. Earliernative-neuralrepair+posthoccontinuousfusion actual.pt1resultsremainseparate,with200+200additionalupdates. Donotreportv7checkpoint100.
+
+CURRENT noexperimentalGPU/CPUrunner active or scheduled, all launchedsessions returnedcompletionreceipts. No backgroundpromise. Humanrequestisresultsdelivery; rootdidnotstartnewresearchwhileassembling. Check source snapshots beforefuturelaunches. Directunresolvedstep: same-checkpoint N16stage1 operationformation/admission diagnostic andthenconstructivefixwithinTopologyMAIN; learned-direct-loop sketch OPEN/unimplemented, notadoptednewroute. Remainwithinexistingresources/isolation, no model/permission/install/commit changes.
+
 ## ACTIVE integrated native checkpoint — 2026-11-01T21:07:22.356081+00:00
 
 MAIN=TOPOLOGY human_only; M0 NOT_PASSED/M3 ultimate; Transformer PRIMARY. Canonical current method ONLY water/method.md, now constructive unified algorithm and topological definitions; time/parameter/full-resource metrics integrated. Actual stage2 completed (not pending): Native ON/OFF .974609375IID/.90625OOD/.8359375L16; old100%; history witness16 triggeredD16. Stronger LR.003Transformer .408203125new/.4375,.291015625old; Replay .3984375new/.970703125,.576171875old. Baseline+error204files local hashverified.
