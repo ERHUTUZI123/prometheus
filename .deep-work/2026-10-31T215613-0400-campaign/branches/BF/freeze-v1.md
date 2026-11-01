@@ -1,0 +1,3 @@
+v1 frozen before numerical probe execution and before opening any coordinator proposal or unassigned branch. Exact hash and UTC timestamp are in the immediately accompanying tool record; this file is not a claim that future edits are impossible. `candidate-v1.md` will remain unchanged; postfreeze corrections belong in the certificate.
+
+Permitted inputs inspected: contract; Cross-field reconstructor and Constructive repairer role paragraphs; B candidate-v0/certificate/load-bearing-records/source-status-correction; F v0/certificate/repair-and-attack/reading-notes. The infrastructure launcher was inspected to establish numerical isolation. No A/C/D/E/coordinator/old report/B-independent-baseline was opened. No nested agents.

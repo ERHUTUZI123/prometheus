@@ -1,0 +1,1289 @@
+
+PDF PAGE 59
+36 Chapter 2
+[120] is an excellent, though even more advanced book. Other books focus on speci/f_ic
+aspects of the theory of stochastic processes. One important example is /f_irst-passage
+time problems, discussed in Redner [138].
+The seminal paper by Shannon [154] already contains the main ideas in information
+theory. Khinchin [87] provides a more systematic introduction to Shannon’s theory.
+Cover and Thomas [32] and MacKay [105] present information theory in a more
+modern and extended way.
+2.12 Exercises
+2.1 Consider a master equation with three states, x ∈{ 0, 1, 2},a n dw i t hc o n s t a n t
+rates kxx′ (x ⁄= x′), none of which vanishes. Write down the explicit form of
+the master equation. Evaluate the steady-state probability distribution pstx ,
+x ∈{ 0, 1, 2} and the corresponding probability current Jst = kx′xpstx − kxx′ pstx′
+with x′ = x + 1 mod 3. Derive the conditions on the rates k such that detailed
+balance is satis/f_ied, i.e., such that Jst vanishes.
+2.2 Consider a master equation with four states, x ∈{ 0, 1, 2, 3}, and with rates kxx′
+(∀x ⁄= x′), none of which vanishes. Show that if kxx′ = kx′x,t h e nt h eu n i q u e
+stationary distribution is p0 = p1 = p2 = p3 = 1/4. Show with an example that
+this is not necessarily the case if some of the rates vanish.
+2.3 A collection of N white balls and N black balls, with N ≥ 3, are randomly dis-
+tributed in two urns, so that each contains N balls. At each step t,o n eb a l l
+is extracted from each urn; the two balls are swapped and put back in the
+urns. Denote by xt the number of white balls in the /f_irst urn. Show that xt is
+a Markov process and express its jump rates kxx′ = p(xt+1 = x|xt = x′).D i s c u s s
+whether the process satis/f_ies detailed balance. Evaluate the stationary distribu-
+tion pstx and the decay rate of the correlation function ⟨xtx0⟩ − ⟨x0⟩2, where x0
+is drawn from the stationary distribution.
+2.4 Consider an in/f_inite sequence of independent, identically distributed real-
+valued random variables y = (y0, y1, ... ) .A n o t h e rs e q u e n c ex = (x0, x1,2 , ... )
+is recursively de/f_ined by
+x0 = y0; xn = yn + ax n−1,
+where 0 < a < 1.
+a. Show that, if the distribution of y𝓁 is Gaussian, the distribution of x𝓁
+approaches for 𝓁 →∞ a stationary Gaussian distribution and evaluate
+its parameters.
+b. Show that, if y𝓁 is not Gaussian distributed, the stationary distribution of
+x𝓁, if it exists, is not Gaussian.
+2.5 A Brownian particle is con/f_ined in a one-dimensional potential. Its posi-
+tion x(t) satis/f_ies the following Langevin equation in the Stratonovich
+representation:
+
+PDF PAGE 60
+Basics 37
+dx
+dt =− /Gamma1kx + σξ ( t),
+where σ> 0a n dξ(t) is Gaussian random white noise, satisfying ⟨ξ(t)⟩ = 0
+and
+⟨
+ξ(t)ξ( t′)⟩ = δ(t − t′) ∀t, t′.W r i t et h ef o r m a ls o l u t i o no ft h ee q u a t i o n
+for t ≥ 0a saf u n c t i o no ft h ei n i t i a lc o n d i t i o nx(0) = x0 and of the realization
+ξ(t′) (0 ≤ t′ ≤ t)o ft h en o i s e .E v a l u a t e⟨x(t)⟩ and ⟨(x(t) − ⟨x(t)⟩)2⟩ for t →∞ .
+Assuming that the potential is harmonic, U(x) = 12 kx2,/f_i n dt h er e l a t i o nt h a t/Gamma1 and σ must satisfy for the particle to reach the equilibrium distribution
+peq(x) ∝ exp(−U(x)/kBT) for t →∞ . Write down the Fokker-Planck equa-
+tion associated with the Langevin equation and show that the equilibrium
+distribution is a solution.
+2.6 Prove eq. (2.110) for a system satisfying a one-dimensional Fokker-Planck
+equation (2.103), assuming that the detailed balance condition eq. (2.109) is
+satis/f_ied.
+2.7 Prove the chain rule for the mutual information, eq. (2.145).
+
+PDF PAGE 61
+CHAPTER 3
+Stochastic Thermodynamics
+The fundamental concepts of stochastic thermodynamics are introduced in this chapter.
+W e focus on an out-of-equilibrium mesoscopic physical system described by a master
+equation and discuss how stochastic thermodynamic observables can be de/f_ined at the
+level of individual trajectories.
+3.1 The system
+W e consider a mesoscopic physical system that can be found in discretemesostates,
+identi/f_ied by a variable x. Mesostates can represent, for example, the number of
+molecules participating in a chemical reaction or diﬀerent conformations of a protein.
+Physically, a mesostate corresponds to a collection of microscopic con/f_igurations, from
+which it is obtained by a suitable coarse-graining procedure. W e discuss in more detail
+the concept of coarse graining in section 3.12. For the time being, we assume that this
+procedure has been successfully carried out, and that the dynamics at the mesoscopic
+level has been properly determined. Since stochastic thermodynamics focuses on the
+mesoscopic dynamics, unless some ambiguity is possible, we refer to mesostates simply
+as states.
+Our mesoscopic system interacts with a heat reservoir. Such interactions are uncon-
+trolled, making the dynamics of the system intrinsically stochastic. This means that we
+expect to observe a diﬀerent trajectory every time we repeat an experiment, even if we
+carefully prepare the system in the same state at the start of each realization. W e there-
+fore introduce the probability distribution px(t) of /f_inding the system in state x at time
+t. This probability distribution evolves according to a master equation of the form given
+in eq. (2.77):
+d
+dt px(t) =
+∑
+x′ (⁄=x)
+[
+kxx′ px′ (t) − kx′xpx(t)] .( 3 . 1 )
+Physical details of the system and the nature of its interactions with the reservoir are all
+encoded into the jump rates, which can in principle be time dependent: kxx′ = kxx′ (t).
+The /f_irst step to establish a connection with thermodynamics is to determine the nature
+of this encoding.
+W e begin with the simple case where the system is in contact with a single heat reser-
+voir. A crucial assumption in stochastic thermodynamics is that this reservoir is very
+large and relaxes quickly enough to be considered at thermodynamic equilibrium at
+
+PDF PAGE 62
+Stochastic Thermodynamics 39
+all times. In the absence of external forces, the jump rates satisfy the detailed balance
+condition (2.85):
+kxx′
+kx′x
+= exp
+( ϵx′ − ϵx
+kBT
+)
+,( 3 . 2 )
+where ϵx is the energy of the system in state x. The condition (3.2) ensures that the
+canonical equilibrium distribution peqx = e(F−ϵx)/kBT is the unique stationary distribu-
+tion of the process and therefore that, independent of the initial condition px(t0),t h e
+system eventually relaxes to it. It also implies that the net probability current between
+any pair of states vanishes at stationarity. These two conditions are the hallmarks of a
+system at equilibrium with a heat reservoir.
+It is o/f_ten easier to estimate energies and the temperature T rather than the jump
+rates directly. In such cases, we can use eq. (3.2) to express rates in terms of known
+quantities. However, eq. (3.2) contains the two unknowns kxx′ and kx′x and is therefore
+underdetermined. This means that there is some freedom in expressing the two jump
+rates. One choice that we o/f_ten make is to write them in a symmetric form:
+kxx′ = ωxx′ e−(ϵx−ϵx′ )/2kBT , kx′x = ωxx′ e−(ϵx′ −ϵx)/2kBT ,( 3 . 3 )
+where ωxx′ = ωx′x is the intrinsic rate of jumps between states x and x′ in the absence
+of an energy diﬀerence. The intrinsic rate vanishes if the two states are not connected
+by jumps. Another possibility is
+kxx′ = ωxx′ e−ϵx/kBT , kx′x = ωxx′ e−ϵx′ /kBT .( 3 . 4 )
+Alternatively, it might be the case that only one jump rate depends on the energies:
+kxx′ = ωxx′ e−(ϵx−ϵx′ )/kBT , kx′x = ωxx′ .( 3 . 5 )
+These possibilities are not exhaustive, and the choice is o/f_ten dictated by physical con-
+siderations. For example, if we know that the rate kx′x cannot depend on the values of
+the energy, then eq. (3.5) is the appropriate choice. Intrinsic rates may incorporate the
+eﬀect of activation barriers, as discussed in section 3.12.
+W e can perturb the system away from equilibrium in two diﬀerent, but not mutually
+exclusive, ways:
+Manipulation. A manipulation is an external, time-dependent control of the system.
+In a manipulation, the energies of states depend on an external control parameter
+ϵx = ϵx(λ),w h i c hi sm a d et oc h a n g ew i t ht i m e :λ = λ(t). When we need to stress this
+dependence, we use the short notationϵx(t) instead of ϵx(λ(t)).E x p e r i m e n t sc a r r i e d
+out with optical tweezers provide paradigmatic examples of manipulated systems. In
+such experiments, a laser creates an energy potential that traps a mesoscopic physi-
+cal system, be it a colloidal particle or a macromolecule. The external manipulation
+modulates the stiﬀness and/or the position of the optical trap.
+Driving. A driving is a coupling of the system to an external agent that exchanges with
+it a certain amount of energy when the system performs speci/f_ic jumps. In this case,
+we denote by δxx′ the energy provided by the external agent during a jump from x′
+to x.T h ee n e r g yt h u sp r o v i d e db r e a k sd e t a i l e db a l a n c ea n di si m m e d i a t e l yr e l e a s e d
+
+PDF PAGE 63
+40 Chapter 3
+to the reservoir. For example, in the case of biological enzymes fueled by chemical
+energy, the driving represents the energetic contribution due to ATP hydrolysis.
+Our /f_irst step is to understand how the detailed balance condition (2.84) is modi-
+/f_ied in systems brought out of equilibrium by means of manipulations and/or drivings.
+Because of the conservation of energy, during a jump from state x′ to state x,t h eh e a t
+reservoir instantaneously receives an amount of energy equal to
+qxx′ = ϵx′ (λ) − ϵx(λ) + δxx′ ,( 3 . 6 )
+which is the sum of the energy ϵx′ (λ) − ϵx(λ) lost by the system and of the energy δxx′
+instantaneously provided by the external driving.
+In a mesoscopic system, jumps occur due to sudden interactions with the heat reser-
+voir at equilibrium at temperatureT. On this fast timescale, the manipulated parameter
+can be considered to be constant. The eﬀect of a driving can be directly included in the
+energy budget of the jump (see eq. (3.6)) and therefore just modi/f_ies the amount of heat
+instantaneously released to the reservoir. W e conclude that, on the timescale of a sin-
+gle jump, the heat reservoir cannot distinguish between an equilibrium system and a
+nonequilibrium system that provides it with the same amount of heat. This argument
+implies that, even out of equilibrium, the ratio between the forward and reverse jump
+rates between pairs of states x and x′ must be equal to exp(−qxx′ /kBT), exactly as in the
+equilibrium case:
+kxx′
+kx′x
+= exp
+( qxx′
+kBT
+)
+= exp
+( ϵx′ (λ) − ϵx(λ) + δxx′
+kBT
+)
+.( 3 . 7 )
+Equation (3.7) is the generalized detailed balance condition .I ti m p l i e si np a r t i c u l a r
+that the jump x −→x′ is allowed if and only if the reverse jumpx′ −→x is also allowed,
+i.e., that the system exhibits microscopic reversibility; see section 2.6. Physically, this
+means that it is always possible to observe the reverse of any observed jump at a /f_inite
+temperature, although it can be very unlikely. W e discuss how this hypothesis can be
+relaxed in section 8.5.
+Equation (3.7) can be used to express jump rates in terms of energies, temperatures,
+and driving. Also this problem is underdetermined, and similar considerations to those
+made in the context of eq. (3.2) apply here. It is o/f_ten the case that the driving acts only
+on one jump direction. In this case, we write the rates in the form
+kxx′ = ωxx′ e−(ϵx−ϵx′ )/(2kBT)+δxx′ /kBT , kx′x = ωxx′ e−(ϵx′ −ϵx)/2kBT .( 3 . 8 )
+A model of a mesoscopic system whose jump rates satisfy eq. (3.7) is said to be
+thermodynamically consistent.
+In general, the energy of a nonequilibrium system exhibits a slow modulation due to
+the time-dependent manipulation, interrupted by sudden changes due to jumps caused
+by drivings and interactions with the heat reservoir, as shown in /f_ig. 3.1.
+3.2 Work and heat in stochastic thermodynamics
+In stochastic thermodynamics, work and heat are de/f_ined at the level of individual
+trajectories and are therefore stochastic quantities.
+
+PDF PAGE 64
+Stochastic Thermodynamics 41
+x
+tt0 t1 t2
+3
+2
+1
+0
+Figure 3.1 . T rajectory of a manipulated system. Thin lines represent energy levels of dif-
+ferent mesostates, modulated in time as an effect of the manipulation. Bold lines mark
+the states occupied by the system; arrows represent jumps. The system is initialized in
+state 2. Its energy changes as time goes from t = t0 to t = t1.A t t = t1 the system jumps
+to state 0, releasing a quantity of heat q02(t1) = ϵ2(t1) − ϵ0(t1) to the reservoir. The energy
+of state 0 changes between t = t1 and t = t2.T h e naj u m po c c u r sa tt = t2 from 0 to 3,
+exchanging with the reservoir a quantity of heat given by q30(t2) = ϵ0(t2) − ϵ3(t2).T h ef a c t
+that q30(t2)< 0i nt h i sc a s em e a n st h a th e a ti sa b s o r b e df r o mt h er e s e r v o i r .I ng e n e r a l ,
+the energy of the system can change either because the energy of the occupied state
+changes (work by the manipulating device) or because of jumps to a state of different
+energy (due to heat exchanged with the reservoir or work by the driving or both).
+W e consider a trajectoryx of our mesoscopic system, starting from time t0 with the
+system in state x0 and ending at time tf with the system in state xf . At the times tk,t h e
+system jumps from state xk−1 to state xk,w i t hk = 1, ... , n and xn = xf ;s e es e c t i o n2 . 7 .
+Along the trajectory, energy is exchanged among the system, the external forces, and
+the reservoir. Thestochastic work w is the energy provided by the external forces to the
+system. The stochastic heat q is the energy released by the system to the reservoir. In
+this book, we use lowercase letters, like w, q,a n dϵ, for stochastic, trajectory-dependent
+thermodynamic observables and uppercase ones for their averaged counterparts, like
+the standard thermodynamic work W,h e a tQ,a n de n e r g yE.
+W e have seen how a system can be perturbed out of equilibrium by a time-dependent
+manipulation or by external drivings. Both of these factors contribute in general to the
+stochastic work. Their combined eﬀect can be expressed by
+w(x) =
+n∑
+k=0
+∫ tk+1
+tk
+dt dλdt dϵxkdλ
+/bracehtipupleft /bracehtipdownright/bracehtipdownleft /bracehtipupright
+manipulated work
++
+n∑
+k=1
+δxkxk−1
+/bracehtipupleft /bracehtipdownright/bracehtipdownleft /bracehtipupright
+driven work
+.( 3 . 9 )
+
+PDF PAGE 65
+42 Chapter 3
+The /f_irst term on the right-hand side of eq. (3.9) is the work made by the manipu-
+lation. Since (dλ/dt) dϵxk /dλ = dϵxk /dt, this term represents the total energy change
+between consecutive jumps. As the reservoir does not exchange energy outside jumps,
+this energy change necessarily originates from work by the manipulation. The second
+term on the right-hand side of eq. (3.9) is the total work performed by the driving along
+each jump. Because of microscopic reversibility, the driven work in a jump x −→x′ is
+equal to δx′x and that in the opposite jump isδxx′ =− δx′x, independent of how the rates
+kxx′ and kx′x have been de/f_ined.
+W e now turn our attention to the stochastic heat. During a jump from state x′ to
+state x at time t, the reservoir receives an amount of heat qxx′ given by eq. (3.6), with
+λ = λ(t). As we discussed, heat is exchanged with the reservoir only during jumps—the
+external manipulation is too slow to contribute to the energy budget on the timescale
+of a single jump. Therefore, the total heat exchanged with the heat reservoir along the
+trajectory x is
+q(x) =
+n∑
+k=1
+qxkxk−1 (tk) =
+n∑
+k=1
+[
+−ϵxk (tk) + ϵxk−1 (tk) + δxkxk−1
+]
+.( 3 . 1 0 )
+From eqs. (3.9) and (3.10), it follows that
+w(x) − q(x) = ϵxf (tf ) − ϵx0 (t0).( 3 . 1 1 )
+We c a l l e q. ( 3 . 1 1 ) t he/f_irst law of stochastic thermodynamics, since it formally resem-
+bles the /f_irst law of thermodynamics, eq. (2.2). The reason for using the cautionary word
+formally is explained in the next section.
+3.3 Mesoscopic and calorimetric heat (*)
+T o understand the physical interpretation of mesoscopic thermodynamic observ-
+ables, it is useful to scrutinize in more detail each term in eq. (3.11) and compare them
+with those appearing in the /f_irst law of thermodynamics, eq. (2.2).
+W e start by re/f_lecting on the actual meaning of the energy of a mesostate ϵx.F o r
+an object such as a rigid colloid without any relevant hidden degrees of freedom,
+this energy can be interpreted without ambiguity. A more subtle case is that of a
+macromolecule, where each mesostate represents a collection of microscopic states ξ ,
+each characterized by its energy ϵξ . T o understand this scenario, we assume that the
+timescales of the fast microscopic dynamics and the slow mesoscopic dynamics are
+well separated. If the manipulation is slow enough, and the driving connects diﬀer-
+ent mesostates, then jumps between states in the same mesostate satisfy the detailed
+balance condition. Therefore, the occupation probabilities of the microstates within a
+given mesostate are proportional to their Boltzmann factors e−ϵξ /kBT , as in equilibrium.
+On the other hand, the relative occupation probabilities of diﬀerent mesostates can in
+general be diﬀerent from those in equilibrium.
+We e v a lu ate t he e qu i l ibr iu m prob abi l it ypeqx of a mesostate x under these assump-
+tions. From the law of total probabilities, we obtain
+peqx = ∑
+ξ ∈x
+peqξ ∝ ∑
+ξ ∈x
+e−ϵξ /kBT ,( 3 . 1 2 )
+
+PDF PAGE 66
+Stochastic Thermodynamics 43
+where the sum runs over all microstatesξ contained in the mesostatex.T h eo c c u p a t i o n
+probability of the mesostate x can be recast in the form of a Boltzmann factor e −ϵx/kBT
+by de/f_ining ϵx via
+ϵx =− kBT ln
+
+∑
+ξ ∈x
+e−ϵξ /kBT
+
+ .( 3 . 1 3 )
+Equation (3.13) reveals that, if the mesostate x has an internal structure, ϵx represents
+its free energy rather than its energy. In principle, mesostates with diﬀerent values of ϵx
+might contain microstates with the same average energies but diﬀerent entropies. As a
+consequence, eq. (3.11) does not really correspond to the /f_irst law of thermodynamics:
+in eq. (2.2), the energies are proper energies, not free energies.
+To s olve t h i s c onu n d r u m , we i nsp e c t m ore cl o s e ly t h e ot h e r /f_lu c tu at i ng t h e r mo dy -
+namic quantities in eq. (3.11). The stochastic work in eq. (3.9) is the sum of a driven and
+a manipulated contribution. The driven work is equal to the total energy provided by
+the external agent and is therefore unambiguous. The de/f_inition of manipulated work
+requires more care. In a manipulated system, we have
+w(x) =
+n∑
+k=0
+∫ tk+1
+tk
+dt dλdt ∂ϵxk∂λ
+=
+n∑
+k=0
+∫ tk+1
+tk
+dt dλdt
+∑
+ξ ∈x(∂ϵξk /∂λ) e−ϵξk /kBT∑
+ξ ∈x e−ϵξ /kBT
+=
+n∑
+k=0
+∫ tk+1
+tk
+dt dλdt ⟨ ∂ϵξk∂λ ⟩eqx ,
+(3.14)
+where we denote by⟨... ⟩eqx the equilibrium average over the microscopic states included
+in the mesoscopic state x. This means that, under our assumptions, the de/f_inition of
+work in stochastic thermodynamics is consistent with the microscopic one.
+The conclusion is that, to save the energy balance, we have to reconsider the phys-
+ical interpretation of the stochastic heat, eq. (3.10). In particular, it is necessary to
+distinguish between two de/f_initions of heat:
+Mesoscopic heat. The mesoscopic heat is de/f_ined by eq. (3.10) and is associated with
+changes in the free energies of the mesoscopic states. This is the natural de/f_inition of
+heat in stochastic thermodynamics. It however neglects the heat exchanges necessary
+to alter the entropy of the mesostates.
+Calorimetric heat. The calorimetric heat is de/f_ined as the heat exchanged with the
+reservoir that would be measured by an in/f_initely sensitive calorimeter. Such a
+calorimeter would appreciate the amount of heat required to rearrange the distribu-
+tion of microscopic states inside each mesostate. Following this de/f_inition, we exp-
+ress the calorimetric heat qcal by subtracting from the mesoscopic heat the entropic
+contribution
+qcal(x) = q(x) − T
+n∑
+k=1
+(
+Sxk (tk) − Sxk−1 (tk)
+)
+,( 3 . 1 5 )
+where Sx =− kB
+∑
+ξ ∈x pξ ln pξ is the entropy of the internal states of a mesostate.
+
+PDF PAGE 79
+56 Chapter 3
+on time. It is o/f_ten useful to evaluate these deviations at /f_irst order in the intensity of
+the manipulation, as measured by the control parameter λ.T h i sa p p r o a c hi sk n o w na s
+linear response theory. Although we introduce it in the context of stochastic thermo-
+dynamics, linear response theory can be applied to a broader range of thermodynamic
+systems close to equilibrium.
+W e assume that the energy of the state x can be manipulated in r diﬀerent ways,
+and we denote by λ = (λα ), α = 1, ... , r the corresponding control parameters. Such
+parameters act linearly and independently on the energies, so that
+ϵx(λ) = ϵ(0)x −
+r∑
+α=1
+λα Xα,x,( 3 . 5 6 )
+where the observables Xα,x, α = 1, ... , r are given functions of x. At /f_ixed values of
+the control parameters, the rates kxx′ satisfy the detailed balance condition (2.85). W e
+denote by ⟨... ⟩0 the equilibrium average in the unperturbed caseλ = 0. At equilibrium,
+the dynamics is invariant under time translations. W e wish to evaluate the average val-
+ues
+⟨
+Xβ (t)
+⟩
+of the observables Xβ,x at time t as a function of the manipulation protocol
+λ = (λ(t)):
+⟨
+Xβ (t)
+⟩
+λ =
+∑
+x
+Xβ,xpx(t; λ),( 3 . 5 7 )
+where px(t; λ) is the probability distribution of the states in the presence of the manipu-
+lation λ.W ed e /f_i n et h eo b s e r v a b l e ss ot h a t⟨Xα ⟩0 = 0f o ra l lα. W e then expand⟨Xα (t)⟩
+as a functional power series,
+⟨
+Xβ (t)
+⟩
+λ =
+∫ ∞
+−∞
+dt′ ∑
+α
+Kβα (t, t′)λα (t′) + higher-order terms, (3.58)
+where we introduce the linear response function Kβα (t, t′).
+W e now express the linear response function in terms of equilibrium averages only.
+The function Kβα (t, t′) must vanish whenever t′ > t,s i n c et h ev a l u eo f⟨Xβ (t)⟩λ cannot
+depend on future values of λα (t′). Moreover, the eﬀects of the manipulation must be
+invariant under time translation. This implies
+Kβα (t, t′) = Kβα (t − t′), ∀α, β.( 3 . 5 9 )
+W e consider a manipulation λ(t) = λ(0) θ(−t) eεt, where ε> 0i sa r b i t r a r i l ys m a l l
+and θ(t) is the Heaviside step function. Such a manipulation grows gradually from 0
+for t →− ∞ to a small constant value λ(0) and is then switched oﬀ at t = 0. Since ε is
+small, at t = 0t h ep r o b a b i l i t yd i s t r i b u t i o no ft h es y s t e mi st h ee q u i l i b r i u mp r o b a b i l i t y
+distribution peq(λ) in the presence of a constant λ(0):
+px(0; λ) = peqx (λ) = e(F(λ)−ϵ(0)x +∑α λ(0)α Xα,x)/kBT
+≈ peq(0)
+(
+1 + 1kBT ∑α λ(0)α Xα,x
+)
+,
+(3.60)
+
+PDF PAGE 80
+Stochastic Thermodynamics 57
+where we expand to linear order in λ(0) and use the fact that
+∂F(λ)
+∂λα
+= ⟨Xα ⟩0 = 0, ∀α.( 3 . 6 1 )
+The average
+⟨
+Xβ (t)
+⟩
+λ for t > 0 is equal to the average of Aβ over a probability distri-bution p(t) that satis/f_ies the unperturbed master equation (2.77), but with the initial
+condition peq(λ). Given the initial condition px′ (t = 0; λ),t h es o l u t i o no ft h i se q u a t i o n
+is given by px(t) = ∑x′ Gxx′ (t)px′ (0; λ), where the matrix Gxx′ (t) is the Green function
+introduced in eq. (2.71). W e then have, to /f_irst order inλ,
+px(t) ≈ peqx (0) + 1kBT ∑x′ Gxx′ (t) ∑α λ(0)α Xα peqx′ (0) (3.62)
+and therefore, taking into account that
+⟨
+Xβ
+⟩
+0 = 0,
+⟨
+Xβ (t)
+⟩
+λ ≈ 1kBT ∑xx′ Xβ,xGxx′ (t) ∑α λ(0)α Xα peqx′ (0)
+= 1kBT ∑α ⟨Xβ (t)Xα (0)⟩0 λ(0)α . (3.63)
+Comparing with (3.58) and taking into account the expression of our protocolλ,w e
+conclude that
+∫ 0
+−∞
+dt′ Kβα (t − t′) = 1kBT ⟨Xβ (t)Xα (0)⟩0 = 1kBT Cβα (t),( 3 . 6 4 )
+where Cβα (t) =
+⟨
+Xβ (t) Xα (0)
+⟩
+0 is the equilibrium time-dependent correlation function.We have, on t he ot her h and,
+∫ 0
+−∞
+dt′ Kβα (t − t′) =
+∫ +∞
+t
+dt′ Kβα (t′).( 3 . 6 5 )
+Taking the derivative with respect to t,a n dt a k i n gi n t oa c c o u n tt h a tK(t) vanishes for
+t < 0, we obtain the expression of the linear response function:
+Kβα (t) =− θ(t)kBT ddt ⟨Xβ (t)Xα (0)⟩0 =− θ(t)kBT ddt Cβα (t).( 3 . 6 6 )
+This result extends the /f_luctuation-dissipation relation from static to time-dependent
+quantities.
+Fluctuation-dissipation relations connect equilibrium /f_luctuations of observables,
+measured by the correlation function on the right-hand side of eq. (3.66), with the
+response to a small external perturbation, given by the coeﬃcient Kβα on the le/f_t-hand
+side. These relations played a fundamental role in the development on nonequilibrium
+statistical physics. W e return to them in chapter 4 in the broader context of /f_luctuation
+relations.
+
+PDF PAGE 81
+58 Chapter 3
+3.12 More on coarse graining (*)
+Throughout this chapter, we have emphasized that stochastic thermodynamics deals
+with a coarse-grained, mesoscopic description of a physical system. The separation be-
+tween the slow timescales of the mesoscopic dynamics and the fast timescales of the
+heat reservoir (and of the microscopic degrees of freedom of the system) is crucial
+to achieve a simple closed description, where we can essentially forget about the fast
+microscopic degrees of freedom. In practice, there are diﬀerent techniques to eliminate
+the fast dynamics and obtain an eﬀective mesoscopic description. These techniques
+can be classi/f_ied into two broad categories. Coarse-graining procedures group states
+together in such a way that the internal dynamics among states in a group is fast,
+whereas dynamics among diﬀerent groups is slower.Decimation procedures eliminate
+states characterized by fast dynamics. With a slight abuse of language, we o/f_ten refer
+to both categories as coarse graining. Both categories include several methods, whose
+eﬀectiveness depends on the problem at hand.
+In many practical situations, the choice of a coarse-graining scale is not unique.
+There can be diﬀerent mesoscopic scales, corresponding to diﬀerent levels of coarse
+graining. If these levels are well separated, one should be able, in principle, to formulate
+stochastic thermodynamics at each mesoscopic level, and these descriptions should be
+consistent among them. For example, we study how rates are transformed by changing
+coarse-graining levels. W e consider an equilibrium physical system with two states, 1
+and 2, separated by a high-energy state f (where f stands for “fast”). The master equation
+reads
+d
+dt p1 = k1f pf − kf1 p1;
+d
+dt pf = kf1 p1 + kf2 p2 − (k1f + k2f )pf ;
+d
+dt p2 = k2f pf − kf2 p2.
+(3.67)
+The rates are expressed as in eq. (3.3). W e now perform an adiabatic elimination of
+the fast state f. The adiabatic elimination is one of the most common decimation
+procedures and is schematized in /f_ig. 3.5 for the case at hand. Since the dynamics
+of state f is fast, it always stays very close to a steady state on the timescales of the
+slow states. W e therefore eliminate this state by setting d pf /dt = 0. This implies pf =
+(kf1 p1 + kf2 p2)/(k1f + k2f ). Substituting into the remaining two equations yields
+d
+dt p1 = keﬀ12 p2 − keﬀ21 p1,
+d
+dt p2 = keﬀ21 p1 − keﬀ12 p2,
+(3.68)
+where
+keﬀ21 = k2f kf1k1f + k2f = ω1f ω2f e(ϵ1−ϵ2)/(2kBT)e−ϵf /(2kBT)ω1f e−ϵ1/(2kBT) + ω2f e−ϵ2/(2kBT) ;
+
+PDF PAGE 82
+Stochastic Thermodynamics 59
+Energy
+kf2
+f
+1
+2
+keff
+k1f
+kf1
+k2f
+21
+keff12
+Figure 3.5. Adiabatic elimination of an intermediate high-energy state. Continuous
+arrows denote the original rates; dashed arrows denote coarse-grained rates. See
+eq. (3.69).
+keﬀ12 = k1f kf2k1f + k2f = ω1f ω2f e(ϵ2−ϵ1)/(2kBT)e−ϵf /(2kBT)ω1f e−ϵ1/(2kBT) + ω2f e−ϵ2/(2kBT) .( 3 . 6 9 )
+The eﬀective rates keﬀ21 and keﬀ12 in eq. (3.69) always satisfy detailed balance. This
+means that the system remains compatible with equilibrium also a/f_ter the coarse-
+graining procedure. However, the precise expressions of the rates are signi/f_icantly more
+complicated than the original ones. These expressions considerably simplify when k1f
+and k2f are equal, i.e., when
+ω1f = ω e(ϵ1−ϵf )/(2kBT);
+ω2f = ω e(ϵ2−ϵf )/(2kBT). (3.70)
+Here ω is a rate constant. In this case, the eﬀective rates become
+keﬀ21 = ω2 e(ϵ1−ϵf )/kBT ;
+keﬀ12 = ω2 e(ϵ2−ϵf )/kBT . (3.71)
+Such an exponential dependence of the rates on the “activation barriers” ϵf − ϵ1 and
+ϵf − ϵ2 is known in physical chemistry as the Arrhenius law.T h i sd e p e n d e n c eh o l d s
+qualitatively also for other choices of ω1f and ω2f ,a sl o n ga sk1f and k2f do not diﬀer
+too much.
+W e have seen that the mesoscopic energies usually treated in stochastic thermo-
+dynamics are, strictly speaking, free energies. Such free energies are automatically
+
+PDF PAGE 83
+60 Chapter 3
+consistent across coarse-graining levels. Suppose, e.g., that a mesostate x contains
+diﬀerent microstates y.W et h u so b t a i n
+ϵx =− kBT ln
+
+∑
+y∈x
+e−ϵy/kBT
+
+ ; ϵy =− kBT ln
+
+∑
+ξ ∈y
+e−ϵξ /kBT
+
+ .( 3 . 7 2 )
+One then also has
+ϵx =− kBT ln
+
+∑
+y∈x
+∑
+ξ ∈y
+e−ϵξ /kBT
+
+ =− kBT ln
+
+∑
+y∈x
+e−ϵy/kBT
+
+ .( 3 . 7 3 )
+This property is general and does not require particular assumptions about how the
+states y are assigned to the states x.
+W e now turn our attention to work. For simplicity, we consider a purely manipulated
+system, without external driving. W e follow the same line of eq. (3.14) and compare the
+de/f_initions of work w(x) and w(y) at the two coarse-graining levels x and y.
+w(y) =
+n∑
+k=0
+∫ tk+1
+tk
+dt dλdt ∂ϵyk∂λ ;( 3 . 7 4 )
+w(x) =
+n′∑
+k=0
+∫ tk+1
+tk
+dt dλdt ∂ϵxk∂λ = n′∑k=0 ∫ tk+1tk dt dλdt ∑y∈x(∂ϵy/∂λ) e−ϵy/kBT∑y∈x e−ϵy/kBT
+=
+n′∑
+k=0
+∫ tk+1
+tk
+dt dλdt ⟨ ∂ϵy∂λ ⟩x,eq ;( 3 . 7 5 )
+where ⟨... ⟩x,eq denotes an equilibrium average over the states y included in the coarse-
+grained state x.T h et w od e /f_i n i t i o n so fw o r ka r et h e r e f o r ee q u i v a l e n tw h e nt h es t a t e s
+y within a state x can be considered at equilibrium among themselves, i.e., when the
+dynamics among the states within x is much faster than that among the mesostates x.
+W e now discuss the behavior of entropy production at diﬀerent coarse-graining lev-
+els. W e should distinguish between two cases. In the /f_irst case, the mesostates y within
+as t a t ex can be considered always at equilibrium as we assumed before. In this case, we
+can follow the same logic of section 3.3 and conclude that, since heat exchanges between
+such mesostates and the heat reservoir are reversible, they do not contribute to entropy
+production. The conclusion in this case therefore is that entropy production does not
+change at diﬀerent coarse-graining levels.
+The situation is diﬀerent when considering cases where the internal dynamics of the
+mesostates y inside a coarser mesostate x is fast but out of equilibrium. In these cases,
+entropy production tends to become smaller at coarser levels of description. One main
+reason is that increasing the coarse-graining level can “destroy” loops in the jump net-
+work that contribute to the entropy production. For example, if the three states 1, 2, 3
+represented in /f_ig. 3.6 are collapsed in the mesostate A, the entropy production associ-
+ated with the current circulating in the loop does not appear anymore in the description
+of the system.
+
+PDF PAGE 84
+Stochastic Thermodynamics 61
+A
+1
+3
+2
+k32k31
+k23k13
+k12
+k21
+Figure 3.6. The three states 1, 2, 3 are collapsed into the state A upon coarse graining.
+As a consequence, the entropy production associated with the current circulating in the
+1, 2, 3 loop disappears.
+In some cases, due to coarse graining, there might be multiple microscopic pathways
+among pairs of states. This means that the eﬀective rate kxx′ represents the sum of rates
+k(r)xx′ associated with physically distinct possible jumps indexed byr,w i t hkxx′ = ∑r k(r)xx′ .In this case, the correct expression of the average entropy production rate is
+˙Stot = kB
+2
+∑
+xx′r
+J(r)xx′ ln k(r)xx′ pstx′
+k(r)x′xpstx ,( 3 . 7 6 )
+where J(r) is de/f_ined by
+J(r)xx′ = k(r)xx′ pstx′ − k(r)x′xpstx , ∀x ⁄= x′, ∀r.( 3 . 7 7 )
+We a l s o d e /f_i n e t h e e ﬀe c t ive c u r re nt
+Jxx′ =
+∑
+r
+J(r)xx′ , ∀x ⁄= x′.( 3 . 7 8 )
+The eﬀective entropy production ˙Scg is the entropy production rate associated with the
+eﬀective rates
+˙Stot,eﬀ = kB
+2
+∑
+xx′
+Jxx′ ln kxx′ pstx′
+kx′xpstx .( 3 . 7 9 )
+
+PDF PAGE 85
+62 Chapter 3
+The eﬀective average entropy production rate provides a lower bound to the actual
+average entropy production rate
+0 ≤ ˙Stot,eﬀ ≤ ˙S.( 3 . 8 0 )
+One has indeed
+˙Stot = kB
+2
+∑
+xx′r
+(
+k(r)xx′ pstx′ − k(r)x′xpstx ) ln k(r)xx′ pstx′
+k(r)x′xpstx = kB
+∑
+xx′r
+k(r)xx′ pstx′ ln k(r)xx′ pstx′
+k(r)x′xpstx
+≥ kB
+∑
+xx′
+kxx′ pstx′ ln kxx′ pstx′kx′xpstx = ˙Stot,eﬀ , (3.81)
+where we apply the logsum inequality (A.18).
+3.13 Continuous systems (*)
+Stochastic thermodynamics has developed in parallel for physical processes with dis-
+crete state space, described by master equations, and continuous state space, described
+by Langevin equations. The main results in stochastic thermodynamics, such as the
+/f_luctuation theorems discussed in the next chapter, can be equivalently derived in either
+case, although the formalism is quite diﬀerent. In this section, we brie/f_ly describe the
+fundamental ideas of stochastic thermodynamics based on Langevin equations.
+We c ons i d e r a on e - d i m e ns i on a l phy s i c a l s y s te m w it h n e g l i g i bl e i n e r t i a , d e s c r ib e d by
+the Langevin equation
+dx
+dt = µP F(x, t) +
+√
+2D ξ(t) = µP
+[
+− ∂∂x ϵ(x, λ) + f (x, t)] + √2D ξ(t),( 3 . 8 2 )
+where we split the total force F(x, t) into a term −∂ϵ( x, λ)/∂x originating from a
+conservative energy /f_ield ϵ(x, λ) and a nonconservative term f (x, t) representing the
+nonequilibrium driving. W e assume that the diﬀusion coeﬃcient D is constant, which
+implies that the equation can be interpreted with either the Ito or the Stratonovich
+convention with identical results. Then the Fokker-Planck equation corresponding to
+eq. (3.82) reads
+∂p(x; t)
+∂t = ∂∂x [µP ( ∂∂x ϵ(x, λ) − f (x, t)) p(x; t) + D ∂∂x p(x; t)] .( 3 . 8 3 )
+This corresponds to the probability current J = µP F p − D ∂p/∂x (cf. eq. (2.105)). W e
+assume that the mobility µP and the diﬀusion coeﬃcient D are connected by the
+Einstein relation,
+D = kBT µP.( 3 . 8 4 )
+The Einstein relation is the condition for the Langevin equation (3.82) to be thermo-
+dynamically consistent. Indeed, if this condition is satis/f_ied, the driving is absent, and
+λ is constant, the equation satis/f_ies detailed balance and the probability current van-
+ishes at stationarity. In this case, the Fokker-Planck equation (3.83) associated with the
+Langevin equation (3.82) admits as a solution the equilibrium distribution
+
+PDF PAGE 133
+110 Chapter 5
+control, the control parameter specifying the manipulation is a function not only of
+time, but also of the measurement outcome, λ = (λ(t, y)).
+As in the previous section, we express the joint distribution of the state of the object
+and the measuring device at a time tm immediately a/f_ter the measurement by
+px,y(tm) = py|x(tm)px(tm).( 5 . 1 0 )
+The mutual information quanti/f_ies the average amount of information gained with
+the measurement. In parallel with the entropy, we de/f_ine the stochastic mutual
+information
+ix:y = ln px,y(tm)px(tm)py(tm) = ln py|x(tm)py(tm) ,( 5 . 1 1 )
+so that I =⟨ i⟩.T h ej o i n tp r o b a b i l i t yo fat r a j e c t o r yx of the object and a measurement
+outcome y is
+Py,x (λ) = py|x (λ)Px (λ).( 5 . 1 2 )
+These de/f_initions allow us to generalize the integral /f_luctuation relation in the presence
+of feedback control:
+⟨
+e−stot/kB−i⟩
+F
+=
+∫
+Dx dyp y|x (tm)Px (λ) Pˆx (ˆλ)Px (λ) py(tm)py|x (tm)
+=
+∫
+Dx dy Pˆx (ˆλ) py(tm) = 1.
+(5.13)
+Here we make use of py|x (tm) = py|x(tm): since the measurement is instantaneous, its
+outcome depends only on the state of the object at time m.E q u a t i o n( 5 . 1 3 )i st h e
+Sagawa-Ueda relation. As in the Jarzynski equality (eq. (4.52)), if the protocol starts
+and ends at equilibrium, we have stot = w − /Delta1F. There is however a subtle diﬀerence:
+in this case, /Delta1F is a stochastic quantity, since the /f_inal free energy depends in principle
+on the outcome of the measurement. Equation (5.13) then implies
+W −⟨ /Delta1F⟩≥− kBTI .( 5 . 1 4 )
+Equation (5.14) quanti/f_ies the apparent violations of the second law due to feedback
+control. In a single, instantaneous measurement, the average total entropy production
+can be negative, up to a minimum given by−kB times the mutual information between
+the object and the measuring device immediately a/f_ter the measurement.
+5.5 The Mandal-Jarzynski machine
+The Mandal-Jarzynski machine is an explicit, analytically solvable model of a meso-
+scopic physical system that is capable of trading information for work. Its dynamics
+shows at play many of the concepts discussed so far.
+The Mandal-Jarzynski machine is characterized by three mesostates A, B, and C, all
+of equal energy (/f_ig. 5.3a). The machine interacts with a tape whose states (bits) can be 0
+or 1. Bits 0 and 1 also have the same energies. At time intervals equal toτ ,t h et a p es h i /f_t s
+to the right, so that the machine interacts with a new bit. W e denote by r the fraction
+of 1 bits in the incoming tape and by d = 1 − 2r the excess of bits 0. The machine is
+
+PDF PAGE 134
+Thermodynamics of Information 111
+1
+kg
+B
+CA
+0110 01 0 10 1 0 1 0 0 01
+−0.5 0.0 0.5
+d
+0.00
+0.25
+0.50
+0.75
+ζ
+engine
+eraser
+dud
+(a) (b)
+Figure 5.3. (a) Sketch of the Mandal-Jarzynski machine. (b) Phase diagram. Regime
+boundaries indicate (solid line) vanishing rotation speed and (dotted line) vanishing
+Shannon entropy change of the tape (the machine swaps 0s and 1s at equal average
+rates). The time interval τ is set to 0.8. See Mandal and Jarzynski [108].
+also connected to a mass m. Depending on the operating regime, it can either li/f_t it
+(performing work) or lower it (extracting work).
+Jumps between states A ←→Ba n dB ←→C occur at rates kAB = kBA = kBC =
+kCB = 1, regardless of the state of the tape and the mass. In contrast, jumps between
+states A and C are coupled to both the tape and the mass:
+•A j u m p A−→Cc a no c c u ro n l yi ft h eb i tr e a db yt h em a c h i n ei s1 .D u r i n gs u c h
+aj u m p ,t h eb i ti s“ /f_l i p p e d ”t o0 .S i m i l a r l y ,aj u m pC−→Ac a no c c u ro n l yi ft h e
+bit is 0 and is /f_lipped it to 1 when the jump occurs.
+•W h e n t h e m a c h i n e j u m p s f r o m C t o A , t h e m a s s i s l i /f_t e d b y a h e i g h t/Delta1h.
+Conversely, when A −→C, the mass is lowered by /Delta1h.
+The jump rates between states A and C satisfy the generalized detailed balance
+relation
+kAC
+kCA
+= e−mg /Delta1h/kBT ,( 5 . 1 5 )
+as the work by the “external agent” (the mass in this case) along the jump A → Ci s
+equal to mg /Delta1h;s e ee q .( 3 . 7 ) .Ac h o i c ec o m p a t i b l ew i t he q .( 5 . 1 5 )i skAC = 1 − ζ and
+kCA = 1 + ζ ,w i t hζ = tanh(mg /Delta1h/2kBT).T h es y s t e mi sa te q u i l i b r i u mi ft h ef r a c t i o n
+r of 1s in the tape is equal to peq1 = e−mg /Delta1h/kBT /(1 + e−mg /Delta1h/kBT ) = (1 − ζ) /2.
+The steady state of the model can be evaluated analytically. It turns out that the
+machine can operate in three distinct regimes, depending on the choice of parameters
+(/f_ig. 5.3b):
+• In the /f_irst regime, the machine is eﬀectively an information engine ,a si t
+extracts work from the heat reservoir, at the cost of dumping entropy into
+the bit sequence. The machine rotates clockwise on average, i.e., A −→B −→
+C −→A. This occurs when d ≥ ζ , i.e., when the entropy of the bit sequence
+is suﬃciently low and the mass suﬃciently light. A machine operating in this
+regime is a concrete example of a Maxwell demon.
+
+PDF PAGE 135
+112 Chapter 5
+• In the second regime, the machine acts as an eraser,c o n s u m i n gm e c h a n i c a l
+work to reduce the Shannon entropy of the tape. The rotation is counterclock-
+wise, i.e., the mass is lowered on average, and the Shannon entropy of the tape is
+reduced. In the particular case of full erasure, i.e., when the output tape is made
+up of all 0s or 1s, the machine spends at least W ≥ kBTH(p), where H(p) =
+−p0 ln p0 − p1 ln p1 is the Shannon entropy of the incoming sequence of bits.
+This operating regime is therefore consistent with the Landauer principle.
+• In the last regime ( dud), the machine both dissipates work and increases
+entropy, without therefore performing any useful operation. The boundary bet-
+ween the eraser and the dud regime is given by the condition H(p) = H(peq),
+as for the engine-eraser boundary, but with p0 < 12 , i.e., d < 0.
+The Mandal-Jarzynski machine provides us with an opportunity to clarify one
+important aspect of the Landauer principle: the work spent to reduce the entropy of
+a memory may not be irreversibly dissipated into the heat reservoir. This work (or at
+least a part of it) can be retrieved by another machine working as an information engine.
+From this perspective, the Maxwell demon and the Landauer principle are two sides of
+the same coin: information can be converted into work and back. In Landauer’s words,
+“Information is physical. ”
+5.6 Copying information
+Living systems rely on their capacity to replicate information at the molecular level
+with high accuracy and speed. Important examples of information copying in biology
+are DNA replication and DNA-to-RNA transcription. At variance with erasure, infor-
+mation copying is not necessarily irreversible. For example, we consider a system with
+two states x = 0, 1, initially prepared in the state x = 0. It is possible to copy the state y
+of another binary system into x without losing information. For example, we can apply
+the reversible transformation
+(x, y) −→(x′, y),( 5 . 1 6 )
+where
+x′ = x XOR y =
+{
+y,i f x = 0;
+1 − y,i f x = 1. (5.17)
+Thus, provided that x is initially in a reference state (0 in this case), copying can be
+performed without dissipation, i.e., there is no equivalent of the Landauer bound for
+copying. However, information can be copied without dissipation only in the limit of
+vanishing speed, whereas copying at /f_inite speed involves a thermodynamic cost. Fur-
+ther, copying at /f_inite temperature necessarily implies errors, and correcting these errors
+can signi/f_icantly increase dissipation. Understanding the tradeoﬀs between error rate,
+speed, and dissipation in copying is crucial to characterize the performance of biolog-
+ical copying machines. Besides biology, these trade-oﬀs are also becoming relevant for
+arti/f_icial computing, as microprocessors become smaller and faster.
+T o be more concrete, we consider a mesoscopic machine that sequentially replicates
+a long, preexisting polymer, made up of two diﬀerent kinds of monomers (/f_ig. 5.4a).
+At each time, the monomer at the tip of the copied polymer can be removed, or a
+new monomer can be added. W e denote by k+r , k−r the rates of incorporation/removal
+of right monomers and by k+w , k−w the corresponding rates for wrong monomers. W e
+assume for simplicity that the rates do not depend on the speci/f_ic pairing of monomers
+
+PDF PAGE 136
+Thermodynamics of Information 113
+copy
+wrr r
+template
+r
+0
+w
+rr ww... ... ... ... ...rw... wr......
+(a)
+(b)
+Figure 5.4. (a) Scheme of a molecular machine (gray oval) that copies a long existing
+polymer, called the template. Due to thermal /f_luctuations, the machine sometimes incor-
+porates w monomers that do not match the template. (b) Sketch of the corresponding
+jump network. The process is iteratively repeated, so that the whole jump network is an
+in/f_inite tree.
+but only on whether the match is correct. The jump network for the complete sys-
+tem (the machine plus the copied polymer) is an in/f_inite tree, sketched in /f_ig. 5.4b.
+Each state in this tree is a string rwwr ... , identifying the sequence of right and wrong
+monomers that have been incorporated in the copy. The generalized detailed balance
+condition (3.7) reads
+k+r /k−r = e(−/Delta1ϵr +δ)/kBT ; k+w /k−w = e(−/Delta1ϵw+δ)/kBT .( 5 . 1 8 )
+Here /Delta1ϵr and /Delta1ϵw are the energies of a right and wrong monomer incorporation,
+respectively. The parameter δ is an external chemical driving that promotes monomer
+incorporation. W e assume the chemical driving to be equal for right and wrong
+monomers. Increasing δ drives the system away from equilibrium. W e remark that
+this system can be driven away from equilibrium although its jump network, depicted
+in /f_ig. 5.4b, does not contain any loop. This fact does not contradict the results in
+section 2.6, since the number of states here is in/f_inite.
+W e write the four jump rates as
+k+r = ωr eδ/kBT ; k−r = ωr e/Delta1ϵr/kBT ;
+k+w = ωw eδ/kBT ; k−w = ωw e/Delta1ϵw/kBT . (5.19)
+W e choose this expression of the rates on the physical assumption that the chem-
+ical driving aﬀects the incorporation rates, whereas speci/f_ic binding energies aﬀect
+monomer stability in the copy and therefore their removal rates. In general, right and
+wrong monomers can be discriminated either due to a diﬀerence in their binding ener-
+gies /Delta1ϵi, i ∈{ r, w} (energetic discrimination), or due to a diﬀerence in the intrinsic rates
+ωi (kinetic discrimination), or both.
+
+PDF PAGE 137
+114 Chapter 5
+The master equation for this system reads
+d
+dt p...r = k+r p... + k−r p...rr + k−w p...rw − (k+r + k+w + k−r )p...r,
+d
+dt p...w = k+w p... + k−r p...wr + k−w p...ww − (k+r + k+w + k−w )p...w,
+(5.20)
+where ... r is a copy with an r monomer at the tip, and similarly for ... w. T o solve the
+master equation, we assume that the probability of producing a given string rwrr ...
+with Nr right and Nw wrong monomers in the steady state is prwrr... ∝ (1 − η)Nr ηNw ,
+where η is the error probability to be determined a posteriori. Substituting this guess
+into the master equation, we /f_ind that it is a solution, provided that η satis/f_ies the
+condition
+η
+1 − η = k+w − ηk−wk+r − (1 − η)k−r .( 5 . 2 1 )
+The corresponding elongation speed is
+v = k+r − (1 − η)k−r + k+w − η k−w .( 5 . 2 2 )
+W e discuss two interesting limiting cases:
+Equilibrium limit. In the equilibrium limit, the elongation speed v is vanishingly
+small. W e solve the equation forη in this limit and evaluate the corresponding rates
+using eq. (5.21). W e /f_ind that the error rate tends to ηeq = e−/Delta1ϵw/kBT /(e−/Delta1ϵr/kBT +
+e−/Delta1ϵw/kBT ), as expected from detailed balance. The corresponding driving δ is
+smaller than the average work needed for the incorporation of a right monomer:
+δstall = ϵR + kBT ln(1 − ηeq). The second term in the expression of the stall driving
+is due to the compositional disorder of the copy: in the absence of driving, entropy
+increase would naturally lead to a nonequilibrium elongation of the chain.
+Fully irreversible limit. In the limit of strong driving, δ ≫ 1, which implies a large
+velocity, the error eventually tends to η = k+w /(k+r + k+w ) = ωw/(ωr + ωw).P h y s i -
+cally, this ratio is related to the diﬀerence in the activation barrier between the
+reactions leading to incorporations of right and wrong monomers; see the discussion
+in section 3.12.
+As the driving δ increases, the copying speed also increases, while the value of the
+error moves from the equilibrium to the irreversible limit. Since the error in the fully
+irreversible limit can be either larger or smaller than that in the equilibrium limit,
+depending on the other parameters, the trade-oﬀ between speed and error can be either
+positive or negative. This fact is illustrated in /f_ig. 5.5.
+Out of equilibrium, the elongation of the copy polymer is a dissipative process that
+produces entropy. The average entropy production rate can be expressed as
+T ˙Stot = kBT
+[
+Jr ln
+( k+r
+k−r (1 − η)
+)
++ Jw ln
+( k+w
+k−w η
+)]
+= v (1 − η)(δ − ϵr + kBT ln(1 − η)) + v η( δ − ϵw + kBT ln η)
+= v
+[
+/Delta1W − /Delta1F − kBTD KL(η‖ηeq)] ≥ 0,
+(5.23)
+
+PDF PAGE 138
+Thermodynamics of Information 115
+0.02 0.10 0.50
+η
+10−3
+10−1
+101
+103
+v
+energetic
+kinetic
+Figure 5.5. Kinetic and energetic discrimination. The two curves show polymerization
+speed v versus error η as the driving δ increases from 0 to 10 kBT for different choices of
+the other parameters. In both curves, higher speed corresponds to larger values of δ,b u t
+the effect of increasing the driving on the error is opposite for the two kinds of discrimi-
+nation. Parameters: (energetic) ωr = ωw = 1, ϵr = 1 kBT , ϵw = 5 kBT ;( k i n e t i c )ϵr = ϵw = 1 kBT ,
+ωr = 50, ωw = 1. Both axes are logarithmic.
+where v = Jr + Jw is the average net rate at which monomers are incorporated into the
+copy, /Delta1W = δ is the work per incorporated monomer, and /Delta1F = kBT ln(e−/Delta1ϵr/kBT +
+e−/Delta1ϵw/kBT ) is the equilibrium free energy change a/f_ter incorporating each monomer.
+A derivation of eq. (5.23) using the Schnakenberg formula (3.39) is le/f_t as exercise 5.2.
+Equation (5.23) also holds for more general models where incorporation of monomers
+does not occur in a single jump, but is a more complex process characterized by several
+intermediate states, potentially correcting errors.
+T o interpret eq. (5.23), we consider the limiting case in which right and wrong
+monomers are isoenergetic, so that ηeq = 1/2. We further assume that it is possible to
+transform a right monomer into a wrong one and vice versa. For example, the diﬀerent
+monomers can be distinguished by a molecular tag (such as methylation) that can be
+reversibly added and removed to the mono mers by another enzyme. In this case, the
+joint system of the template plus the copy is conceptually equivalent to the tape of the
+Mandal-Jarzynski machine discussed in section 5.5. In particular, a precise match of
+the template and the copy can be fed to a Mandal-Jarzynski machine operating as an
+information engine. Such a machine would extract mechanical work by increasing the
+error in the copy. This thought experiment shows that the last term in eq. (5.23) rep-
+resents free energy reversibly incorporated into the copy as information, which can in
+principle be transformed again into mechanical work.
+5.7 Information cost in sensing
+Living organisms need to constantly keep track of the state of relevant variables
+in their environment. They perform this task by means of electrical, chemical, and
+mechanical signaling pathways, called sensory systems. Important properties of sensory
+
+PDF PAGE 139
+116 Chapter 5
+systems are a fast response to environmental changes, complemented by a slower
+adaptation, i.e., a long-term storage of the average state of the environment into a mem-
+ory. Systems possessing these properties are aptly called sensory adaptation systems.
+Stochastic thermodynamics allows us to investigate the fundamental minimum energy
+cost for the functioning of a sensory adaptation system.
+W e focus on a minimal model of a sensory adaptation system. This system monitors
+ab i n a r yv a r i a b l e ,t h esignal e ∈{ 0, 1}, representing a relevant property of the environ-
+ment. The state x of the sensory adaptation system is speci/f_ied by two internal binary
+variables: the activity a ∈{ 0, 1} and the memory m ∈{ 0, 1}.A tc o n s t a n ts i g n a l ,t h e
+state m ∈{ 0, 1} must be closely correlated with e,w h i l ea is le/f_t free to adapt to sud-
+den changes in the environment. This means that the dynamics of m must be much
+slower than that of a.
+For simplicity, we consider a sensory adaptation system that is not driven by chemical
+energy. This means that, at constant signal, its dynamics satis/f_ies the detailed balance
+condition (2.83), and the system eventually settles down to an equilibrium state.
+We w r ite t h e e n e rg y f u n c t i onϵ = ϵx,e = ϵa,m,e of the sensory adaptation system based
+on physical considerations. The lowest-energy states must be those where the memory
+matches the signal, m = e, ensuring stability of the memory. The energies of these states
+are independent of a, since the activity should not play any role if the signal matches
+the memory. Instead, whenm ⁄= e, states in which the activity matches the environment
+(a = e) should be energetically more stable than those with a ⁄= e.T h e s er e q u i r e m e n t s
+lead to the expression
+ϵa,m,e = |e − m| (/Delta1m + |a − e| /Delta1a) .( 5 . 2 4 )
+The parameters /Delta1m > 0a n d/Delta1a > 0 are penalties due to memory and activity mistrack-
+ing, respectively. W e express them by
+/Delta1a,m =− kBT ln δa,m ,( 5 . 2 5 )
+where δa,m ≪ 1 are tolerances for activity ( a)a n dm e m o r y(m)t r a c k i n g .W ea s s u m e
+that individual jumps change the state of either a or m,b u tn o tb o t hs i m u l t a n e o u s l y :
+k(1−a,m),(a,m) = ωa eϵa,m,e/kBT ;
+k(a,1−m),(a,m) = ωm eϵa,m,e/kBT . (5.26)
+Since the activity is fast compared to the memory, we take ωa ≫ ωm.T h ep r o b a b i l i t y
+distribution px(t) follows a master equation with the rates (5.26). The environment-
+dependent equilibrium state is given by
+peqx|e ∝ e−ϵa,m,e/kBT .( 5 . 2 7 )
+To i l lu s t r ate t he dy n am i c s , we c ons i d e r an e nv i ron m e nt t h at h a s b e e n i n s t atee = 0
+for some time and suddenly switches to e = 1a tt i m et = 0. The initial distribution is
+peqx|e=0. In a time on the order ofω−1a , the activity variable tends to the new environmen-
+tal state. At longer times, of order ω−1m , m starts aligning with the new environmental
+state while a slowly resets toward a state where 0 and 1 are equiprobable. The dynamics
+is shown in /f_ig. 5.6.
+
+PDF PAGE 140
+Thermodynamics of Information 117
+0 100 200 300
+t (s)
+0.00
+0.25
+0.50
+0.75
+1.00(a)
+(b)
+δa
+δm
+δad
+memory
+activity
+signal
+10−2 100 102
+t (s)
+0.00
+0.25
+0.50
+0.75
+1.00
+8a9, 8m98a9, 8m9
+memory
+activity δa
+δm
+δad
+Figure 5.6. Average activity ⟨a⟩ and average memory ⟨m⟩ as a function of time t for a
+signal switching from e = 0t o e = 1a t t = 0. (a) Linear time axis. (b) Logarithmic time
+axis. Parameters: δm = 0.35, δa = 0.01, ωa = 1/50 s−1, ωm = 1/250 s−1, kBT = 1. See Sartori
+et al. [142].
+The information carried by the sensory adaptation system about the environment is
+quanti/f_ied by the mutual information
+I(sys : env) =
+∑
+x,e
+px|epe ln px|epx ,( 5 . 2 8 )
+where px = ∑e px|epe. W e assume that the environment is unbiased, so thatpe = 1/2. By
+using the chain rule for the mutual information (2.145) and the fact that the distribution
+of the system (sys) is the joint distribution of the activity (act) and the memory (mem),
+we obtain
+I(sys : env) = I(mem : env) + I(act : env|mem),( 5 . 2 9 )
+
+PDF PAGE 141
+118 Chapter 5
+where
+I(act : env|mem) =
+∑
+a,m,e
+pa,m|epe ln pa|m,epa|m (5.30)
+is the conditional mutual information between the activity and the environment, given
+the memory. This quantity is positive but quite small in the steady state. The reason
+is that most of the information on the environment is carried by the memory, I(sys :
+env) ≈ I(mem : env) ≈ 1b i t .
+W e now study a case in which the environmental signal is initially either 0 or 1 with
+equal probability. At timet,t h es i g n a lc a ns w i t c hw i t hp r o b a b i l i t y1/2. The information
+borne by the sensory adaptation system can be split into information about the initial
+environment env (t0), which must be erased, and information about the /f_inal envi-
+ronment env(tf ), which must be acquired. Given the instantaneous state px|e(t0),e(tf )(t)
+conditioned to the initial and /f_inal environments, we de/f_ine the acquired information
+/Delta1Imeas(t) on the /f_inal environment and the erased information /Delta1Ieras(t) by
+/Delta1Imeas(t) = I(sys(t) : env(tf )) − I(sys(t0) : env(tf ));
+/Delta1Ieras(t) = I(sys(t0) : env(t0)) − I(sys(t) : env(t0)|env(tf )). (5.31)
+Here I(sys(t) : env(tf )) is the mutual information between the state x of the sen-
+sory adaptation system at time t and the /f_inal environment. Similarly, I(sys(t) :
+env(t0)|env(tf )) is the conditional mutual information between the system at timet and
+the initial environment, given the /f_inal environment. They are respectively de/f_ined by
+I(sys(t) : env(tf )) =
+∑
+x,ei,ef
+px|ei,ef (t)pei,ef ln px|ei,ef pei,ef (t)px(t)pef ,
+I(sys(t) : env(t0)|env(tf )) =
+∑
+x,ei,ef
+px|ei,ef (t)pei,ef ln px|ei,ef (t)px|ef (t) , (5.32)
+where px(t) = ∑ei,ef px|e(t0),e(tf )(t) pe(t0),e(tf ) and pe(tf ) = ∑e(t0) pe(t0),e(tf ).A n a l o g o u sde/f_initions hold for I(sys : env(t0)) and pe(t0).O n ec a nv e r i f yt h a tI(sys(t0) : env(tf )) =
+limt→∞ I(sys(t) : env(t0)|env(tf )) = 0. These quantities can be further split into con-
+tributions from the activity and the memory via the chain rule; see section 2.10. The
+behavior of /Delta1Imeas and /Delta1Ieras as a function of time are shown in /f_ig. 5.7, along with
+their decomposition into information carried bym and a, respectively. In particular, the
+activity carries signi/f_icant information about the measurement at intermediate times,
+whereas it carries quite small erasure information.
+Upon switching from ei to ef , the environment performs work on the sensory adap-
+tation system. The average work is given by W = ∑ei,ef ⟨ϵx,ef ⟩peqx,ei pei,ef ≥ 0. This work
+is in part dissipated in the reservoir during relaxation to the new equilibrium state
+peqx,ef , thereby producing entropy. The average total entropy produced up to timet given
+(ei, ef ) is expressed by
+Stotei,ef (t) = /Delta1Ssysei,ef (t) + Sresei,ef (t),( 5 . 3 3 )
+where
+/Delta1Ssysei,ef (t) = kB [H(px|ei,ef (t)) − H(px|ei,ef (0))] ,( 5 . 3 4 )
+
+PDF PAGE 142
+Thermodynamics of Information 119
+10−3 10−1 101
+t
+10−3 10−1 101
+t
+0.0
+0.2
+0.4
+0.6
+0.0
+0.2
+0.4
+0.6
+ΔImeas
+1 bit
+ΔImeas
+ΔImmeas
+ΔIameas
+(b)
+(a)
+I0 − ΔIeras
+1 bit
+I(0) – ΔIeras
+Im(0) – ΔImeras
+Ia(0) – ΔIaeras
+Figure 5.7 . (a) Information acquired about the new state of the environment as a func-
+tion of time. The information is split into information carried by the memory m and
+information carried by the activity a,g i v e ne n v(tf) and m.( b )I n f o r m a t i o nl o s ta b o u tt h e
+old state of the environment as a function of time. The difference I(0) − /Delta1Ieras(t),w h e r e
+I(0) = I(sys(t0) :e n v(t0)),i ss p l i ti n t oi n f o r m a t i o nc a r r i e db yt h em e m o r ym and information
+carried by the activity a,g i v e ne n v(t0) and m. In both plots, t denotes the time elapsed
+since the switch; the scale is logarithmic. Parameters: δm = 0.01, δa = 0.01, ωa = 1/50 s−1,
+ωm = 1/250 s−1, kBT = 1. See Sartori et al. [142].
+in which H(px) is the Shannon entropy of the distribution px,a n d
+Sresei,ef (t) = 1T Qresei,ef (t) = 1T (⟨ϵx,ef ⟩peqx|ei − ⟨ϵx,ef ⟩px|ei,ef (t)) .( 5 . 3 5 )
+Here Qresei,ef (t) is the average heat released to the reservoir up to timet,e q u a lt ot h ed i ﬀ e r -ence between the initial average energy of the sensory adaptation system (immediately
+
+PDF PAGE 143
+120 Chapter 5
+a/f_ter the switch) and its current average. By the second law of stochastic thermodynam-
+ics, Stot ≥ 0 for any /f_inite time interval. Therefore,Stot(t) is a monotonically nondecreas-
+ing function of t.S i n c et h i si st r u ef o ra n yc h o i c eo fei and ef , it is also true on average.
+W e split the total entropy production into two nonnegative terms, one pertaining
+to the measuring process and the other to the erasure. Averaging out H(px|ei,ef (t)),w e
+obtain the conditional entropy
+H(sys(t)|env(t0), env(tf )) = H(sys(t)|env(tf )) − I(sys(t) : env(t0)|env(tf ))
+= H(sys(t)) − I(sys(t) : env(tf )) − I(sys(t) : env(t0)|env(tf )),
+(5.36)
+where we apply the chain rule twice. Averaging (5.33) and substituting this relation, we
+obtain
+/Delta1Stot(t) = kB/Delta1H(sys(t)) + 1T Qres(t) − kBI(sys(t) : env(tf ))/bracehtipupleft /bracehtipdownright/bracehtipdownleft /bracehtipupright
+/Delta1Smeas(t)
+− kBI(sys(t) : env(t0)|env(tf ))
+/bracehtipupleft /bracehtipdownright/bracehtipdownleft /bracehtipupright
+/Delta1Seras(t)
+.
+(5.37)
+The quantity /Delta1Smeas(t) cannot decrease in time:
+d/Delta1Smeas
+dt =− kB
+∑
+x,ef
+pef
+dpx|ef (t)
+dt ln px|ef (t)peqx|ef
+=− kB
+∑
+ef
+pef
+d
+dt DKL(px|ef (t)‖peqx|ef ) ≥ 0.
+(5.38)
+The last equality holds because the Kullback-Leibler divergence between the instanta-
+neous and the stationary distribution decreases monotonically with time; see eq. (A.20).
+The nonnegativity of d/Delta1Seras/dt is proved in a similar way. Integrating with respect tot,
+we /f_ind that both /Delta1Smeas and /Delta1Seras are nonnegative.
+We t hu s o bt ai n , t a k i ng i nto a c c ou nt t h at l i mt→∞ Q = W − /Delta1 ⟨ϵ⟩, and recalling the
+de/f_inition of the nonequilibrium free energy Fneq = ⟨ϵ⟩p − kBTH(p) in section 2.3,
+W − ⟨/Delta1F⟩ ≥ kBT [I(sys(+∞) : env(tf )) − I(sys(0) : env(tf ))]
+= kBT /Delta1Imeas; (5.39a)
+T /Delta1Seras = kBT (I(sys(0) : env(t0)|env(tf )) − I(sys(+∞) : env(t0)|env(tf )))
+= kBT /Delta1Ieras ≥ 0. (5.39b)
+The /f_irst relation corresponds to the Sagawa-Ueda relation (5.14), and shows that, in
+the present system, measurement is energetically costly and that the work is provided
+by the switch in the signal. The second relation shows that memory erasure takes place
+without energy costs but is necessarily dissipative. The entropy production as a function
+of time is shown in /f_ig. 5.8.
+Most biologically relevant sensory adaptation systems are driven in a nonequili-
+brium steady state by dissipation of chemical energy and therefore do not satisfy
+
+PDF PAGE 144
+Thermodynamics of Information 121
+10−3 10−1 101
+t
+0
+1
+2
+3
+S/kB
+ΔStot
+ΔSmeas
+ΔSeras
+Figure 5.8. T otal entropy production of the sensory adaptation process in the model and
+its decomposition in measurement /Delta1Smeas and erasure /Delta1Seras contributions, expressed
+as a function of the time elapsed since the switch. Parameters: δm = 0.01, δa = 0.01,
+ωa = 1/50 s−1, ωm = 1/250 s−1, kBT = 1. Timescale is logarithmic. See Sartori et al. [142].
+detailed balance. In spite of this fundamental diﬀerence, inequalities closely related to
+(5.39) also hold for such systems. They are based on the separate /f_luctuation relations
+for adiabatic and nonadiabatic entropy production discussed in section 4.9. Indeed,
+in a nonequilibrium steady state, the entropy production is entirely captured by the
+adiabatic contribution de/f_ined in (4.64). A change in the signal is accompanied by nona-
+diabatic entropy production (see eq. (4.67)), which is also associated with excess heat
+released to the reservoir. In our case, the average excess heat is given by
+Qex(t) = kBT ∑
+ei,ef
+pei,ef
+∫ t
+t0
+dt
+∑
+x
+dpx|ei,ef (t)
+dt ln pstx|ef .( 5 . 4 0 )
+As a consequence of the /f_luctuation relation (4.74), averaged over ei, ef ,o n eh a s
+Sna(t) = kB /Delta1H(sys(t)|env(t0), env(tf )) + Qex(t)T ≥ 0. (5.41)
+The nonadiabatic entropy production Sna(t) can be further split, as above, in the
+contributions of measure and erasure, yielding
+kB /Delta1H(sys(t)) + Qex(t)T ≥ kB /Delta1Imeas(t) ≥ 0;
+Sna(t) ≥ kB /Delta1Ieras(t) ≥ 0.
+(5.42)
+Here /Delta1Imeas(t) and /Delta1Ieras(t) are de/f_ined as in (5.31). In this case, the system usually
+receives most of the energy necessary for the process by the inner working of the cell,
+rather than from the signal, as in the equilibrium case.

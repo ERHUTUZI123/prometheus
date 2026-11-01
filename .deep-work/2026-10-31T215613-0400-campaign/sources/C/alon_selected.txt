@@ -1,0 +1,304 @@
+FILE: food/An Introduction to Systems Biology Design Principles of Biological Circuits (Uri Alon) (z-library.sk, 1lib.sk, z-lib.sk).pdf
+PDF PAGES: 316
+
+=== PDF PAGE 163 ===
+14 < CHApTEr 7
+We see that exact adaptation is lost, since A2 is no longer equal to A0. In this example,
+a modest 20% change in the level of a protein (CheR) caused almost a threefold difference
+in the steady-state activities with and without ligand (Figure 7.8b). Exact adaptation is a
+fine-tuned property in this model.
+7.4.2 The barkai-leibler robust Mechanism for Exact Adaptation
+A mechanism that allows exact adaptation for a wide range of biochemical parameters was
+suggested by Naama Barkai and Stanislas Leibler (1997). The full model includes several
+methylation sites and other details, and reproduces many observations on the dynami-
+cal behavior of the chemotaxis system (a two-methylation-site version is solved in exer-
+cise 7.1). Here we will analyze a simplified version of the Barkai–Leibler model, aiming to
+understand how a biochemical circuit can robustly adapt.
+Our toy model (Figure 7.9) has a single methylation state, so that receptors can be either
+unmethylated, X, or methylated, Xm. The unmethylated receptor X is inactive, whereas Xm
+transits between an inactive state and an active state, Xm*. The activity is proportional to
+the number of receptors in the methylated, active state:
+A = Xm* (7.4.13)
+CheB
+m
+Active state
+Attractant
+Tumbles
+CheR m
+Inactive state
+FIGurE 7.9 The Barkai–Leibler mechanism for exact adaptation. Unmethylated receptors are methylated by
+CheR at a constant rate. Demethylation is due to CheB, which acts only on the active methylated receptors.
+Methylated receptors (marked with m) transit rapidly between active and inactive states (the former marked
+with a star). Attractant binding increases the probability to become inactive, whereas repellents increase the
+probability to become active. The active receptors catalyze the phosphorylation of CheY, leading to tumbles.
+When attractant is added, many active receptors rapidly become inactive, and hence the tumbling frequency
+decreases. The reduced number of active receptors means that CheB has less substrate to work on, and thus
+the demethylation rate drops. Since CheR continues to work at a constant rate, the total number of methyl-
+ated receptors increases. This increase only stops when demethylation rate exactly balances the methylation
+rate, that is, when the number of active receptors returns to its prestimulus value. Thus, exact adaptation
+occurs because the concentration of active receptors adjusts itself so that the demethylation rate is equal to
+the constant methylation rate.
+
+=== PDF PAGE 164 ===
+rObuSTNESS OF prOTEIN CIrCuITS < 14
+The model is based on two key features. First, CheR must work at saturation. Second,
+CheB can only demethylate the active receptors, Xm
+* (Figure 7.5). To repeat, CheB does
+not work on the inactive methylated receptors. This leads to the following equation for the
+total concentration of methylated receptors (both active and inactive):
+*
+d X X
++ ( ) =
+*
+m m
+V R V B
+B m
+R
+*–
+X (7.4.14)
+dt
+K X
++
+m
+where R and B denote the concentrations of CheR and CheB. Note that the Michaelis–
+Menten term for CheB contains the concentration of its substrate, active receptors Xm*.
+The steady-state of this dynamic equation occurs when d(Xm + Xm*)/dt = 0. At steady-
+state, the value of Xm
+* reaches a point where demethylation exactly balances the constant
+flux of methylation:
+*
+V R V BX
+B m
+=
+R
+* (7.4.15)
+K X
++
+m
+which can be solved for the steady-state activity A = Xm*:
+A X KV R
+R
+= =
+2
+* (7.4.16)
+m
+V B V R
+−
+B R
+When attractant is added, it binds the receptors and decreases the probability of the
+active state. Therefore, the number of active receptors A = Xm
+* rapidly decreases. This
+causes the abrupt initial drop in tumbling frequency that is observed in the experiments
+(Figure 7.10).
+After this sharp initial response, adaptation occurs due to the fact that CheB only
+works on the active receptors. The rate of demethylation by CheB is reduced because of
+the decrease in Xm
+* caused by the attractant. CheR, on the other hand, continues to meth-
+ylate receptors at a constant rate. Therefore, the total number of methylated receptors
+gradually increases:
+15
+15
+A0 A2
+10
+10
+exact
+adaptation
+A
+5
+5
+0
+0
+0 1 2 3 4 5 6 7 8 9 10
+0 1 2 3 4 5 6 7 8 9 10
+Time
+Time
+(a)
+(b)
+FIGurE 7.10 Activity dynamics of the robust model in response to addition of saturating attractant at time
+t = 2. (a) Model parameters K = 10, VR R = 1, and VB B = 2. (b) Same parameters with R reduced by a factor
+of 2. Exact adaptation is preserved. Note that the value of the steady-state tumbling frequency is fine-tuned
+and depends on the model parameters.
+
+=== PDF PAGE 165 ===
+14 < CHApTEr 7
+*
+d X X
++ ( ) =
+m m
+dt
+*
+V R V BX
+B m
+R
+*– (7.4.17)
+K X
++
+m
+As the total number of methylated receptors increases, so does the number of active
+methylated receptors Xm*, which are a fraction of the total methylated receptors. As
+before, steady-state is reached when Xm
+* reaches a level that balances the effects of CheR
+and CheB, resulting in a steady-state activity level:
+*
+A X KV R
+R
+= =
+2
+m
+V B V R
+−
+B R
+This activity is equal to the pre-attractant activity. Thus, the steady-state activity does
+not depend on ligand levels:
+(7.4.18)
+A2 = A0 (7.4.19)
+How does this mechanism work? The crucial elements are a fixed flux of methylation
+due to CheR, set against a counterflux of demethylation by CheB that directly depends on
+the activity A = Xm*. At steady state, the number of active receptors always adjusts itself so
+that demethylation balances the reference flux of methylation. In other words, the active
+receptors Xm
+* return to the fixed point of Equation 7.4.17, no matter what the attractant
+level. The activity A = Xm
+* reaches a steady-state value that does not depend on the ligand
+stimulus. Exact adaptation is achieved. Figure 7.10 shows the dynamics of this model for
+two sets of parameters, in which CheR levels are varied by a factor of 2. It is seen that the
+steady-state activity changes, but adaptation remains exact.
+Exact adaptation occurs for a wide range of variations in any of the parameters of the
+model, namely, K, VR, VB, R, and B. In contrast, the value of the steady-state activity to
+which the cells adapt depends on these parameters. In other words, steady-state activity is
+a fine-tuned feature of this model (Figure 7.10). Exact adaptation, in which the steady state
+does not depend on ligand levels, is a robust feature of the model and does not depend on
+the precise values of the biochemical parameters.
+There are limits to robustness: for example, when VRR exceeds VBB, the saturation
+assumption for enzyme CheR is no longer valid, and robustness breaks down.
+Robustness of exact adaptation in this model depends on the assumption that CheB
+works only on active receptors, and does not demethylate receptors that are in their inac-
+tive state. This is a specific biochemical detail that is essential for robust adaptation. The
+assumption that CheB works only on active receptors is not unrealistic, because enzymes
+can be exquisitely specific in discriminating between molecular states. Relaxing this
+assumption by allowing a small relative rate ε for CheB action on inactive receptors entails
+a loss of exact adaptation by a factor on the order of ε.
+7.4.3 robust Adaptation and Integral Feedback
+The feedback in the robust mechanism is special: the demethylation rate is related directly
+to the activity, rather than to some other entity, such as the level of CheB-P. The negative
+feedback loop therefore acts directly on the variable to be controlled.
+
+=== PDF PAGE 166 ===
+rObuSTNESS OF prOTEIN CIrCuITS < 14
+The direct feedback in the robust mechanism of exact adaptation is related to the engi-
+neering control principle of integral feedback (Yi et al., 2000). In integral feedback, a
+device is controlled by a signal that integrates over time the error between the output
+and the desired output. This type of feedback is guaranteed to guide the device to the
+desired output level, regardless of variations in the system parameters, because otherwise
+the integral of the error grows without bound. Moreover, in many cases integral feedback
+can be shown to be the only robust solution to this problem. The integrator in bacterial
+chemotaxis that effectively sums the error in activity (the activity minus the steady-state
+activity) is the methylation level of the receptors. The properties of integral feedback in
+chemotaxis are examined in exercises 7.2 and 7.3.
+7.4.4 Experiments Show That Exact Adaptation Is robust, whereas
+Steady-State Activity and Adaptation Times Are Fine-Tuned
+An experimental test of robustness employed genetically engineered E. coli strains, which
+allowed controlled changes in the concentration of each of the chemotaxis proteins (Alon
+et al., 1999). This control was achieved by first deleting the gene for one chemotaxis pro-
+tein (for example, CheR) from the chromosome, and then introducing into the cell a copy
+of the gene under control of an inducible promoter (the lac promoter). Thus, expression of
+the protein was controlled by means of an externally added chemical inducer (IPTG). The
+more inducer that was added, the higher the CheR concentration in the cells. In this way,
+CheR levels were varied from about 0.5 to 50 times their wild-type levels. The population
+response of these cells to a saturating step of attractant was monitored using video micros-
+copy on swimming cells. The experiment was carried out with changes in the expression
+levels of different chemotaxis proteins.
+It was found that the steady-state tumbling frequency and the adaptation time var-
+ied with the levels of the proteins that make up the chemotaxis network (Figure 7.11).
+For example, steady-state tumbling frequency increased with increasing CheR levels,
+whereas adaptation time decreased. Despite these variations, exact adaptation remained
+robust to within experimental error. These results support the robust model for exact
+adaptation.
+7.5 INdIvIduAlITy ANd rObuSTNESS IN bACTErIAl CHEMOTAxIS
+Spudich and Koshland (1976) observed that genetically identical cells appear to have an
+individual character as they perform chemotaxis. Some cells are “nervous” and tumble
+more frequently than others, whereas other cells are “relaxed” and swim with fewer tum-
+bles than the norm. These individual characteristics of each cell last for tens of minutes.
+The adaptation time to an attractant stimulus also varies from cell to cell. Interestingly,
+these two features are correlated: the steady-state tumbling frequency f in a given cell is
+inversely correlated with its adaptation time, τ, that is, f ~ 1/τ.
+The robust model for bacterial chemotaxis can supply an explanation for the varying
+chemotaxis personalities of E. coli cells. This is based on the cell–cell variation in chemo-
+taxis protein levels, and particularly in the least abundant protein in the system, CheR.
+Variations in CheR affect the tumbling frequency f and the adaptation time τ in opposite
+
+=== PDF PAGE 172 ===
+rObuSTNESS OF prOTEIN CIrCuITS < 155
+7.3. dP/dt = c1 T + c2 P + c3 (P7.10)
+and show that integral feedback as a structural feature of the system is necessary
+and sufficient for robust exact adaptation.
+Integral feedback in chemotaxis. Demonstrate that a simple linear form of the robust
+model for chemotaxis contains integral feedback. What is the integrator in this bio-
+logical system (Yi et al., 2000)?
+Solution:
+In a linear model, CheR works at saturation and CheB works with first-order kinet-
+ics, and only on the active receptors. The rate of change of the total number of meth-
+ylated receptors (Xm,t = Xm + Xm* = Xm + A) is given by the difference between the
+methylation and de-methylation rates:
+dXm,t/dt = VR R – VB B A (P7.11)
+This can be rewritten in terms of the difference between the activity A and its
+steady-state value Ast:
+dXm,t/dt = –VB B (A – Ast) (P7.12)
+where the steady-state activity is
+Ast = VR R/VB B (P7.13)
+The total number of methylated receptors, Xm,t, thus acts as the integrator in the
+system that integrates the error in activity over time (in analogy to Equation P7.8):
+Xm,t ~ –VB B ∫(A – Ast) dt (P7.14)
+The activity A is analogous to the room temperature in problem 7.2. To complete
+the analogy with problem 7.2, let us write a detailed equation for the rate of change
+of activity, A = Xm*. The number of methylated active receptors Xm* increases due
+to transitions from Xm to Xm* at a ligand-dependent rate, k(l). The number Xm*
+decreases due to the demethylating action of CheB and due to transitions to the
+inactive state Xm at a ligand-dependent rate k’(l). The dynamics of Xm* = A are
+therefore given by the sum over the rates of all of these transitions with appropriate
+signs:
+dA/dt = k(l) Xm – k´(l) A – VB B A (P7.15)
+
+=== PDF PAGE 173 ===
+15 < CHApTEr 7
+We want to rearrange this equation so that the first term is proportional to Xm,t =
+Xm + A (analogous to the heater power, P, in exercise 7.2; Equation P7.7). For this
+purpose, we add and subtract k(l)A to find
+dA/dt = k(l) Xm,t – (k´(l) + k(l)) A – VB B A (P7.16)
+Thus, we end up with an integral feedback system, analogous to Equations P7.7 and
+P7.9, in which
+dA/dt = a Xm,t – b A (P7.17)
+7.4. (a) (b) dXm,t/dt = –K (A – Ast) (P7.18)
+where a = k(l), b = k´(l) + k(l) + VB B, and K = VB B.
+To restate the analogy, think of A as the temperature and Xm,t as the power to the
+heater in problem 7.2. As shown in problem 7.2, the steady-state activity Ast does
+not depend on any of the parameters a, b, or K, and in particular on the ligand level
+that enters only through k(l) and k´(l) in the parameters a and b. Thus, Ast does not
+depend on the level of attractant (or repellent), and exact adaptation is achieved.
+Zero-order ultrasensitivity (Goldbeter and Koshland, 1981): In this exercise, we will
+see how two antagonistic enzymes can generate a sharp switch. A protein X can be
+in a modified X1 or unmodified X0 state. Modification is carried out by enzyme E1,
+and de-modification by enzyme E2. The rate V2 of E2 is constant, whereas the rate V1
+of E1 is governed by an external signal. Consider V1 as the input and X1 as the out-
+put of this system.
+Assume that E1 and E2 work with first-order kinetics. What is the output X1 as a
+function of input V1.
+What is the sensitivity of this circuit, defined as the relative change in X1 per
+relative change in V1.
+(c) (d) (e) V
+1
+dX
+S X V
+=
+( , ) 1 1
+1
+X
+1
+dV
+1
+Assume now that E1 and E2 work with zero-order kinetics. What is X1 as a func-
+tion of V1? Note that X0 + X1 cannot exceed the total concentration Xtot.
+What is the sensitivity of the zero-order circuit? Explain why this is called “zero-
+order ultra-sensitivity”.
+Compare the switching time (time to 50% change in X1 upon a change in V1)
+between the cases of (a) and (c) above.

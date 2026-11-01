@@ -1,0 +1,192 @@
+
+optician2017.pdf PDF PAGE 2
+1:2 Anders Miltner, Kathleen Fisher, Benjamin C. Pierce, Davi d Walker, and Steve Zdancewic
+A lens comprises two functions, get and put. /T_he get function translates source data into the
+target format. If the target data is updated, the put function translates this edited data back into
+the source format. A beneﬁt of lens-based languages is that they use a single term to express both
+get and put. Furthermore, well-typed lenses give rise to get and put functions guaranteed to satisfy
+desirable invertibility properties.
+Lens-based languages are present in variety of tools and have fou nd mainstream industrial use.
+Boomerang [3, 5] lenses provide guarantees on transformations be tween ad hoc string document
+formats. Augeas [26], a popular tool that reads Linux system c onﬁguration ﬁles, uses the get
+part of a lens to transform conﬁguration ﬁles into a canonical tree r epresentation that users can
+edit either manually or programmatically. It uses the lens’s put to merge the edited results back
+into the original string format. Other lens-based languages and to ols include GRoundTram [20],
+BiFluX [30], BiYacc [41], Brul [40], BiGUL [21], bidirectio nal variants of relational algebra [4],
+spreadsheet formulas [27], graph query languages [19], and XM L transformation languages [25].
+Unfortunately, these languages impose ﬁddly constraints on lense s, making lens programming
+slow and tedious. For example, Boomerang programmers o/f_ten mus t rearrange the order of data
+items by recursively using operators that swap adjacent ﬁelds . Furthermore, the Boomerang type
+checker is very strict, disallowing many programs because the y contain ambiguity about how
+certain data is transformed. In short, lens languages provide s trong bidirectional guarantees at the
+cost of forcing programmers to satisfy ﬁnicky type systems.
+To make programming with lenses faster and easier, we have devel oped Optician, a tool for
+synthesizing lenses from simple, high-level speciﬁcations. /T_hi s work continues a recent trend to-
+ward streamlining programming tasks by synthesizing programs in a variety of domain-speciﬁc
+languages [10, 15, 24, 31], many guided by types [10, 11, 14, 29, 32]. Speciﬁcally, Optician supports
+the synthesis of bijective lenses , a useful subset of Boomerang. As inputs, Optician takes speci -
+ﬁcations of the source and target formats, plus a collection of concrete examples of the desired
+transformation. Format speciﬁcations are supplied as ordinary regular expressions. Because regu-
+lar expressions are so widely understood, we anticipate such inp uts will be substantially easier for
+everyday programmers to work with than the unfamiliar syntax o f lenses. Moreover, including
+these format descriptions communicates a great deal of informa tion to the synthesis system. /T_hus,
+requiring user input of regular expressions makes synthesis robust, helps the system scale to large
+and complex data sources, and constrains the search space suﬃciently that the user typically needs
+to give very few, if any, examples.
+Despite the beneﬁts of Boomerang’s informative types, Boomerang is not well-suited to support
+synthesis directly. Speciﬁcally, Boomerang’s types are regu lar expression pairs, and each regular
+expression is equivalent to an inﬁnite number of other regular ex pressions. To synthesize all
+Boomerang terms, a type-directed synthesizer must sometimes be able to ﬁnd, amongst all possible
+equivalent regular expressions, the one with the right syntacti c structure to guide the subsequent
+search for a well-typed, example-compatible Boomerang term .
+To resolve these issues, we introduce a new language of Disjunctive Normal Form (DNF) lenses .
+Just as string lenses have pairs of regular expressions as types , DNF lenses have pairs of DNF
+regular expressions as types. /T_he typing judgements for DNF lenses limit how equivale nces can be
+used, greatly reducing the size of the search space. Despite t he restrictive syntax and type system
+of DNF lenses, we prove our new language is equivalent to a natural, declarative speciﬁcation of
+the bijective fragment of Boomerang.
+Figure 1 shows a high-level, schematic diagram for Optician. First, Optician uses the function
+⇓ to convert the input regular expressions into DNF regular expres sions. Next, S/y.sc/n.sc/t.sc/h.scDNFL/e.sc/n.sc/s.sc
+performs type-directed synthesis on these DNF regular expre ssions and the input examples to
+, Vol. 1, No. 1, Article 1. Publication date: October 2017.
+
+optician2017.pdf PDF PAGE 3
+Synthesizing Bijective Lenses 1:3
+⇓
+S
+T
+exs
+DS
+DT
+S/y.sc/n.sc/t.sc/h.scDNFL/e.sc/n.sc/s.sc
+Optician
+dl ⇑ l
+Fig. 1. Schematic Diagram for Optician. Regular expressions , S and T , and examples, exs, are given as input.
+First, the function ⇓ converts S and T into their respective DNF forms, DS and DT . Next, S/y.sc/n.sc/t.sc/h.scDNFL/e.sc/n.sc/s.sc
+synthesizes a DNF lens, dl, from S, T , and exs. Finally, ⇑ converts dl into l, a lens in Boomerang that is
+equivalent to dl.
+synthesize a DNF lens. Finally, this DNF lens is converted back intoa regular lens with the function
+⇑, and returned to the user.
+Contributions. Optician makes bidirectional programming more accessible byobviating the need
+for programmers to write lenses by hand. We begin by brieﬂy revi ewing some background on reg-
+ular expressions and core lens combinators (§2). A/f_ter we motivate our problem with an extended,
+real-world example (§3), we oﬀer the following technical contributions:
+• We introduce a new lens language (DNF Lenses) that is suitable for s ynthesis (§4 and §5).
+We show how to convert ordinary regular expressions and lenses into the corresponding
+DNF forms, and we prove that DNF lenses are sound and complete with respect to the
+high-level bijective lens syntax.
+• We present an eﬃcient, type-directed synthesis algorithm for synthesizing lenses (§6). We
+prove that if there is a lens that satisﬁes the input speciﬁcati on, this algorithm will return
+such a lens.
+• We evaluate Optician, its optimizations, and existing synthesis tools on 39 benchmarks,
+including examples derived from Flash Fill [16] and the Augeas [ 26] system (§7). We show
+that our optimizations are critical for synthesizing many of the complex lenses in our
+benchmark suite and that our full algorithm succeeds on all benc hmarks in under 5 sec-
+onds.
+• While we are not aware of any other systems for automatically sy nthesizing bijective
+transformations, we establish a baseline for our the eﬀectivene ss of our techniques by
+comparing our synthesis algorithm with the one used in Flash Fil l [16], a well-known and
+inﬂuential synthesis system deployed in Microso/f_t Excel. Flash Fill only synthesizes trans-
+formations in one direction, but it was only able to complete synth esis of 3 out of 39 of
+our benchmarks. We conjecture that the extra information we sup ply the synthesis sys-
+tem via our regular format descriptions, allows it to scale to signiﬁcantly more complex
+and varied formats than is possible in current string synthesis s ystems that do not use this
+information.
+We close with related work ( §8) and conclusions ( §9).
+2 PRELIMINARIES
+Technical Report. /T_hroughout the paper, we will state a number of theorems. We hav e omi/t_ted
+these proofs for space, and have included these details in the a uxiliary technical report.
+, Vol. 1, No. 1, Article 1. Publication date: October 2017.
+
+optician2017.pdf PDF PAGE 10
+1:10 Anders Miltner, Kathleen Fisher, Benjamin C. Pierce, Dav id Walker, and Steve Zdancewic
+relation and is still conﬂuent and bisimilar. We have not been able to prove that this relation is
+the coarsest such relation possible, but it is suﬃcient to cov er all the test cases in our benchmark
+suite (see §7). However, it is easy to show that Conway’s axioms ( Prodstar in particular) are not
+bisimilar, which is why we avoid this in our system.
+Challenge 2: Large Types. DNF lenses are equivalent in expressivity to lenses and the algor ithm
+S/y.sc/n.sc/t.sc/h.scDNFL/e.sc/n.sc/s.sc is quite fast. Unfortunately, the conversion to DNF incurs an exp onential blowup.
+In practical examples, the regular expressions describing co mplex ad hoc data formats may be
+very large, causing the exponential blowup to have a signiﬁcant im pact on synthesis time. /T_he
+key to addressing this issue is to observe that users naturally construct large types incrementally,
+introducing named abbreviations for major subcomponents. For exa mple, in the speciﬁcation of
+legacy title and modern title, the variable text char describes which characters can be
+present in a title. To include a large disjunction representing al l valid title characters instead of
+the concise variable text char in the deﬁnitions of legacy title and modern title would be
+unmaintainable and diﬃcult to read.
+Unfortunately, leaving these variables opaque introduces a new dimension of search. In addition
+to searching through the rewrites on regular expressions, the algorithm must also search through
+possible substitutions, replacements of variables with their deﬁnitions. We designate these two
+types of equivalences expansions, using “rewrites” to denote expansions that arise from traversi ng
+rewrite rules on the regular expressions, and using “substitut ions” to denote expansions that arise
+from replacing a variable with its deﬁnition.
+Interestingly, Optician can exploit the structure inherent in these named abbreviations to speed
+up the search dramatically. For example, if text char appears just once in both the source and
+the target types, the system hypothesizes that the identity l ens can be used to convert between
+occurrences of text char. On the other hand, if text char appears in the source but not in the
+target, the system recognizes that, to ﬁnd a lens, text char must be replaced by its deﬁnition. In
+this way, the positions of names can serve as a guide for applying substitutions and rewrites in the
+synthesis algorithm. By using these named abbreviations, T/y.sc/p.sc/e.scP/r.sc/o.sc/p.sc guides the transformation of
+regular expression types during search by deducing when certa in expansions must be taken, or
+when one of a class of expansions must be taken.
+4 DNF REGULAR EXPRESSIONS
+/T_he ﬁrst important step in Optician is to convert regular expres sion types into disjunctive normal
+form (DNF). A DNF regular expression, abbreviated DNF RE, is an n-ar y disjunction of sequences,
+where a sequence alternates between concrete strings and atoms, a nd an atom is an iteration of
+DNF regular expressions. /T_he grammar below describes the synta x of DNF regular expressions
+(DS,DT ), sequences ( SQ,TQ), and atoms ( A, B) formally.
+A,B ::= DS∗
+SQ,TQ ::=[s0· A1· . . .· An· sn]
+DS,DT ::= ⟨SQ1| . . .| SQn⟩
+Notice that it is straightforward to convert an arbitrary ser ies of atoms and strings into a se-
+quence: if there are multiple concrete strings between atoms, t he strings may be concatenated
+into a single string. If there are multiple atoms between concret e strings, the atoms may be sepa-
+rated by empty strings, which will sometimes be omi/t_ted for rea dability. Notice also that a simple
+string with no atoms may be represented as a sequence containing just one concrete string. In
+our implementation, names of user-deﬁned regular expressions ar e also atoms. However, we elide
+such deﬁnitions from our theoretical analysis.
+, Vol. 1, No. 1, Article 1. Publication date: October 2017.
+
+optician2017.pdf PDF PAGE 11
+Synthesizing Bijective Lenses 1:11
+⊙SQ : Sequence→ Sequence→ Sequence
+[s0· A1· . . .· An· sn]⊙ SQ[t0· B1· . . .· Bm· tm] =[s0· A1· . . .· An· sn· t0· B1· . . .· Bm· tm]
+⊙ : DNF→ DNF→ DNF
+⟨SQ1| . . .| SQn⟩⊙⟨ TQ1| . . .| TQm⟩ =
+⟨SQ1⊙SQ TQ1|···| SQ1⊙SQ TQm|···| SQn⊙SQ TQ1|···| SQn⊙SQ TQm⟩
+⊕ : DNF→ DNF→ DNF
+⟨SQ1| . . .| SQn⟩⊕⟨ TQ1| . . .| TQm⟩ =⟨SQ1| . . .| SQn| TQ1| . . .| TQm⟩
+D :Atom→ DNF
+D(A) =⟨[ϵ· A· ϵ]⟩
+Fig. 5. DNF Regular Expression Functions
+Intuitions about DNF regular expressions may be conﬁrmed by thei r semantics, which we give
+by deﬁning the language (set of strings) that each DNF regular exp ression denotes:
+L(DS∗) ={s1· . . .· sn| ∀isi∈L( DS)}
+L([s0· A1· . . .· An· sn]) ={s0· t1··· tn· sn| ti∈L( Ai)}
+L(⟨SQ1| . . .| SQn⟩) ={s| s∈L( SQi) and i∈[ 1, n]}
+A sequence of strings and atoms issequence unambiguously concatenable, wri/t_ten·!(s0; A1; . . . ; An; sn),
+if, when s′i , t′i ∈L( Ai) for all i, then s0s′1 . . . s′nsn = s0t′1 . . . t′nsn implies s′i = t′i for all i. A DNF
+regular expression S is unambiguously iterable, wri/t_ten S∗! if, for all n, m∈ N and for all strings
+s1, . . . , sn, t1, . . . , tm∈L( S), if s1· . . .· sn = t1· . . .· tm then n = m and si = ti for all i.
+Expressivity of DNF Regular Expressions. Any regular expression may be converted into an equiv-
+alent DNF regular expression. To deﬁne the conversion function, we rely on several auxiliary
+functions deﬁned in Figure 5. Intuitively, DS⊙ DS concatenates two DNF regular expressions, pro-
+ducing a well-formed DNF regular expression as a result. Simi larly, DS⊕ DS generates a new DNF
+regular expression representing the union of two DNF regular expressions. Finally,D(A) converts
+a naked atom into a well-formed DNF regular expression. /T_he conver sion algorithm itself, wri/t_ten
+⇓S, is deﬁned below.
+⇓s = ⟨[s]⟩
+⇓∅ = ⟨⟩
+⇓(S∗) = D((⇓ S)∗)
+⇓(S1· S2) = ⇓S1⊙⇓ S2
+⇓(S1| S2) = ⇓S1⊕⇓ S2
+Using⇓ , the deﬁnition of legacy title’ gets converted into the DNF regular expression:
+dnf legacy title =
+⟨ ["<Field Id=2></Field>"]
+| ["<Field Id=2>" · text char· ""·⟨[ text char]⟩∗· "<Field Id=2>"] ⟩
+and the deﬁnition of modern title gets converted into the DNF regular expression:
+dnf modern title =
+⟨ ["Title:"· text char· ""·⟨[ text char]⟩∗· ","]
+| [""] ⟩
+/T_heorem 1 (⇓ Soundness). For all regular expressions S,L(⇓ S) =L(S).
+, Vol. 1, No. 1, Article 1. Publication date: October 2017.

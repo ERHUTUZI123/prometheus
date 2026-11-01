@@ -1,0 +1,105 @@
+{
+  "scope": "Prerequisite attack only; no candidate learning, neural training, graph construction or scientific performance comparison executed.",
+  "mean_activity": {
+    "inputs": [
+      -1.0,
+      1.0
+    ],
+    "target_outputs": [
+      -1.0,
+      1.0
+    ],
+    "corrupted_outputs": [
+      1.0,
+      -1.0
+    ],
+    "target_mean": 0.0,
+    "corrupted_mean": 0.0,
+    "mean_activity_error": 0.0,
+    "functional_mse": 4.0,
+    "interpretation": "Zero mean-activity error does not distinguish an identity computation from its sign reversal."
+  },
+  "control_authority": [
+    {
+      "a": 0.2,
+      "d": 0.4,
+      "bound": null,
+      "m": 2.9998639363605712,
+      "y": 0.9999727872721142,
+      "final_error": 2.7212727885750354e-05,
+      "analytical_required_m": 2.9999999999999996,
+      "unbounded_linear_stable": true
+    },
+    {
+      "a": -0.2,
+      "d": 0.4,
+      "bound": null,
+      "m": 66010.35981618434,
+      "y": -13201.67196323687,
+      "final_error": 13202.67196323687,
+      "analytical_required_m": -2.9999999999999996,
+      "unbounded_linear_stable": false
+    },
+    {
+      "a": 0.2,
+      "d": 0.0,
+      "bound": 2.0,
+      "m": 2.0,
+      "y": 0.4,
+      "final_error": 0.6,
+      "analytical_required_m": 5.0,
+      "unbounded_linear_stable": true
+    }
+  ],
+  "finite_trace": {
+    "leak": 0.999,
+    "relative_tolerance": 0.02,
+    "development": [
+      {
+        "hold": 1,
+        "leaky_output": 0.999,
+        "abs_error": 0.0010000000000000009
+      },
+      {
+        "hold": 2,
+        "leaky_output": 0.998001,
+        "abs_error": 0.001998999999999973
+      },
+      {
+        "hold": 4,
+        "leaky_output": 0.996005996001,
+        "abs_error": 0.003994003998999962
+      },
+      {
+        "hold": 8,
+        "leaky_output": 0.992027944069944,
+        "abs_error": 0.00797205593005601
+      },
+      {
+        "hold": 16,
+        "leaky_output": 0.9841194418156399,
+        "abs_error": 0.015880558184360072
+      }
+    ],
+    "heldout": [
+      {
+        "hold": 100,
+        "leaky_output": 0.9047921471137089,
+        "abs_error": 0.09520785288629108
+      },
+      {
+        "hold": 1000,
+        "leaky_output": 0.36769542477096373,
+        "abs_error": 0.6323045752290363
+      },
+      {
+        "hold": 10000,
+        "leaky_output": 4.517334597704824e-05,
+        "abs_error": 0.9999548266540229
+      }
+    ],
+    "accepted_on_development": true,
+    "passes_all_heldout": false,
+    "interpretation": "A finite short-trace contract can accept an implementation that catastrophically loses longer-term memory."
+  }
+}

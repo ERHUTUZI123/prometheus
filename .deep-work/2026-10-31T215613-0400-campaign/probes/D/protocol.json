@@ -1,0 +1,11 @@
+{
+  "frozen_before_execution": true,
+  "question": "Can bounded generic boundary-formula synthesis, given an explicitly supplied two-field fold/decode scaffold, find an executable editable grouping from raw I/O and round-trip obligations?",
+  "non_claims": ["This does not learn the two-field schema or decoder loop from scratch", "No neural proposer is trained", "No broad novelty or discovery advantage follows"],
+  "search": {"boolean_atoms": ["current == previous raw symbol", "global index is even", "current segment length is even", "current == first symbol of current segment"], "boolean_operators": ["not", "and", "or"], "max_boolean_ast_nodes": 5, "decode_count_candidates": ["n", "n+1", "n-1", "2*n", "n//2", "(n+1)//2", "1"], "task_map_candidates": "count -> a*count+b, a in {0,1,2}, b in {-1,0,1}"},
+  "selection_raw_law_domain": "all strings over a,b,c of length 0 through 3",
+  "training": {"increment": [["abbc", "aabbbcc"], ["deef", "ddeeeff"], ["ggghh", "gggghhh"]], "double": [["aabccc", "aaaabbcccccc"], ["xzz", "xxzzzz"], ["pppq", "ppppppqq"]]},
+  "post_selection_checks": ["exhaustive new raw strings over a,b,c length 0 through 6", "unseen letters and longer counts", "GetPut and PutGet on positive count edits", "PutPut on two successive positive count edits", "reject source-object-identity merging edit", "wrong parser and writer counterexamples", "preserve original v0 example typo as a correction record"],
+  "cost": "Count every source-read, AST-node evaluation, record scalar write, view scalar read, and raw output write; enumerate all candidates and charge construction search separately. Compare to explicit fused raw implementations with identical raw outputs, not a claim about their synthesis difficulty.",
+  "stop": "One deterministic execution and necessary fixes for correctness. Deliver semantic/scaffold findings, not a larger experiment."
+}

@@ -1,0 +1,409 @@
+
+PDF PAGE 11
+
+x Contents
+6.5.3 6.5.4 Implementation . . . . . . . . . . . . . . . . . . . . . . Discussion . . . . . . . . . . . . . . . . . . . . . . . . 175
+180
+6.6 Summary 182
+7 Analyzing representation and transformation 185
+7.1 Basis vectors and basis functions 185
+7.2 Decomposing 192
+7.3 Determining possible transformations 196
+7.3.1 7.3.2 Linear tuning curves . . . . . . . . . . . . . . . . . . . Gaussian tuning curves . . . . . . . . . . . . . . . . . . 200
+204
+7.4 Quantifying representation 206
+7.4.1 7.4.2 Representational capacity . . . . . . . . . . . . . . . . Useful representation . . . . . . . . . . . . . . . . . . . 206
+208
+7.5 The importance of diversity 210
+7.6 Summary 216
+8 Dynamic transformations 219
+8.1 Control theory and neural models 8.1.1 8.1.3 Introduction to control theory . . . . . . . . . . . . . . 8.1.2 A control theoretic description of neural populations . . Revisiting levels of analysis . . . . . . . . . . . . . . . 8.1.4 Three principles of neural engineering quantified . . . . 221
+221
+222
+225
+230
+8.2 An example: Controlling eye position 8.2.1 8.2.2 Implementation . . . . . . . . . . . . . . . . . . . . . . Discussion . . . . . . . . . . . . . . . . . . . . . . . . 232
+233
+240
+8.3 An example: Working memory 8.3.1 8.3.2 Introduction . . . . . . . . . . . . . . . . . . . . . . . . Implementation . . . . . . . . . . . . . . . . . . . . . . 8.3.2.1 Dynamics of the vector representation . . . . 8.3.2.2 Simulation results . . . . . . . . . . . . . . . 8.3.3 Discussion . . . . . . . . . . . . . . . . . . . . . . . . 244
+244
+244
+244
+245
+248
+8.4 Attractor networks 250
+8.4.1 8.4.2 8.4.3 Introduction . . . . . . . . . . . . . . . . . . . . . . . . Generalizing representation . . . . . . . . . . . . . . . Generalizing dynamics . . . . . . . . . . . . . . . . . . 250
+254
+256
+
+PDF PAGE 36
+
+Of neurons and engineers 15
+More generally, because the stability (and various other high-level properties) of control
+systems is well understood, we believe that this approach to neural dynamics can help
+quantify our understanding of the dynamics of a wide range of neurobiological systems in
+an interesting, new way (see section 8.4).
+1.4 THREE PRINCIPLES OF NEURAL ENGINEERING
+To this point in the chapter we have outlined, in very general terms, the approach that we
+develop in the remainder of the book. In this section, we consolidate these previous consid-
+erations by clearly stating the guiding assumptions of our approach. Much of our argument
+for these ‘principles of neural engineering’ is of the proof-is-in-the-pudding variety. That
+is, throughout the course of the book we provide numerous examples of detailed models of
+a wide variety of neurobiological systems that were constructed based on these principles.
+But, our goal is not to simply provide examples, rather it is to demonstrate how to use these
+principles. That is, we are interested in describing a framework for understanding and sim-
+ulating neurobiological systems in general. Thus we provide not only this set of guiding
+principles, but also a methodology for applying these principles. In order to demonstrate
+this methodology, we follow it for each of the examples we present. It is important for our
+purposes that not only are a large number and variety of examples provided, but that they
+are also built with consistent assumptions and with a consistent methodology. Given our
+discussion to this point, these principles should be unsurprising:
+Three principles of neural engineering
+1. Neural representations are defined by the combination of nonlinear encoding (exem-
+plified by neuron tuning curves) and weighted linear decoding (see chapters 2, 3, 4, and
+5).
+2. Transformations of neural representations are functions of variables that are represented
+by neural populations. Transformations are determined using an alternately weighted linear
+decoding (i.e., the transformational decoding as opposed to the representational decoding;
+see chapters 6 and 7).
+3. Neural dynamics are characterized by considering neural representations as control
+theoretic state variables. Thus, the dynamics of neurobiological systems can be analyzed
+using control theory (see chapter 8).
+We take these three principles to be excellent guiding assumptions for the construction
+of biologically plausible, large-scale simulations of neurobiological systems. While it is
+premature to state these principles more quantitatively, later on we will be in a position
+to do so (see section 8.1.4). In addition to these main principles, there is an important
+addendum which guides our analyses of neurobiological systems:
+
+PDF PAGE 37
+
+16 Chapter 1
+Addendum
+4. Neural systems are subject to significant amounts of noise. Therefore, any analysis of
+such systems must account for the effects of noise (see sections 2.2, and 5.2).
+We do not consider this addendum to be a principle because, rather than being a claim
+about how to explain the functioning of neurobiological systems, it is a claim about how to
+analyze such systems. Nevertheless, it is essential for articulating the principles in detail.
+In the next four sections, we briefly discuss the strengths of, and possible concerns with,
+these principles and the addendum.
+1.4.1 Principle 1
+Principle 1 emphasizes the importance of identifying both encoding and decoding when
+defining neural representation. Moreover, this principle highlights the central assumption
+that, despite a nonlinear encoding, linear decoding is valid (see Rieke et al. 1997, pp.
+76–87). As discussed in detail by Rieke et al., a nonlinear response function like that of
+typical neurons is, in fact, unrelated to whether or not the resulting signal can be linearly
+decoded.10 That is, the nature of the input/output function (i.e., encoding) of a device is
+independent of the decoder that is needed to estimate its input. This means that a nonlinear
+encoding could need a linear or nonlinear decoding, and vice versa. This is because the
+decoding depends on the conditional probability of input given the output and on the
+statistics of the noise (hence our addendum). Perhaps surprisingly, linear decoding works
+quite well in many neural systems. Specifically, the additional information gained with
+nonlinear decoding is generally less than 5%.
+Of course, nonlinear decoding is able to do as well or better than linear decoding at
+extracting information, but the price paid in biological plausibility is generally thought to
+be quite high (see, e.g., Salinas and Abbott 1994). Furthermore, even if there initially seems
+to be a case in which nonlinear decoding is employed by a neural system, that decoding
+may, in the end, be explained by linear decoding. This is because, as we discuss in section
+6.3, nonlinear transformations can be performed using linear decoding. Thus, assuming
+linear decoding at the neuron (or sub-neuron, see section 6.3) level can well be consistent
+with nonlinear decoding at the network (or neuron) level. So, especially in combination
+with principle 2, linear decoding is a good candidate for describing neural decoding in
+general.
+It is important to emphasize that analyzing neurons as decoding signals using (optimal)
+linear or nonlinear filters does not mean that neurons are presumed to explicitly use opti-
+During this same discussion, Rieke et al. mention that there are certain constraints on when linear decoding
+will work. In particular, they claim that there can be only a few, preferably one, spike(s) per correlation time of
+the signal. However, we have found that this not the case (see section 4.3.3).
+
+PDF PAGE 38
+
+Of neurons and engineers 17
+mal filters. In fact, according to our account, there is no directly observable counterpart
+to these optimal decoders. Rather, the decoders are ‘embedded’ in the synaptic weights
+between neighboring neurons. That is, coupling weights of neighboring neurons indirectly
+reflect a particular population decoder, but they are not identical to the population decoder,
+nor can the decoder be unequivocally ‘read-off’ of the weights. This is because connection
+weights are determined by both the decoding of incoming signals and the encoding of the
+outgoing signals (see, e.g., section 6.2). Practically speaking, this means that changing a
+connection weight both changes the transformation being performed and the tuning curve
+of the receiving neuron. As is well known from work in artificial neural networks and
+computational neuroscience, this is exactly what should happen. In essence, the encod-
+ing/decoding distinction is not one that neurobiological systems need to respect in order to
+perform their functions, but it is extremely useful in trying to understand such systems and
+how they do, in fact, manage to perform those functions.
+1.4.2 Principle 2
+The preceding comments about representational decoders apply equally to transforma-
+tional decoders. This should be no surprise given our prior discussion (in section 1.3) in
+which we noted that defining a transformation is just like defining a representation (al-
+though with different decoders). However, we did not previously emphasize the kinds of
+transformations that can be supported with linear decoding.
+It has often been argued that nonlinear transformations are by far the most common
+kind of transformations found in neurobiological systems (see, e.g., Freeman 1987). This
+should not be surprising to engineers, as most real-world control problems require com-
+plex, nonlinear control analyses; a good contemporary example being the remote manip-
+ulator system on the international space station. This should be even less of a surprise to
+neuroscientists who study the subtle behavior of natural systems. As Pouget and Sejnowski
+(1997) note, even a relatively simple task, such as determining the head-centered coordi-
+nates of a target given retinal coordinates, requires nonlinear computation when considered
+fully (i.e., including the geometry of rotation in three dimensions). Thus, it is essential that
+we be able to account for nonlinear as well as linear transformations. In section 6.3 we
+discuss how to characterize nonlinear transformations in general. We provide a neurobio-
+logical example of a nonlinear transformation (determining the cross product) that allows
+us to account for a number of experimental results (see section 6.5). Thus we show that
+assumptions about the linearity of decoding do not limit the possible functions that can be
+supported by neurobiological systems.
+This result will not be surprising to researchers familiar with current computational
+neuroscience. It has long been known that linear decoding of nonlinear ‘basis functions’
+can be used to approximate nonlinear functions (see section 7.4). Nevertheless, our analysis
+
+PDF PAGE 164
+
+6Feed-forward transformations
+In the first half of this book we have concentrated on characterizing representation in
+neurobiological systems. Ultimately, however, we do not merely want to catalog kinds
+of representation, but instead to explain the behavior of these systems by reference to
+their representations. In order to do so, we can understand that behavior as a result of
+representations being compared, contrasted, combined, weighted, averaged or otherwise
+transformed. So, along with a story about representation, we need, just as much, a story
+about how representations can be manipulated. Only by understanding both representation
+and transformation can we begin to explain the wide variety of intriguing behaviors
+exhibited by neurobiological systems.
+So, in the second half of this book, we characterize neurobiological transformations.1
+Doing so requires us to be concerned with a) the different types of transformations in neu-
+robiological systems, b) how to implement transformations in neurobiological systems, and
+c) the dynamics of transformations in neurobiological systems. In this chapter, we discuss
+the basics of implementation. In the next chapter we present an analysis that can help
+us determine the kinds of transformations a neural population can support, and gives us
+deeper insight into the nature of neural representation. In chapter 8, we address the dy-
+namics of neural systems. There, we provide a general characterization of neural dynamics
+and present a number of examples that show how the general characterization can be ap-
+plied. Finally, in the last, more speculative chapter we return to issues of implementation
+and discuss learning and statistical inference as it can be understood within this frame-
+work. Together, these chapters provide an overview and analysis of many of the kinds of
+transformations found in neurobiological systems.
+6.1 LINEAR TRANSFORMATIONS OF SCALARS
+6.1.1 A communication channel
+Let us begin by considering the simplest kind of linear, feed-forward transformation: none
+at all. As ridiculous as this suggestion may at first seem, it helps elucidate a technique
+that can be used to implement significantly more complex transformations. To make the
+example seem more interesting, let us consider this transformation as characterizing a
+simple communication channel. The purpose of such a channel is to send some signal
+A terminological note: although we use the term ‘transformations’ throughout, we do not object to calling these
+same processes ‘computations’. However, the term ‘computation’ has, for many, a definition along the lines of
+“rule-governed manipulation of discrete, symbolic representations” (see, e.g., Gelder 1995; Fodor and Pylyshyn
+1988). This definition is inappropriate for many of the kinds of computations we discuss.
+
+PDF PAGE 165
+
+144 Chapter 6
+ai bj
+ωji
+x y
+Figure 6.1
+A communication channel in a neural network. Solid lines indicate possible connections. Dotted lines indicate
+an encoding/decoding relation.
+from one location to another location. In this case, our signal will be a scalar value, , and
+the two locations are neural populations and (see figure 6.1).
+We can begin constructing our model by writing down the representations in the two
+neural populations, as derived in section 2.1.2. Thus, we have the population
+(6.1)
+(6.2)
+(6.3)
+where (6.2) defines the encoding and (6.3) defines the decoding. As before, is taken
+to be defined by a LIF neuron, and is for ‘on’ neurons and for ‘off’ neurons. In
+(6.3) we have introduced a new notation with respect to the decoding weight, . From
+now on, we often write the variable that the decoder is for (i.e., ) as a superscript on the
+decoder (i.e., ), as this serves to disambiguate decoders. Disambiguation is important
+because, as we will see, characterizing transformations often requires identifying multiple
+decoders.
+For population we define the representation analogously:
+(6.4)
+(6.5)
+
+PDF PAGE 169
+
+148 Chapter 6
+efficiently generate large-scale networks with complex behaviors.3 In sum, being able to
+avoid or incorporate learning as necessary makes this approach usefully flexible, and thus
+appropriate for many of the standard uses of neurobiological simulation (see section 9.5
+for more on the relation of this framework to learning).
+The second result highlighted by this simple example is that carefully characterizing
+neural representation is central to understanding neural transformation. This becomes even
+more evident in section 7.3, where we provide a quantitative demonstration of the relation
+between representation and transformation in a neural population. In this example, we
+have shown how we can ‘plug’ one representational characterization, , into another,
+, in order to determine the weights that implement the desired transformation between
+the two. Thus, the limitations or strengths of a pre-transformed representation can carry
+over to post-transformed representation. So knowing what those limitations and strengths
+are is tantamount to knowing how the resulting network functions. Let us consider some
+more examples to show that this approach of simply ‘plugging in’ representations works
+surprisingly well.
+6.1.2 Adding two variables
+In order to implement any linear transformation, we need to be able to multiply variables
+by a constant (as we have done above) and add two (or more) variables together. In order
+to add two variables, we need to define the representations in three neural populations. We
+can then arrange these populations as shown in figure 6.3, to transform the representations
+of the scalars in the first two populations to a representation of their sum in the third.
+We begin by assuming the same representational definitions as in section 6.1.1. Thus,
+all three populations have encoding and decoding relations defined analogously to that
+shown here for the population:
+(6.14)
+(6.15)
+Our desired transformation in this case is simply
+Of course, none of this implies that learning is not important to a complete understanding of neural function.
+We return to these issues in chapter 7.
+
+PDF PAGE 174
+
+Feed-forward transformations 153
+a) b)
+1
+0.8
+vector 1
+vector 2
+vector sum
+actual value
+1
+0.6
+x1
+0.4
+0.2
+0
+component magnitude
+0.8
+0.6
+0.4
+0.2
+0
+-0.1 0 0.1 0.2 0.3 0.4
+x2
+0 0.05 0.1 0.15 0.2
+time (s)
+Figure 6.5
+Results of vector addition where (vector 1), (vector 2) using 1200 spiking LIF neurons
+(400 for each population). In each case, the desired answer is shown as a grey line and the population decoding
+is shown as a black line. The thickest line, , is the sum of and . a) Vector addition in state space. b) Vector
+addition over time, with each component of each vector drawn separately.
+6.3 NONLINEAR TRANSFORMATIONS
+As mentioned previously, the impressively complex behavior exhibited by neural systems
+is unlikely to be fully explained by linear transformations alone. Rather, there is abundant
+evidence that nonlinear operations are central to neural transformations (see Koch and
+Poggio 1992 and Mel 1999 for a partial review).4 For example, the responses of neurons
+in the visual pathway of the locust are best predicted by the product of the angular image
+velocity and a function of the angular size of the object on the locust’s retina (Koch 1999,
+p. 347; Koch and Segev 2001). As well, in primates there is evidence that some coordinate
+transformations in parietal areas are a result of finding the product of representations of eye
+and head positions (Zipser and Andersen 1988). These are both examples of multiplication,
+one of the simplest but most important nonlinear transformations. Nonlinearities, then,
+span the phylogenetic tree.
+The reason that nonlinearities like multiplication are so important, is that they vastly
+increase computational power and storage capacity (Giles and Maxwell 1987). Koch
+Here is a non-comprehensive list of examples of multiplication in neurobiological systems: disparity tuning
+in binocular visual cells (Ohzawa et al. 1990), responses to illusory contours (Peterhans and von der Heydt
+1989), responses to periodic gratings (von der Heydt et al. 1991), velocity tuning (Nowlan and Sejnowski
+1993), various kinds of motion perception (Koch 1999; Koch and Poggio 1992; Nowlan and Sejnowski 1993;
+Adelson and Bergen 1985; Mel 1999), direction selectivity (Adelson and Bergen 1985), shape selectivity with
+spatial invariance (Fukushima et al. 1983), and modulation by selective attention (Anderson and Van Essen 1987;
+McAdams and Maunsell 1999).
+
+PDF PAGE 175
+
+154 Chapter 6
+(1999) points out that such nonlinearities are actually necessary for doing true information
+processing (p. 346). If we suppose that evolution is capable of finding near-optimal, or
+even good solutions to information processing problems, then we would expect to find
+nonlinearities in nervous systems trying to solve those problems. As a result, we take
+it to be a ‘hard constraint’ on theories of neurobiological systems that they be able to
+incorporate multiplication.
+It may seem obvious, given the nonlinear responses of the spike generating mecha-
+nisms in neurons themselves, that nonlinearities are common in neurobiological systems.
+However, it is not immediately evident that neurons can easily generate highly nonlinear
+functions (like multiplication) of their input currents since the spike generating nonlinear-
+ities often exhibit a fairly linear response (and tend, if anything, to be sublinear). By far
+the majority of neural models assume that the soma current is simply a sum of the synaptic
+currents. If this is true, multiplication must be a network behavior, rather than one found
+in single cells. However, there is mounting evidence that soma currents are nonlinear func-
+tions of dendritic inputs (Mel 1994; Mel 1999). So, there are two options for explaining
+multiplication; as a network property or as a cellular property (or both, perhaps). Even if
+we have tendencies to think one explanation is more likely than the other, it is a matter of
+debate as to how either networks (Salinas and Abbott 1996) or cells (Mel 1994) can mul-
+tiply inputs—even though there is ample evidence that multiplication occurs somewhere
+(see footnote 4).
+In the next section we consider both the possibility that multiplication is a network
+property and the possibility that it is a cellular property. We show how both possibilities
+can be accounted for by the framework we are presenting. We cover both possibilities
+to show the flexibility of the framework and also to demonstrate the manner in which
+it can be sensitive to experimental results (since such results will presumably, on a case
+by case basis, determine if a given nonlinearity is a cellular or network effect). We put
+multiplication to use in a model of vestibular function in section 6.5.
+6.3.1 Multiplying two variables
+In this section, we discuss three different ways to understand multiplication in neurobio-
+logical systems. First, we consider the possibility that there is a dendritic mechanism that
+directly implements multiplication (or a suitable variant). In this case, we can include mul-
+tiplication in our framework by simply permitting multiplication of the inputs to a neuron.
+Second, we consider how to implement multiplication at a network level using the frame-
+work more directly. And, third, we consider the possibility that the network level analysis
+can be embedded directly into the dendrites of a neuron, so as to provide a novel explana-
+tion for multiplication at the cellular level.
+
+PDF PAGE 176
+
+Feed-forward transformations 155
+There have been many proposals for how multiplication can be implemented at the
+cellular level, usually in the dendritic tree (Mel 1994; Koch and Poggio 1992). These
+include, for example, the suggestion that dendrites have logarithmic response properties
+and thus multiplication could be done as a sum of these logarithms (Koch and Poggio 1992;
+Tal and Schwartz 1997; Durbin and Rumelhart 1989).5 Or, alternatively, that shunting
+inhibition could provide the necessary nonlinearity (Poggio 1981; Torre and Poggio 1978).
+Or, perhaps best known, that presynaptic spike ‘coincidence detection’ can be used to
+implement multiplication in dendrites (see Mel 1994, pp. 1058–9 for relevant references;
+Stevens and Zador 1998). Coincidence detection has long been known to be able to
+underwrite multiplication in spiking neurons (Küpfmüller and Jenik 1961). This is becuase
+a receiving neuron with coincidence detection will spike at a frequency proportional to the
+product of two input spike train frequencies.
+We have elsewhere presented a simple model which employs coincidence detection
+directly (Hakimian et al. 1999). In that model, we begin by defining the representations
+for , , and as in (6.14) and (6.15) above. The transformation we wish to implement is
+simply , so we can write the firing rates for as
+where . While it is an easy matter to multiply firing rates in a computer
+model (since they are real valued variables), here we are interested in implementing this
+network using spiking neurons. Therefore we need to employ a biologically plausible
+mechanism like coincidence detection. Writing the output of the the and populations
+as spikes gives
+To show that this can be implemented by coincidence detection, let us suppose that the
+filters are narrow Gaussians.6 We can write this multiplication as (see appendix D.1
+Recall that .
+Note that the only real constraint on the choosing to get the desired result is that it be narrow relative to
+the distance between neighboring spikes. Choosing Gaussians makes the analysis mathematically simpler.
+
+PDF PAGE 177
+
+156 Chapter 6
+for a complete derivation)
+(6.18)
+where is the (small) variance of the Gaussian filter, . Equation (6.18) implements a
+kind of coincidence detection. Notice that in this product, the first Gaussian is centered on
+the mean of the possibly coincident spike times and the second is peaked only if ,
+otherwise it is near zero everywhere. So, the resulting filtered and multiplied signal consists
+of narrow Gaussians near the mean of and only if they are approximately equal;
+i.e., if they are coincident. So, this kind of coincidence detection can implement the
+multiplication we need. Many researchers have thought that the main nonlinearity in
+dendritic trees must be this kind of coincidence (Softky and Koch 1995; Stevens and Zador
+1998; see also Mel 1994, pp. 1058–9 for relevant references).
+However, the above analysis also shows a weakness in the coincidence hypothesis.
+Notice that in order to implement multiplication in this fashion, each spike from a neuron
+in population must be compared to each and every spike in population . Because
+coincidence detection, if it takes place, must take place between neighboring synapses,
+the receiving population, , has to have synapses (where is the number of neurons
+in population ) near each of the synapses. So, for any cell in the population, it has to
+make connections to each cell in the population. This kind of ‘over-full’ connectivity
+is not at all neurobiologically realistic.7
+Notice also that although we have assumed coincidence detection is the mechanism
+underlying multiplication in this example, we could equally have assumed one of the other
+possible mechanisms, so long as the somatic current is a product of the post-synaptic cur-
+rents. Perhaps there are other implementations that do not have biologically unrealistic
+consequences—perhaps even implementations of coincidence detection. Nevertheless, it
+should be clear such solutions to the problem of implementing multiplication are indepen-
+By ‘over-full’ we mean to note that this needs more connections than a fully connected network. A fully
+connected network has one connection from each and to each . This network requires more
+connections from each to each . Note that even full connectivity is unrealistic in real nervous systems.

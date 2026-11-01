@@ -1,0 +1,250 @@
+
+foster2005.pdf PDF PAGE 3
+Together, the transformations from c to a and from a′
+and c to c′ form a lens. Our goal is to ﬁnd a set of com-
+binators that can be assembled to describe a wide variety
+of lenses in a concise, natural, and mathematically coheren t
+manner. (Just to whet the reader’s appetite, the lens expres -
+sion that implements the transformation sketched above is
+written map (focus Phone
+˘˛˛URL ↦→ http://google.com˛˛¯).)
+3. SEMANTIC FOUNDATIONS
+Although many of our combinators work on trees, their se-
+mantic underpinnings can be presented in an abstract set-
+ting parameterized by the data structures (“views”) manip-
+ulated by lenses. In this section—and in §4, where we discuss
+generic combinators—we simply assume some ﬁxed set U of
+views; from §5 on, we will choose U to be the set of trees.
+Basic Structures When f is a partial function, we write
+f (a) ↓ if f is deﬁned on argument a and f (a) = ⊥ otherwise.
+We write f (a) ⊑ b for f (a) = ⊥∨ f (a) = b. We write dom(f )
+for the set of arguments on which f is deﬁned. When S ⊆ U ,
+we write f (S) for {r | s ∈ S ∧ f (s) ↓ ∧ f (s) = r}. We
+take function application to be strict, i.e., f (g(x)) ↓ implies
+g(x) ↓.
+3.1 Deﬁnition [Lenses]: A lens l comprises a partial
+function l↗ from U to U, called the get function of l, and
+a partial function l↘ from U × U to U, called the putback
+function.
+3.2 Deﬁnition [W ell-behaved lenses]: Let l be a lens
+and let C and A be subsets of U. We say that l is a well
+behaved lens from C to A, written l ∈ C ⇋ A, iﬀ it maps
+arguments in C to results in A and vice versa
+l↗(C) ⊆ A (Get)
+l↘(A × C) ⊆ C (Put)
+and its get and putback functions obey the following laws:
+l ↘ (l↗ c, c ) ⊑ c for all c ∈ C (GetPut)
+l↗ (l ↘ (a, c )) ⊑ a for all ( a, c) ∈ A × C (PutGet)
+We call C the source and A the target in C ⇋ A.
+Intuitively, the GetPut law states that, if we get some
+abstract view a from a concrete view c and immediately
+putback a (with no modiﬁcations) into c, we must get back
+exactly c (if both operations are deﬁned). PutGet, on the
+other hand, demands that the putback function must cap-
+ture all of the information contained in the abstract view:
+if putting a view a into a concrete view c yields a view c′,
+then the abstract view obtained from c′ is exactly a.
+An example of a lens satisfying PutGet but not GetPut
+is the following. Suppose C = string×int and A = string,
+and deﬁne l by l↗ (s, n) = s and l ↘ (s′, (s, n)) = ( s′, 0).
+Then l ↘ (l↗ (s, 1), (s, 1)) = ( s, 0) ⁄= ( s, 1). Intuitively, the
+law fails because the putback function has “side eﬀects”: it
+modiﬁes information from the concrete view that is not re-
+ﬂected in the abstract view.
+An example of a lens satisfying GetPut but not PutGet
+is the following. Let C = string and A = string × int,
+and deﬁne l by l↗ s = (s, 0) and l ↘ ((s′, n), s ) = s′. Put-
+Get fails here because some information contained in the
+abstract view does not get propagated to the concrete view.
+For example, l↗ (l ↘ ((s′, 1), s )) = l↗ s′ = (s′, 0) ⁄= (s′, 1).
+The GetPut and PutGet laws reﬂect fundamental ex-
+pectations about the behavior of lenses; removing either la w
+signiﬁcantly weakens the semantic foundation. We may also
+consider an optional third law, called PutPut, stating that
+l ↘ (a′, l ↘ (a, c )) ⊑ l ↘ (a′, c ) for all a, a′ ∈ A and c ∈ C.
+This law states that the eﬀect of a sequence of two putbacks
+is (modulo undeﬁnedness) just the eﬀect of the second: the
+ﬁrst gets completely overwritten. Alternatively, a series of
+changes to an abstract view may be applied either incremen-
+tally or all at once, resulting in the same ﬁnal concrete view .
+We say that a well-behaved lens that also satisﬁes PutPut
+is very well behaved . Both well-behaved and very well be-
+haved lenses correspond to well-known classes of “update
+translators” from the classical database literature (see §8).
+However, when we come to deﬁning our lens combinators
+for tree transformations in §5, we will not require PutPut
+because one of our most important lens combinators, map,
+fails to satisfy it(see §5).
+A ﬁnal important property of lenses is totality.
+3.3 Deﬁnition [Totality]: A lens l ∈ C ⇋ A is said to be
+total, written l ∈ C ⇐ ⇒A, if C ⊆ dom(l↗) and A × C ⊆
+dom(l↘).
+The reasons for considering both partial and total lenses
+instead of building totality into the deﬁnition of well-
+behavedness are much the same as in conventional functional
+languages. In practice, we always want lenses to be total: to
+make Harmony synchronizers work predictably, lenses must
+be deﬁned on the whole of the domains where they are used.
+All of our primitive lenses are designed to be total, and all
+of our lens combinators map total lenses to total lenses—
+with the sole, but important, exception of lenses deﬁned by
+recursion (to which we will turn in a moment); as usual, re-
+cursive lenses must be constructed in the semantics as limit s
+of chains of increasingly deﬁned partial lenses. At the leve l
+of types, the type annotations we give for our lens combina-
+tors can be used to prove that any well-typed lens expression
+is well-behaved, but only recursion-free expressions can b e
+shown total by completely compositional reasoning; for re-
+cursive lenses, more global arguments are required. The lon g
+version of the paper gives several of these arguments in de-
+tail, showing that all our derived forms involving recursio n
+are actually total. In what follows here, however, we focus
+on well-behavedness for the sake of brevity.
+Recursion Since we will be interested in lenses over trees,
+and since trees in many interesting application domains may
+have unbounded depth (e.g., a bookmark item can be either
+a link or a folder containing a list of items), we will often
+want to deﬁne lenses by recursion.
+The development follows familiar lines. We introduce an
+information ordering on lenses and show that the set of
+lenses equipped with this ordering is a complete partial or-
+der (cpo). We then apply standard tools from domain theory
+to interpret a variety of common syntactic forms from pro-
+gramming languages—in particular, functional abstractio n
+and application (“higher-order lenses”) and lenses deﬁned
+by single or mutual recursion.
+We say that a lens l′ is more informative than a lens l,
+written l ≺ l′, if both the get and putback functions of l′
+have domains that are at least as large as those of l and if
+their results agree on their common domains.
+A cpo is a partially ordered set in which every increasing
+chain of elements has a least upper bound in the set. A cpo
+
+foster2005.pdf PDF PAGE 4
+with bottom is a cpo with an element ⊥ that is smaller than
+every other element. In our setting, ⊥ is the lens whose get
+and putback functions are everywhere undeﬁned.
+3.4 Lemma: Let l0 ≺ l1 ≺ . . . ≺ ln ≺ . . . be an increasing
+chain of lenses. The lens l deﬁned by
+l ↘ (a, c ) = li ↘ (a, c ) if li ↘ (a, c ) ↓ for some i
+l↗ c = li↗ c if li↗ c ↓ for some i
+and undeﬁned elsewhere is a least upper bound for the chain.
+3.5 Lemma: Let l0 ≺ l1 ≺ . . . ≺ ln ≺ . . . be an increasing
+chain of lenses, and let C0 ⊆ C1 ⊆ . . . and A0 ⊆ A1 ⊆ . . . be
+increasing chains of subsets of U. Then( ∀i ∈ ω. l i ∈ Ci ⇋
+Ai) = ⇒ (Fn ln) ∈ (Si Ci) ⇋ (Si Ai).
+3.6 Theorem: Let L be the set of well-behaved lenses from
+C to A. Then ( L, ≺) is a cpo with bottom.
+We can now apply standard domain theory to interpret
+recursive deﬁnitions: the least ﬁxed point of a continuous
+function on well-behaved lenses is a well-behaved lens.
+Dealing with Creation In practice, there will be cases
+where we need to apply a putback function, but where no old
+concrete view is available, as we saw with Jo’s URL in §2. We
+deal with these cases by enriching the universe U of views
+with a special placeholder Ω, pronounced “missing,” which
+we assume is not already in U. When S ⊆ U , we write SΩ
+for S ∪ {Ω}.
+Intuitively, l ↘ (a, Ω) means “create a new concrete view
+from the information in the abstract view a.” By convention,
+Ω is only used in an interesting way when it is the second
+argument to the putback function: in all of the lenses deﬁned
+below, we maintain the invariants that (1) l↗ Ω = Ω, (2)
+l ↘ (Ω, c ) = Ω for any c, (3) l↗ c ⁄= Ω for any c ⁄= Ω, and
+(4) l ↘ (a, c ) ⁄= Ω for any a ⁄= Ω and any c (including Ω).
+We write C ⇋
+Ω
+A for the set of well-behaved lenses from
+CΩ to AΩ obeying these conventions. For brevity in the
+lens deﬁnitions below, we always assume that c ⁄= Ω when
+deﬁning l↗ c and that a ⁄= Ω when deﬁning l ↘ (a, c ), since
+the results in these cases are uniquely determined by these
+conventions. (There are other, formally equivalent, ways o f
+handling missing concrete views. The advantages of this one
+are discussed in §5.)
+4. GENERIC LENSES
+With these semantic foundations in hand, we are ready to
+move on to syntax. We begin in this section with sev-
+eral generic lens combinators, whose deﬁnitions are inde-
+pendent of the particular choice of universe U. Each def-
+inition is accompanied by a type declaration asserting its
+well-behavedness under certain conditions (e.g., “the ide n-
+tity lens belongs to C ⇋
+Ω
+C for any C”).
+Most of the lens deﬁnitions in this and following sections
+are parameterized on one or more arguments. These may
+be of various types: views, other lenses, predicates on view s,
+edge labels, predicates on labels, etc. The long version in-
+cludes proofs that every lens we deﬁne is well behaved (i.e.,
+that the type declaration accompanying its deﬁnition is a
+theorem) and total, and that every lens that takes other
+lenses as parameters is continuous in these parameters and
+maps total lenses to total lenses.
+The identity lens copies the concrete view in the get direc-
+tion and the abstract view in the putback direction.
+id↗ c = c
+id ↘ (a, c ) = a
+∀C⊆U. id ∈ C ⇋
+Ω
+C
+The lens composition combinator l; k places two lenses l
+and k in sequence.
+(l; k)↗ c = k↗ (l↗ c)
+(l; k) ↘ (a, c ) = l ↘ (k ↘ (a, l ↗ c), c )
+∀A, B, C⊆U. ∀l ∈ C ⇋
+Ω
+B. ∀k ∈ B ⇋
+Ω
+A.
+l; k ∈ C ⇋
+Ω
+A
+The get direction applies the get function of l to yield a ﬁrst
+abstract view, on which the get function of k is applied. In
+the other direction, the two putback functions are applied in
+turn: ﬁrst, the putback function of k is used to put a into
+the concrete view that the get of k was applied to, i.e., l↗ c;
+the result is then put into c using the putback function of l.
+(If the concrete view c is Ω, then, l↗ c will also be Ω by our
+conventions on Ω, so the eﬀect of ( l; k) ↘ (a, Ω) is to use k
+to put a into Ω and then l to put the result into Ω.)
+Another simple combinator is const v d, which transforms
+any view into the constant view v in the get direction. In
+the putback direction, const simply restores the old concrete
+view if one is available; if the concrete view is Ω, it returns
+a default view d.
+(const v d )↗ c = v
+(const v d ) ↘ (a, c ) = c if c ⁄= Ω
+d if c = Ω
+∀C⊆U. ∀v∈U. ∀d∈C. const v d ∈ C ⇋
+Ω
+{v}
+Note that the type declaration demands that the putback
+direction only be applied to the abstract argument v.
+We will deﬁne a few more generic lenses in §6; for now,
+though, let us turn to some lens combinators that work on
+tree-structured data, so that we can ground our deﬁnitions
+in speciﬁc examples.
+5. LENSES FOR TREES
+To keep our lens deﬁnitions as straightforward as possible,
+we work with an extremely simple form of trees: unordered,
+edge-labeled trees with no repeated labels. This does not
+give us—primitively—all the structure we need for some ap-
+plications; in particular, we will need to deal with ordered
+data such as lists and XML documents via an encoding in-
+stead of primitively. Experience has shown that the reduc-
+tion in the complexity of the lens deﬁnitions obtained in this
+way far outweighs the increase in complexity of lens pro-
+grams due to manipulating ordered data in encoded form.
+Notation From this point on, we choose the universe
+U to be the set T of ﬁnite, unordered, edge-labeled trees
+with labels drawn from some inﬁnite set N of names—e.g.,
+character strings—and with the children of a given node all
+labeled with distinct names.
+A tree is essentially a ﬁnite partial function from names
+to other trees. It will be more convenient, though, to adopt
+a slightly diﬀerent perspective: we will consider a tree t ∈ T
+to be a total function from N to TΩ that yields Ω on all but a
+ﬁnite number of names. We write dom(t) for the domain of
+t—i.e., the set of the names for which it returns something

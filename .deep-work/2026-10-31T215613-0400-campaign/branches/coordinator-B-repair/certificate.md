@@ -1,0 +1,8 @@
+# Coordinator repair certificate
+
+CLAIM: Separating the fixed learned relation energy from an SPD learned execution mobility repairs the specific new-stationary-point failure of adding a periodic shortcut.
+STATUS: General mathematical reconstruction of known preconditioning; implemented limited-case feasibility, no architecture novelty or efficiency advantage established.
+EVIDENCE: proposal-v1.md gives stationary-set/inertia argument. Inspected numerical code ran with env scrub, network denied and run-only write sandbox under120s timeout. Four mobility parameters were actually adapted from16 training starts without inverse-Hessian target. Training loss .009474→.003567; 64/64 new random starts succeed, median first-threshold112 versus138 identity steps; local slow rate .47527 versus .381966. A specified block reuse on the four-parent chain leaves the old added-shortcut winding state and reaches parent energy0. The block reuse is supplied, not learned transfer.
+WEAKEST LINK: Useful relation coordinates/grammar remain supplied; learned optimizer acquisition and application costs may dominate all inference benefit. General basins are not preserved, preexisting wrong minima remain possible, and geometry learning is established prior work.
+FAILED BRANCH: Adding an algebraically entailed cosine energy produces new stable wrong states. A raw cost estimate also overcounted evaluations; exact static accounting is preserved separately rather than silently editing results.
+NEXT SINGLE SCIENTIFIC DECISION: Compare this repair with the fresh BF reconstruction and actual nearest learned-preconditioner literature before selecting any lead. No automatic new campaign is authorized.

@@ -1,0 +1,5 @@
+# Cost accounting correction, raw result preserved
+
+The original results.json field training_loss_evaluations=5401 used the planned bound of nine evaluations/epoch. The executed code actually calls loss eight times per central-difference epoch, once per stored trace entry, once initially and once for the final result. With 31 trace entries, static code accounting is 600*8+31+2=4833 loss evaluations and 4833*16*24=1855872 training phase-query steps. This is a deterministic code reconstruction, not measured instrumentation. Original code/results remain unchanged. Training trajectory, final U/P and evaluation values are unaffected.
+
+The reported phase-step saving at inference does not count the extra four scalar mobility multiplies and two adds per two-state update, nor all training. Actual evaluation runs continued for1200 steps even after recording first threshold passage; no wall-clock reduction was measured. Therefore neither total amortized efficiency nor physical energy superiority is established.

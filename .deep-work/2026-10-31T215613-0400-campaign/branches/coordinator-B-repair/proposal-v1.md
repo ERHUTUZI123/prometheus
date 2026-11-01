@@ -1,0 +1,19 @@
+# AGENT PROPOSAL / RECONSTRUCTION: change execution mobility instead of adding a periodic energy shortcut
+
+This coordinator construction follows B's frozen failure; it is not an independent first branch. It is deliberately not sent to the future fresh repairer before that repairer develops a version.
+
+The mechanistic change: retained observed relations define E(theta), while a newly constructed computational interaction acts on the *error flow*, not as another periodic state constraint. Execute theta_dot=-P_psi(theta) grad E(theta), with P=epsilon I+U_psi U_psi^T, uniformly bounded and epsilon>0. A trace normalization can impose an explicit mobility budget; it is only a numerical resource proxy. The neural generator of U, relation graph and its costs must be supplied/accounted. A defined possible learning law is gradient descent on finite unrolled settling error plus message/storage cost over authorized training queries; gradients alter psi, not E. This is ordinary meta-optimization, not a new estimator. No discovery of useful coordinates is solved here.
+
+Mathematical content (RECONSTRUCTION):
+- dE/dt=-(grad E)^T P grad E<=-epsilon||grad E||^2 for fixed static clamps. This remains true for state-dependent P.
+- Since P is nonsingular, stationary states are exactly those of the original E. Thus this construction cannot add the wrong stationary points that B's added cosine energy creates.
+- At a stationary point, derivative-of-P terms vanish because grad E=0. The Jacobian is -P H. It is similar to the symmetric -P^(1/2) H P^(1/2), so Sylvester inertia preserves the number of stable/unstable linear directions of nonsingular critical points. This does not preserve basins, fix preexisting spurious minima, establish global convergence, or guarantee a discrete-time implementation.
+- For Euler updates, if grad E is globally L-Lipschitz and eigenvalues P lie in [epsilon,M], step h<2/(LM) gives a sufficient energy descent condition by the descent lemma; a strict bound or line search is designed infrastructure.
+
+For B's anchored chain with independent parent errors e=Ntheta-delta, N is square invertible and unimodular in the explicit path example. The stationary equations N^T K sin(e)=0 force each e_j to 0 or pi modulo2pi. Any pi gives a negative direction in H=N^T diag(K cos(e))N; only all-zero parent errors are stable. Positive mobility preserves this property. The 5-cycle winding fixed point of the added shortcut is not stationary for the original path and cannot survive as a stationary point under any SPD P.
+
+A local illustration, not a demonstrated learned gain: for H=[[2,-1],[-1,1]], P=(2/3)*H^(-1) has trace2 and PH=(2/3)I. This has equal local rate2/3, compared with identity mobility's slow rate(3-sqrt5)/2. But H^(-1) is computed analytically here, not discovered by a neural learner, and a dense P introduces communication/arithmetic costs. It must not be sold as a matched physical or overall efficiency comparison.
+
+Closest-prior attack: SPD preconditioning, Riemannian/natural gradient, learned optimizers and multigrid-like acceleration already alter optimization geometry without changing the objective. This is a substantive repair of this candidate, not evidence of a new foundational principle. The open architecture question is whether a learner can construct cheap reusable, local error-flow interactions from its acquired relation graph, accounting for acquisition cost, rather than invoking an inverse-Hessian oracle.
+
+Scientific significance: a learner that improves its own internal solver must distinguish changing what counts as an answer from changing how an answer is reached. B's countermodel shows that algebraically redundant constraints can nevertheless change the computation's attractors. The repair separates these causal roles explicitly. It does not establish that this architecture is the strongest Prometheus candidate.

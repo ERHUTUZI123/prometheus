@@ -1,0 +1,41 @@
+--- original-deep-work/tools/audit.py
++++ run-local/audit_authorized_ultra.py
+@@ -25,18 +25,30 @@
+             errors.append(label + ": absent, not a file, or outside run root")
+ 
+     def mode(value: Any, label: str) -> None:
++        # USER OVERRIDE: current Ultra explicitly authorized, never relabelled Pro.
++        # This replaces only the original Pro evidence policy. Other checks remain.
+         if not isinstance(value, dict):
+             errors.append(label + ": missing mode evidence")
+             return
+-        if value.get("requested_mode") != "pro" or value.get("effective_mode") != "pro":
+-            errors.append(label + ": Pro not requested and evidenced")
+-        if value.get("evidence_kind") not in {"provider_metadata", "ui_user_attested"}:
+-            errors.append(label + ": unacceptable evidence kind")
+-        if not value.get("model"):
+-            errors.append(label + ": missing model label")
+-        if value.get("evidence_kind") == "ui_user_attested":
+-            warnings.append(label + ": UI/user attestation, not programmatic provider verification")
++        if value.get("requested_mode") != "user_authorized_ultra" or value.get("effort") != "ultra":
++            errors.append(label + ": current Ultra authorization/effort missing")
++        if value.get("effective_mode") is not None or value.get("provider_effective_mode_verified") is not False:
++            errors.append(label + ": unsupported provider-effective mode claim")
++        if value.get("evidence_kind") != "host_metadata_plus_user_authorization":
++            errors.append(label + ": inappropriate evidence kind")
+         artifact(value.get("receipt_path"), label + ".receipt_path")
++        try:
++            receipts = json.loads((root / value["receipt_path"]).read_text())
++            receipt = next(x for x in receipts if x.get("context_id") == value.get("context_id"))
++            selected = receipt["host_selected"]
++            if selected.get("model") != value.get("model") or selected.get("effort") != "ultra":
++                errors.append(label + ": host receipt does not match selected route")
++            policy = json.loads((root / "manifest.json").read_text())["mode_policy"]
++            if policy.get("superseding_user_authorization") != ["Ultra就可以开始", "现在这个mode就可以开始"]:
++                errors.append(label + ": explicit user override missing")
++        except (OSError, ValueError, KeyError, StopIteration, TypeError):
++            errors.append(label + ": malformed/unmatched host receipt or override")
++        warnings.append(label + ": authorized host-selected Ultra; provider-effective reasoning.mode unknown, no Pro claim")
+ 
+     if not isinstance(record.get("run_id"), str) or not record["run_id"]:
+         errors.append("missing run_id")

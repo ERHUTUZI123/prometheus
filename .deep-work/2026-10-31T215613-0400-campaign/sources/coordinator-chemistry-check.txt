@@ -1,0 +1,220 @@
+
+PDF PAGE 65
+
+48 CHAPTER 3. THE MATRIX CHEMISTRY AS AN EXAMPLE
+unless we introduce a nonlinearity. Therefore, we shall use the following related computation:
+s′
+i +k N
+=σ
+j= N
+j=1
+Pi j ×s j +k N−Θ , (3.4)
+with i=1,..., N , k=0,..., N−1 and σ[x] symbolizing the squashing function
+σ[x]=
+1 for x ≥0
+(3.5)
+0 for x <0.
+Θ is an adjustable threshold. Equation 3.3 can be interpreted as a matrix multiplication, whereas
+eq. 3.4 amounts to a combination of Boolean operations (for the case Θ=0 discussed later).
+This is all very particular to our system, for the sake of concreteness of the example. Other
+operations are allowed as well, so the following general transformation rule is really all we need:
+⃗
+⃗
+s ′
+=
+f (P ,
+⃗
+s). (3.6)
+As in previous examples, we adopt the reaction notation of chemistry and consider an oper-
+ator P , formed from s1,
+2 which reacts with s2 to produce a string s3 under conservation of all
+reactants. We can write this as a general reaction of the kind
+s(1) +s(2) −→s(1) +s(2) +s(3)
+, (3.7)
+where a new string is produced through the interaction of the two strings s(1)
+, s(2). In the real
+world, there would need to be some sort of material X added to the left-hand side of this reaction,
+needed to build the pattern of string s3, but we do not require this conservation of matter in our
+current study.
+The general reaction of eq. (3.7) can be further examined and reactions can be classified into
+three different classes: (1) Self-replication reactions, for instance,
+s(1) +s(1) −→s(1) +s(1) +s(1)
+, (3.8)
+s(1) +s(2) −→s(1) +s(2) +s(1)
+, (3.9)
+where one of the partners replicates with the help of another string, and (3) heterogeneous reac-
+tions, like
+s(1) +s(2) −→s(1) +s(2) +s(3)
+, (3.10)
+where s(1)
+̸=s(2)
+̸=s(3)
+.
+Based on the realization of these interaction laws in the matrix chemistry, there is one string,
+which really destroys a balanced system development if left uncontrolled: The string consist-
+ing of ”0”s only (called ”destructor”) is a self-replicating string that is able to replicate with all
+other strings. So it will quickly gain dominance under any condition. We therefore will have to
+disable it from reactions by using the special rule that interactions with the ”0” string will not
+produce any string and instead be elastic collisions. However, there is another potentially haz-
+ardous string in this system, the one consisting of all ”1” entries (called ”exploitor”). In addition
+to being able to replicate itself, it is capable of replicating with many other strings. However, we
+don’t need to prohibit the reaction of this string with others; instead, we can use a softer method
+to control it.
+(2) Replication reactions, for instance
+2In the future, when discussing string types, we shall omit the vector arrow and only number different string sorts.
+
+PDF PAGE 66
+
+3.1. THE BASIC MATRIX CHEMISTRY 49
+Table 3.1 Some low dimensional examples. N : Matrix size in one dimension; N : Length of strings;
+ns : Number of diﬀerent strings, excluding destructor; nR : Number of possible reactions, excluding
+self-reactions.
+N 1 N 1 2 3 4 9 4 5 16 25 10
+100
+ns 1 15 511 65535∼107
+nR 0 210∼2.6·105
+∼4·109
+∼1015
+∼1030
+∼1060
+Algorithm: To this end, we shall introduce the following general stability criterion for strings:
+A string may be considered the more stable, the less "1"’s it contains. Its chance to decay, hence,
+depends on
+I (k) =
+N
+i=1
+s(k)
+i , k=1,..., M . (3.11)
+I (k) measures the amount of "1"’s in string k and will determine a probability
+p(k) =(I (k)/N )n (3.12)
+with which an encountered string should decay. The parameter n can serve us to tilt probabilities
+slightly. Note that the exploitor has probability p=1 and must decay upon encounter.
+The entire algorithm can now be stated as follows:
+while ¬terminate() do
+s1 :=draw(P );
+s2 :=draw(P );
+s4 :=draw(P );
+O :=: fold(s1);
+if ∃(s1 +s2 →s1 +s2 +s3) ∈R
+then
+P :=remove(P , s4);
+P :=insert(P , s3);
+fi
+od
+We close this section by giving a short table (table 3.1) showing the impressive amount of
+possible interactions between strings as we increase their length N . For arbitrary N we have
+ns =2N
+−1 (3.13)
+strings and
+nR =22N
+−3·2N +2 (3.14)
+reactions, excluding reactions with the destructor and self-reactions. The number of potential
+self-replications is, of course
+nSR =nS. (3.15)
+
+PDF PAGE 317
+
+300 CHAPTER 14. SELF-ORGANIZATION AND EMERGENT PHENOMENA
+and micro), and states the problem of emergence to explain this apparent contradiction [89].
+Bedau discerns nominal emergence, weak emergence and strong emergence. In the definition
+of these three types of emergence different aspects of the term are taken into account. The com-
+mon feature of all three types is the notion that there are properties that can be possessed by
+entities on the macro level, but not by entities on the micro level. This sort of minimal common
+denominator he calls ”nominal emergence.” This term, being minimal, is not able to explain
+how and why emergence occurs, it merely describes the fact of macro properties that are not
+found on the micro level.
+Macro properties come in different flavors, however, so Bunge restricts the realm of emer-
+gence to those properties of the macro level that are global, and not distributive. By that he
+means properties that are not simply the sum over all the elements, of which there could be
+many. Examples of relevant ”global” properties mentioned by Bunge [145, p12] are, for instance,
+the synchrony of a neural assembly, the self-regulation of an organism or machine, the validity
+of an argument, the consistency of a theory, etc. The more traditional name for global properties
+among philosophers of emergence is emergent as opposed to ”resultant” properties. Distribu-
+tive properties as mentioned before, therefore, can be identified as resultant properties. Nominal
+emergence, according to Bedau, does not differentiate between global and distributive or emer-
+gent and resultant properties, which makes it a very broad definition.
+What, now, are the stricter concepts of weak and strong emergence, according to Bedau? The
+most restrictive concept, strong emergence, adds the following further requirements: A strongly
+emergent property is supervenient and has irreducible causal power. Supervenience is a con-
+cept that explains the bottom-up formation of emergent properties. However, in addition to this
+feature, strongly emergent properties have irreducible causal power, i.e., causal power that can-
+not be explained by the causal power of lower-level entities. What is meant by causal power?
+Well, it is a process by which the higher level of a system (say the macro level, the global level)
+influences and determines behavior of lower-level (microlevel) components. It is important to
+understand the term ”irreducible causal power.” This means that there is no explanation for its
+effects on the lower level, by merely taking into account the lower-level entities and their behav-
+ior, be it simple or complicated (by way of interactions). Kim, in particular, points out a problem
+with this irreducible causal powers [459, 460]: If there is irreducible causal power acting from a
+macro level to determine the behavior of components at the micro level, this causal effect would
+possibly counteract causal effects from micro-level interactions of components themselves. In
+other words, there would be a causal overdetermination of the behavior of micro-level entities
+that would lead to contradictions. Bedau therefore dismisses strong emergence as a scientifically
+implausible if not irrelevant concept and instead proposes weak emergence as a less radical, in-
+termediate notion with sufficient scientific credibility. We disagree with him on this for reasons
+explained later in this chapter.
+Weak emergence requires supervenience, i.e., the dependence of macro-level properties on
+micro-level properties, but dismisses irreducible causal powers of the macro-level entities. In-
+stead, ”the central idea behind weak emergence is that the emergent causal powers can be de-
+rived from micro-level information, but only in a certain complex way” [89]. In other words,
+among macro-level properties emergent from micro-level interactions is in particular their
+causal effects on the micro level. These causal effects can therefore be explained without re-
+currence to irreducible causal powers at the macro level.
+Kim is less skeptical than Bedau about the possibility that an account of irreducible causal
+powers can be found, but he emphasizes that without such a consistent account the entire value
+of the notion of emergence breaks down. By proposing weak emergence Bedau, on the other
+
+PDF PAGE 318
+
+14.4. EXPLANATORY CONCEPTS OF EMERGENCE 301
+hand, emphasizes that a scientific account of irreducible causal powers is neither required nor
+possible. This discussion requires some more elucidation, and we will devote the next section to
+top-down causation.
+14.4.2 Hyperstructures and Dynamical Hierarchies
+Another explanatory concept in regard to emergence is the idea of hyperstructures, originally
+introduced by Baas with follow-up work on the dynamics of hierarchies by Rasmussen et al.
+Baas introduced hyperstructures as a framework to conceptualize emergence and he formally
+connected emergent entities to category theory [45, 46]. Baas considers the formation of hyper-
+structures as a process consisting of the repeated application of three ingredients: Objects Si ,
+with index i characterizing a particular object in a family, a mechanism to observe properties,
+O, with properties being formalized as P ∈O(Si ) and interactions among objects, I , which use
+the properties of objects. Together, these ingredients form a constructive process that leads to
+higher-order objects, when stabilized. This is formalized as R(Si ,O(Si ), I ). The result of this pro-
+cess could be a family of new objects, S2
+j , which would have their own set of observations, O2
+.
+These could be either completely disjoint, partially overlapping, or equal to the set of observa-
+tions O at the lower level which we now call first-order objects. Observations of second-order
+objects would now lead to second-order properties, P 2 ∈O2(S2
+j ) which would lead to second-
+order interactions I 2. In turn the interaction among the second-order objects could lead to even
+higher-order objects. Iterating these operations (object formation and interactions) will pro-
+duce what Baas calls a hyperstructure, SN =R(SN−1
+,SN−2
+,...,S1). The situation is depicted in
+figure 14.4.
+Where does all that leave us in regard to emergence? The constructive process leading to
+higher-order objects with possibly new properties allows to define emergent properties as fol-
+lows: Emergent properties Pe ∈O2(S2
+j ) would be properties that are not found among the compo-
+nents of a second-order object S2
+j , i.e., Pe ∉O2(Sk ) where k runs over the components of S2
+j thus
+containing all first-order components of this second-order object. Note that emergent proper-
+ties can only exist with higher-order objects, beginning at the second order.
+The formation of higher-order objects is the subject of influential work on dynamical hierar-
+chies [689]. With two examples, the formation of hierarchies of subsequently more complex ob-
+jects is simulated and studied. These two examples are taken from the area of molecular dynam-
+ics (a 2D and a 3D simulation, respectively) where the formation of vesicles from monomers with
+certain properties is studied. The process of interaction is constituted by aggregation, whereby
+single molecules and polymers are driven to cluster together through physical forces (first from
+monomers into polymers, then from polymers into vesicles). Aggregation is, however, only one
+of a number of possible mechanisms for constructing higher-level objects. In social systems,
+this mechanism would be better characterized as group formation. Another completely differ-
+ent mechanism is network formation. In networks, interactions happen on edges between nodes
+(objects), and the relation between level of an object is constituted by its connectivity in the net-
+work.
+In dynamical hierarchies, once a new level of objects is created, the interactions of objects
+are usually a new means of communication. The communication could happen within the new
+level (i.e., between the objects of the new level), or between new and old levels. Generally, the
+complexity of objects will need to increase in the process, in order to be able to handle addi-
+tional communication/interaction. While this happens automatically in a natural system, in a

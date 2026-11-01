@@ -1,0 +1,536 @@
+
+dreamcoder2021.pdf PDF PAGE 4
+PLDI ’21, June 20ś25, 2021, Virtual, Canada K. Ellis, C. Wong, M. Nye, M. Sablé-Meyer, L. Morales, L. Hewitt, L. Cary, A. Solar-Lezama, J. Tenenbaum
+Objective: For each task x in X, ﬁnd best program ρx solving x under current prior (D, θ)
+Neurally guided search
+Propose programs ρ in
+decreasing order under Q(·|x)
+until timeout
+Library D, weights θ
+f1(x) =(+ x 1)
+f2(z) =(fold cons
+(cons z nil))
+· · · · · · · · ·
+Task x
+[7 2 3] →[4 3 8]
+[3 8] →[9 4]
+[4 3 2] →[3 4 5]
+Recognition
+Model Q(·|x)
+Best programs Bx for task x
+(map f1 (fold f2 nil x))
+· · ·
+Choose ρ’s that maximize:
+P [ρ|x, (D, θ)] ∝ P [x|ρ] P [ρ|D, θ]
+Wake
+Objective: Grow library D to compress
+programs found during waking
+program for task 1
+(+ (car z) 1)
+program for task 2
+(cons (+ 1 1))
++ 11
+cons + 1
+car z
+Refactoring
+Propose new library routines from
+subtrees of refactorings of programs
+New library D
+w/ routine
+(+ x 1)
++ 1
+Expand D w/
+the routine that
+maximizes:∫
+P[D, θ] ∏x∈X ∑ρ∈Bx P [x|ρ] P [ρ|D, θ] d θ
+Sleep: Abstraction
+Objective: Train recognition model Q(ρ|x)
+to predict best programs ρx for typical
+tasks x and current prior (D, θ)
+Fantasies
+2. set task x
+to output of
+executing ρ
+1. draw
+programs
+ρ from
+prior (D, θ)
+sample
+Replays
+2. set program
+ρ to retrieved
+solution ρx
+1. recall
+tasks x
+solved in
+waking
+sample
+Train network on x,ρ pairs
+Task
+x
+Program
+ρ
+Gradient step in parameters of Q
+to maximize log Q(ρ|x)
+Sleep: Dreaming
+Repeat
+until no
+increase
+in score
+Train
+until
+converged
+Library
+prog
+task
+prog
+task
+prog
+task
+is
+Figure 3. DreamCoder p er-
+forms approximate Bayesian in-
+ference for the graphical model in
+the middle: inputting synthesis
+tasks, which it explains with la-
+tent programs, and infers a latent
+library capturing cross-program
+regularities. A neural net, called
+the recognition model (red ar-
+rows) is trained to infer programs
+with high posterior probability.
+Waking ( top) infers programs
+while holding the library and
+recognition model fixed. Abstrac-
+tion ( left) updates the library
+while holding the programs fixed
+by refactoring programs found
+during waking and abstracting
+out common components (high-
+lighted in orange). Dreaming
+(right) trains the recognition
+model on ‘Fantasies’ (programs
+sampled from library) & ‘Replays’
+(programs found during waking).
+map, which can then be used to represent both functions
+concisely. The use of this data structure results in substantial
+efficiency gains: A graph with 106 nodes, calculated in min-
+utes, can represent the 1014 refactorings in Fig. 2 that would
+otherwise take centuries to explicitly enumerate and search.
+2.3 Dream Sleep: Training a Recognition Model
+During dreaming, the system trains its recognition model,
+which later guides the search for programs during waking.
+Like EC2, DreamCoder trains a recognition network on (pro-
+gram, task) pairs drawn from two sources of self-supervised
+data: replays of programs discovered during waking, and
+fantasies, or random programs assembled from members
+of the learned library. Replays ensure that the recognition
+model is trained on the actual tasks it needs to solve, and
+does not forget how to solve them, while fantasies provide a
+large and highly varied dataset to learn from, and are crit-
+ical for data efficiency: becoming a domain expert is not a
+few-shot learning problem, but nor is it a big data problem.
+The input corpus to DreamCoder typically contains 100-200
+tasks, which is too few examples for a high-capacity neural
+network. But after the model learns a library customized to
+the domain, it can draw unlimited samples or ‘dreams’ to
+train the recognition network, facilitating sample-efficient
+learning. Unlike EC2 and other prior works, we parameterize
+and train our network in new ways which teach it to restrict
+the search over program space via learning to break syntactic
+symmetries.
+2.4 A Bayesian View
+In this section, we summarize the original formalization of
+Ellis et al. [ 14] of the wake sleep approach as a probabilistic
+inference problem in the context of DreamCoder. The input
+to the algorithm is a set of tasks, written 𝑋 , and the output is
+both a set of programs {𝜌𝑥 } solving each task 𝑥 ∈ 𝑋 , as well
+as a prior distribution over programs likely to solve tasks in
+the domain (Fig. 3 middle). This prior is encoded by a library,
+written D, which when equipped with a real-valued weight
+vector, written 𝜃 , defines a distribution over programs, writ-
+ten P[𝜌 |D, 𝜃]. The library D is a set of typed 𝜆-calculus
+expressions, while the weight vector 𝜃 acts similarly to the
+production probabilities of a probabilistic context free gram-
+mar, with each single element of 𝜃 controlling the probability
+of using a single element of D. Appendix 6 formally specifies
+P[𝜌 |D, 𝜃] via a probabilistic program which stochastically
+generates well-typed expressions obeying variable scoping
+rules. Using this notation, the joint distribution, 𝐽 , over the
+observed tasks and the latent variables is
+𝐽 (D, 𝜃) ≜ P[D, 𝜃]
+/productdisplay.1
+𝑥 ∈𝑋
+/summationdisplay.1
+𝜌
+P[𝑥 |𝜌]P[𝜌 |D, 𝜃] (1)
+where P[D, 𝜃] is a prior distribution over languages and
+parameters and P[𝑥 |𝜌] scores the likelihood of a task 𝑥 ∈
+838
+
+dreamcoder2021.pdf PDF PAGE 5
+DreamCoder: Bootstrapping Inductive Program Synthesis with Wake-Sleep Library Learning PLDI ’21, June 20ś25, 2021, Virtual, Canada
+𝑋 given a program 𝜌.1 The solution to the DreamCoder
+problem is then the optimal language and weight vector
+D∗ = arg max
+D
+∫
+𝐽 (D, 𝜃) d𝜃 𝜃 ∗ = arg max
+𝜃
+𝐽 (D ∗, 𝜃)
+(2)
+Evaluating Eq. 1 entails marginalizing over the infinite set
+of all programs ś which is impossible. We make a particle-
+based approximation to Eq. 1 and instead marginalize over
+a finite beam of programs, with one beam per task, collec-
+tively written {B𝑥 }𝑥 ∈𝑋 . This particle-based approximation
+is written ℒ(D, 𝜃, {B𝑥 }) and acts as a lower bound on the
+joint density: 𝐽 (D, 𝜃) ≥ ℒ, where ℒ is
+ℒ(D, 𝜃, {B𝑥 }) ≜ P[D, 𝜃]
+/productdisplay.1
+𝑥 ∈𝑋
+/summationdisplay.1
+𝜌 ∈B𝑥
+P[𝑥 |𝜌]P[𝜌 |D, 𝜃] (3)
+In all of our experiments we set the maximum beam size
+|B𝑥 | to 5. Wake and sleep phases correspond to alternate
+maximization of ℒ w.r.t. {B𝑥 }𝑥 ∈𝑋 , D, and 𝜃 .
+Wake: Maxing ℒ w.r.t. the beams. Here (D, 𝜃) is fixed
+and we want to find new programs to add to the beams
+so that ℒ increases the most (and therefore best approxi-
+mates 𝐽 (D, 𝜃)). ℒ most increases by finding programs where
+P[𝑥 |𝜌]P[𝜌 |D, 𝜃] ∝ P[𝜌 |𝑥, D, 𝜃] is large, i.e., programs with
+high posterior probability, which we use as the search objec-
+tive during waking. Unlike EC 2, during each wake cycle we
+sample a random minibatch of tasks to try to solve, rather
+than trying to solve every task at each wake.
+Sleep (Abstraction): Maxing ℒ w.r.t. the library. Here
+{B𝑥 }𝑥 ∈𝑋 is held fixed and the problem is to search the dis-
+crete space of libraries and find one maximizing
+∫
+ℒ d𝜃 ,
+and then update 𝜃 to arg max𝜃 ℒ(D, 𝜃, {B𝑥 }).
+Finding programs solving tasks is difficult because of the
+infinitely large, combinatorial search landscape. We ease this
+difficulty by training a neural recognition model, 𝑄 (𝜌 |𝑥),
+during the Dreaming phase: 𝑄 is trained to assign high
+probability to programs which score highly under the poste-
+rior P[𝜌 |𝑥, (D, 𝜃)] ∝ P[𝑥 |𝜌]P[𝜌 |(D , 𝜃)] . Thus training the
+neural network amortizes the cost of finding programs with
+high posterior probability.
+Sleep (Dreaming): tractably maxing ℒ w.r.t. the beams.
+Here we train 𝑄 (𝑝 |𝑥) to assign high probability to programs
+𝑝 where P[𝑥 |𝜌]P[𝜌 |D, 𝜃] is large, because incorporating
+those programs into the beams will most increase ℒ. In the
+sections that follow, we elaborate on how these phases are
+realized.
+3 Abstraction Sleep
+During the abstraction phase of sleep, the model grows its
+library with the goal of discovering specialized library rou-
+tines that allow it to easily express solutions to the tasks
+1For example, for list processing, the likelihood is 1 iff the program predicts
+the correct outputs on the observed inputs. For probabilistic programs, the
+likelihood is the probability of the program sampling the observation.
+at hand. Ease of expression translates into a preference for
+libraries that best compress programs found during waking,
+namely the programs in the beams {B𝑥 }𝑥 ∈𝑋 .
+In order to do this, however, we need to address a problem
+with the beam approximation in Eq. 3: the beam contains
+programs found in the previous waking phase, but those pro-
+grams will not be written in terms of the new routines that
+we may want to consider in D, so there will be a missalign-
+ment between the programs in B𝑥 , and the proposed D.
+There is also a second challenge: integration over 𝜃 (Eq. 2)
+is intractable when 𝜃 is high dimensional. Hence we ap-
+proximate the abstraction sleep objective using the Akaike
+Information Criterion (AIC: [ 3]).2 The AIC is a model selec-
+tion criterion which replaces integration with maximization,
+and penalizes the number of continuous degrees of freedom
+(here, the dimensionality of 𝜃 ).
+We address both of these challenges by refining the opti-
+mization objective to the formula below.
+log P[D] + arg max
+𝜃
+/summationdisplay.1
+𝑥 ∈𝑋
+log
+/summationdisplay.1
+𝜌 ∈ B𝑥
+P[𝑥 |𝜌] max
+𝜌′− →∗𝛽 𝜌 P[𝜌 ′|D, 𝜃]
++ log P[𝜃 |D] − | 𝜃 |0 (4)
+We define P [D] ∝ exp
+(
+−𝜆 /summationtext.1𝜌 ∈ D size(𝜌)) using a hyper-
+parameter 𝜆 so that it minimizes the size of each library
+function in D. We place a symmetric Dirichlet prior over the
+weight vector 𝜃 to define P [𝜃 |D ]. But the most important
+aspect of this objective is that instead of considering only the
+programs in the beam, it also considers any of their refactor-
+ings. By refactoring, we mean any program which is equiva-
+lent up to 𝛽-reduction (i.e., function application/variable sub-
+stitution [39]). We write 𝜌 − →𝛽 𝜌 ′ to mean that 𝜌 rewrites
+to 𝜌 ′ in one step of 𝛽-reduction, and write 𝜌 − →∗𝛽 𝜌 ′ for the
+transitive reflexive closure of 𝜌 − →𝛽 𝜌 ′.
+Because infinitely many programs may𝛽-reduce to a given
+expression, DreamCoder bounds the number of 𝛽-reduction
+steps separating a program from its refactorings. Yet this
+now-bounded set of refactorings grows exponentially, moti-
+vating the techniques described next.
+3.1 Efficient Refactoring
+We tame the combinatorial explosion associated with refac-
+toring using machinery that draws primarily on the ideas
+of an E-graph and a version space. A version space is a data
+structure that compactly represents a large set of programs
+and supports efficient set operations like union, intersec-
+tion, and membership checking. An E-graph, in turn, is a
+data-structure that leverages sharing to compactly represent
+many alternative versions of the same program. The two
+ideas are quite closely related, and in fact, prior systems
+2The AIC is only one such possible model selection criterion. Other choices,
+such as Variational Bayes [ 26], may more closely approximate the marginal
+over 𝜃 , but are more complex and come at greater computational expense.
+839
+
+dreamcoder2021.pdf PDF PAGE 6
+PLDI ’21, June 20ś25, 2021, Virtual, Canada K. Ellis, C. Wong, M. Nye, M. Sablé-Meyer, L. Morales, L. Hewitt, L. Cary, A. Solar-Lezama, J. Tenenbaum
+such as FlashFill have used E-graph-like representations to
+represent version spaces compactly [ 20].
+Version space. The purpose of a version space is to com-
+pactly represent a set of programs. Our basic language will be
+𝜆-calculus with some additional primitives. We use deBuijn
+notation to simplify the treatment of bound variables.
+Definition 3.1. A version space is either
+• A deBuijn index: written $𝑖, for 𝑖 a natural number
+• A primitive, such as the number 42, or the function map
+• An abstraction: written 𝜆𝑣, where 𝑣 is a version space
+• An application: written (𝑓 𝑥 ), where both 𝑓 and 𝑥 are
+version spaces
+• A union: ⊎𝑉 , where 𝑉 is a set of version spaces
+• The empty set, ∅
+• The set of all 𝜆-calculus expressions, Λ
+By a leaf we mean either a primitive or a deBuijn index.
+The union operator ( ⊎), which, intuitively, represents a
+nondeterministic choice between a collection of alternatives,
+allows the notation above to compactly represent large sets of
+programs. For example, the version space(𝜆⊎{$0, 7}) (⊎ {4, 9})
+encodes four different expressions: (𝜆$0)4, (𝜆$0)9, (𝜆7)4, and
+(𝜆7)9. We refer to the set of expressions encoded by a version
+space as its extension:
+Definition 3.2. The extension of a version space 𝑣 is writ-
+ten ⟦𝑣⟧ and is defined recursively as:
+⟦𝜌⟧ = {𝜌 } , if 𝜌 a leaf ⟦Λ⟧ = Λ ⟦∅⟧ = ∅
+⟦𝜆𝑣⟧ = {𝜆𝑒 : 𝑒 ∈ ⟦𝑣⟧} ⟦⊎𝑉 ⟧ = {𝑒 : 𝑣 ∈ 𝑉 , 𝑒 ∈ ⟦𝑣⟧}
+⟦(𝑣1 𝑣2)⟧ = {(𝑒1 𝑒2) : 𝑒1 ∈ ⟦𝑣1⟧, 𝑒 2 ∈ ⟦𝑣2⟧}
+The data structures we use to represent version spaces
+also support efficient membership checking, which we write
+as 𝑒 ∈ ⟦ 𝑣⟧. Important for our purposes, it is also efficient
+to extract the smallest member of a version space’s exten-
+sion in terms of a new libraryśi.e., extracting the most com-
+pressive member of a version space given a new library. We
+define extract(𝑣 |D) as calculating arg min𝜌 ∈⟦𝑣⟧ size(𝜌 |D) ,
+where size(𝜌 |D) for program 𝜌 and library D is the size of
+the syntax tree of 𝜌, when members of D are counted as
+having size 1 (Fig. 5A).
+Inverse 𝛽-reduction. Our next goal is to define an oper-
+ator over version spaces which calculates the set of 𝑛-step
+refactorings of a program 𝜌. We call this operator 𝐼 𝛽𝑛, be-
+cause it inverts 𝛽-reduction 𝑛 times, writing 𝐼 𝛽𝑛 (𝜌) for a
+version space encoding 𝑛-step refactorings of program 𝜌.
+This operator should satisfy:
+⟦𝐼 𝛽𝑛 (𝜌)⟧ =
+{
+𝜌 ′ : 𝜌 ′ − →𝛽 𝜌 ′′ − →𝛽 · · · − →𝛽
+/bracehtipupleft/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehtipdownright/bracehtipdownleft/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehext/bracehtipupright
+≤ 𝑛 times
+𝜌
+}
+(5)
+We define 𝐼 𝛽𝑛 in terms of another operator, 𝐼 𝛽′, which per-
+forms a single step of refactoring (Fig. 5B); in particular, we
+want to define 𝐼 𝛽′ so that its extension obeys
+⟦𝐼 𝛽′(𝑣)⟧ = {𝜌 ′ : 𝜌 ′ − →𝛽 𝜌 ∀𝜌 ∈ ⟦𝑣⟧} (6)
+Here we will define and explain 𝐼 𝛽′ intuitively but the appen-
+dix proves that these definitions are consistent (Theorem G.5)
+and complete (Theorem G.6). Consistency means that only
+valid refactorings are output (every program in ⟦𝐼 𝛽′(𝑣)⟧
+does actually 𝛽-reduced to a program in ⟦𝑣⟧), while com-
+pleteness means that every valid refactoring is output (every
+program which 𝛽-reduces to an expression in ⟦𝑣⟧ is present
+in ⟦𝐼 𝛽′(𝑣)⟧). Consistency and completeness imply Eq. 6.
+Constructing 𝐼 𝛽′ depends on careful consideration of the
+𝛽-reduction operator we aim to invert (see [ 39] and Appen-
+dix F). The operator 𝐼 𝛽′ builds both top-level redexes and
+also recurses to build redexes within the body of an expres-
+sion. Fig. 5C defines 𝐼 𝛽′ as the union of an operator 𝑆, which
+constructs these top-level substitutions, along with recur-
+sive invocations of 𝐼 𝛽′. The 𝑆 operator (Fig. 5D) takes as
+input a version space 𝑢 and then returns a version space
+whose extension contains programs of the form (𝜆𝑏)𝑣 where
+substituting the value 𝑣 into the body 𝑏 (i.e. performing 𝛽
+reduction) gives an expression in ⟦𝑢⟧. The definition of 𝑆 is a
+bit involved both because of the different ways in which one
+can introduce additional abstraction into a lambda expres-
+sion as well as because of the need to keep track of deBuijn
+indices. Index tracking is done by parameterizing 𝑆 by an in-
+dex 𝑘, so 𝑆 (𝑣) is defined as 𝑆0 (𝑣), but every time 𝑆𝑘 is applied
+to an expression of the form 𝜆𝑏, the body 𝑏 must be handled
+by 𝑆𝑘+1 to keep track of the fact that the body is inside an
+additional 𝜆.
+We now define how these version spaces aggregate into
+a single data structure, one for each program, tracking ev-
+ery equivalence revealed by 𝐼 𝛽𝑛. Observe that every time
+we calculate 𝐼 𝛽𝑛 (𝜌), we obtain a version space containing
+expressions semantically equivalent to program 𝜌Ðand also
+we obtain 𝐼 𝛽𝑛 for any subexpressions of 𝜌. In order to al-
+low these subexpressions to be refactored independently,
+we track the equivalences exposed by 𝐼 𝛽𝑛 and compile all
+these equivalencies together. For example, when refactoring
+(* (+ 1 1) (+ 5 5)) , the 𝐼 𝛽1 operator, which inverts 1 step
+of 𝛽-reduction, will identify that (+ 1 1) can be rewritten
+as (double 1) while (+ 5 5) can be rewritten as (double 5) ,
+where double = (lambda (x) (+ x x)) . However, 𝐼 𝛽1 will not
+discover that (* (+ 1 1) (+ 5 5)) can be rewritten as (* (double
+1) (double 5)) , because this requires inverting 2 steps of 𝛽-
+reduction. Yet this rewrite is clearly licensed by the semantic
+equivalences exposed by 𝐼 𝛽1.
+Inspired by the E-graph equality saturation approach within
+program analysis [53], we build a graph tracking the equiva-
+lences exposed by 𝐼 𝛽𝑛, and finally return a single structure
+for each program compiling all of these equivalences. This
+allows e.g. refactoring (* (+ 1 1) (+ 5 5)) into (* (double
+1) (double 5)) without considering more than 1 step of 𝛽-
+reduction. Concretely, for each program 𝜌, we calculate a
+840
+
+dreamcoder2021.pdf PDF PAGE 7
+DreamCoder: Bootstrapping Inductive Program Synthesis with Wake-Sleep Library Learning PLDI ’21, June 20ś25, 2021, Virtual, Canada
+5+ 5 x
++ 5
+λx 5
+5+ x
+λx 5
+x
++ x
+λx 5
+5+ 5
+λx 5
+legend
+semantic equivalence
+⊎ nondeterministic choice
+(A) Four refactorings of (+ 5 5) w/ common structure
+(B) Those refactorings reexpressed w/ version space ⊎, plus more refactorings
+5+ 5
+⊎
+5 x+ ⊎
+5 x
+λx 5
+/bracehtipupleft /bracehtipdownright/bracehtipdownleft /bracehtipupright
+refactorings in (A)
+5
+⊎
++ y
+5
+λy +
+λz 5
+⊎
+5 z
+Example program encoded by data structure in (B):
+((λ (y) (y 5 (( λ (z) z) 5))) +)
+Figure 4. Inverting 𝛽-reduction by one step using the ⊎
+version space operator and equivalence tracking. (A): four
+refactorings of (+ 5 5) , each semantically equivalent to the
+original expressionś notated with a dashed orange lineśby
+abstracting out the number 5. Because there are two 5s, and
+each can be either left as 5 or replaced with a variable, we
+have four possibilities. The rightmost tree in (B) collapses
+all four such refactorings into a single tree via ⊎ and shows
+several other portions of the data structure, but ellides others
+for clarity.
+version space 𝐼 𝛽(𝜌) defined as
+𝐼 𝛽(𝜌) = 𝐼 𝛽𝑛 (𝜌) ⊎
+ 
+
+𝐼 𝛽(𝑓 ) 𝐼 𝛽(𝑥) if 𝜌 = (𝑓 𝑥 )
+𝜆𝐼 𝛽(𝑏) if 𝜌 = 𝜆𝑏
+∅ if 𝜌 is a leaf
+where 𝑛, the amount of refactoring, is a hyper parameter.
+We set 𝑛 to 3 for all experiments unless otherwise noted.
+Figure 4 diagrams a subset of the refactoring data structure
+when 𝑛 = 1 and the refactored expression is (+ 5 5) .
+3.2 Putting Together the Pieces
+Algorithm 2 (Appendix) specifies our library learning proce-
+dure, which is exponential in the amount of refactoring but
+polynomial in program size. Naively, the number of candi-
+date new library routines grows linearly with the number
+of programs, and each candidate must be scored against all
+other programs, giving quadratic dependence on the number
+of programs. In practice we found this quadratic dependence
+prohibitive. So, for each version space 𝑣, we perform a beam
+search to approximately calculate the top 106 candidate li-
+braries D minimizing the size of extract(𝑣 |D) .
+4 Dream Sleep
+Our dream phase works differently from a conventional
+wake-sleep [23] dream phase in the following way: we think
+of dreaming as creating an endless stream of random prob-
+lems, which we then solve during sleep, and train the recogni-
+tion network to predict the solution conditioned on the prob-
+lem. The classic wake-sleep algorithm would instead sample
+a random program, execute it to get a task, and train the
+recognition network to predict the sampled program from
+the sampled task. Specifically, we train 𝑄 to perform MAP in-
+ference by maximizing E
+[
+log 𝑄
+((
+arg max𝜌 P[𝜌 |𝑥, 𝐿]
+)
+|𝑥
+)]
+,
+where the expectation is taken over tasks. Taking this expec-
+tation over the empirical distribution of tasks trains 𝑄 on
+replays; taking it over samples from the generative model
+trains 𝑄 on fantasies. To clarify this departure from clas-
+sic wake/sleep, we define a pair of alternative objectives for
+the recognition model, Lpost. and LMAP, which (respectively)
+train 𝑄 to perform full posterior inference (as in EC2 [14] and
+classic wake/sleep), or MAP inference (as in DreamCoder):
+Lpost. = Lpost.Replay + L post.Fantasy LMAP = LMAPReplay + L MAPFantasy
+Lpost.Replay = E𝑥∼𝑋
+ /summationdisplay.1𝜌 ∈B𝑥 P [𝑥, 𝜌 |D, 𝜃]/summationtext.1𝜌′ ∈ B𝑥 P [𝑥, 𝜌 ′|D, 𝜃] log 𝑄 (𝜌 |𝑥)
+LMAPReplay = E𝑥∼𝑋
+[
+log 𝑄
+(
+arg max
+𝜌 ∈ B𝑥
+P[𝜌 |𝑥, D, 𝜃]
+/barex/barex/barex/barex 𝑥)]
+Lpost.Fantasy = E(𝜌,𝑥 )∼( D ,𝜃) [log 𝑄 (𝜌 |𝑥)]
+LMAPFantasy = E𝑥∼( D,𝜃)
+[
+log 𝑄
+(
+arg max
+𝜌
+P[𝜌 |𝑥, D, 𝜃]
+/barex/barex/barex/barex 𝑥)]
+Evaluating LFantasy involves drawing programs from the
+current library, running them to get their outputs, and then
+training 𝑄 to regress from the input/outputs to the program.
+Since these programs map inputs to outputs, we need to
+sample the inputs as well. We simply sample the inputs
+from the empirical observed distribution of inputs in 𝑋 . The
+LMAPFantasy objective also involves finding the MAP program
+solving a task drawn from the library. To make this tractable,
+rather than sample programs as training data for LMAPFantasy,
+we enumerate programs in decreasing order of their prior
+probability, tracking, for each dreamed task 𝑥, the set of
+enumerated programs maximizing P[𝑥, 𝜌 |D, 𝜃] (Appendix
+Algorithm 3).
+We chose to have DreamCoder maximize LMAP rather
+than Lpost. because, when, combined with our parameteriza-
+tion of 𝑄, described next, we will show thatLMAP encourages
+the recognition model to break syntactic symmetries.
+841

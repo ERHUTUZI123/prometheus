@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0",
+  "kind": "workflow_spec_not_vendor_config",
+  "model_policy": {
+    "required_mode": "pro",
+    "api_model_example": "gpt-6-astra",
+    "reasoning_effort_example": "max",
+    "verify_at_deployment": true,
+    "silent_fallback": false,
+    "acceptable_evidence": [
+      "provider_metadata",
+      "ui_user_attested"
+    ]
+  },
+  "orchestration": {
+    "initial_branches": 6,
+    "candidate_target_per_branch": 2,
+    "finalist_target": 3,
+    "targets_not_quotas": true,
+    "native_host_preferred": true,
+    "fresh_contexts_required": true,
+    "old_proposal_release": "after_independent_freeze",
+    "adaptive_phase_order": true
+  },
+  "budget": {
+    "applies_to": "research_runtime_not_workflow_construction",
+    "research_token_cap": null,
+    "research_round_cap": null,
+    "research_time_cap": null,
+    "actual_limit": "existing_authorized_available_resources",
+    "goal": "scientific_progress_not_token_saving_or_burning",
+    "initial_allocation": {
+      "reading": 0.25,
+      "invention": 0.4,
+      "tests_and_revision": 0.25,
+      "independent_rebuild_and_delivery": 0.1
+    },
+    "protected_high_risk_share": 0.25,
+    "allocation_is_adjustable": true,
+    "checkpoint_and_delivery_reserve": true,
+    "new_paid_resources": "separate_authorization"
+  },
+  "permissions": {
+    "research_tools": "all_authorized_tools",
+    "experimental_code": "isolated_no_credentials",
+    "originals": "read_only",
+    "root_constitution": "preserve",
+    "active_NOW": "existing_canonical_only",
+    "external_publication": false
+  },
+  "persistence": {
+    "root": ".deep-work/<run-id>",
+    "task_states": [
+      "pending",
+      "running",
+      "checkpointed",
+      "completed",
+      "blocked",
+      "closed"
+    ],
+    "append_only_evidence": true,
+    "save_failures": true,
+    "resume_with_attempt_ids": true
+  },
+  "stop": {
+    "fulfilled_research_delivery": true,
+    "actual_resource_or_mode_block": true,
+    "user_stop": true,
+    "repeated_global_no_new_information": true,
+    "branch_local_repair_stagnation": "redirect_after_two_distinct_substantive_attempts"
+  }
+}

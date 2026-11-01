@@ -1,0 +1,496 @@
+
+PDF PAGE 1
+how the body shapes 
+the way we think
+a new view of  intelligence
+Rolf Pfeifer and Josh Bongard
+foreword by Rodney Brooks
+How the Body Shapes the Way We Think 
+A New View of Intelligence
+Rolf Pfeifer and Josh Bongard
+foreword by Rodney Brooks 
+illustrations by Shun Iwasawa 
+How could the body influence our thinking when it seems
+obvious that the brain controls the body? In How the Body
+Shapes the Way We Think, Rolf Pfeifer and Josh Bongard
+demonstrate that thought is not independent of the body
+but is tightly constrained, and at the same time enabled, by
+it. They argue that the kinds of thoughts we are capable of
+have their foundation in our embodiment—in our mor-
+phology and the material properties of our bodies. 
+This crucial notion of embodiment underlies funda-
+mental changes in the field of artificial intelligence over the
+past two decades, and Pfeifer and Bongard use the basic
+methodology of artificial intelligence—“understanding by
+building”—to describe their insights. If we understand
+how to design and build intelligent systems, they reason,
+we will better understand intelligence in general. In acces -
+sible, nontechnical language, and using many examples,
+they introduce the basic concepts by building on recent
+developments in robotics, biology, neuroscience, and psy-
+chology to outline a possible theory of intelligence. They
+illustrate applications of such a theory in ubiquitous com -
+puting, business and management, and the psychology of
+human memory. Embodied intelligence, as described by
+Pfeifer and Bongard, has important implications for our
+understanding of both natural and artificial intelligence. 
+Rolf Pfeifer is Professor of Computer Science and Director
+of the Artificial Intelligence Laboratory in the Department
+of Informatics at the University of Zurich. He is the author
+of Understanding Intelligence (MIT Press, 1999). Josh Bongard is
+a Postdoctoral Associate in the Computational Synthesis
+Lab, Sibley School of Mechanical and Aerospace
+Engineering, at Cornell University.
+A Bradford Book
+how the body shapes
+the way we think
+Pfeifer and Bongard
+artificial intelligence/cognitive science
+“In this thoroughly engaging and unusually wide-ranging book, Pfeifer and
+Bongard make the case for the central role of embodiment in understanding nat-
+ural intelligence and building artificial intelligence. The body and nervous system
+are inseparable interacting constituents of an organism, and it is a mistake to
+think of the former passively obeying the commands of the latter: they operate in
+complex and subtle harmony. With great clarity and authority, the authors—both
+leading researchers in the area—map out the intellectual landscape, from bio-
+logical intelligence to robotics to intelligent companies. This is an outstanding
+and very accessible book: without being overburdened with technical detail, the
+reader is taken deep into this fascinating and important subject.”
+—Phil Husbands, Professor of Artificial Intelligence, University of Sussex
+The MIT Press
+Massachusetts Institute of Technology
+Cambridge, Massachusetts 02142
+http://mitpress.mit.edu
+Gabriel Gomez, Artificial Intelligence Laboratory, University of Zurich
+0-262-16239-3
+978-0-262-16239-5
+50555Pfeifer  10/2/06  10:35 AM  Page 1
+TLFeBOOK
+
+PDF PAGE 2
+How the Body Shapes the Way We Think
+
+PDF PAGE 3
+
+
+PDF PAGE 4
+How the Body Shapes the Way We Think
+A New View of Intelligence
+Rolf Pfeifer and Josh Bongard
+with a contribution by Simon Grand
+Foreword by Rodney Brooks
+Illustrations by Shun Iwasawa
+A Bradford Book
+The MIT Press
+Cambridge, Massachusetts
+London, England
+
+PDF PAGE 5
+© 2007 Massachusetts Institute of Technology
+All rights reserved. No part of this book may be reproduced in any form by any electronic
+or mechanical means (including photocopying, recording, or information storage and
+retrieval) without permission in writing from the publisher.
+MIT Press books may be purchased at special quantity discounts for business or sales
+promotional use. For information, please email special_sales@mitpress.mit.edu or write to
+Special Sales Department, The MIT Press, 55 Hayward Street, Cambridge, MA 02142.
+This book was set in Syntax and Times Roman by SNP Best-set Typesetter Ltd., Hong
+Kong. Printed and bound in the United States of America.
+Library of Congress Cataloging-in-Publication Data
+Pfeifer, Rolf, 1947–
+How the body shapes the way we think : a new view of intelligence / by Rolf Pfeifer
+and Josh Bongard ; with a contribution by Simon Grand ; foreword by Rodney Brooks ;
+illustrations by Shun Iwasawa.
+p. cm.
+Includes bibliographical references (p. ).
+ISBN-13: 978-0-262-16239-5 (alk. paper)
+ISBN-10: 0-262-16239-3 (alk. paper)
+1. Artiﬁcial intelligence. 2. Cognitive science. I. Bongard, Josh. II. Grand, Simon.
+III. Title.
+Q335.P445 2006
+006.3—dc22
+2006044919
+1 0987654321
+
+PDF PAGE 6
+To my friends in Japan (R. P .)
+To Toby, Carol, and Ralph (J. B.)
+
+PDF PAGE 7
+
+
+PDF PAGE 8
+Contents
+Foreword by Rodney Brooks xiii
+Preface xvii
+I Intelligence, Artiﬁcial Intelligence, Embodiment, and What the Book Is
+About 1
+1 Intelligence, Thinking, and Artiﬁcial Intelligence 5
+1.1 Thinking, Cognition, and Intelligence 7
+1.2 The Mystery of Intelligence 11
+1.3 Deﬁning Intelligence 14
+1.4 Artiﬁcial Intelligence 17
+1.5 Embodiment and Its Implications 18
+1.6 Summary 22
+2 Artiﬁcial Intelligence: The Landscape 25
+2.1 Successes of the Classical Approach 27
+2.2 Problems of the Classical Approach 30
+2.3 The Embodied Turn 34
+2.4 The Role of Neuroscience 37
+2.5 Diversiﬁcation 39
+2.6 Biorobotics 41
+2.7 Developmental Robotics 44
+2.8 Ubiquitous Computing and Interfacing Technology 47
+2.9 Artiﬁcial Life and Multiagent Systems 49
+2.10 Evolutionary Robotics 53
+2.11 Summary 54
+
+PDF PAGE 9
+II Toward a Theory of Intelligence 57
+3 Prerequisites for a Theory of Intelligence 61
+3.1 Level of Generality and Form of Theory 62
+3.2 Diversity-Compliance 67
+3.3 Frame of Reference 72
+3.4 The Synthetic Methodology 77
+3.5 Time Perspectives 82
+3.6 Emergence 85
+3.7 Summary 88
+4 Intelligent Systems: Properties and Principles 89
+4.1 Real Worlds and Virtual Worlds 90
+4.2 Properties of Complete Agents 95
+4.3 Agent Design Principle 1: The Three-Constituents 
+Principle 100
+4.4 Agent Design Principle 2: The Complete-Agent 
+Principle 104
+4.5 Agent Design Principle 3: Cheap Design 107
+4.6 Agent Design Principle 4: Redundancy 113
+4.7 Agent Design Principle 5: Sensory-Motor 
+Coordination 117
+4.8 Agent Design Principle 6: Ecological Balance 123
+4.9 Agent Design Principle 7: Parallel, Loosely Coupled
+Processes 134
+4.10 Agent Design Principle 8: Value 137
+4.11 Summary and Conclusions 140
+5 Development: From Locomotion to Cognition 141
+5.1 Motivation 143
+5.2 Toward Developmental Robot Design 145
+5.3 From Locomotion to Cognition: A Case Study 149
+5.4 From Gait Patterns to Body Image to Cognition 153
+5.5 The Symbol Grounding Problem 159
+5.6 Matching Brain and Body Dynamics 161
+5.7 Broadening the Scope: Other Aspects of Development 164
+5.8 Learning in Embodied Systems 168
+5.9 Social Interaction 170
+5.10 Development: Where Are We and Where Do We Go from
+Here? 173
+viii Contents
+
+PDF PAGE 10
+5.11 Summary: Design Principles for Developmental 
+Systems 175
+6 Evolution: Cognition from Scratch 177
+6.1 Motivation 181
+6.2 The Basics of Evolutionary Computation 184
+6.3 The Origins of Evolutionary Computation 187
+6.4 Artiﬁcial Evolution in the Real World: On Pipes, Antennas,
+and Electronic Circuits 189
+6.5 Evolutionary Robotics 192
+6.6 Evolving Morphology and Control 194
+6.7 Genetic Regulatory Networks and Developmental 
+Plasticity 196
+6.8 Self-Organization: The Powerful Ally of Mutation and
+Selection 204
+6.9 Artiﬁcial Evolution: Where Are We and Where Do We Go
+from Here? 206
+6.10 Summary: Design Principles for Evolutionary Systems 208
+7 Collective Intelligence: Cognition from Interaction 213
+7.1 Motivation 215
+7.2 Agent-Based Modeling 217
+7.3 Simulation versus Real Robots 221
+7.4 Groups of Robots 222
+7.5 A Note on Cooperation 226
+7.6 Modular Robots 228
+7.7 Scalability, Self-Assembly, Self-Repair, Homogeneity, and
+Heterogeneity 232
+7.8 Self-Reproducing Machines 235
+7.9 Collective Intelligence: Where Are We and Where Do We
+Go from Here? 238
+7.10 Summary: Design Principles for Collective Systems 241
+III Applications and Case Studies 245
+8 Ubiquitous Computing and Interfacing Technology 249
+8.1 Ubiquitous Technology as Scaffolding 251
+8.2 Ubiquitous Technology: Properties and Principles 253
+8.3 Interacting with Ubiquitous Technology 263
+Contents ix
+
+PDF PAGE 11
+8.4 Cyborgs 264
+8.5 Summary and Conclusions 270
+9 Building Intelligent Companies 271
+9.1 Management and Entrepreneurship: Decision and Action
+under Uncertainty 272
+9.2 Companies as Embodied Systems 274
+9.3 A Synthetic Approach to Management 279
+9.4 Design Principles for Building Intelligent Companies 282
+9.5 Corroborating the Speculations 293
+9.6 Summary and Conclusions 294
+10 Where Is Human Memory? 295
+10.1 Introduction 298
+10.2 The Storehouse Metaphor and Its Problems 300
+10.3 Concepts of Memory 302
+10.4 The Frame-of-Reference Problem in Memory Research:
+Ashby’s Proposal 304
+10.5 The Embodied View of Memory: Applying the Design
+Principles for Intelligent Systems 307
+10.6 Implications for Memory Research: Summary and
+Speculations 318
+11 Robotic Technology in Everyday Life 323
+11.1 Introduction: Everyday Robots 324
+11.2 Vacuum Cleaners: Roomba, Trilobite, and Similar 
+Species 327
+11.3 Entertainment Robots 328
+11.4 Therapeutic, Medical, and Rescue Robots 333
+11.5 Humanoid Companion Robots 335
+11.6 Robots Capable of Social Communication 341
+11.7 Robots Capable of Facial and Bodily Expression 344
+11.8 A Theoretical Note 346
+11.9 Summary and Conclusions 348
+IV Principles and Insights 351
+12 How the Body Shapes the Way We Think 353
+12.1 Steps Toward a Theory of Intelligence 354
+12.2 Selected Highlights 358
+x Contents
+
+PDF PAGE 12
+12.3 Seeing Things Differently 367
+12.4 Epilogue 370
+Notes 373
+References 375
+Index 389
+Contents xi
+
+PDF PAGE 13
+
+
+PDF PAGE 14
+Foreword
+The great revolutions in science come about when what was formerly
+thought to be true and unassailable is both assailed and shown to not be
+true after all. Sometimes the assaults are brutal and front on, and some-
+times they are gentle over a long period of time, gradually creeping up
+on the soon to be discredited truth.
+This book is a gentle assault on some of the collateral tenets of modern
+rationalism; not an assault on rationalism itself, but an assault on many
+of the things that are commonly assumed by rationalists. Rolf Pfeifer and
+Josh Bongard question whether our nervous systems compute, whether
+they are separate control systems for our bodies, and even whether there
+can truly be disembodied reasoning. These three ideas are so ingrained
+in our computational metaphors that they usually go unquestioned—
+they make no sense within our normal frameworks of thinking in the
+ﬁelds of computer science and artiﬁcial intelligence, and even neuro-
+science. Beyond the mere technical these questions challenge the intel-
+lectual father of rationalism Rene Descartes and his “Je pense, donc je
+suis” (I think, therefore I am) from his Discourse on Method (written in
+French, not Latin, in 1637).
+While such questions can be seen as a challenge to the very under-
+pinnings of the scientiﬁc world view, they really are not. Pfeifer and
+Bongard are not suggesting throwing out the scientiﬁc method and
+replacing it, as some might fear, with postmodern relativism. Rather they
+are assaulting certain metaphors that have perhaps gone haywire in their
+inﬂuence on how we approach the study of intelligence, the study of us.
+In modern times there have been two important and perhaps under-
+estimated inﬂuences on our view of intelligence.
+1. As Alan Turing described in his 1950 paper “Computing Machinery
+and Intelligence,” his earlier and today still dominant model of 
+
+PDF PAGE 15
+computation came from considering the externally observable behavior
+of a human computer, a person who carried out computations with pen
+and paper, and “is supposed to be following ﬁxed rules.” It is worth
+noting here that Turing modeled what a person does, not what a person
+thinks.
+2. Ever since the human brain has come to be considered as the seat of
+our thought, desires, and dreams, it has been compared to the most
+advanced technology possessed by mankind. In my own lifetime I have
+seen popular “complexity” metaphors for the brain evolve. When I was
+a young child the brain was likened to an electromagnetic telephone
+switching network. Then it became an electronic digital computer. Then
+a massively parallel digital computer. And delightfully, in April 2002,
+someone in a lecture audience asked me whether the brain could be “just
+like the world wide web.” Even otherwise serious scientists have become
+enamored of their own complexity metaphors declaring for instance that
+quantum phenomena and the brain are both so complex that they must
+be about the same thing.
+Turing’s metaphor has become the very deﬁnition of computation, and
+he points out in his 1950 paper, using Babbage’s unrealized mechanical
+engine as the exemplar, that such computation is independent of the
+medium in which it is expressed. The metaphors for the brain (except for
+the quantum speculations) have entrenched it as the equivalent of
+Turing’s form of computation, and thus rationalism largely assumes that
+the human brain is a Turing machine, carrying out Turing computation,
+and controlling its periphery, the human body.
+But when we consider the evolutionary history of nervous systems we
+are faced with a dilemma not unlike one that is so often used to chal-
+lenge evolution itself. How could evolution have incrementally produced
+the components of an eye—the lens, the pupil, the retina—when all are
+necessary, fully formed, to enable the other to carry out its function
+within the ensemble? When we turn that skepticism on its head we are
+left to ask what roles earlier versions of nervous systems played, before
+they became fully functional control systems, like Turing’s “control” com-
+ponent which he talked about along with the “executive” and the “store.”
+Metaphors are useful in science as a way of understanding systems we
+wouldn’t otherwise understand—metaphors can suggest appropriate
+questions to ask about a system, they can provide intuitive models about
+how things might work, and they can bridge gaps as a more explicit
+theory is being formed. But they can also lead to ways of thinking about
+xiv Foreword
+
+PDF PAGE 16
+problems that may be more complex than needed. Gravity can be viewed
+as a medium for conveying information about one body to another, but
+the information metaphor is not as useful as classical mechanics for 
+computing the orbit of a planet around the sun. Likewise, metaphors
+about computation and information may not always be the most useful
+metaphor for understanding intelligence.
+Pfeifer and Bongard provide another way of looking at intelligence,
+more in line with the evolutionary history of organisms, and less inﬂu-
+enced by computational metaphors than most contempory work in arti-
+ﬁcial intelligence, cognitive psychology, and neuroscience. The viewpoint
+espoused in this book considers the physical manifestation of the body
+as primary. The stuff of intelligence has evolved in conjunction with that
+body and is more a modulator of its behavior rather than a primary and
+central control system. Such an inverted viewpoint is perhaps not so 
+radically controversial when applied to “low-level details” like how an
+animal or robot might locomote. But it is truly an affront to the modern
+viewpoint when it is applied to perception and even more so to thought
+itself. And make no mistake, this is the direction of the authors’ assault.
+It is much easier to critique an existing approach to an area of scien-
+tiﬁc research than it is to create such an area. But this book is more than
+just a critique. It reports on wide varieties of experiments, many by the
+authors themselves, which start to provide an alternate framework within
+which further research can be carried out, and not incidentally, within
+which practical robotic artifacts can be built.
+Suspend your preconceptions. There may be less to intelligence than
+meets the eye.
+Rodney Brooks
+Director, MIT Computer Science and Artiﬁcial Intelligence Laboratory
+Panasonic Professor of Robotics
+Foreword xv
+
+PDF PAGE 17
+
+
+PDF PAGE 18
+Preface
+Embodiment, the idea that the body is required for intelligence, has been
+around for two decades, but an awful lot has changed since then.
+Research labs and leading technology companies around the world have
+produced or are developing a host of sometimes science ﬁction-like cre-
+ations: almost frighteningly realistic humanoid robots, robot musicians,
+wearable technology, robots controlled by biological brains, robots that
+can walk without a brain, real-life cyborgs, robots in homes for the
+elderly, robots that literally put themselves together, artiﬁcial cells grown
+automatically, and simulated genetic regulatory networks for growing
+virtual creatures. This new breed of technology, along with many signif-
+icant theoretical advances, is the direct result of the embodied approach
+to intelligence. Along the way, many of the initially vague ideas have
+been elaborated and the arguments sharpened, and the diverse outcomes
+are beginning to form into a coherent structure. Thus, it seemed like a
+good opportunity to work out the ﬁrst steps toward a theory of intelli-
+gence and write a book about it.
+From a personal perspective, I (Rolf) have given many seminars and
+lectures to nonspecialized audiences, and many of them were able to
+relate in very direct and natural ways to the ideas presented: the ideas I
+talked about seemed to hold relevance for their own interests and spe-
+cialties.What most people found intriguing was that this research demon-
+strates how things can always be seen differently. We all have our strong
+prejudices and often think, “It’s got to be like that, there is no other
+way!” For example, if you want to build a fast-running robot you must
+have fast electronics; an object-collecting robot must have a means for
+recognizing the objects it is supposed to gather; or an insect with six legs
+needs a centralized control program somewhere in its brain to coordi-
+nate all its legs while walking. Surprisingly, it turns out that none of these
+are true, as we will see later.
+
+PDF PAGE 19
+So, I felt that rather than writing another specialized textbook like
+Understanding Intelligence, co-authored with Christian Scheier in 1999,
+a popular science–style publication accessible to a wide readership might
+be a more suitable undertaking. Science and technology are no longer
+isolated ﬁelds. They closely interact with the corporate, political, and
+social aspects of our society; and that interaction, among its other effects,
+increases the need to justify basic research. Convinced that we might be
+able to provide a novel perspective not only on artiﬁcial intelligence 
+but more generally on how we view ourselves and the world around 
+us, we took up the challenge of trying to translate the scientiﬁc results
+and insights we have gained into everyday language. The result is 
+this book.
+Aims and Scope
+The goal of this book is twofold: on the one hand it is to explore the
+implications of embodiment (how having a body affects intelligence), to
+work out the ﬁrst steps toward a theory of intelligence, and ﬁnally to
+demonstrate the wide applicability of these ideas. On the other, we will
+try to show that things can always be seen differently. So, the book is
+conceptual, and is geared toward a broad audience in education, busi-
+ness, information technology, engineering, entertainment, the media, as
+well as academics from virtually all disciplines and levels, but especially
+those involved in psychology, neuroscience, philosophy, linguistics, and
+biology. And last but not least, this book is also intended for anyone
+interested in technology, its future, and its implications for society.
+No special training or education is required for understanding the 
+ideas presented: we have tried to provide background information,
+examples, and pointers to further reading for the more difﬁcult-to-grasp
+concepts.
+The core of the theory consists of a set of “design principles for intel-
+ligent systems.” The reason for choosing the form of design principles for
+our theory is that they are a compact way of describing insights about
+intelligent systems in general and they provide convenient heuristics for
+actually building artiﬁcial systems, like robots in particular. And actually
+building systems is crucial because we want to design and construct intel-
+ligent artiﬁcial systems so that we can understand intelligent systems in
+general: this is the synthetic methodology—the basic methodology of
+artiﬁcial intelligence—which can be characterized as understanding by
+building. As we will show with many examples, by building artiﬁcial
+xviii Preface
+
+PDF PAGE 20
+systems we can learn about biology, but also about intelligence in
+general. An exciting prospect is that this enables us not only to study
+natural forms of intelligence, but to create new forms of intelligence that
+do not yet exist; “intelligence as it could be,” to adapt a quote by the
+founder of the ﬁeld of artiﬁcial life, Chris Langton. Thus, by building
+robots, our intention is to learn something about intelligence, and not so
+much to build technologically sophisticated robots. So, the book is not
+so much about the intricacies of the engineering process or the details
+of how to build robots, but rather about the basic insights that arise as a
+result of building robots.
+We have tried to support our claim that the ideas developed in this
+book have broad applicability beyond the ﬁeld of artiﬁcial intelligence
+proper by providing illustrations from the ﬁelds of ubiquitous com-
+puting, strategic management, human memory, and robotic technology
+in everyday life. We hope that the reader will enjoy these case studies
+and will feel encouraged to apply the ideas to areas of his or her own
+interest.
+We should perhaps brieﬂy comment on the term artiﬁcial intelligence
+here before continuing. With the introduction of the notion of embodi-
+ment about 20 years ago, the ﬁeld has undergone fundamental changes,
+so that sometimes the term embodied artiﬁcial intelligence is employed,
+and we even published a book with precisely that title (Iida et al., 2004).
+In this book we will avoid that usage, because it somehow suggests 
+that there is the “real” ﬁeld of artiﬁcial intelligence—the overarching,
+encompassing discipline—and then there is this small subarea called
+“embodied” artiﬁcial intelligence. We feel that this perspective is some-
+what inappropriate. As we will elaborate later, there are essentially two
+directions in artiﬁcial intelligence: one concerned with developing useful
+algorithms or robots; and another direction that focuses on understand-
+ing intelligence, biological or otherwise. In order to make progress on
+the latter, an embodied perspective is mandatory. In this research branch,
+artiﬁcial intelligence is embodied.
+One last comment is necessary before we turn to the contents of the
+book. In spite of the fact that the materials presented are often a bit the-
+oretical and require concentration on the part of the reader, we have
+tried to make the book fun to read by providing many examples. Also,
+the web site for the book (www.iﬁ.unizh.ch/groups/ailab/HowTheBody)
+contains many links to videos and other supporting material, as well 
+as a discussion forum. To make the book even more appealing, we 
+have engaged an artist and computer scientist, Shun Iwasawa of the 
+Preface xix

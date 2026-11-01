@@ -1,0 +1,316 @@
+
+PDF PAGE 1
+
+IEEE TRANSACTIONS ON COMPUTER-AIDED DESIGN. VOL. 9 NO. 9. SEPTEMBER 1990
+NOVA: State Assignment of Finite State Machines
+for Optimal Two-Level Logic Implementation
+TIZIANO VILLA AND ALBERT0 SANGIOVANNI-VINCENTELLI, FELLOW, IEEE
+905
+Abstract-The problem of encoding the states of a synchronous finite
+state machine (FSM), so that the area of a two-level implementation of
+the combinational logic is minimized, is addressed. As in previous ap-
+proaches, the problem is reduced to the solution of the combinatorial
+optimization problems defined by the translation of the cover obtained
+by a multiple-valued logic minimization or by a symbolic minimization
+into a compatible Boolean representation. In this paper we present al-
+gorithms for their solution, based on a new theoretical framework that
+offers advantages over previous approaches to develop effective heu-
+ristics. The algorithms are part of NOVA, a program for optimal en-
+coding of control logic. Final areas averaging 20% less than other state
+assignment programs and 30% less than the best random solutions have
+been obtained. Literal counts averaging 30% less than the best random
+solutions have been obtained.
+I. INTRODUCTION
+HE AUTOMATIC synthesis of a sequential circuit as
+T a programmable logic array (PLA)-based finite state
+machine (FSM) involves functional design, logic design,
+topological design, and physical design. The step of logic
+design maps the functional description into a logic rep-
+resentation in terms of logic variables. A representation
+of the symbolic states (and also of the proper inputs and
+outputs, if they are symbolic) in terms of Boolean vari-
+ables, called state assignment, is chosen. The complexity
+of the combinational component of the FSM depends
+heavily on the state assignment and selection of memory
+elements. PLA optimization aims at minimizing the area
+occupied by the PLA and the delay through it (propor-
+tional to the number of product-terms, to a first-order ap-
+proximation). The PLA area is proportional to the product
+of the number of rows (product-terms) times the number
+of columns. The optimum state assignment (or encoding)
+problem looks for the assignment corresponding to a PLA
+implementation of minimum area. The (minimum) num-
+ber of rows is the cardinality of the (minimum) cover of
+the FSM combinational component according to a given
+assignment. The number of bits used to represent the states
+Manuscript received June 22, 1989; revised October9, 1989. This work
+was supported in part by DARPA under Contract N00039-87-C-0182, by
+the National Science Foundation under Grant ECS 84-30435, and by grants
+from MICRO, AMD, AT&T Bell Laboratories, Bell Communications Re-
+search, GE, Harris, HP, Hughes, Intel, Microelectronics and Computer
+Technology, Olivetti, PhilipdSignetics, Rockwell, Silicon Computers, and
+Xerox. This paper was recommended by Editor M. R. Lightner.
+This is an expanded version of the work presented at DAC’89.
+The authors are with the Department of Electrical Engineering and
+Computer Science, University of California, Berkeley, CA 94720.
+IEEE Log Number 9036179.
+(and the proper inputs and outputs, in case they are sym-
+bolic) is related to the number of PLA columns. There-
+fore, the PLA area depends in a complex way on the state
+assignment.
+There is a rich early literature on the state assignment
+problem. Armstrong [3] was the first to formulate the en-
+coding problem as a graph embedding problem, where a
+graph defines adjacency relations (in terms of Hamming
+distance) between the codes of the states to be preserved
+by a subgraph isomorphism on the encoding cube, with
+the objective to minimize the number of gates of the final
+implementation. Others [ 13, [2], [4], [ 5 ] proposed alge-
+braic methods based on partition theory and on a reduced
+dependence criterion. In [6] conditions to find a critical
+race free encoding of asynchronous sequential machines
+were reduced to a graph embedding problem. Each input
+defined a partition of the states (or of a subset of the states)
+by the successor relation. The states were assigned to ver-
+tices in the cube so that for each partition the images of
+all states in the same block formed a path (using, if nec-
+essary, states not also included in the partition or unused
+vertices, each for at most one block) disjoint from the
+ones associated to the other blocks. In terms of imple-
+mentations of minimum area, these approches suffered
+from a weak connection with the logic optimization steps
+after the encoding.
+Advances in the state assignment problem [7]-[9] have
+made a key connection with multiple-valued logic min-
+imization: the states of a FSM are represented as the set
+of possible values for a single multiple-valued variable.
+Logic minimization is applied on a symbolic representa-
+tion of the combinational component of the FSM. The
+effect of multiple-valued logic minimization is to group
+together the states that are mapped by some input into the
+same next state and assert the same output. A new com-
+binatorial optimization problem arises (called FACE HY-
+PERCUBE EMBEDDING) of assigning each of these sets
+(called input constraints) to subcubes of a Boolean k-cube,
+for a minimum k, in a way that each subcube contains all
+and only all the codes of the states included in the corre-
+sponding constraint. More recently, symbolic minimiza-
+tion [lo], [17] has been proposed to take into account the
+effect of the encoding on the next state part. Symbolic
+minimization is a technique that yields a minimal encod-
+ing-independent sum-of-products representation of a sym-
+bolic function. It builds up a directed acyclic graph, where
+0278-0070/90/0900-0905$01 .OO 0 1990 IEEE
+
+PDF PAGE 2
+
+906 IEEE TRANSACTIONS ON COMPUTER-AIDED DESIGN. VOL. 9 NO. 9. SEPTEMBER 1990
+the nodes are the next states and an edge (U, U ) corre-
+sponds to the covering constraint (called output con-
+straint) that the code of U covers bit-wise the code of U.
+The translation of the cover obtained by symbolic min-
+imization into a compatible Boolean representation de-
+fines simultaneously a face hypercube embedding prob-
+lem and an output covering problem (called ORDERED
+FACE HYPERCUBE EMBEDDING).
+Ongoing work [ 161, [ 181 is focusing on the output en-
+coding problem defined in the optimal state assignment.
+Output minimization techniques may be seen as setting
+disjunctive constraints on the codes of the symbolic states
+(the code of some states is the logical disjunction of the
+codes of two or more other states). Finding a compatible
+Boolean representation entails solving a difficult encoding
+problem based on input, output, and disjunctive con-
+straints.
+Other recent approaches [ 131 rely on local optimization
+rules defined on a control flowgraph. These rules are ex-
+pressed as constraints on the codes of the internal vari-
+ables and an encoding algorithm tries to satisfy most of
+these constraints.
+In this paper we present algorithms for optimal state
+assignment of FSM’s based on the solution of face hy-
+percube embedding and ordered face hypercube embed-
+ding. We revisit symbolic minimization and describe an
+effective version of it. The proposed theoretical frame-
+work offers substantial advantages over previous ap-
+proaches to develop effective algorithms. The algorithms
+are part of NOVA, a program for optimal encoding of
+control logic, available as a tool of the Berkeley logic syn-
+thesis system [ll], [15]. The first three algorithms: iex-
+act-code, ihybrid-code, and igreedy-code, solve face hy-
+percube embedding. The last algorithm, iohybrid-code,
+solves ordered face hypercube embedding. iexact-code is
+an exact algorithm that finds an encoding satisfying all
+input constraints and minimizing the encoding length.
+ihybrid-code and igreedy-code are heuristic encoding al-
+gorithms that maximize input constraint satisfaction, for
+a (user or default)-given encoding length. ihybrid-code,
+based on a polynomial version of iexact-code, yields so-
+lutions of high quality and guarantees the satisfaction of
+all input constraints, for an encoding space large enough.
+iohybrid-code is a heuristic encoding algorithm that max-
+imizes simultaneous input and output constraint satisfac-
+tion, according to an appropriately defined metric. It is
+based on an adaptation of ihybrid-code to deal with both
+input and output constraints.
+We present results over a wide range of benchmarks
+that show that the final areas obtained by the best solution
+of NOVA average 20% less than those obtained by KISS
+[9], and 30% less than the best of a number of random
+state assignments. Final areas obtained by iohybrid-code
+average 30% less than the results reported for Cappuc-
+cino/Cream [ 101. Although NOVA targets two-level log-
+ical implementations, running our examples also through
+MIS-11, a multilevel logic synthesis system developed at
+UCB, we found that the final literal counts in a factored
+form of the logic when encoded by NOVA average 30%
+less than the literal counts obtained by the best of a num-
+ber of random state assignments. Comparisons with
+MUSTANG [12] in the two-level and multilevel case are
+also reported. Even though NOVA was not designed as a
+multilevel state assignment program, its performances
+compare successfully with MUSTANG.
+The paper is organized as follows. Algorithms iexact-
+code, ihybrid-code, igreedy-code and iohybrid-code are
+described, respectively, in Sections 111-VI. Results on the
+benchmark examples are presented in Section VI1 to-
+gether with final remarks and future work.
+11. PRELIMINARIES
+In this section, we introduce some background material
+that is used throughout the paper. The definitions are con-
+sistent with [9]-[lo], to which we refer for details.
+2. I . Encoding Problems in Logic Synthesis
+Tabular descriptions of logic functions at the structural
+level are transformed into Boolean representations by re-
+placing each symbolic entry by Boolean vectors. An as-
+signment of Boolean vectors to symbolic entries is called
+an encoding. The optimization of logic functions per-
+formed on the Boolean representation is heavily depen-
+dent on the representation of the variables. For instance,
+the complexity of the combinational component of a FSM
+depends on the assignment of Boolean variables to the
+internal states. The following optimal encoding problems
+may be defined, with respect to a proper cost function:
+a) optimal encoding of inputs of a logic function. A
+problem in class A is the optimal assignment of op-
+codes for a microprocessor,
+b) optimal encoding of outputs of a logic function,
+c) optimal encoding of both inputs and outputs (or
+some inputs and some outputs) of a logic function.
+d) optimal encoding of both inputs and outputs (or
+some inputs and some outputs) of a logic function,
+where the encoding of the inputs (or some inputs) is
+the same as the encoding of the outputs (or some
+outputs). Encoding the states of a FSM is a problem
+in class D since the state variables appear both as
+input (present state) and output (next state) vari-
+ables. Another problem in class D is encoding the
+signals connecting two (or more) combinational cir-
+cuits.
+In this paper we study the problem of the optimal state
+(and proper input) assignment of FSM’s, using as a cost
+function the area of a two-level implementation. In Sec-
+tions 111-V we approximate the solution of the state as-
+signment problem by modeling it as a problem in class A,
+i.e., driving the assignment only from information related
+to the optimal encoding of the present states (and the
+proper inputs). The algorithms proposed are applicable to
+any problem in class A. In Section V we model the state
+assignment problem as a problem in class D, using a
+scheme of symbolic minimization [ 101 that captures par-
+
+PDF PAGE 3
+
+VILLA AND SANGIOVANNI-VINCENTELLI: NOVA: ASSIGNMENT OF FSM’S FOR LOGIC IMPLEMENTATION
+tially the effect of the next states in case of two-level im-
+plementations.
+2.2. Multiple-valued Minimization of FSM’s
+FSM’s can be represented by state transition tables.
+State transitions tables have as many rows as transitions
+in the FSM. The rows of the table are divided into four
+fields corresponding to the primary inputs, present states,
+next states, and primary outputs of the FSM. Each field
+is a string of characters. The primary inputs may be in
+Boolean form or symbolic. We assume that the primary
+outputs of the FSM are always in Boolean form. Note that
+the input and output patterns may contain don’t care en-
+tries. A state transition table defines a symbolic cover of
+the combinational component of a FSM. The rows of the
+state transition table are called symbolic implicants of the
+symbolic cover. The symbolic cover reresentation may be
+seen as a multiple-valued logic representation, where each
+present state mnemonic is one of the possible values of a
+present-state multiple-valued variable. A similar identifi-
+cation holds for the next states (and the proper inputs, if
+they are symbolic). A multiple-valued logic minimizer can
+be used to compute a minimal or minimum multiple-val-
+ued symbolic cover. The effect of multiple-valued logic
+minimization is to determine subsets of states that are
+mapped by some input combination into the same next
+state and assert the same output. These subsets of states
+are called input constraints, because they constrain the
+encoding of the present states (and of the proper inputs,
+if symbolic) when transforming the symbolic representa-
+tion into a compatible Boolean representation. The goal
+of state assignment is to assign each of these subsets of
+states to subcubes of a Boolean k-cube, for a minimum k,
+in a way that each subcube contains all and only the codes
+of the states included in the corresponding constraint. This
+problem is called face hypercube embedding.
+From now on, algorithms for the satisfaction of input
+constraints are algorithms that can solve any problem in
+class A, although here we are particularly concerned with
+FSM encoding approximated as a problem in class A , by
+means of multiple-valued minimization applied to a sym-
+bolic cover of the FSM. Later, in Section VI, we will
+define other kinds of constraints arising when dealing with
+FSM encoding solved more generally as a problem in class
+D. In the next section we describe a theoretical framework
+and an exact algorithm to solve face hypercube embed-
+ding.
+1
+907
+4
+Fig. 1. Encoding of examples 2.1 and 3.1.
+111. AN EXACT ALGORITHM FOR FACE HYPERCUBE
+EMBEDDING
+In this section we present iexact-code, an exact algo-
+rithm that finds an encoding satisfying all input con-
+straints and minimizing the encoding length.
+3. I Theoretical Background
+Consider the problem FACE HYPERCUBE EMBED-
+DING: given a collection of subsets of states or symbols
+(called input constraints and represented as characteristic
+vectors of the subsets), assign each of these subsets to
+subcubes (called faces) of a Boolean hypercube of mini-
+mum dimension in such a way that each face does not
+intersect the Boolean vector (called encoding, code or as-
+signment) assigned to any state not contained in the cor-
+responding constraint. Formally it may be stated as the
+following.
+INSTANCE: Set S = { 1, . . . , n } and a collection IC
+of subsets ic G S .
+QUESTION: Find the minimum k and an injective map
+ffrom the sets E IC U S to B k , where B = { 0 , 1, x } ,
+such that for all subsets ic E IC and singletons s E S :
+f ( i c ) n f(s) z ip e s E ic.
+Example 3. I . I : Consider IC = { 11 10000, 01 11000,
+0000111, 1000110, 0000011, OOllOOO}: A solution is k
+= 4 and f( 1110000) = ~ 0 x 0 , f(OlllOO0) = 1 ~ x 0 ,
+f( 00001 11 ) = x l x l , f( 10001 10) = oxxx, f( 000001 1 )
+= x l l l , f(0011000) = 1x00, f( 1000000) = 0000,
+f( 0100000) = 1010, f( 0010000) = 1000, f( 0001000)
+= 1100, f(0000100) = 0101, f(0000010) = 0111,
+f(OOOOOO1) = 1111. Fig. 1 shows the encoding on the
+4-cube.
+To verify the correctness for ic = 1110000, we com-
+pute:
+f(iiioo00) = xoxo nf(1oooooo) = oooo # ip
+f(iiioo00) = xoxo n f(oiooooo) = io10 + ip
+f(iiioo00) = xoxo nf(ooioo0O) = io00 + ip
+f(iiioo00) = xoxo n f(oooio00) = 1100 = ip
+f( iiioooo) = xoxo n f(oo00ioo) = 0101 = ip
+f(iiioo00) = xoxo nf(oooO0io) = 0111 = ip
+f(iiioo00) = xoxo nf(ooooooi) = 1111 = ip.
+To capture the inclusion relations among the faces of
+the hypercube, we choose to represent it with its under-

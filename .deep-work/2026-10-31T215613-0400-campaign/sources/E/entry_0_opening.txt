@@ -1,0 +1,429 @@
+
+PDF PAGE 1
+
+
+PDF PAGE 2
+ Principles of Neural Design 
+ 
+ 
+
+PDF PAGE 3
+ Principles 
+  Compute with chemistry  
+  Compute directly with analog primitives  
+  Combine analog and pulsatile processing  
+  Sparsify  
+  Send only what is needed  
+  Send at the lowest acceptable rate  
+  Minimize wire  
+  Make neural components irreducibly small  
+  Complicate  
+  Adapt, match, learn, and forget  
+
+PDF PAGE 4
+ The MIT Press 
+ Cambridge, Massachusetts 
+ London, England 
+ Peter Sterling and Simon Laughlin 
+ Principles of Neural Design 
+
+PDF PAGE 5
+  ©  2015  Massachusetts Institute of Technology  
+     
+ All rights reserved. No part of this book may be reproduced in any form by any 
+electronic or mechanical means (including photocopying, recording, or information 
+storage and retrieval) without permission in writing from the publisher. 
+     
+ MIT Press books may be purchased at special quantity discounts for business or sales 
+promotional use. For information, please email special_sales@mitpress.mit.edu. 
+     
+ This book was set in Stone Sans and Stone Serif by Toppan Best-set Premedia Limited. 
+Printed and bound in the United States of America. 
+       
+ Library of Congress Cataloging-in-Publication Data  
+ Sterling, Peter (Professor of neuroscience), author. 
+ Principles of neural design / Peter Sterling and Simon Laughlin. 
+    p. ; cm. 
+ Includes bibliographical references and index. 
+ ISBN 978-0-262-02870-7 (hardcover : alk. paper) 
+ I. Laughlin, Simon, author. II. Title. 
+ [DNLM: 1.  Brain — physiology. 2.  Learning. 3.  Neural Pathways.  WL 300] 
+ QP376 
+ 612.8’2 — dc23 
+                                                             2014031498 
+     
+ 10   9   8   7   6   5   4   3   2   1 
+
+PDF PAGE 6
+ For Sally Zigmond and Barbara Laughlin 
+
+PDF PAGE 7
+
+
+PDF PAGE 8
+ Contents 
+ Preface   ix 
+ Acknowledgments   xi 
+ Introduction   xiii 
+ 1   What Engineers Know about Design   1 
+ 2   Why an Animal Needs a Brain   11 
+ 3   Why a Bigger Brain?   41 
+ 4   How Bigger Brains Are Organized   57 
+ 5   Information Processing: From Molecules to Molecular Circuits   105 
+ 6   Information Processing in Protein Circuits   125 
+ 7   Design of Neurons   155 
+ 8   How Photoreceptors Optimize the Capture of Visual Information   195 
+ 9   The Fly Lamina: An Efficient Interface for High-Speed Vision   235 
+ 10   Design of Neural Circuits: Recoding Analogue Signals to Pulsatile   265 
+ 11   Principles of Retinal Design   277 
+ 12   Beyond the Retina: Pathways to Perception and Action   323 
+ 13   Principles of Efficient Wiring   363 
+ 14   Learning as Design/Design of Learning   399 
+ 15   Summary and Conclusions   433 
+ Principles of Neural Design   445 
+ Notes   447 
+ References   465 
+ Index   519 
+
+PDF PAGE 9
+
+
+PDF PAGE 10
+ Neuroscience abounds with stories of intellectual and technical daring. 
+Every peak has its Norgay and Hillary, and we had imagined telling some 
+favorite stories of heroic feats, possibly set off in little boxes. Yet, this has 
+been well done by others in various compendia and reminiscences (Straus-
+field, 2012; Glickstein, 2014; Kandel, 2006; Koch, 2012). Our main goal is 
+to evince some principles of design and note some insights that follow. 
+Stories deviating from this intention would have lengthened the book and 
+distracted from our message, so we have resisted the natural temptation to 
+memoir-ize. 
+ Existing compendia tend to credit various discoveries to particular 
+individuals. This belongs to the storytelling. What interest would there 
+be to the Trojan Wars without Odysseus and Agamemnon? On the other 
+hand, dropping a name here and there distorts the history of the 
+discovery process — where one name may stand for a generation of thought-
+ful and imaginative investigators. Consequently, in addition to forgoing 
+stories, we forgo dropping names — except for a very few who early enunci-
+ated the core principles. Nor do the citations document who did what first; 
+rather they indicate where supporting evidence will be found — often 
+a review. 
+ Existing compendia often pause to explain the ancient origins of various 
+terms, such as cerebellum or hippocampus. This might have been useful 
+when most neuroscientists spoke a language based in Latin and Greek, but 
+now with so many native speakers of Mandarin or Hindi the practice seems 
+anachronistic, and we have dropped it. Certain terms may be unfamiliar to 
+readers outside neuroscience, such as physicists and engineers. These are 
+italicized at their first appearance to indicate that they are technical ( cation 
+channel ). A reader unfamiliar with this term can learn by Googling in 210 
+ms that  “ cation channels  are pore-forming proteins that help establish and con-
+trol the small voltage gradient across the plasma membrane of all living cells  . . .   ”  
+ Preface 
+
+PDF PAGE 11
+Preface x
+(Wikipedia). So rather than impede the story, we sometimes rely on you to 
+Google. 
+ Many friends and colleagues long aware of this project have wondered 
+why it has taken so long to complete. Some have tried to encourage us to 
+let it go, saying,  “ After all, it needn ’ t be perfect  . . .  ”  To which we reply, 
+ “ Don ’ t worry, it isn ’ t! ”  It ’ s just that more time is needed to write a short 
+book than a long one. 
+
+PDF PAGE 12
+ For reading and commenting on various chapters we are extremely grateful 
+to: Larry Palmer, Philip Nelson, Dmitry Chklovskii, Ron Dror, Paul 
+Glimcher, Jay Schulkin, Glenn Vinnicombe, Neil Krieger, Francisco 
+Hern á ndez-Heras, Gordon Fain, Sally Zigmond, Alan Pearlman, Brian 
+Wandell, and Dale Purves.  
+ For many years of fruitful exchange PS thanks colleagues at the Univer-
+sity of Pennsylvania: Vijay Balasubramanian, Kwabena Boahen, Robert 
+Smith, Michael Freed, Noga Vardi, Jonathan Demb, Bart Borghuis, 
+Janos Perge, Diego Contreras, Joshua Gold, David Brainard, Yoshihiko 
+Tsukamoto, Minghong Ma, Amita Sehgal, Jonathan Raper, and Irwin 
+Levitan. SL thanks colleagues at the Australian National University 
+and the University of Cambridge. Adrian Horridge, Ben Walcott, Ian 
+Meinertzhagen, Allan Snyder, Doekele Stavenga, Martin Wilson, Srini (MV) 
+Srinivasan, David Blest, Peter Lillywhite, Roger Hardie, Joe Howard, Barbara 
+Blakeslee, Daniel Osorio, Rob de Ruyter van Steveninck, Matti Weckstr ö m, 
+John Anderson, Brian Burton, David O ’ Carroll, Gonzalo Garcia de Polav-
+ieja, Peter Neri, David Attwell, Bob Levin, Aldo Faisal, John White, Holger 
+Krapp, Jeremy Niven, Gordon Fain, and Biswa Sengupta. 
+ For kindly answering various queries on specific topics and/or providing 
+figures, we thank: Bertil Hille, Nigel Unwin (ion channels), Stuart Firestein, 
+Minghong Ma, Minmin Luo (Olfaction); Wallace Thoreson, Richard Kramer, 
+Steven DeVries, Peter Lukasiewicz, Gary Matthews, Henrique von Gersdorff, 
+Charles Ratliff, Stan Schein, Jeffrey Diamond, Richard Masland, Heinz 
+W ä ssle, Steve Massey, Dennis Dacey, Beth Peterson, Helga Kolb, David 
+Williams, David Calkins, Rowland Taylor, David Vaney, (retina); Roger 
+Hardie, Ian Meinertzhagen (insect visual system); Nick Strausfeld, Berthold 
+Hedwig, Randolf Menzel, J ü rgen Rybak (insect brain); Larry Swanson, Eric 
+Bittman, Kelly Lambert (hypothalamus); Michael Farries, Ed Yeterian, 
+Robert Wurtz, Marc Sommer, Rebecca Berman (striatum); Murray Sherman, 
+ Acknowledgments 
+
+PDF PAGE 13
+xii Acknowledgments
+Al Humphreys, Alan Saul, Jose-Manuel Alonso,Ted Weyand, Larry Palmer, 
+Dawei Dong (lateral geniculate nucleus); Indira Raman, Sacha du Lac, David 
+Linden, David Attwell, John Simpson, Mitchell Glickstein, Angus Silver, 
+Chris De Zeeuw (cerebellum); Tobias Moser, Paul Fuchs, James Saunders, 
+Elizabeth Glowatzki, Ruth Anne Eatock (auditory and vestibular hair cells); 
+Jonathan Horton, Kevan Martin, Deepak Pandya, Ed Callaway, Jon Kaas, 
+Corrie Camalier, Roger Lemon, Margaret Wong-Riley (cerebral cortex). 
+ For long encouragement and for skill and care with the manuscript and 
+illustrations, we thank our editors at MIT: Robert Prior, Christopher Eyer, 
+Katherine Almeida, and Mary Reilly, and copy editor Regina Gregory.  
+
+PDF PAGE 14
+ A laptop computer resembles the human brain in volume and power use —
+ but it is stupid. Deep Blue, the IBM supercomputer that crushed Grandmas-
+ter Garry Kasparov at chess, is 100,000 times larger and draws 100,000 times 
+more power (figure I.1). Yet, despite Deep Blue ’ s excellence at chess, it too is 
+stupid, the electronic equivalent of an idiot savant. The computer operates 
+at the speed of light whereas the brain is slow. So, wherein lies the brain ’ s 
+advantage? A short answer is that the brain employs a hybrid architecture 
+of superior design. A longer answer is this book — whose purpose is to iden-
+tify the sources of such computational efficiency.    
+ The brain ’ s inner workings have been studied scientifically for more 
+than a century — initially by a few investigators with simple methods. In the 
+last 20 years the field has exploded, with roughly 50,000 neuroscientists 
+applying increasingly advanced methods. This outburst amounts to 1 mil-
+lion person-years of research — and facts have accumulated like a mountain. 
+At the base are detailed descriptions :  of neural connections and electrical 
+responses, of functional images that correlate with mental states, and of 
+molecules such as ion channels, receptors, G proteins, and so on. Higher up 
+are key discoveries about mechanism: the action potential, transmitter 
+release, synaptic excitation and inhibition. Summarizing this Everest of 
+facts and mechanisms, there exist superb compendia (Kandel et al., 2012; 
+Purves et al., 2012; Squire et al., 2008). 
+ But what if one seeks a book to set out principles that explain how our 
+brain, while being far smarter than a supercomputer, can also be far smaller 
+and cheaper? Then the shelf is bare. One reason is that modern neurosci-
+ence has been  “ technique driven. ”  Whereas in the 1960s most experiments 
+that one might conceive were technically impossible, now with methods 
+such as patch clamping, two-photon microscopy, and functional magnetic 
+resonance imaging (fMRI), aided by molecular biology, the situation has 
+reversed, and it is harder to conceive of an experiment that can not  be done. 
+ Introduction 
+
+PDF PAGE 15
+xiv Introduction
+Consequently, the idea of pausing to distill principles from facts has lacked 
+appeal. Moreover, to many who ferret out great new facts for a living, it has 
+seemed like a waste of time. 
+ Yet, we draw inspiration from Charles Darwin, who remarked,  “ My mind 
+seems to have become a kind of machine for grinding general laws out of 
+large collections of facts ”  (Darwin, 1881). Darwin, of course, is incompara-
+ble, but this is sort of how our minds work too. So we have written a small 
+book — relative to the great compendia — intending to beat a rough path up 
+ “ Data Mountain ”  in search of organizing principles.   
+ Figure I.1 
+  How do neural circuits use space and power so efficiently?  Computer: Image  http://
+upload.wikimedia.org/wikipedia/commons/d/d3/IBM_Blue_Gene_P_supercomputer
+.jpg . Brain: Photo by UW-Madison, University Communications  ©  Board of Regents 
+of the University of Wisconsin System. 
+
+
+PDF PAGE 16
+Introduction xv
+ Principles of engineering 
+ The brain is a physical device that performs specific functions; therefore, its 
+design must obey general principles of engineering. Chapter 1 identifies 
+several that we have gleaned (not being engineers) from essays 
+and books on mechanical and electrical design. These principles do not 
+address specific questions about the brain, but they do set a context for 
+ordering one ’ s thoughts — especially helpful for a topic so potentially intim-
+idating. For example, it helps to realize that neuroscience is really an 
+exercise in  “ reverse engineering ”  — disassembling a device in order to 
+understand it. 
+ This insight points immediately to a standard set of questions that we 
+suppose are a mantra for all  “ reverse engineers ” :  What does it do? What are 
+its specifications? What is the environmental context?  Then there are com-
+mandments, such as  Study the interfaces  and  Complicate the design.  The latter 
+may puzzle scientists who, in explaining phenomena, customarily strive for 
+simplicity. But engineers focus on designing effective devices, so they have 
+good reasons to complicate.  1   This commandment, we shall see, certainly 
+applies to the brain. 
+ Why a brain? 
+ To address the engineer ’ s first question, we consider why an animal should 
+need a brain — what fundamental purpose does it serve and at what cost to 
+the organism? Chapter 2 begins with a tiny bacterium,  Escherichia coli   
+which succeeds  without  a brain, in order to evaluate what the bacterium can 
+do and what it cannot. Then on to a protozoan,  Paramecium caudatum , still 
+a single cell and brainless, but so vastly larger than  E. coli  (300,000-fold) 
+that it requires a faster type of signaling. This prefigures long-distance sig-
+naling by neurons in multicellular organisms. 
+ The chapter closes with the tiny nematode worm,  Caenorhabditis elegans , 
+which does have a brain — with exactly 302 neurons. This number is small 
+in absolute terms, but it represents nearly one third of the creature ’ s total 
+cells, so it is a major investment that better turn a profit, and it does. For 
+example, it controls a multicellular system that finds, ingests, and digests 
+bacteria and that allows the worm to recall for several hours the locations 
+of favorable temperatures and bacterial concentrations. 
+ Humans naturally tend to discount the computational abilities of small 
+organisms — which seem, well  . . . , mentally deficient — nearly devoid of 
+learning or memory. But small organisms  do  learn and remember. It ’ s just 
+
+PDF PAGE 17
+xvi Introduction
+that their memories match their life contexts: they remember only what 
+they need to and for just long enough. Furthermore, the mechanisms that 
+they evolved for these computations are retained in our own neurons — so 
+we shall see them again. 
+ The progression bacterium  →  protozoan  →  worm is accompanied by 
+increasing computational complexity. It is rewarded by increasing capacity 
+to inhabit richer environments and thus to move up the food chain: proto-
+zoa eat bacteria, and worms eat protozoa. As engineering, this makes per-
+fect sense: little beasts compute only what they must; thus they pay only 
+for what they use. This is equally true for beasts with much larger brains 
+discussed in chapter 3. 
+ Why a bigger brain? 
+ The brain of a fruit fly ( Drosophila melanogaster ) is 350-fold larger than 
+ C. elegans  ’ , and the brain of a human ( Homo sapiens ) is a million-fold larger 
+than the fly ’ s. These larger brains emerge from the same process of natural 
+selection as the smaller ones, so we should continue to expect from them 
+nothing superfluous — only mechanisms that are essential and pay for 
+themselves. We should also expect that when a feature works really well, it 
+will be retained — like the wheel, the paper clip, the aluminum beer can, 
+and the transistor (Petroski, 1996; Arthur, 2009). We note design features 
+that brains have conserved (with suitable elaborations) across at least 400 
+million years of natural selection. These features in the human brain are 
+often described as  “ primitive ”  — reptilian — reflecting what are considered 
+negative aspects of our nature. But, of course, any feature that has been 
+retained for so long must be pretty effective. 
+ This chapter identifies the core task of all brains: it is to regulate the 
+organism ’ s internal milieu — by responding to needs and, better still, by 
+anticipating needs and preparing to satisfy them before they arise. The 
+advantages of omniscience encourage omnipresence. Brains tend to become 
+universal devices that tune all internal parameters to improve overall stabil-
+ity and economy.  “ Anticipatory regulation ”  replaces the more familiar 
+ “ homeostatic regulation ”  — which is supposed to operate by waiting for 
+each parameter to deviate from a  “ set point, ”  then detecting the error and 
+correcting it by feedback. Most physiological investigations during the 20th 
+century were based on the homeostatic model — how kidney, gut, liver, pan-
+creas, and so on work independently, despite Pavlov ’ s early demonstration 
+of the brain ’ s role in anticipatory regulation (Pavlov, 1904). But gradually 
+anticipatory control has been recognized. 
+
+PDF PAGE 18
+Introduction xvii
+ Anticipatory regulation offers huge advantages.  2   First, it matches overall 
+response capacity to fluctuations in demand — there should always be 
+enough but not too much. Second, it matches capacity at each stage in the 
+system to anticipated needs downstream, thus threading an efficient path 
+between excess capacity (costly storage) and failure from lack of supplies. 
+Third, it resolves potential conflict between organs by setting and shifting 
+priorities. For example, during digestion it can route more blood to the gut 
+and less to muscle and skin, and during exercise it can reverse this priority. 
+This allows the organism to operate with a smaller blood volume than 
+would otherwise be needed. Finally, it minimizes errors — which are poten-
+tially lethal and also cause cumulative damage. 
+ Anticipatory regulation includes behavior 
+ An organ that anticipates need and regulates the internal milieu by over-
+arching control of physiology would be especially effective if it also regu-
+lated behavior. For example, it could reduce a body ’ s need for physiological 
+cooling (e.g., sweating — which costs energy and resources — sodium and 
+water) by directing an animal to find shade. Moreover, it could evoke the 
+memory of an unpleasant heatstroke to remind the animal to take anticipa-
+tory measures (travel at night, carry water). Such anticipatory mechanisms 
+are driven ceaselessly by  memories  of hunger, cold, drought, or predation: 
+ Pick the beans! Chop wood! Build a reservoir! Lock the door!  
+ The memories of danger and bad times that shape our behavior can be 
+our own, but often they are stored in the brains of our parents and grand-
+parents. We are reared with  their  nightmares — the flood, the drought, the 
+famine, the pogrom. Before written history, which spans only 6,000 years, 
+all lessons that would help one anticipate and thus avoid a lethal situation 
+could be transmitted only by oral tradition — the memory of a human life 
+span. Given that the retention of memories in small brains corresponds to 
+their useful span, and that retention has a cost, human memory for great 
+events should remain vivid with age whereas recent memories of lesser 
+events should fade (chapter 14). 
+ The most persistent dangers and opportunities, those extending far 
+beyond a few generations, eventually become part of the neural wiring. 
+Monkeys universally fear snakes, and so do most humans — suggesting that 
+the response was encoded into brain structure before the lines split — on the 
+order of 35 million years. But beyond alertness for predators, primate soci-
+eties reserve their most acute observations and recall for relationships 
+within the family and the troop. The benefit is that an individual ’ s chances 
+
+PDF PAGE 19
+xviii Introduction
+for survival and reproduction are enhanced by the  group ’ s  ability to antici-
+pate and regulate. The cost is that the individual must continuously sense 
+the social structure — in its historical context — to receive aid when needed 
+and to avoid being killed or cast out (Cheney & Seyfarth, 2007). 
+ Consequently, primate brains have expanded significantly in parts con-
+cerned with social recognition and planning — such as prefrontal cortex and 
+amygdala. Humans greatly expand these areas and also those for social 
+communication, such as for language, facial expression, and music. These 
+regions serve both the cooperative and the competitive aspects of anticipa-
+tory regulation to an awesome degree. They account for much of our brain 
+structure and many of our difficulties. 
+ Flies too show anticipatory behavior — to a level consonant with their 
+life span and environmental reach. A fly need not wait for its blood sugar 
+to fall dangerously low, nor for its temperature to soar dangerously high, 
+before taking action. Instead its brain expresses prewired commands:  Find 
+fruit! In a cool spot!  Anticipatory commands are often tuned to environmen-
+tal regularities that predict when and where a resource is most likely to 
+appear — or disappear. Thus, circadian rhythms govern foraging and sleep. 
+Seasonal rhythms, which broadly affect resource availability, govern mat-
+ing and reproduction. Consequently, specific brain hormones tuned to day 
+length send orders to prewired circuits:  Court a mate! Intimidate a 
+competitor!  
+ What drives behavior? 
+ To ensure that an organism will execute these orders, there are neural 
+mechanisms to make it  “ feel bad ”  when a job is undone and  “ feel good ”  
+when it has succeeded. These are circuits whose activity humans experi-
+ence, respectively, as  “ anxiety ”  and  “ pleasure. ”  Of course, we cannot know 
+what worms or flies experience — but the same neurochemicals drive similar 
+behaviors. This is one wheel that has certainly been decorated over hun-
+dreds of millions of years, but not reinvented. 
+ To actually accomplish a task is vastly complicated. Reconsider Deep 
+Blue ’ s task. Each side in chess has 16 pieces — that move one at a time, 
+slowly (minutes), and only in two dimensions. Each piece is constrained to 
+move only in certain ways, and some pieces repeat so that each side has 
+only six different types of motion. This relatively simple setup generates so 
+many possible moves that to evaluate them requires a Deep Blue. 
+ But the organ responsible for anticipatory regulation takes continuous 
+data from every sensory neuron in the organism — both internal and 
+
+PDF PAGE 20
+Introduction xix
+external — plus myriad hormones and other chemicals. While doing so, it is 
+calculating in real time — milliseconds — how to adjust every body compo-
+nent inside and out. It is flying the fly, finding its food, shade, and mate; it 
+is avoiding predators and intimidating competitors — all the while tweaking 
+every  internal  parameter to match what is about to be needed. Thus, it 
+seems fair to say that Deep Blue is stupid even compared to a fruit fly. This 
+defines sharply the next engineering question: what constrains the design 
+of an effective and efficient brain? 
+ What constrains neural design? 
+ When Hillel was asked in the first century  B.C.E.  to explain the whole Torah 
+while standing on one leg, he was ready:  “ That which is hateful to you, do 
+not unto another. The rest is commentary — and now go study. ”  
+ There is a one-leg answer for neural design:  “ As information rate rises, 
+costs rise disproportionately. ”  For example, to transmit more information 
+by spikes requires a higher spike rate. Axon diameter rises linearly with 
+spike rate, but axon volume and energy consumption rise as the diameter 
+squared. Thus, the essence of neural design:  “ Send only information that is 
+needed, and send it as slowly as possible ”  (chapter 3). This key injunction 
+profoundly shapes the brain ’ s macroscopic layout, as explained in chapter 
+4. We hope that readers will  . . .  go study. 
+ If spikes were energetically cheap, their rates would matter less. How-
+ever, a 100-mV spike requires far more current than a 1-mV response evoked 
+by one packet of chemical transmitter. Obviously then, it is cheaper to com-
+pute with the smaller currents. This exemplifies another design principle: 
+minimize energy per  bit  of information by computing at the finest possible 
+level. Chapter 5 identifies this level as a change in protein folding on the 
+scale of nanometers. Such a change can capture, store, and transmit one bit 
+at an energetic cost that approaches the thermodynamic limit. Chapter 6 
+explains how proteins couple to form intracellular circuits on the scale of 
+micrometers, and chapter 7 explains how a neuron assembles such circuits 
+into devices on a scale of micrometers to millimeters. 
+ It emerges that to compute most efficiently in space and energy, neural 
+circuits should  nanofy : 
+ 1. Make each component irreducibly small: a functional unit should be a 
+single protein molecule (a channel), or a linear polymer of protein sub-
+units (a microtubule), or a sandwich of monomolecular layers (a 
+membrane). 

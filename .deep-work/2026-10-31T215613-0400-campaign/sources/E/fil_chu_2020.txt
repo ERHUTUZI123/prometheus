@@ -1,0 +1,744 @@
+
+PDF PAGE 1
+A thermodynamically consistent chemical spiking neuron
+capable of autonomous Hebbian learning
+Jakub Fil and Dominique Chu
+CEMS, School of Computing, University of Kent, CT2 7NF, Canterbury, UK
+Abstract
+We propose a fully autonomous, thermodynamically consistent set of chemical reactions that implements a spiking neuron.
+This chemical neuron is able to learn input patterns in a Hebbian fashion. The system is scalable to arbitrarily many
+input channels. We demonstrate its performance in learning frequency biases in the input as well as correlations between
+diﬀerent input channels. Eﬃcient computation of time-correlations requires a highly non-linear activation function. The
+resource requirements of a non-linear activation function are discussed. In addition to the thermodynamically consistent
+model of the CN, we also propose a biologically plausible version that could be engineered in a synthetic biology context.
+1 Introduction
+Beside electronic devices there are a number of substrates that can be used to realise computations [Adamatzky
+et al., 2019]. A particularly important class of what is sometimes called “unconventional computers” are
+chemical systems and especially biochemical systems [Amos, 2004]. These underpin the remarkable abilities of
+unicellular organisms to adapt to changes in their environment in the absence of a nervous system. Examples
+of biochemical information processors include sensing [Alon, 2019, Govern and ten Wolde, 2014a,b], chemotaxis
+[Hoﬀer et al., 2001, Yi et al., 2000] or diauxic growth [Chu, 2017, 2018, Chu and Barnes, 2016]. Understanding
+the function of biochemical systems has so far been the domain of molecular biology. With the advent of
+synthetic biology it is now possible to build custom-made biochemical systems and hence to engineer wet-ware
+molecular computers. There are a number of possible applications of such computers. Particularly promising
+areas include personalised precision medicine, especially targeted drug delivery but also environmental clean-up
+or sensing. Before any such computers can be built, it is ﬁrst necessary to understand how to program them.
+Here we propose a chemical reaction network — henceforth referred to as the chemical neuron (CN) —
+that behaves like an artiﬁcial spiking neuron (SN). SNs are a type of learning machine that is used widely in
+Artiﬁcial Intelligence as a component of neural networks [Afshar et al., 2020, Sengupta et al., 2019]. It is now
+also well established that a single SN has signiﬁcant learning capabilities [Fil and Chu, 2020, G¨ utig, 2016]. In
+computer science they have been applied to a number of real-world tasks including principal component analysis
+[Oja, 1982], recognition of handwriting [Diehl and Cook, 2015] or classiﬁcation of ﬁghter-planes [Afshar et al.,
+2019]. There are many diﬀerent models of SNs in the literature. Commonly a SN has an internal state which
+is typically represented by a positive number. The input state may decay, that means that it reduces over time
+with some rate. The input can also increase when the SN receives a stimulus (an input spike) via one of its
+N input channels. Importantly, these input channels are weighted such that the increase of the internal state
+variable is diﬀerent for the diﬀerent input channels. The higher the weight of a channel, the stronger a stimulus
+will aﬀect the internal state.
+A central problem of research in neural networks is to ﬁnd ways to to determine the weights of a neuron such
+that it performs a particular task. The process of ﬁnding these weights is usually referred to as the “training”
+or alternatively as the learning phase. A common method to train SNs is Hebbian learning. The basic idea of
+Hebbian learning is that the weights relating the input to the output are plastic, i.e. they change over time.
+In Hebbian learning, the weights will be strengthen by some amount if the input to the neuron coincides with
+the neuron generating an output event. A well-known special case of Hebbian learning is associative learning.
+Assume that A1 and A2 are both inputs to B. Assume further that the connection between A1 is suﬃciently
+strong such that its ﬁring can trigger a ﬁring event of B. If A2 ﬁres usually at around the same time as A 1, then
+its weights will be strengthened. Eventually, the rates of the second channel will have adjusted suﬃciently such
+that ﬁring of A2 alone will be suﬃcient to trigger a response on its own.
+There have been a number of previous attempts to design chemical implementations of learning machines.
+Amongst the earliest is perhaps work in the 1980s by Okamoto and collaborators [Okamoto et al., 1988] who
+showed that certain biochemical systems implement the McCulloch-Pitts neuronic equations. A chemical neuron
+has been implemented by [Hjelmfelt et al., 1991]; however, this neuron could only detect stable concentrations
+of input molecules and no learning was shown. Fernando and coworkers [Fernando et al., 2009] showed that
+1
+arXiv:2009.13207v1  [cs.NE]  28 Sep 2020
+
+PDF PAGE 2
+2 Results 2
+Fig. 1: Example simulation showing the core of the CN dynamics. The graphs show the internal state B, the
+learning signalE and the weight H for a single channel. We assume a bolus provided at time t = 0.015.
+This causes the internal state to go up and reach the threshold. A learning signal is triggered at around
+t = 0.03 and consequently the weight is increase by (in this case) 15 molecules of H.
+a relatively simple set of molecular interactions can implement associative learning. Their model is fully au-
+tonomous, but it is also inﬂexible. Association is learned after just a single coincidence, and hence not ﬁt to
+detect statistical correlations robustly. Moreover, the system cannot forget the association between the inputs.
+[McGregor et al., 2012] improved on that with systems that were found by evolutionary processes. A biochem-
+ically plausible implementation of the associative learning based on genetic regulatory networks was proposed
+by [Macia and Sole, 2014, Macia et al., 2017a,b]. They imagine their system not to be within a single cell, but
+distributed across multiple compartments. This has the advantage that is reduces crosstalk between molecular
+species and allows more complicated networks to be implemented. Another model close to biology is by Nesbeth
+[Nesbeth et al., 2016]. A perceptron formulated in an artiﬁcial chemistry was proposed by Banda et al. [Banda
+et al., 2014]; later this was extended to a fully ﬂedged feed-forward neural network [Blount et al., 2017] which
+could solve the XOR problem. Their model still requires regular intervention by outside operators. Besides
+these simulation studies, there have also been attempts to implement learning in vivo [Chen and Xu, 2015,
+Nesbeth et al., 2016, Racovita and Jaramillo, 2020, Shirakawa and Sato, 2013].
+The main contribution of this article is a design for a novel chemical neuron (CN), that is a family of
+molecular reaction networks. The CN implements a fully autonomous spiking neuron capable of full Hebbian
+learning. A tuneable parameter of the design of the CN is the non-linearity of the activation function . This
+activation function determines the probability that the CN generates a learning signal, depending on the internal
+state.
+We demonstrate that the CN is capable of Hebbian learning, in the sense that its internal molecular abun-
+dances will reﬂect statistical biases of its inputs. More speciﬁcally, via each its input channels the CN can accept
+boli of some chemical species. Over time these boli will lead to a reconﬁguration of the steady state abundances
+of the CN. These abundances will then be reﬂective of statistical biases of the input boli. In particular we
+consider two types of biases: ( i) Frequency biases (FB), where the average waiting time between two boli is
+diﬀerent for diﬀerent channels. Here the input times are independent but not identically distributed random
+variables. (ii) Time Correlations (TC), where the frequency of boli may be the same for each input channel, but
+inputs for one channel tend to happen before or after the inputs of one or more other channels. Here, input boli
+are identically distributed, but not independently drawn from one another. We ﬁnd that the CN can identify
+both types of biases. However, we also show that the FB task is trivial for chemical systems, whereas the TC
+task can only be solved when the non-linearity is high. We ﬁnd that a high non-linearity comes with minimal
+resource requirements.
+In this contribution, we will give two versions of the CN. The ﬁrst (basic) version will be a minimal set of
+reactions. It is thermodynamically consistent in that it consists only of micro-reversible reactions with mass-
+action kinetics. This basic version cannot be realised easily though. Therefore, we shall propose a second version
+of the model, which is not thermodynamically explicit, but biologically plausible and can likely be engineered
+in a synthetic biology framework.
+2 Results
+2.1 Model Description
+Overview We implement the CN as a set of micro-reversible elementary chemical reactions obeying mass-
+acting kinetics. Micro-reversibility makes the model thermodynamically consistent. See table 1 for the list of
+reactions. The system is best understood by thinking of the molecular species Ai as the input to the system via
+
+PDF PAGE 3
+2 Results 3
+Input An
+kAB
+−−−⇀↽−−−kBA B
+Activation function B + Ei
+k+
+−−⇀↽−−
+k – Ei+1, i<m − 1
+B + Em – 1
+k+
+−−−⇀↽−−−
+k –last E
+Learning An +E
+kAE
+−−−⇀↽−−−kEA AEn
+kEH
+−−−⇀↽−−−kHE Hn +E
+An + Hn
+kAH
+−−−⇀↽−−−kHA AHn
+kHB
+−−−⇀↽−−−kBH B + Hn
+Leak Hn
+kH∅
+− −− →∅
+B
+kB∅
+− −− →∅
+Tab. 1: List of chemical reactions in a single CN.
+input channel i. The weight equivalent of the i-th input channel of the CN are the abundances of the species
+Hi. The species E is the activated form of E and takes the dual role as the learning signal and the output of
+the CN. The internal state of the CN is represented by the abundance of the molecular species B.
+Input-Output relation We assume here that the CN has N diﬀerent species of input molecules A1,...,A N.
+These represent the N input channels and are associated with the corresponding weights H1,...,H N. The
+input is always provided as an exponentially decaying bolus at a particular time tsi . Concretely, this means that
+timet =tsi the CN is brought in contact with a reservoir consisting of β (unmodelled) precursor molecules that
+then decay into Ai molecules with a rate constant κ >0. A particular consequence of this is that the Ai are
+not added instantaneously, but will enter the system over a certain time. This particular procedure is a model
+choice that has been made for convenience. Diﬀerent choices are possible and would not impact on the results
+to be presented. The important point is that there is a sense in which inputs can be provided to particular
+input channels i by providing a bolus of Ai at a particular time t. Finally, note that the CN has a dissipative
+component. Both B and Hi molecules decay with a ﬁxed rate constant. This enables the system to reach a
+steady state provided that the input is stationary.
+The basic idea of the CN is that input boli Ai are converted into internal state molecules B. The speed of
+conversion depends on the amount of weight Hi. If at any one time there is enough of B in the system then
+the learning signalE is created by activating E molecules. Once the learning signal is present then some of the
+Ai are converted into weight molecules, such that the weight of the particular input channel increases. This
+realises Hebbian learning in the sense that the coincidence of inputs B and outputE should activate learning
+following the well known Hebbian tenet “What ﬁres together, wires together”.
+Activation function Precisely what constitutes “enough” B molecules to trigger a learning signal depends
+on the precise tuning of the system and will be discussed extensively below. The link between the internal
+state molecules B and the learning signal is often called the activation function . More speciﬁcally, this is the
+functional dependence of the probability to observe the activated form E and the abundance of B. As we will
+show below, this activation function determines the ability of the CN to learn various kinds of input biases. In
+the simplest, albeit hard to realise case, the activation is a step function. This means that the learning signal
+is only generated if the abundance of B molecules is greater than some threshold ϑ.
+In reality, the activation function will at best approximate a step function. In the CN it is realised as follows:
+In all simulations presented below, we start at time t = 0 with a ﬁxed number of E molecules. Each of the
+E molecule has m binding sites to which the internal state molecules B can bind. Once all m binding sites
+are occupied, then E is converted into its active form E. We make here the simplifying assumption that the
+conversion from E toE is instantaneous once the last B binds. Similarly, if a B unbinds, then the E changes
+immediately toE. In this model, the balance betweenE andE molecules depends on the binding and unbinding
+rates of B. We assume that there is a cooperative interaction between the B molecules such that unbinding of
+B fromE is much slower than unbinding from E. With an appropriate choice of rate constants, this system
+is known to implement ultrasensitivity, i.e. the probability for the fully occupied form of the ligand chain ( E)
+to exist transitions rapidly from close to 0 to close to 1 as the concentration of ligands approaches a threshold
+value ϑ≈ k+/k−. Such systems are often approximated by the so-called Hill kinetics. It can be shown that
+the maximal Hill exponent that can be achieved by such a system is m [Chu et al., 2009]. This means that the
+chain-lengthm, which we henceforth shall refer to as the “nonlinearity”, controls the steepness of the activation
+function ofE. In the limiting case of m =∞, this will be a step function, whereby the probability to observe E
+is 0 if the abundance of B is below a threshold and 1 otherwise. We are limited here to ﬁnite values of m> 0.
+In this case, the function is sigmoidal, or a saturating function in the case of m = 1. The parameter m and
+
+PDF PAGE 4
+2 Results 4
+0.0 0.2 0.4 0.6 0.8 1.0
+0
+250A1
+0.0 0.2 0.4 0.6 0.8 1.0
+0
+250A2
+0.0 0.2 0.4 0.6 0.8 1.0
+0
+250B
+0.0 0.2 0.4 0.6 0.8 1.0
+0
+1
+2
+
+0.0 0.2 0.4 0.6 0.8 1.0
+time
+50
+100H Weight 1
+Weight 2
+Fig. 2: Associative learning in CN. The ﬁrst two graphs show the inputs A1 and A2. Clearly, a single A2 does
+not lead to a suﬃcient increase of the internal state B, such that no learning signal is triggered. After a
+few coincidences of A1 and A2 the weights H2 (last graph) have increased suﬃciently for A2 to trigger
+a signal in its own at time t = 0.8. Note the increase in weights for the second channel after each
+coincidence. On the contrary, the weight associated with the ﬁrst input channel experiences a marginal
+increase. This shows that the system implements a form of local weight normalisation mechanism similar
+to the one proposed by Oja [1982].
+hence the steepness of the activation function will turn out to be a crucial factor determining the computational
+properties of the CN.
+The functional dependence of E on B is the analogue of an activation function in SNs. However, note that
+unlike standard practice in SNs, the activation function determines the probability of a learning signal being
+present as a function of the abundance of B molecules, i.e. it is a stochastic function.
+Learning The weights Hi of a particular input channel i can only be increased if two conditions are fulﬁlled:
+(i) the learning signal E is present and (ii) there are still input molecules Ai in the system. In short, learning
+can only happen if input and output coincide, which is precisely the idea of Hebbian learning.
+2.2 Associative learning
+Throughout this paper we will assume that the dynamics of A,B and E is fast compared to the change in
+concentration ofH. This is a crucial assumption to allow the weights to capture long-term properties of inputs;
+in particular, the weights should not be inﬂuenced by high frequency noise present in the system. Furthermore,
+we also assume that the lifetime of E is short. For details of the parameters used see table 3.
+We ﬁrst demonstrate that the CN is capable of associative learning; see ﬁg. 2. To do this, we generate a CN
+withN = 2 input channels. Then, we initialise the CN with a high weight for the ﬁrst channel ( H1 = 100) and
+a low weight for the second channel ( H2 = 0). Furthermore, we set the parameters of the model such that a
+bolus ofA1 is suﬃcient to trigger an output, but a bolus of A2, corresponding to stimulating the second channel
+is not; see ﬁg. 2 for details. This also means that presenting simultaneously both A1 andA2 triggers a learning
+signal and increases H1 and H2. If A1 and A2 coincide a few times, then the weights of A2 have increased
+suﬃciently so that a bolus of A2 can push the internal state of the system over the threshold on its own; see
+ﬁg. 2. This demonstrates associative learning. Note that unlike some previous molecular implementations of
+associative learning (e.g. [Fernando et al., 2009]), the system requires several coincidences before it learns the
+association. It is thus robust against noise. It will also readily unlearn the correlation if input patterns change.
+2.3 Full Hebbian learning
+We now show that the ability of the CN to learn extends to full Hebbian learning with an arbitrary number of
+N input channels. First we consider the FB task. To do this, we provide random boli to each of the N input
+channels. Random here means that the waiting time between two successive boli of Ai is distributed according
+to an exponential distribution with parameter 1 /fi, where fi is the frequency of the input boli to channel i.
+The CN should then detect the diﬀerence in frequencies fi between input channels. We consider the FB task
+as solved if (after a transient period) the ordering of the abundances of weights reﬂects the input frequencies,
+i.e. the number of Hi should be higher than the number of Hj if fi >f j.
+
+PDF PAGE 5
+2 Results 5
+TC 2 TC 3 TC 4 FB 2 FB 3 FB 4
+0.00
+0.05
+0.10
+0.15
+0.20
+0.25
+0.30
+0.35
+Normalised weights 
+ at steady state
+H1 H2 H3 H4 H5
+Fig. 3: Normalised weights for a variety of TC and FB tasks. The ﬁrst (blue) bar refers to the ﬁrst weight,
+the second (orange) to the weight for the second channel and so on. Each value represents the average
+over 300 time units of a single simulation. Data was only collected after the weights reached the steady
+state (after 700 time units). In all experiments we set the number of E1 molecules at the start of the
+simulation to 40. The nonlinearity was set to m = 5 for the TC, and m = 1 for FB.
+In order to test this, we consider 3 variants of the FB task: We use a CN with N = 5 and m = 1 and
+assume that boli to the ﬁrst two channels input come at a frequency of 4Hz whereas channels 3, 4 and 5 ﬁre
+at a frequency of 2 Hz; we call this variant FB 2. Similarly, for FB 3 and FB 4 the ﬁrst 3 and 4 channels
+respectively ﬁre at the high frequency. Fig. 3 shows the steady state weights for each of the three tasks. As
+expected, in each of the experiments the weights of the high-frequency inputs are higher when compared to the
+low frequency inputs. We conclude, that the CN can work as a frequency detector.
+A more interesting scenario is the direct generalisation of the associative learning task to an arbitrary
+number of input channels. For this problem we assume that all input frequencies are the same, i.e. fi = fj
+for all i,j ≤N. Instead of diﬀerences in frequency, we allow temporal correlations between input boli of some
+channels. This means that there are pairs of channels i,j and time windows ∆τ such that the probability to
+observe a bolus of j between timet0 andt0 + ∆τ — wheret0 is the time where input Ai ﬁred — is greater than
+the probability to observe a bolus between t0− ∆τ and time t0. In practice, we implement such correlations as
+follows: If A1 and A2 are temporally correlated then each bolus of A1 is followed by a bolus of A2 after a time
+period of δ +ξ; with δ being a ﬁxed number and ξ is a random variable drawn from normal distribution with
+µ = 0 and σ2 = 0.0001 for each bolus. In all simulations we present below, the input frequency of all channels
+is set to 2Hz.
+The CN can solve the TC task in the sense that after a transient period the weights indicate which channels
+are correlated and the temporal order implied by the correlation, i.e. if Ai tends to precede Aj, then the
+abundance of weightHi should be higher than the abundance of Hj. Furthermore, if Ai is correlated with some
+other channel k, but Aj is not, then the abundance of Hi must be greater than that of Hj. In order to test
+the ability of the system to detect TC biases, we initialised the CN with N = 5 input channels. Initially the
+weight molecules Hi = 0. We then determined the steady state weights. We compared four diﬀerent scenarios:
+(i) there are correlations between A1 and A2 (TC 2), (ii) A1,A 2,A 3 (TC 3), and (iii) A1,A 2,A 3,A 4 (TC 4).
+The temporal order is always in ascending order of the index, such that in the last example, A1 occurs before
+A2, which in turn occurs before A3. We ﬁnd that the behaviour of the CN is as expected; see ﬁg. 3. At steady
+states the weights reﬂect the correlation between input channels, including the temporal ordering.
+2.4 Correlation detection
+We now examine how the nonlinearity parameter m impacts on the ability of the system to compute. We
+consider two extreme cases: Firstly, the case of minimal non-linearity (i.e. m = 1) and the secondly, the
+limiting case of maximal nonlinearity (i.e. m =∞). This latter case would correspond to an activation function
+that is a step function. Strictly speaking, the CN cannot realise a pure step function, but it still provides
+valuable insight to think through this limiting case.
+We consider ﬁrst this latter scenario with a CN with two inputs A1 and A2. In this case, there will be
+a learning signal E in the CN if the abundance of B crosses the threshold ϑ. Let us now assume that the
+parameters are set such that a single bolus of either A1 orA2 is not suﬃcient to push the abundance of B over
+the threshold, but a coincidence of both is:
+
+PDF PAGE 6
+2 Results 6
+• A single bolus of A1 will not lead to a threshold crossing. No learning signal is generated and weights are
+not increased.
+• If a bolus of A1 coincides with a bolus of A2 then this may lead to a crossing of the threshold of the
+internal state. A learning signal is generated. Weights for both input channels 1 and 2 are increased
+(although typically not by equal amounts).
+Next consider an activation function tuned to the opposite extreme, i.e. m = 1. It will still be true that both
+A1 and A2 are required to push the abundance of B across the threshold. However, the learning behaviour of
+the CN will be diﬀerent:
+• A single bolus of A1 will not lead to a threshold crossing. A learning signal may still be generated even
+below the threshold because the activation function is not a strict step function. The weight H1 will
+increase by some amount, depending on the bolus size.
+• If a bolus of A1 coincides with a bolus of A2 then this will lead to more learning signal being generated
+than in the case of A1 only. As a result, the weights for both input channel 1 and 2 are increased by more
+than if they had occurred separately.
+These two extreme cases illustrate how the CN integrates over input. In the case of low non-linearity the
+weights of a channel will be a weighted sum over all input events of this channel. The weights will be higher for
+channels whose boli coincide often. On the other hand, a step-like activation function will integrate only over
+those events where the threshold was crossed, thus speciﬁcally detect coincidences. From this we can derive two
+conjectures:
+• The higher the nonlinearity, the better the CN at detecting coincidences. Low non-linearity still allows
+coincidence detection, but in a much weaker form.
+• As the bolus size increases, the CN will lose its ability to detect coincidences, especially when the bolus
+size is so large that a single bolus is suﬃcient to push the abundance of B over the threshold. In this
+case, a single input spike can saturate the activation function, thus undermining the ability of the system
+to detect coincidences eﬀectively.
+In order to check these conjectures, we simulated a CN with 3 inputs, whereA1 andA2 are correlated andA3
+ﬁres at twice the frequency of A1 andA2. We considered the minimally nonlinear case (m = 1) and a moderate
+non-linearity (m = 4); Fig. 4 shows the weights as a function of the bolus size. The minimal non-linear CN
+detects both coincidences and frequency diﬀerences, but loses its ability to detect coincidences as the bolus size
+increases. This is consistent with the above formulated hypothesis. In contrast, for the non-linear CN and
+moderately low bolus-sizes the weights indicate the coincidences strongly (i.e. the weights H2 are highest). Yet,
+as the bolus size increases the non-linear CN also loses its ability to detect coincidences.
+Next, we check how the coincidence detection depends on the time-delay between the correlated signals.
+To do this we created a scenario where we provided two boli to the system. The ﬁrst bolus A1 comes at a
+ﬁxed time and the second one a ﬁxed time period δ thereafter. We then vary the length of δ and record the
+accumulation of weights H1 as a fraction of total weight accumulation. Fig. 5 conﬁrms that the CN with the
+low non-linearity is less sensitive to short coincidences, but can detect coincidences over a longer period of time.
+In contrast, as the non-linearity increases, the diﬀerential weight update becomes more speciﬁc, but also more
+limited in its ability to detect coincidences that are far apart. In the particular case, for a δ >0.1 the CN with
+m >1 does not detect any coincidences any more, whereas the case of m = 1 shows some diﬀerential weight
+update throughout.
+Next, we tested the conjecture that the TC can be solved more eﬀectively by the CN when the nonlinearity
+is higher. To do this, we generated a CN with N = 5 input channels on the TC 2 task. We then trained
+the CN for nonlinearities m = 1,..., 10. As a measure of the ability of the system to distinguish the weights,
+we used the index of dispersion, i.e. the standard deviation divided by the mean of the weights. A higher
+index of dispersion indicates more heterogeneity of the weights and hence a better ability of the system to
+discriminate between the diﬀerent frequencies. Consistently with our hypothesis we found that the ability to
+discriminate between frequencies increases with the nonlinearity. However, it does so only up to a point (the
+optimal nonlinearity), beyond which the index of dispersion reduces again; see ﬁg. 6. Increasing the bolus size,
+i.e. increasing the number of Ai that are contained within a single bolus, shifts the optimal nonlinearity to the
+right. This suggests that the decline in the performance of the CN for higher chain lengths is due to a resource
+starvation. The realisation of the sigmoidal function, i.e. the thresholding reactions in table 1, withdraws m
+molecules of B from the system. As a consequence, the CN is no longer able to represent its internal state
+eﬃciently and the activation function is distorted. If the total abundance of B is high compared to E, then this
+eﬀect is negligible. We interpret this as a resource cost of computing non-linearity. The higher m, the higher
+the bolus size required to faithfully implement the activation function.
+
+PDF PAGE 7
+2 Results 7
+0.0 2.5 5.0 7.5 10.0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+Normalised weights 
+ at steady state
+m=1
+H1 H2 H3
+0.0 2.5 5.0 7.5 10.0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+m=4
+Bolus size
+Fig. 4: The weights as a function of bolus size for a CN with 3 inputs. Input A3 (green) is provided at 4Hz,
+A1 and A2 are correlated with a δ = 0.0047 but they are only provided at 2Hz. The graph shows
+the normalised weights at steady state corresponding to the input channels for diﬀerent boli-sizes (here
+reported as a fraction of the threshold). From left to right, the non-linearity increases. For m = 2 the
+system detects the higher frequency of A1 as indicated by its high weight throughout. The weight of A2
+(orange) is only slightly higher than the weight ofA3, indicating that the CN detects the coincidence only
+to some limited extent. For increased non-linearity, the CN indicates the correlation because weights are
+only increased when coincidences occur. If the bolus size is increased, then a single bolus is suﬃcient to
+cross the threshold and the frequency bias is recognised again.
+0.00 0.05 0.10 0.15 0.20
+δ
+0.50
+0.55
+0.60
+0.65
+0.70
+0.75
+0.80
+ΔH2
+ΔH1 Δ ΔH2
+m=1
+m=2
+m=3
+m=4
+0.00 0.05 0.10 0.15 0.20
+δ
+0.4
+0.5
+0.6
+0.7
+0.8
+ΔH2
+ΔH1 Δ ΔH2
+kB∅ = 0.05
+kB∅ = 0.1
+kB∅ = 0.15
+Fig. 5: Diﬀerential weight increase for diﬀerent chain lengths. A value of 1 means that only the ﬁrst input
+channel received weight accumulation. A value of 0 .5 means that the weights of both channels were
+updated equally (left). Same, but for diﬀerent removal rates of B (right). The faster the removal, the
+more speciﬁc the coincidence detection, i.e. inputs need to occur within a narrower window. For both
+graph points were computed as follows: We simulated a CN with two input channels only and an initial
+condition of H1,H 2 = 0. At time t = 0 we provided a bolus of A1 and after a variable time we provided
+the bolus A2. We then continued the simulation for another 0 .2 time units. The y-axis records the
+relative increase of H2 averaged over 1000 repetitions.
+
+PDF PAGE 8
+2 Results 8
+2 4 6 8
+non-linearity (m)
+0
+20
+40
+60
+80Index of dispersion
+β/ϑ = 0.5 β/ϑ = 1.0 β/ϑ = 1.5
+2 4 6 8
+non-linearity (m)
+0
+50
+100
+150
+Fig. 6: Index of dispersion for diﬀerent bolus sizes β expressed as a fraction of the threshold ϑ. We show that
+for TC 2 (left) and FB 2 (right) tasks. The index of dispersion measures how diﬀerent the steady state
+weights are from one another, and hence indicates how well the CN distinguished between input channels.
+Completely unbiased input would give an index of dispersion of ≈ 0. The graph shows that for the TC
+task, there is an optimal nonlinearity. Increasing the bolus size, increases the optimal non-linearity,
+which is consistent with the fact that the optimum is due to resource starvation.
+2.5 Frequency detection
+We have established that the CN is a coincidence detector, which is why it is able to solve the TC task. We
+showed above that the CN can also perform the FB problem, i.e. it can record frequencies of input signals. The
+FB task is fundamentally about integrating over input, which can be done naturally in chemical systems. Indeed
+it can be done by systems that are much simpler than the CN, for example: Ai
+d
+−−→∅. For appropriately
+chosen values ofd, the steady state value ofAi would then reﬂect the input frequency. To understand this, note
+that the input frequency determines the rate of increase of Ai. This rate, divided by the decay rate constant d
+then determines the steady state abundance of Ai, such thatAi trivially records its own frequency. This system
+is the minimal and ideal frequency detector.
+The CN itself is not an ideal frequency detector because all weight updates are mediated by the internal
+state B. Hence, the weights are always convolutions over all inputs. The weights thus reﬂect both frequency
+bias and temporal correlations. In many applications this may be desired, but sometimes it may not be. We
+now consider the conditions necessary to turn the CN into a pure frequency detector, i.e a system that indicates
+only FB, but not TC. One possibility is to set the parameters such that the CN approximates the minimal
+system. This could be achieved by setting kBA≪kAB and all other rate constants very high in comparison to
+kAB. The second possibility is to tune the CN such that a single bolus saturates the threshold. In this case,
+the strength of the learning signal does not depend on the number of boli that are active at any one time. A
+single bolus will trigger the maximal learning signal. This is conﬁrmed by ﬁg. 4, which shows that as the bolus
+size increases, the system becomes increasingly unable to detect temporal correlations, but remains sensitive to
+frequency diﬀerences.
+2.6 A biological model
+The basic model of the CN, as presented in table 1 is thermodynamically plausible and has the beneﬁt of being
+easy to simulate and analyse. However, it is biologically implausible. As written in table 1 the molecular species
+Ai,H i and B would have to be interpreted as conformations of the same molecule with diﬀerent energy levels.
+Additionally, we require that these diﬀerent conformations have speciﬁc enzymatic properties. Molecules with
+the required properties are not known currently, and it is unlikely that they will be discovered or engineered in
+the near future.
+As we will show now it is possible to re-interpret the basic model of the CN (table 1) so as to get a model
+whose elements are easily recognisable by computational biologists as common mechanistic motifs. This requires
+only relatively minor adjustments of the reactions themselves, but a fundamental re-interpretation of what the
+reactions mean. For the list of modiﬁed reactions see table 2 and ﬁg. 7 for a graphical illustration of the
+intuition behind the model.
+The main diﬀerence between the basic CN and the biological version is that the latter is compartmentalised.
+While in the basic model the index (as in Ai andHi) referred to diﬀerent species that exist in the same volume,
+
+PDF PAGE 9
+3 Discussion 9
+2
+1
+4
+Bolus injection (A) 3
+Leak (B)
+h
+h
+h
+h
+B
+A*
+H
+A
+Fig. 7: Graphical representation of a compartment-version of the CN.Ai andAj are the same molecular species
+but contained in diﬀerent compartments i and j respectively. We allow for an activated form of A,
+denoted by A∗, which binds to the promotor site of h and activates its expression. H is an active
+transporter molecules for A. The internal state molecule B is any of the Ai when in the outermost
+compartment. We assume that each compartment has a trans-membrane protein E with m extra-
+cellular binding sites. If all m binding sites are occupied by B, then the internal site becomes active
+(indicated by green) and can catalyse the activation of A.
+it should now be interpreted as indicating diﬀerent compartments that separate the same molecular species.
+These compartments, which are themselves enveloped in a further compartment (the “extra-cellular space”),
+could be thought of as individual bacterial cells or else artiﬁcially generated membranes with a minimal genome.
+Input is provided by boli of the molecular species A into the compartment i. There is now also an activated
+form of A, denoted by A∗. The conversion from A to A∗ is catalysed by the learning signal E. Also new is
+that each compartment contains a gene h that codes for the molecule H (we suppress the index indicating the
+compartment). Expression of the gene is activated by A∗ binding to the promoter site of h. We also allow a low
+leak expression by the unactivated gene (denoted as h0 in table 2). Gene activation of this type is frequently
+modelled using Michaelis-Menten kinetics, thus reproducing in good approximation the corresponding enzyme
+kinetics in the basic model of the CN. The molecules of type H are now transporters for A. We then interpret
+the conversion of Ai toB as export of A from compartment i to the extra-cellular space. In this interpretation
+the molecular species B is then the same as A but contained directly in the outer compartment. The rate of
+export of A is speciﬁc to each compartment in that it depends on the abundance of H in this compartment.
+Finally, we interpret the E molecules as transmembrane proteins that are embedded in the membrane of each
+compartment. Their extra-cellular site has m binding sites for B molecules which bind cooperatively. When all
+sites are occupied then the intra-cellular part is activated, i.e. becomes E. In its activated form it can convert
+A to A∗.
+Another diﬀerence between the two versions of the models is that the molecule E is now speciﬁc to each
+membrane. The minimum number of copies ofE is thusN whereas in the basic model a single copy ofE at time
+t = 0 could be suﬃcient. This has two consequences. Firstly, at any particular time the number of occupied
+binding sites will typically be diﬀerent across the diﬀerent N compartments. This is a source of additional
+variability. Moreover, since the number of copies of E is higher than in the basic CN, the model in table 2 is
+more susceptible to starvation of B as a result of the extra-cellular binding sites withdrawing molecules from
+the outer compartment. Both of these potential problems can be overcome by tuning the model such that the
+abundance of B molecules is high in comparison to E molecules.
+This highlights that the diﬀerence between the basic CN and its biological interpretation are deeper than the
+list of reaction suggests. We checked that the biological interpretation still allows the same phenomenological
+behaviour, provided that the parameters are adjusted. Fig. 8 conﬁrms that both associative learning and full
+Hebbian learning (with 5 input channels) is possible with this model.
+3 Discussion
+To our knowledge the CN presented here is the ﬁrst fully autonomous design for a chemical systems capable of
+full Hebbian learning. The model is, at least in principle, fully scalable. Previous attempts (e.g. [Fernando et al.,
+
+PDF PAGE 10
+3 Discussion 10
+0
+250A1
+0
+250A2
+0
+250B
+0
+25
+0.0 0.2 0.4 0.6 0.8 1.0
+time
+250
+500H Weight 1
+Weight 2
+TC 2 TC 3 TC 4 FB 2 FB 3 FB 4
+0.00
+0.05
+0.10
+0.15
+0.20
+0.25
+Normalised weights 
+ at steady state
+H1 H2 H3 H4 H5
+Fig. 8: Associative (top) and Hebbian learning (bottom) for the biologically plausible version of the CN. The
+experimental setup is as in ﬁg. 2, and ﬁg. 3 respectively. For the parameters used see table 4. Both
+experiments approximated the ligand dynamics by a Hill function, in order to speed up the simulations.
+Input In
+kIA
+−−⇀↽−−kAI A
+Activation function B + Ei
+k+
+−−⇀↽−−
+k – Ei+1, i<m − 1
+B + Em – 1
+k+
+−−−⇀↽−−−
+k –last E
+Learning
+E + A
+kAE
+−−−⇀↽−−−kEA EA
+kA*E
+−−−⇀↽−−−kEA* E + A*
+A* kA*A−−−⇀↽−−−kAA* A
+h0 +A∗ A · h−−−⇀↽−−−hA · h
+h0
+kleak
+−−−→Hn + h0
+h
+kh
+−−→Hn + h
+A + H
+kAH
+−−−⇀↽−−−kHA AH
+kHB
+−−−⇀↽−−−kBH B + H
+Leak H
+kH∅
+− −− →∅
+B
+kB∅
+− −− →∅
+Tab. 2: List of chemical reactions in a single CN unit interpreted as a cell. Molecular species A,E,E,h 0,h and
+H are compartmentalised. Each compartment has a gene h0 which when activated by A∗ can express
+a transporter H.
+
+PDF PAGE 11
+3 Discussion 11
+2009, McGregor et al., 2012]) were limited to 2 input associative learning or they were not fully autonomous
+(e.g. [Blount et al., 2017]). Our proposed basic model is not biologically realistic, but it is thermodynamically
+consistent and could be analysed with respect to its minimal energy dissipation. The second design we proposed
+is biologically more realistic. While the second model is not directly translatable into a synthetic biology
+design, its basic building blocks (i.e. activated gene expression, export of molecules, cooperative binding) are
+recognisable biological components.
+The CN is closely analogous to theleaky integrate and ﬁre(LIF) neuron which is a commonly used continuous
+time SN [Fil and Chu, 2020, Gerstner and Kistler, 2002]. The LIF neuron is a powerful computational unit
+[G¨ utig, 2014, G¨ utig and Sompolinsky, 2006, Maass, 1997, Maass and Natschlaeger, 1998]. The CN inherits this.
+One of the attractive features of the (basic) CN neuron is that it is a micro-reversible model and as such it
+is a thermodynamically plausible model. While a thorough analysis of the energy requirements of the system
+is beyond the scope of this article, we note that the physical plausibility of the model has highlighted resource
+requirements of the computation. In particular, we found that increasing the non-linearity comes at an additional
+cost in resource. The CN suﬀers from starvation of B molecules as the chain-length of realising the activation
+function increases. For a suﬃciently high number of m, this leads to a breakdown of the mechanisms and the
+system loses its ability to detect coincidences, as illustrated in ﬁg. 6. The CN is better at solving the TC task
+when the nonlinearity is higher. At the same time, the non-linearity requires resources that cannot be met any
+more by the system. This “starvation” eﬀect can be alleviated by increasing the bolus size (while keeping the
+threshold ﬁxed); see ﬁg. 6. The minimal amount of work required to add particles to the CN is proportional to
+the number of particles, i.e. the bolus size. Less visibly, there is also an additional expenditure of energy due to
+the fact that the B andH molecules need to be removed from the system, which again requires a concentration
+gradient to be maintained. Hence, at least in this model the non-linearity comes directly at a thermodynamical
+cost. To the best of our knowledge, it is an open question whether the computation of non-linearities necessarily
+comes at a higher thermodynamic cost or whether this is just a side eﬀect of the computational medium used
+here, i.e. chemical reactions.
+References
+A. Adamatzky, C. Fullarton, N. Phillips, B. De Lacy Costello, and T. C. Draper. Thermal switch of oscillation
+frequency in belousov–zhabotinsky liquid marbles. Royal Society Open Science, 6(4):190078, April 2019. doi:
+10.1098/rsos.190078. URL https://doi.org/10.1098/rsos.190078.
+S. Afshar, R. Hamilton, J. Tapson, A. vanSchaik, and G. Cohen. Investigation of event-based surfaces for high-
+speed detection, unsupervised feature extraction, and object recognition. Frontiers in Neuroscience, 12:1047,
+2019. ISSN 1662-453X. doi: 10.3389/fnins.2018.01047. URL https://www.frontiersin.org/article/10.
+3389/fnins.2018.01047.
+S. Afshar, N. Ralph, Y. Xu, J. Tapson, A. van Schaik, and G. Cohen. Event-based feature extraction using
+adaptive selection thresholds. Sensors, 20(6), 2020. ISSN 1424-8220. doi: 10.3390/s20061600. URL https:
+//www.mdpi.com/1424-8220/20/6/1600.
+U. Alon. An Introduction to Systems Biology: Design Principles of Biological Circuits . Chapman & Hall/CRC
+Computational Biology Series. CRC Press LLC, 2019. ISBN 9781439837177. URL https://books.google.
+co.uk/books?id=MWXdQgAACAAJ.
+M. Amos. Cellular Computing . Oxford University Press, 2004.
+P. Banda, C. Teuscher, and D. Stefanovic. Training an asymmetric signal perceptron through reinforcement in
+an artiﬁcial chemistry. Journal of The Royal Society Interface , 11(93):20131100, April 2014. doi: 10.1098/
+rsif.2013.1100.
+D. Blount, P. Banda, C. Teuscher, and D. Stefanovic. Feedforward chemical neural network: An in silico
+chemical system that learns xor. Artiﬁcial Life, 23(3):295–317, August 2017.
+M. Chen and J. Xu. Construction of a genetic conditional learning system in escherichia coli. Science China
+Information Sciences , 58(11):1–6, September 2015. doi: 10.1007/s11432-015-5308-8. URL https://doi.
+org/10.1007/s11432-015-5308-8 .
+D. Chu. Limited by sensing - a minimal stochastic model of the lag-phase during diauxic growth. Journal of
+Theoretical Biology, 414:137–146, feb 2017. doi: 10.1016/j.jtbi.2016.10.019.
+D. Chu. Performance limits and trade-oﬀs in entropy-driven biochemical computers. Journal of Theoretical
+Biology, 443:1–9, 2018. ISSN 0022-5193. doi: https://doi.org/10.1016/j.jtbi.2018.01.022. URL http://www.
+sciencedirect.com/science/article/pii/S0022519318300389.
+
+PDF PAGE 12
+3 Discussion 12
+D. Chu and D. Barnes. The lag-phase during diauxic growth is a trade-oﬀ between fast adaptation and high
+growth rate. Scientiﬁc Reports, 6:25191, 2016. doi: 10.1038/srep25191. URL http://dx.doi.org/10.1038/
+srep25191.
+D. Chu, N. Zabet, and B. Mitavskiy. Models of transcription factor binding: Sensitivity of activation func-
+tions to model assumptions. Journal of Theoretical Biology , 257(3):419 – 429, 2009. ISSN 0022-5193. doi:
+https://doi.org/10.1016/j.jtbi.2008.11.026. URL http://www.sciencedirect.com/science/article/pii/
+S0022519308006310.
+P. Diehl and M. Cook. Unsupervised learning of digit recognition using spike-timing-dependent plasticity.
+Frontiers in Computational Neuroscience, 9:99, 2015. ISSN 1662-5188. doi: 10.3389/fncom.2015.00099. URL
+https://www.frontiersin.org/article/10.3389/fncom.2015.00099.
+C. Fernando, A. Liekens, L. Bingle, C. Beck, T. Lenser, D. Stekel, and J. Rowe. Molecular circuits for associative
+learning in single-celled organisms. Journal of the Royal Society Interface, (October 2008):463–469, 2009. doi:
+10.1098/rsif.2008.0344.
+J. Fil and D. Chu. Minimal spiking neuron for solving multilabel classiﬁcation tasks. Neural Computation, 32
+(7):1408–1429, 2020.
+W. Gerstner and W. M. Kistler. Spiking Neuron Models: Single Neurons, Populations, Plasticity . Cambridge
+University Press, 2002. doi: 10.1017/CBO9780511815706.
+C. Govern and P. ten Wolde. Energy dissipation and noise correlations in biochemical sensing. Physical Review
+Letters, 113(25):258102, Dec 2014a. doi: 10.1103/PhysRevLett.113.258102. URL http://dx.doi.org/10.
+1103/PhysRevLett.113.258102.
+C. Govern and P. ten Wolde. Optimal resource allocation in cellular sensing systems. Proceedings of the
+National Academy of Science USA , 111(49):17486–17491, Dec 2014b. doi: 10.1073/pnas.1411524111. URL
+http://dx.doi.org/10.1073/pnas.1411524111.
+R. G¨ utig. To spike, or when to spike? Current Opinion in Neurobiology , 25:134–139, 2014. ISSN 09594388.
+doi: 10.1016/j.conb.2014.01.004.
+R. G¨ utig. Spiking neurons can discover predictive features by aggregate-label learning. Science, 351(6277):
+aab4113–aab4113, 2016. ISSN 0036-8075. doi: 10.1126/science.aab4113.
+R. G¨ utig and H. Sompolinsky. The tempotron: a neuron that learns spike timing-based decisions. Nature
+Neuroscience, 9(3):420–428, 2006. ISSN 1097-6256. doi: 10.1038/nn1643.
+A. Hjelmfelt, E. D. Weinberger, and J. Ross. Chemical implementation of neural networks and turing machines.
+Proceedings of the National Academy of Sciences , 88(24):10983–10987, 1991. ISSN 0027-8424. doi: 10.1073/
+pnas.88.24.10983. URL https://www.pnas.org/content/88/24/10983.
+S. M. Hoﬀer, H. V. Westerhoﬀ, K. J. Hellingwerf, P. W. Postma, and J. Tommassen. Autoampliﬁcation of a
+two-component regulatory system results in ”learning” behavior. Journal of bacteriology, 183(16):4914—4917,
+August 2001. ISSN 0021-9193. doi: 10.1128/jb.183.16.4914-4917.2001. URL https://europepmc.org/
+articles/PMC99548.
+W. Maass. Networks of spiking neurons: The third generation of neural network models. Neural Networks, 10
+(9):1659–1671, 1997. doi: 10.1016/s0893-6080(97)00011-7.
+W. Maass and T. Natschlaeger. Associative memory with networks of spiking neurons in temporal coding.
+Progress in Neural Processing, 1998.
+J. Macia and R. Sole. How to make a synthetic multicellular computer. PLOS ONE, 9(2):1–13, 02 2014. doi:
+10.1371/journal.pone.0081248. URL https://doi.org/10.1371/journal.pone.0081248.
+J. Macia, B. Vidiella, and R. V. Sol´ e. Synthetic associative learning in engineered multicellular consortia.
+Journal of The Royal Society Interface , 14(129):20170158, April 2017a.
+J. Macia, B. Vidiella, and R. V. Sol´ e. Synthetic associative learning in engineered multicellular consortia.
+Journal of The Royal Society Interface , 14(129):20170158, 2017b. doi: 10.1098/rsif.2017.0158. URL https:
+//royalsocietypublishing.org/doi/abs/10.1098/rsif.2017.0158.
+S. McGregor, V. Vasas, P. Husbands, and C. Fernando. Evolution of associative learning in chemical networks.
+PLOS Computational Biology , 8(11):1–19, 11 2012. doi: 10.1371/journal.pcbi.1002739. URL https://doi.
+org/10.1371/journal.pcbi.1002739.
+
+PDF PAGE 13
+A CN chemical reaction network details 13
+D. N. Nesbeth, A. Zaikin, Y. Saka, M. C. Romano, C. V. Giuraniuc, O. Kanakov, and T. Laptyeva. Synthetic
+biology routes to bio-artiﬁcial intelligence. Essays in Biochemistry , 60(4):381–391, November 2016.
+E. Oja. Simpliﬁed neuron model as a principal component analyzer. Journal of Mathematical Biology , 15(3):
+267–273, 1982. doi: 10.1007/BF00275687. URL https://doi.org/10.1007/BF00275687.
+M. Okamoto, T. Sakai, and K. Hayashi. Biochemical switching device realizing mcculloch-pitts type equation.
+Biol. Cybern., 58(5):296–299, April 1988. ISSN 0340-1200.
+A. Racovita and A. Jaramillo. Reinforcement learning in synthetic gene circuits. Biochemical Society Transac-
+tions, 48(4):1637–1643, August 2020.
+A. Sengupta, Y. Ye, R. Wang, C. Liu, and K. Roy. Going deeper in spiking neural networks: Vgg and residual
+architectures. Frontiers in Neuroscience, 13:95, 2019. ISSN 1662-453X. doi: 10.3389/fnins.2019.00095. URL
+https://www.frontiersin.org/article/10.3389/fnins.2019.00095.
+T. Shirakawa and H. Sato. Construction of a molecular learning network. Journal of Advanced Computational
+Intelligence and Intelligent Informatics , 17(6):913–918, 2013. doi: 10.20965/jaciii.2013.p0913.
+T. Yi, Y. Huang, M. Simon, and J. Doyle. Robust perfect adaptation in bacterial chemotaxis through integral
+feedback control. Proceedings of the National Academy of Sciences , 97(9):4649–4653, 2000. ISSN 0027-8424.
+doi: 10.1073/pnas.97.9.4649. URL https://www.pnas.org/content/97/9/4649.
+A CN chemical reaction network details
+Input kIA = 10, kAI = 0.000001kAB = 0.1, kBA = 0.000001
+Activation function k+ = 1, k− = 5k−last = 0.5
+Learning kAE = 0.05, kEA = 0.000001, kEH = 100, kHE = 0.000001kAH = 0.001, kHA = 0.000001, kHB = 100, kBH = 0.000001
+Leak kH∅ = 0.0003kB∅ = 0.1
+Tab. 3: List of reaction rate constants in the CN model.
+Bolus kIA = 10, kAI = 0.000001
+Activation function (Hill) h = 10
+Learning
+kAE = 0.2, kEA = 0.000001, kA∗E = 0.2, kEA∗ = 0.000001,
+kA∗A = 0.05, kAA∗ = 0.000001
+kA∗h = 1, khA∗ = 0.1
+kleak = 0.0001
+kh = 1
+kAH = 0.03, kHA = 0.000001, kHB = 100, kBH = 0.000001
+Leak kH∅ = 0.0003kB∅ = 0.1
+Tab. 4: List of reaction rate constants in a biological interpretation of the CN model.

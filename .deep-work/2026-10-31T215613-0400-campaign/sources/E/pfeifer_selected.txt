@@ -1,0 +1,887 @@
+
+PDF PAGE 129
+one’s purposes can be found everywhere: we take notes, we write docu-
+ments and books, we type things into computers, we use sticky-note pads,
+we store phone numbers in our mobile phones, we put information on
+bulletin boards, we take pictures and videos, and we put up Web pages.
+Given the obvious usefulness of changing the environment to simplify
+our lives—that is, of scaffolding our environment—it is truly surprising
+that most robots do not signiﬁcantly change their environments to make
+their tasks easier! Thus, scaffolding is an important part of the three-
+constituents principle, because it requires consideration of the agent’s
+niche, what tasks it is to perform, and how it should be designed.
+4.4 Agent Design Principle 2: The Complete-Agent Principle
+The complete agent principle states that when designing agents we must
+think about the complete agent behaving in the real world.
+This principle contrasts with the paradigm of “divide and conquer”
+that pervades virtually all scientiﬁc disciplines: decompose a problem or
+system into simple subsystems which can then be developed separately.
+Once the subsystems have been designed, they can then be put together
+again. But it often turns out that in practice, subsystems create unneces-
+sary problems, known as artifacts, which would not exist if the system
+were taken into account in its entirety. A good example of this comes
+from the ﬁeld of computer vision, where it seemed obvious at the outset
+that vision could be understood as a separate process from the rest of
+the agent’s behaviors. Computer vision thus focused almost exclusively
+on the analysis of static photographic pictures, such as desks cluttered
+with objects. Highly sophisticated and computationally intensive algo-
+rithms were developed to “understand” the images by identifying and
+categorizing the object in the image. However, vision turns out to be
+much easier when the agent interacts with the environment. In other
+words, we should treat vision as an interactive process, not just a set of
+operations performed on a set of static images. If you move your head
+back and forth, objects that move more quickly over your visual ﬁeld are
+closer to you than objects that move less; if one object blocks your view
+of another object, you can simply walk to another location and look
+again. Simple. Having a body and being able to act in the world simpli-
+ﬁes vision—and many other things as well, as we will see. This insight
+helps us when building agents, but it is also useful in trying to understand
+existing agents, like ourselves.
+104 II. Toward a Theory of Intelligence
+
+PDF PAGE 130
+Here is another example drawn from the related research area of per-
+ception, in which researchers in the cognitive sciences, psychology, and
+neuroscience try to ﬁgure out how individuals can interpret sensory stim-
+ulation in the real world. It has been demonstrated in many experiments
+that the function of a particular part of the brain can be very different
+depending on whether the agent—typically an animal—is studied as it
+behaves in the real world, or the particular subsystem, in this case the
+vision system, is studied in isolation. In what would eventually lead to a
+Nobel Prize in 1981, the neuroscientists David Hubel and Torsten Wiesel
+conducted a famous experiment in the late 1950s in which they inserted
+a microelectrode into individual cells in the visual cortex of an anes-
+thetized cat. They then presented the immobilized animal with different
+kinds of visual stimuli while recording the signals from these cells. One
+of their fascinating results was that some cells did not respond to light
+intensity but rather to orientation of edges. In other words, some of these
+cells would respond only if the left of the visual scene was light and the
+right was dark (or vice versa), while others would respond only if the top
+was light and the bottom dark, and so on. It seemed natural to conclude
+from this that some neurons in the cat’s visual cortex act as edge detec-
+tors. Later, when experiments with moving cats became technologically
+possible, it was found that these cells were in fact involved in many other
+activities as well (Haenny et al., 1988). Although it is correct to say that
+there is a correlation of the activity of these so-called edge-detection cells
+and the presentation of the visual stimuli containing the edges, it cannot
+be said that they are edge-detection modules, because they are involved
+in other behaviors as well. We are not criticizing Hubel and Wiesel’s
+groundbreaking experiments but merely pointing out that these neurons
+cannot be considered basic modules from which the complete system could
+be assembled. The results still hold: they only need to be reinterpreted.
+Often, it turns out that viewing only part of an agent when explaining
+its behavior causes us to attribute more “brainpower” to it than may actu-
+ally be there. In other words, by considering the entire agent we can often
+ﬁnd other, simpler mechanisms for achieving the behavior. So the com-
+plete agent principle is related to the principle of cheap design that we
+will discuss next: given the right body for the job, and keeping the agent’s
+behavior and environment in mind, agents can get away with less com-
+putational hardware. Remember the navigation behavior of the desert
+ant Cataglyphis? It has been shown in many experiments that the ant can
+use landmarks to ﬁnd the precise location of the nest when it returns from
+a foraging trip. In these experiments, the landmarks are typically large
+4. Intelligent Systems: Properties and Principles 105
+
+PDF PAGE 131
+black cylinders that are placed around the nest. In order for the land-
+marks to be useful, the ant has to recognize them ﬁrst, then make a deci-
+sion in which direction to move; at least that is what we would think
+should happen. Recognizing landmarks is a difﬁcult task that would
+require a perceptual system potentially entailing a lot of computation, as
+we explained in the computer vision example. However, as described in
+chapter 2, the ants take a kind of “snapshot” of the surroundings as they
+leave the nest. When they come back near the nest, they simply compare
+the stored snapshot with what they currently see—the current sensory
+stimulation—and they move in the direction that will further reduce the
+difference between the two.When the two fully match, the ant is precisely
+at the location of the nest. At this point, we can say that the ant has rec-
+ognized the landmarks, but the “recognition” is fully integrated into the
+behavior of the ant, and we cannot separate “ﬁnding the nest” from “rec-
+ognizing the landmarks.” This implies on the one hand that there are not
+two separate modules for these tasks, and on the other that by looking at
+the behavior of the complete agent, rather than at the perceptual subtask
+only, we can see that the solution is much “cheaper,” from the perspective
+of the agent’s design (for more details see Lambrinos et al., 2000).
+Furthermore, when observing complete agents behaving in the real
+world, we are less prone to modularize our systems inappropriately: in
+the previous example, two incorrect modules that we could have pro-
+posed to explain the ants’ behavior are “ﬁnd the nest” and “recognize
+landmarks.” Psychology has as its research topic the most complex
+known system in the universe, the human. In order to come to grips with
+the awesome complexities involved, researchers in this ﬁeld carve up the
+human psyche in particular ways for the purpose of investigation, for
+example into cognition, perception, categorization, memory, attention,
+social interaction, learning, development, motivation and emotion, motor
+action, problem solving and reasoning, planning, creativity, communica-
+tion, language, awareness, and consciousness, to mention but a few. Sep-
+arate ﬁelds within psychology are devoted to the study of many of these
+areas. If we look at the complete agent and ask what processes underlie
+behaviors such as walking, talking, or recognizing a face in a crowd, we
+see immediately that these subdisciplines do not so much correspond to
+actual “modules” but are in fact different perspectives on the same (or
+at least largely overlapping) set of processes. For example, learning
+makes no sense without perception, and memory makes no sense without
+learning. Planning can only be performed on the basis of perception and
+memory, and so on.
+106 II. Toward a Theory of Intelligence
+
+PDF PAGE 132
+Moreover, when studying complete agents, we always have to deal
+with complete sensory-motor loops. If we follow this principle we will
+never be in danger of decoupling certain aspects—such as the planning
+of movements—from the sensory system, as is usually done in classical
+robotics. In 1999, I (Rolf) was a guest in a research laboratory of a large
+car manufacturer in Germany, where, for the ﬁrst time in my life, I was
+served coffee by a robot. It was a great experience: the robot went over
+to a table, grabbed a cup, moved over to the coffee machine, deposited
+the cup, pushed the button, waited for the cup to be ﬁlled, moved over
+to my chair, and handed me the cup. I was impressed. But in fact it was
+not actually as smooth as all that: motion planning had been developed
+separately from the rest of the agent, which led to a few problems. For
+example, while performing the planned movement, at the time (I am sure
+this has changed meanwhile) the robot received no sensory feedback
+from the environment. As a result, the robot grasped the cup in a slightly
+different way from how it was supposed to, causing the cup to bend and
+almost break the tube where the coffee came out of the machine. In a
+complete-agent approach, one is forced to always take the complete
+sensory-motor loops into account: if the robot had been able to sense the
+way it grasped the cup or the strain the cup was placing on the coffee
+dispenser, this particular problem would have been avoided. This also
+illustrates the principle of sensory-motor coordination, described below.
+In summary, the complete agent principle has important implications
+both for how we study agents, as in psychology and neuroscience, and
+for how we design and build them, as in robotics. This principle also
+emphasizes that in a complete agent, everything is tightly interconnected.
+4.5 Agent Design Principle 3: Cheap Design
+The principle of cheap design states that if agents are built to exploit the
+properties of the ecological niche and the characteristics of the interaction
+with the environment, their design and construction will be much easier,
+or “cheaper.”
+Recall for a moment our discussion of what we intuitively mean by
+intelligence. We suggested that the concept is related to compliance and
+diversity. Agents that comply with and exploit their ecological niche in
+order to generate diverse behavior are intuitively considered more intel-
+ligent. We have to comply with the givens: there is no way in which we
+can ignore the fact that there is gravity on Earth; or rather, to ignore it
+4. Intelligent Systems: Properties and Principles 107
+
+PDF PAGE 133
+will generally not be very beneﬁcial to the organism. If I step off a roof-
+terrace, I will fall, whether I like it or not. But this is not always a nega-
+tive thing: the laws of physics can also be exploited in smart ways. It is
+worth distinguishing here between two closely related aspects of exploit-
+ing the ecological niche: the properties of the niche, which includes the
+laws of physics, gravity, friction, electromagnetic forces; and the proper-
+ties of the interaction with the environment, such as the sensory stimu-
+lation generated as an agent moves. The principle of cheap design simply
+states that if agents are built to exploit these kinds of properties, their
+design and construction will be much easier. So cheap design is about
+exploitation of the properties of a niche, and the term cheap should not
+be taken too literally. However, it is indeed often the case that if the prin-
+ciple is applied properly, the resulting agents will be cheap in the literal
+sense of the word: if they are simple, they will be inexpensive to design,
+manufacture, and maintain. The related design principle of ecological
+balance (described below) helps us to ﬁgure out how this exploitation
+should be done; cheap design simply illustrates that the more and better
+the exploitation, the simpler agent it will be.
+We are now going to illustrate these points with a few examples: the
+Swiss robots that we have already introduced; the “passive dynamic
+walker,” a “brainless” and nonmotorized robot capable of walking down
+a slope without control, and its successor, “Denise,” which has a little bit
+of brain mass and some actuation; and ﬁnally we will look at how insects
+can coordinate their legs when they are walking even though there is no
+center in their brain that actually manages the synchronization of the
+movements. We introduce these examples in the context of the cheap
+design principle, but it should be kept in mind that all of the design prin-
+ciples apply to all agents to a greater or lesser extent.
+The Swiss Robots
+Recall the case study of the Swiss robots that we introduced in the pre-
+vious chapter where the task was to design robots that together tidy up
+an arena cluttered with Styrofoam cubes. (This is admittedly not the most
+glamorous of tasks, but it is deﬁnitely related to one of the reasons we
+want robots in the ﬁrst place!) Intuitively we would think that the fol-
+lowing steps have to be taken. First, the robot has to ﬁnd a cube. Once
+it has found one it has to look for the nearest heap or cluster. Then it
+has to move and deposit the cube there, and the procedure is repeated
+until all the cubes are clustered. These steps all require sophisticated
+visual processing and planning, and would thus be computationally
+108 II. Toward a Theory of Intelligence
+
+PDF PAGE 134
+expensive, so to speak. Remember that just because visual perception is
+natural and effortless for us humans by no means implies that it is a
+simple process.
+The Swiss robots take an alternative approach: they master the job by
+exploiting their own morphology and the properties of the ecological
+niche. Remember that in fact they achieve the task by being programmed
+only with simple reﬂexes for obstacle avoidance. In order for the clus-
+tering to come about, the following aspects of the ecological niche had
+to be exploited: the size of the cubes (if they are too big or too small it
+does not work), their weight (if cubes were too heavy for pushing, it
+would no longer work), the fact that the environment is enclosed by sur-
+rounding walls (otherwise, the robots would drive away, rather than
+cleaning up), the fact that the ground is ﬂat and provides, together with
+the tires of the wheels, the right kind of friction (if you put soap on the
+ground, it will no longer work). If any of these constraints do not hold,
+the Swiss robots will miserably fail to achieve their task. But if they are
+fulﬁlled, this solution works very well, and it is cheap: the Swiss robots
+exploit the properties of their niche, the laws of physics, and their own
+morphology in clever ways, so that computationally expensive vision is
+not required. The Swiss robots do not need to know what they are doing;
+they merely react to sensory stimulation.
+The Passive Dynamic Walker and “Denise”
+The passive dynamic walker, illustrated in ﬁgure 4.3b, is a type of robot
+(or, more accurately, a mechanical device, since it has no sensors or
+motors and no control program) that was ﬁrst proposed by McGeer
+(1990). It is capable of walking down a ramp without any sensing, actu-
+ation, or control: in other words, it is literally brainless, if you like. In this
+sense, it is not really an agent. Nonetheless, in order for this task to be
+achieved, the dynamics of the robot—how gravity, friction, and the forces
+generated by the swinging of the legs and arms act on it—must be
+exploited. The result of this exploitation is that the walking behavior is
+very energy efﬁcient and looks surprisingly natural.
+However, its ecological niche, i.e., the environment in which the robot
+is capable of operating, is extremely narrow: it consists only of slopes of
+certain angles. Just as in the case of the Swiss robots, if you change any-
+thing whatsoever in the ecological niche, such as the angle of inclination
+or the surface properties (e.g., by putting a soft rug on it), the device will
+no longer work. The fact that an agent will cease to function if some
+aspect of its niche (speciﬁcally some aspect that the agent exploits) is
+4. Intelligent Systems: Properties and Principles 109
+
+PDF PAGE 135
+110 II. Toward a Theory of Intelligence
+(a)
+(b)
+Figure 4.3
+Passive dynamic walkers. (a) The patron saints of the city of Zurich in Switzerland: Felix,
+Regula, and Exuperantius. They were beheaded in the third century because of their reli-
+gious beliefs.The legend says that they carried their heads under their arms to a spot where
+later the Grossmünster church, the symbol of Zurich, was built. Legend? No, passive
+dynamic walkers! ( b) The “classical” passive dynamic walker by Steve Collins that walks
+down a declined ramp with no actuation (left), together with the 3D biped robot “Denise”
+by Martijn Wisse (right). Denise is a hybrid passive dynamic walker: its ankle and knee
+joints swing passively, while a motor drives the hips to induce walking over ﬂat ground.
+
+PDF PAGE 136
+changed is an unavoidable trade-off of the principle of cheap design.
+Energy efﬁciency is achieved because the leg movements are entirely
+passive, driven only by gravity in a pendulum-like manner. To make this
+work, a lot of attention was devoted to morphology and materials. For
+example, the robot is equipped with wide feet of a particular shape,
+elastic heels, and counterswinging arms that all help it to walk in this way
+(Collins et al., 2001).
+Loosely speaking, we can also say that the neural processing normally
+required for controlling walking is taken over by the proper morphol-
+ogy and the right materials, and thus is another instance of morpholog-
+ical computation. In fact, the neural control for this robot reduces to zero.
+But, if anything is changed, e.g., the angle of the incline, the agent ceases
+to function—the price of cheap design.
+Because the fully passive dynamic walker exploits many properties of its
+ecological niche, it is entirely dependent on that niche. But the ecological
+niche can be widened if we augment the agent’s capabilities: by adding
+motors, adding some control, and modifying the morphology of a passive
+dynamic walker we enable the robot to walk over ﬂat terrain.This has been
+achieved by the team led by Martijn Wisse, a highly creative young engi-
+neer at the Technical University of Delft,in Holland,who was also involved
+in the development of the passive dynamic walker at Cornell University.
+He recently created “Denise” (ﬁgure 4.3b), an almost completely passive
+dynamic walker, by augmenting the earlier model with some actuation,
+adding two electrical motors to move the legs. Its walking behavior (or
+should we say “her” walking behavior?) is actually quite natural, presum-
+ably because it exploits the passive forward swing of the leg.
+One might be inclined to say that cheap design only works for very
+simple systems, and admittedly the examples we have given so far are all
+indeed very simple. But look at humans for a moment.When we walk, the
+forward swing of our legs is—like “Denise’s”—mostly passive, i.e., the
+muscles are passive and the leg swings forward like a pendulum, thereby
+exploiting gravity. Our legs are complex indeed, with their bones, joints,
+tendons, ligaments, muscles, nerve cells, and skin, but complexity does not
+preclude exploitation.In this sense we can say that we ourselves as humans,
+even though we are incredibly complex, are “cheaply” designed. It will cer-
+tainly be interesting to see whether Wisse’s approach to robot walking will
+scale up to even more complex systems, in particular complex humanoid
+robots, or whether alternative approaches will have to be employed.
+Even though the passive dynamic walker is an artiﬁcial system (and a
+very simple one at that), it has a very natural feel. The term “natural”
+4. Intelligent Systems: Properties and Principles 111
+
+PDF PAGE 137
+applies not only to biological systems but to artiﬁcial ones as well:
+perhaps the natural feel comes from the exploitation of the dynamics,
+e.g., the passive swing of the leg (for an elaboration on this point see
+Pfeifer and Glatzeder, 2004).
+Leg Coordination in Insect Walking
+The ﬁrst two examples were drawn from robotics, so let us now look at
+one from biology: leg coordination in insect walking. It has been known
+for a long time that leg movements in insects are controlled by largely
+independent controllers (von Holst, 1943), in other words, there seems
+to be no center in the brain that coordinates the legs in walking. But if
+there is no such coordination center, how then can insects walk in the
+ﬁrst place, and how does leg coordination come about? And the legs do
+need to be coordinated, otherwise walking is not possible. A couple of
+years ago the radical thinker and trendsetting German biologist Holk
+Cruse, who has been studying insect walking for many years, cracked the
+conundrum. It turns out that the trick these insects use is to exploit their
+interaction with the environment (Cruse, 1990). Assume that the insect
+stands on the ground and then, in order to move forward, pushes back-
+ward with one of its legs. As a result, the joint angles of all the legs stand-
+ing on the ground will instantaneously be changed. The body is pushed
+forward, and consequently the other legs are also pulled forward and the
+joints will be bent or stretched. This is one of those unavoidable reper-
+cussions of being an embodied agent, and the insect can do nothing about
+it. However, and this is Cruse’s fascinating ﬁnding, this fact can be
+exploited to the animal’s advantage. All that is needed is angle sensors
+in the joints—and they do exist—for measuring the change, and there is
+global communication between the legs! But the communication is through
+the interaction with the environment, not through neural connections.
+So, the local neural leg controllers need only exploit this global com-
+munication. There is an additional beneﬁt of all this. Because the insect
+is moving forward, the angles of the other legs are all moving in the right
+direction—information that, in addition to being free, i.e., available
+without computation—is extremely useful and can be directly exploited
+for controlling the individual legs. This is not trivial, but Cruse and his
+colleagues have worked out a neural network architecture that does the
+job (Dürr et al., 2003). And this architecture, the WalkNet, can also be
+used to control six-legged robots.
+This is another beautiful instance of cheap design: if the insect had to
+do everything through computation, it would be more costly and much
+slower.This is also an instance of morphological computation: part of the
+112 II. Toward a Theory of Intelligence
+
+PDF PAGE 138
+task that would have to be done by the brain—the communication
+between the legs and the calculation of the angles on all the joints—is
+performed by the interaction with the real world.
+The principle of cheap design is very general because it only states that
+the ecological niche can be exploited to simplify the agent, but does not
+tell us how the exploitation should be accomplished or what dynamics
+should be exploited. Other design principles such as ecological balance,
+redundancy, and sensory-motor coordination are more speciﬁc and more
+about the how. But cheap design can be applied to more speciﬁc issues,
+such as the design of the visual system—a ﬁeld that is becoming known
+as “cheap vision.” The literature on vision is full of examples of how an
+ecological niche and speciﬁc interactions with the environment can be
+exploited. An instructive and entertaining example, the “Eyebot” robot,
+is discussed later in this chapter.
+To conclude the discussion of cheap design let us brieﬂy mention some
+examples that do not conform to this principle, in order to clarify it a bit.
+A laptop computer, as explained before, does not exploit the environ-
+ment in interesting ways, and neither does a humanoid robot in which
+the movements required for walking are largely “programmed into” the
+robot. Famous humanoids like Asimo, Qrio, or HRP (from the Japanese
+Humanoid Robotics Program) are largely preprogrammed, and there is
+no substantial exploitation of their system-environment interaction (yet).
+4.6 Agent Design Principle 4: Redundancy
+The redundancy principle states that intelligent agents must be designed
+in such a way that (a) their different subsystems function on the basis of
+different physical processes, and (b) there is partial overlap of functional-
+ity between the different subsystems.
+The redundancy principle is geared toward designing robust systems,
+i.e., systems that continue to function even if there are signiﬁcant changes
+in the environment.The term redundancy has a long history and is used in
+many different ways,and so,once again,rather than trying to come up with
+a deﬁnition we introduce the term intuitively using a number of examples.
+Visual and Haptic Systems in Humans
+The term modality is often used in the literature to designate different
+sensory channels: we talk about the visual, the haptic, or the auditory
+modality. The visual system, or visual modality, provides us with precise
+spatial information that enables us to move around very quickly because
+4. Intelligent Systems: Properties and Principles 113
+
+PDF PAGE 145
+computer scientist and engineer Max Lungarella from the University of
+Tokyo, the Dutch ethologist Rene te Boekhorst of the University of
+Hertfordshire, the American neuroscientist and “neuroboticist” Olaf
+Sporns of Indiana University, and I (Rolf) have shown that through
+sensory-motor coordination, correlations are induced in the sensory
+stimulation and these correlations provide the basis for perception and
+learning.
+The idea of sensory-motor coordination is in fact very old. We bor-
+rowed the term from the American philosopher and psychologist John
+Dewey, who introduced it in his famous and provocative article “The
+Reﬂex Arc in Psychology,” published in 1896. (Note that the concept of
+sensory-motor coordination also plays an important role in Jean
+Piaget’s theory of intelligence development, where it is used to charac-
+terize a particular stage; Piaget, 1952). Dewey argued that perception
+should not be seen as a process that starts from sensory stimulation,
+passes through internal processing, and ﬁnally produces an action: this
+is the classical behavioral view of input-processing-output. Rather, he
+suggested that “we begin not with a sensory stimulus, but with a sen-
+sorimotor co-ordination....I n  a  certain sense it is the movement which
+is primary, and the sensation which is secondary, the movement of the
+body, head, and eye muscles determining the quality of what is experi-
+enced” (Dewey, 1896; reprinted in McDermott, 1981, pp. 127–128). In
+fact, we would not argue that the movement is primary but that, to use
+once again the dynamical systems metaphor, both sensory and motor
+processes are coupled—they depend on each other. Trying to identify
+which is primary and which is secondary would be like attempting to
+solve the chicken-and-egg problem. We speculate that what Dewey did
+not know at the time was why sensory-motor coordination is so funda-
+mental: we suggest that in addition to mastering the manipulation of
+objects, there are signiﬁcant information-theoretic implications, as we
+just discussed.
+We already pointed out that categorization is one of the most funda-
+mental of cognitive abilities. Perceptual categorization, as well as per-
+ception in general, in animals and humans has all the characteristics of
+sensory-motor coordination, and once we consider different activities—
+looking, grasping, drinking, walking, writing, and listening—more care-
+fully, we realize that we are always engaged in sensory-motor coordination.
+It is one of the most important processes in the development from infant
+to adult, and it constitutes the basis of many forms of learning. We will
+come back to both of these points in the next chapter, where we sketch
+120 II. Toward a Theory of Intelligence
+
+PDF PAGE 146
+out how cognition might emerge from a developmental process in a
+bottom-up fashion.
+Recognizing Objects by Manipulating the Environment
+To conclude our discussion of sensory-motor coordination for the time
+being, let us look at an example from robotics. The Italian engineer and
+computer scientist Giorgio Metta, while working at MIT’s Artiﬁcial
+Intelligence Laboratory on the humanoid robot Cog, was interested in
+getting the robot to recognize objects in its environment. Cog, developed
+in Rodney Brooks’s laboratory during the 1990s, consists of a legless
+torso, a head with vision and auditory systems, and two arms with hands.
+Often, as we know from our discussion about computer vision, recog-
+nizing objects is a hard task, especially if there are many objects heaped
+together in a cluttered environment. The objects may be colored simi-
+larly to the background, the lighting conditions may not be very good, or
+contrast may be poor. One strategy, often used by humans, is to move the
+head while looking at an object.Through these sensory-motor-coordinated
+movements, sensory stimulation is induced that can be exploited to
+extract information from the environment. This strategy of moving your
+head and eyes—or the robot’s “head” and cameras—to support percep-
+tual processes is also applied in so-called active vision systems.
+To take things one step further, Metta programmed Cog with a par-
+ticular sensory-motor strategy that goes beyond mere head or eye move-
+ment: Cog was programmed to actually manipulate the environment by
+poking objects in front of it in order to see how they move. This is done
+by tracking only the movement of the robot’s arm (which is easy to do
+and requires relatively little computation), i.e., all the robot can “see”
+through its own vision system is the motion of its arm and hand. By
+having a motion-detection algorithm, the robot continuously sees its
+hand and arm moving through space. If as the robot moves there is a
+sudden spread of motion activity in its ﬁeld of vision, this is an indica-
+tion that the robot is pushing an object, because the stationary object has
+begun to move as well. Spread of motion activity means that the area in
+which the robot detects motion suddenly becomes much larger than that
+described by the arm alone. This can be very easily detected, and the
+robot “knows” immediately what portion of the visual ﬁeld constitutes
+the object (see ﬁgure 4.4, which shows a similar robot, the Babybot, that
+Metta had developed for his Ph.D. thesis). Through the interaction with
+the environment—by poking an object—the robot has induced sensory
+stimulation that distinguishes the moving arm and the moving object
+4. Intelligent Systems: Properties and Principles 121
+
+PDF PAGE 147
+122 II. Toward a Theory of Intelligence
+(a)
+(b)
+(c)
+Figure 4.4
+Generation of sensory stimulation through the interaction with the real world: sensory-
+motor coordination. Lira Lab’s “Babybot” (University of Genova, Italy), exploring the clut-
+tered area in front of it. The panels show the output from the motion-detection system. (a)
+The arm is clearly visible because it is moving, whereas the apple and the other objects on
+the table are at this point in time not visible by motion detection. (b) Babybot touches the
+apple, but the apple is still not moving and thus invisible to the motion-detection system.
+(c) Babybot pushes the apple, thus inducing motion so that the apple becomes visible and
+can easily be identiﬁed as an object. Reaching toward the apple, touching it, and pushing
+it are processes of sensory-motor coordination. (Experiments by Giorgio Metta and Paul
+Fitzpatrick.)
+
+PDF PAGE 148
+from the rest of the environment. This is a beautiful illustration of the
+principle of sensory-motor coordination.
+When discussing design for emergence we said that if we could demon-
+strate that an agent designed by artiﬁcial evolution conformed to one of
+the design principles, this would provide additional support for the valid-
+ity of that principle. As we will see in chapter 6, the “Block Pushers”—
+agents produced by artiﬁcial evolution—also exploit sensory-motor
+coordination in order to move, even though this coordination was not
+programmed into the system.
+4.8 Agent Design Principle 6: Ecological Balance
+The principle of ecological balance has two parts. The ﬁrst states that given
+a certain task environment, there has to be a match between the complex-
+ities of the agent’s sensory, motor, and neural systems. The second aspect
+is closely related to the ﬁrst; it states there is a certain balance or task dis-
+tribution between morphology, materials, control, and environment.
+Let us brieﬂy inspect the ﬁrst aspect of ecological balance, the idea
+that, given a certain task environment, there has to be a match between
+the complexity of the agent’s sensory systems, motor systems, and neural
+substrate. A nice illustration of this principle is given by Richard
+Dawkins in his book Climbing Mount Improbable, where he describes a
+hypothetical snail with human-like, and human-sized, eyes. This snail
+would have a hard time carrying along these giant eyes, but more impor-
+tantly, they would be only moderately useful, if at all: human eyes, and
+the eyes of mammals in general, are adapted to our particular mode of
+life, which requires the detection of fast-moving objects, high-resolution
+images, and so on. A snail has little use for such abilities: why bother
+detecting fast-moving predators if you cannot run away from them, or
+detecting running prey if you are vegetarian? The complexity, weight,
+and size of the human eyes would only constitute unnecessary baggage,
+an example of an entirely unbalanced system.
+Let us look at another, very different example. Recall the Braitenberg
+vehicles we introduced in chapter 2, in which the light sensors are directly
+wired to the motors in such a way that they would follow a light. The
+“brains” of these robots are extremely simple, consisting of only two
+wires, or “synapses” if you like, but they are sufﬁcient for the purpose of
+light-following or light-avoiding. If you now replace the two-synapse
+brain by a brain of human complexity with 10 14 synapses, how does the
+4. Intelligent Systems: Properties and Principles 123
+
+PDF PAGE 149
+agent beneﬁt from such a brain? The answer is simply that there is no
+beneﬁt because the system is not ecologically balanced. Depending on
+the tasks required of the robot, the complexity of the sensory and motor
+systems would have to be augmented as well if the brain were to be
+useful. A Khepera robot with only two motors that can turn either
+forward or backward is, like Dawkins’s snail, rather limited in what it can
+accomplish: equipping it with a high-resolution camera, for instance, is
+ecologically unbalanced, because it does not expand the behavior capa-
+bilities of the robot; it only weighs it down.
+Because biological agents—animals and humans—have evolved, they
+are all ecologically balanced vis-à-vis their ecological niche. Humans, for
+example, have enormous brains, but they also possess, taken as a whole,
+the most sophisticated sensory and motor systems of any species on
+Earth. Some animals admittedly possess amazingly dexterous
+appendages, such as an elephant’s trunk or the tentacles of an octopus,
+or impressive sensory organs—for example, the bat’s echolocation
+scheme for catching ﬂying insects—but consider the ﬂexibility of the
+human hand or the astounding intricacy of our vocal tract. A complex
+hand allows good tool use; a complex vocal tract allows for language. A
+heavy-duty brain indeed is required for coordinating our complex
+sensory and motor systems in order to carry out a wide range of tasks.
+Again, it is worth pointing out that one system did not evolve ahead of
+the others; rather, they increased in complexity roughly together.
+The second aspect of the principle of ecological balance is basically a
+generalization of the ﬁrst aspect: given a particular task environment,
+there must be a certain balance or task distribution between morphol-
+ogy, materials, control, and environment. This second part has been elab-
+orated in great detail in many papers (e.g., Bongard and Pfeifer, 2001;
+Hara and Pfeifer, 2000; Ishiguro and Kawakatsu, 2003; Pfeifer, 2000;
+Pfeifer et al., 2004), so here we only provide a few example systems to
+build an intuition of what this balance is all about.
+The Human Hand-Arm-Shoulder System
+Although the situation is slowly changing, most robots are still built from
+hard materials like aluminum and plastics, and for actuation they rely on
+electrical motors. It turns out that the control programs for such systems
+tend to be very complicated because every little movement of every
+joint, down to the ﬁngertips (if the robot has any) has to be explicitly
+controlled (as illustrated in ﬁgure 4.1c). By contrast, in the human hand-
+arm-shoulder system the muscles and tendons have a certain degree of
+124 II. Toward a Theory of Intelligence
+
+PDF PAGE 150
+elasticity. One of the important points of ecological balance is that these
+material properties will dramatically reduce the amount of control
+required to achieve the same kinds of movement as compared to a com-
+pletely stiff system. Imagine that you are sitting at your desk and you
+intend to grab the coffee cup sitting on the desk in front of you. There
+is a natural position for your arms which is determined by the anatomy
+of your torso, shoulders, and arms, and by the elastic, material properties
+of the muscle-tendon system. Grasping the cup with your right hand
+would normally be done with the palm facing left, but you could also—
+with considerable additional effort—grab the cup with your right hand
+twisted such that the palm is facing to the right. If you now relax the
+muscles from this awkward position, your arm will automatically turn
+back to its natural position. This is achieved not by neural control but by
+the material properties of the muscle-tendon system. Normally in robot-
+ics, returning to a default position is a function of electronic control,
+whereas for agents with biological muscles, it is achieved (mostly)
+through the material properties of the muscle-tendon system. In other
+words, the materials of the muscle-tendon system take over some of the
+control tasks that the brain, if the system had been designed without
+muscles, would have to deal with explicitly. So, to simplify the problem,
+when building our robots we might consider using artiﬁcial muscles that
+have properties similar to natural ones. Thus it could be said that neural
+control or program control is traded against materials.
+In our discussion we have focused on the material properties of the
+muscle-tendon system. But it is clear that the morphology itself—or, as
+we say when talking about humans, the anatomy—also provides impor-
+tant constraints which make control much easier. For example, the skele-
+tal arrangement of the human hand, together with the tissue holding the
+hand together, guarantees that when it closes, the ﬁngers naturally come
+together.
+Puppy as an Ecologically Balanced Robot
+We can use our case study of the robot Puppy to illustrate some of the
+important points about ecological balance. Robotics researchers often
+come from a background of control theory, and some control theorists
+argue that the bottleneck in achieving rapid locomotion in robots is the
+electronics for controlling the sensors and motors. In other words, the
+circuits are too slow to process the sensor signals and calculate the motor
+commands fast enough. This is a puzzling idea, because today’s elec-
+tronics have cycle times on the order of microseconds (10 −6 sec) to
+4. Intelligent Systems: Properties and Principles 125
+
+PDF PAGE 151
+nanoseconds (10 −9 sec), whereas the neural substrate of biological
+systems is much slower with “cycle times,” so to speak, somewhere
+between 10 (10 −2 sec) and 100 milliseconds (10 −1 sec). Of course, we
+cannot really speak of cycle times in biological neural networks because
+they are continuous and have no clock like digital electronic circuits, but
+clearly the operating time scale of biological neurons is much slower.
+Nevertheless, there are biological organisms like dogs, horses, cheetahs,
+and humans that move much faster than today’s legged robots. There are
+probably two factors involved in this surprising fact. First, biological
+organisms beneﬁt from the massive parallelism of their neural systems,
+as well as the existence of local reﬂexes. In other words the signals do
+not have to travel all the way from the muscles up to the brain and back
+but they can be processed directly by the spinal cord, thus shortening the
+response times signiﬁcantly.
+But this alone would not sufﬁce to make biological systems so fast.
+What is required in addition is the exploitation of the morphological and
+material properties of their bodies as the agent interacts with the real
+world. Let us brieﬂy explain what this phrase means. Recent thinking in
+biomechanics (e.g., Blickhan et al., 2003), the ﬁeld in which locomotion
+behavior of animals and humans is studied, draws our attention to the
+importance of the springlike properties of the muscle-tendon system. For
+example, the way that the knee joint moves when your foot hits the
+ground is not controlled by the brain or the spinal cord: rather, it is a
+result of the elastic properties of the leg’s muscle-tendon system. What
+the neural system does control is the speciﬁc elasticity of the system:
+neural signals create a particular elastic stiffness of the muscle in the leg
+according to the phase of the gait that the animal is currently in. There-
+fore the trajectories of the individual joints are not controlled completely
+by the brain or spinal cord; some of the control is taken over by the mate-
+rial properties of the system itself.
+Another instance of exploitation of morphological properties is the
+passive swing of the leg during human walking, a phenomenon that is
+mirrored in the design of the passive dynamic walker and its offshoot
+“Denise,” discussed earlier in this chapter. During the swing phase there
+is little control of the leg’s motion: the desired movement is achieved by
+passive exploitation of gravity and momentum. Robot designers have
+traditionally ignored this fact, and instead have tried to reproduce the
+walking movements in humanoid robots using complex control algo-
+rithms. As a consequence, the robots, even though some have achieved
+considerable speed, do not move naturally and only in certain environ-
+126 II. Toward a Theory of Intelligence
+
+PDF PAGE 152
+ments, for example only on ﬂat surfaces with particular frictional 
+properties.
+As we explained earlier, Puppy’s legs are moved back and forth by
+servo motors at the “shoulder” and “hip” joints only; all the other joints
+are passive: they are not driven by any motors. The two springs that are
+attached to each of the legs (see ﬁgure 3.2b) can be seen as very simple
+artiﬁcial muscles or muscle-tendon combinations, and because of their
+intrinsic material properties less electronics are required: the springs
+take over the task that would otherwise have to be explicitly controlled.
+Springs are, of course, extremely simple, but they do capture some of the
+key properties of natural muscle-tendon systems, such as the elastic
+movement of the knee joint when the foot hits the ground. One of the
+problems with springs, though, is that their spring constant (that is, how
+stiff they are) does not change, whereas an important property of natural
+muscles is that their spring constants, so to speak, can be changed on the
+ﬂy to meet the demands of the current situation. For example, on impact
+it is important that the muscles controlling the knee joint have the right
+stiffness. The higher an animal jumps, the more stiffness is required to
+support the body on landing, but there still must be some elasticity to
+soften the impact. But what exactly is the right stiffness for running or
+for jumping? Note how our thinking has moved from controlling trajec-
+tories of joints to controlling morphological properties; now we are
+asking what the right material properties of Puppy’s springs should be.
+It is just this focus on morphology that we want to stress in artiﬁcial intel-
+ligence, because such considerations will beneﬁt our design of robots
+and, ultimately, our understanding of intelligence. This also relates back
+to the idea of designing for emergence: if we get the material properties
+right, the desired trajectories will emerge from the interaction with the
+environment. Finding the proper stiffness for each situation, however, is
+a hard problem and will require a lot of research.
+Artiﬁcial muscles are an emerging robot technology that now exist in
+many variations, but the most popular kind so far has been the pneu-
+matic actuator—a kind of rubber tube surrounded by a braided fabric—
+that contracts when air pressure is applied. Because of the rubbery
+material, there is intrinsic elasticity and passive compliance, meaning that
+the muscle will yield elastically if the agent in which it is embedded
+encounters an object. And if we have robots interacting with humans, we
+want them to yield elastically so they will not hurt anyone: this general
+idea of yielding to external objects is known in robotics as compliance.
+A number of other technologies for artiﬁcial muscles are beginning to
+4. Intelligent Systems: Properties and Principles 127
+
+PDF PAGE 153
+be used by roboticists: polymers that work on the basis of charge dis-
+placement; gels that contract depending on the chemical properties of
+the solution they are immersed in; metals whose lengths vary depending
+on the current that ﬂows through them; and several others that are still
+just being developed in research laboratories. Like any kind of technol-
+ogy, each variety of artiﬁcial muscle has its pros and cons. Some cannot
+be bought off the shelf, some can extend quickly but only retract slowly;
+another type may wear out quickly or be too slow, etc. Pneumatic actu-
+ators are fast and robust and can be bought off the shelf in many varia-
+tions. Their main disadvantage is that pressurized air is required for their
+operation and that they have to be controlled by valves.
+One desirable property that we get free from artiﬁcial muscles—in
+contrast to servomotors—is that because of their springlike properties,
+they act as energy stores: on impact, part of the kinetic energy from the
+ﬂight phase is transformed into potential energy in the muscle (or rather
+the muscle-tendon system), and some of it can be reused for the next
+step. A hopping kangaroo, for instance, regains about 40% of the energy
+absorbed in landing when it bounces up again (Vogel, 1998).
+But back to Puppy. The right combination of material and morpho-
+logical properties, i.e., the particular shape of the body and the limbs, is
+what allows Puppy to run. The servo motors that move the legs back and
+forth provide the energy supply and the basic rhythmic activation. The
+springs, the elastic spine, and the speciﬁc morphology take care of the
+harmonious distribution of the forces throughout Puppy’s body when it
+interacts with the environment and make it adaptive to variations in its
+environment. The slightly slippery materials of the feet provide the addi-
+tional degrees of freedom required for self-stabilization, the robot’s
+ability to stabilize its gait without explicit control. Note that because
+Puppy is only a very simpliﬁed version of a dog, its dynamics is very dif-
+ferent from that of an actual dog, but its movement is natural with
+respect to its own construction. As a consequence, there is a deﬁnite
+sense of aesthetics in Puppy’s movements.You can verify the naturalness
+of Puppy’s movements by watching the video clip at the book’s Web
+page.
+The Brain Controlling the Body, or Vice Versa?
+While for a robot there is a clear distinction between the controller—
+which resides in the microprocessor—and the controlled—the actual
+physical robot, this distinction is far less clear in natural systems. Ulti-
+mately, the neural system of an animal or human is just as physically
+128 II. Toward a Theory of Intelligence
+
+PDF PAGE 154
+embodied as the rest of the body: it is not hidden away in a micro-
+processor that operates more or less independently from the body. One
+criterion that distinguishes the controller from the controlled in robots
+is energy consumption: typically the energy consumption of the con-
+troller is much less than that of the motors that are controlled by it.
+However, as is well known, the energy consumption of the human brain
+is very high, making up about 20% of the body’s total energy usage. But
+the distinction gets even more fuzzy if we take into account that the body
+itself—the morphology and the materials—and the system-environment
+interaction also take over control tasks, i.e., perform morphological 
+computation.
+To illustrate: Imagine that you are running along a level jogging path
+and then the path goes downhill a bit. You will start running a bit faster,
+not because the brain “tells” the body to run faster, but because gravity
+accelerates the body, which in turn makes the limbs move faster, which
+in turn speeds up the brain’s oscillatory circuits! So, the body “controls”
+the brain just as much as the brain controls the body. In other words, no
+one system is dominant over the other; the body and brain mutually
+determine each other’s behavior. We will see more examples of this
+mutual coupling throughout the book.
+“Computation” by Sensor Morphology: The “Eyebot”
+In about 1995 the theoretical physicist and AI researcher Lukas 
+Lichtensteiger, together with his colleague Peter Eggenberger, came up
+with a brilliant idea inspired by insects. In insects, at least in some species,
+the speciﬁc arrangement of the facets in their compound eye can be seen
+to perform an important function, i.e., to compensate for motion paral-
+lax. Facets are the small units that together make up an insect’s com-
+pound eye. Motion parallax is just a fancy name for a phenomenon that
+is very familiar to all of us. Assume that you are sitting on a train looking
+out the window in the direction in which the train is moving and, still far
+away, you see a tree. As long as you are far away, this tree will move
+slowly across your visual ﬁeld. When you pass close by the tree it will
+move much more quickly across your visual ﬁeld, even though the train
+is moving at constant speed. This is purely a geometric phenomenon and
+holds for the human eye just as for the insect eye: objects nearby move
+faster across the visual ﬁeld than objects farther away. Even though the
+insect eye is much more primitive than the human eye, it is nevertheless
+extremely effective and suited for its task, i.e., for guiding the insect
+during rapid ﬂight.
+4. Intelligent Systems: Properties and Principles 129
+
+PDF PAGE 155
+The prominent neuroscientist and robot enthusiast Nicolas Frances-
+chini, working at the Centre National de Recherche Scientiﬁque (CNRS)
+in Marseille, France, found that in the houseﬂy, the spacing of the facets
+is not homogeneous: the density toward the front is higher than on the
+side. What could be the advantage of this arrangement? First of all, it
+makes sense to have high resolution in the direction where you are going,
+which is usually forward. But second, with this arrangement of facets, a
+slow-moving point of light—from a distant object—will pass from one
+facet to the next at the front of the eye roughly at the same rate as a fast-
+moving point of light—from a close object—at the side of the eye. So the
+eye, because of its morphology, effectively compensates for motion 
+parallax (see ﬁgure 4.5).
+Let us assume that an insect “wants” to ﬂy past an obstacle at a certain
+safe distance. One way of doing this is to maintain a ﬁxed lateral distance
+from the object during ﬂight, as do the railway lines going past the tree.
+Because of the facet distribution, all the insect needs to do is maintain a
+constant optic ﬂow; that is, it has to move such that the time interval
+needed for a point of light to travel from one facet to the next remains
+constant: this is cheap design indeed! If there were a homogeneous
+arrangement of facets, because of motion parallax, computation would
+be more complicated (differently tuned neural circuits would have to 
+be used for different pairs of facets). This is another illustration of 
+morphological computation, or trading morphology for computation:
+the computation is, so to speak, performed by the morphology of the
+insect eye.
+Inspired by these discoveries about the morphology of insect eyes,
+Lichtensteiger and Eggenberger developed the “Eyebot,” a robot with a
+linear array of “facets,” which are simply plastic tubes with a light sensor
+inside each one (see ﬁgure 4.5). These “facets” can be moved individu-
+ally by electrical motors, and the motors in turn can be controlled by a
+program. Now, the ability to adapt one’s behavior is normally attributed
+to plasticity of the brain. Lichtensteiger and Eggenberger were inter-
+ested in the adaptive potential of morphology and asked the following
+question. Assume that an agent has the task of moving in such a way that
+its lateral distance to an obstacle remains constant: if we keep the brain
+ﬁxed for the duration of the experiment, but we allow the agent to
+change its own morphology, will it be able to solve the task by adjusting
+its morphology (in this case the arrangement of the facets)? They ran an
+evolutionary algorithm (see chapter 6) on the “Eyebot” to optimize the
+angular position of the facets so that light would move past each facet
+130 II. Toward a Theory of Intelligence
+
+PDF PAGE 156
+4. Intelligent Systems: Properties and Principles 131
+(b)
+(c)
+(a)
+Figure 4.5
+Ecological balance: morphological computation through sensor morphology. ( a) The
+“Eyebot” has adjustable hollow tubes with light-sensitive cells at the base, thereby mim-
+icking the facets of an insect eye. ( b) If the facets are evenly spaced, a point of light,
+depicted by the running lightbulb, moves slowly across the visual ﬁeld if the lightbulb is in
+front and far away, but moves fast as it passes by the side of the robot. This is the phe-
+nomenon of motion parallax. ( c) If, however, the facets are more dense toward the front
+of the robot, a point of light will move at the same speed across all of the tubes, no matter
+whether it is in front or to the side of the robot; the motion parallax is therefore compen-
+sated away by this particular morphology.
+
+PDF PAGE 157
+pair at the same rate. Indeed, after about ﬁve hours, the robot managed
+to solve the problem: the resulting arrangement of the facets was similar
+to the one found in biological insects, with most clustered near the front
+and fewer arranged along the robot’s side.
+Morphological Computation, Cheap and Diverse Locomotion: Stumpy
+At just about the start of the twenty-ﬁrst century, Raja Dravid, a physi-
+cist, engineer, and self-made man who runs an “inventor’s cooperative”
+in Zurich—together with the engineers and computer scientists 
+Chandana Paul and Fumiya Iida—had an ingenious idea: they developed
+a very simple robot capable of many behaviors like walking, dancing,
+hopping, and turning. But rather than building a robot with legs and
+actuating them, they decided to actuate only the upper body.
+Stumpy’s lower body is made up of an inverted T mounted on wide,
+springy “feet.” The upper body is an upright T connected to the lower
+body by a joint that can move back and forth, the “waist” joint: with this
+joint, Stumpy can move the upper body left and right, but cannot turn it
+(see ﬁgure 4.6). This upper horizontal beam is connected to the vertical
+beam by a second joint that can rotate left and right, providing an addi-
+tional degree of freedom, the “shoulder” joint. So, Stumpy has two
+degrees of freedom: it can move its upper body left and right, and it can
+rotate its shoulder left and right, but it cannot bend forward and back.The
+horizontal beam at the top of the robot has weights attached to the ends
+in order to increase the effect of its movements. Since the ﬁrst Stumpy, a
+whole series of Stumpies with somewhat different designs, morphologies,
+and materials have been built in order to explore the different ways in
+which simple bodies can give rise to lots of different behaviors.
+Although Stumpy has no real legs or feet, it can move around in many
+ways: it can move forward in a straight or curved line, it has different gait
+patterns, it can move sideways, and it can turn on the spot. Interestingly,
+all this can be achieved by actuating only the two joints. In other words,
+control is extremely simple—the robot is virtually “brainless.”The reason
+this works is because the dynamics, determined by its morphology, its
+materials (elastic, springlike materials, the surface properties of the feet),
+and the way it is actuated, are exploited in clever ways. Stumpy’s many
+appealing and entertaining ways of moving arise not just from actuation
+of the two joints in particular ways, but because Stumpy is built in a spe-
+ciﬁc manner (for more detail, see Iida et al., 2002 and Paul et al., 2002);
+if its morphology were different, it would exhibit less behavioral diver-
+sity, as illustrated in ﬁgures 4.6a and b.
+132 II. Toward a Theory of Intelligence

@@ -1,0 +1,21 @@
+# CD central finite check — frozen before implementation/results
+
+MODE: inherited current user-authorized Ultra route; no exposed backend/model telemetry, no Pro claim. AGENT PROPOSAL. Exploratory evaluation: shared filesystem and code are instruction-separated, not a blind held-out evaluation environment.
+
+QUESTION: Can raw transition observations, without labelled target state fields or a supplied target causal model, identify an editable finite state decomposition and supply local circuit-construction targets for a new composite transition? Does the resulting construction differ from a frozen-module-plus-state-adapter implementation given the same discovered interface and data?
+
+GIVEN: A bounded deterministic teacher has eight opaque state identifiers, four opaque action identifiers, and one binary output. The experiment designer uses three Boolean variables only to generate a reproducible teacher: two setter actions for one variable, toggles of the other two, and output XOR of the first two. Two fixed independent opaque state permutations (seeds 11 and 29) are used. The learner receives all 32 raw action transitions and eight readouts, never the generating variables. The full eight-state domain is supplied: this is substantial finite-state scaffolding.
+
+CONSTRUCTION: Search all bijections from the eight raw states into generic finite products of shapes (8), (2,4), and (2,2,2). A one-field relabelling cannot alter its score and needs only one representative; other shapes have 8! codebooks each. Minimize total changed-field bit width over actions, then use a fixed lexical tie break. This objective deliberately favors intervention locality, not semantic names. Construct Get from the codebook and Put by replacing a field tuple and applying the inverse codebook. Compile binary-field updates from raw transition rows using a fixed Boolean expression grammar (constants, variables, NOT, AND, OR, XOR). No neural proposal is trained.
+
+NEW OPERATION: Supply eight raw before/after examples of a fifth event that sets first designer variable to its XOR with the second and preserves the other two. All state rows are labelled; do not call subsequent state evaluation held out. The new action is absent from the four old actions and is not an installed compiler primitive. Its learned expression may use generic Boolean gates. The source teacher and transition tables are absent from runtime execution.
+
+BASELINES: (1) The supplied opaque-state representation; report the locality score and actual codec search debt, without claiming a matched search-performance benchmark. (2) Frozen old transition functions plus a newly synthesized state adapter for the fifth action, using exactly the same discovered interface, expression grammar, and eight new examples. This baseline gets the editable state access afforded to the candidate. Do not make a positive claim by denying it that access. Compare actual emitted transition functions, correctness, and gate counts.
+
+ATTACK: A missing distinction in old behavior need not determine the new operation. Exhibit two fifth-action extensions with identical four-action observations but different new behavior. Also inspect whether the local postcondition checker is merely the compiled transition equations in a different role.
+
+VERIFIER: Enumerated codebook search; exact row checks over the declared eight-state domain; exhaustive action sequences through length four over the five-action alphabet from all eight starts. These verify this finite induced implementation and its adapter equivalent, not neural learning, unseen state discovery, efficient search, or novelty. Old rows are the construction target; the new task supplies new labels. A local equality test is not an independent semantic oracle.
+
+BUDGET: One standard-library Python implementation, at most two fixed encodings, 2*(1+2*8!) candidate codebooks; Boolean expression discovery capped at tree size seven; exhaustive runtime tests at length <=4; one isolated run with wall timeout 45 seconds and, only for a genuine implementation bug, one recorded repair/run. No network in inspected numerical execution. No nested agents or purchases.
+
+STOP: Deliver the concrete machine, measured finite result or timeout, strongest equivalent method and central remaining gap. No escalation to a neural benchmark.

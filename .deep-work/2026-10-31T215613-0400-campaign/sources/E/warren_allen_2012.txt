@@ -1,0 +1,1396 @@
+
+PDF PAGE 1
+Steady-state parameter sensitivity in stochastic modeling via trajectory reweighting
+Patrick B. Warren 1 and Rosalind J. Allen 2
+1Unilever R&D Port Sunlight, Quarry Road East, Bebington, Wirral, CH63 3JW, UK.
+2SUPA, School of Physics and Astronomy, The University of Edinburgh,
+The Kings Buildings, Mayﬁeld Road, Edinburgh, EH9 3JZ, UK.
+(Dated: February 8, 2012)
+Parameter sensitivity analysis is a powerful tool in the building and analysis of biochemical net-
+work models. For stochastic simulations, parameter sensitivity analysis can be computationally
+expensive, requiring multiple simulations for perturbed values of the parameters. Here, we use
+trajectory reweighting to derive a method for computing sensitivity coeﬃcients in stochastic simula-
+tions without explicitly perturbing the parameter values, avoiding the need for repeated simulations.
+The method allows the simultaneous computation of multiple sensitivity coeﬃcients. Our approach
+recovers results originally obtained by application of the Girsanov measure transform in the general
+theory of stochastic processes [A. Plyasunov and A. P. Arkin, J. Comp. Phys. 221, 724 (2007)].
+We build on these results to show how the method can be used to compute steady-state sensitiv-
+ity coeﬃcients from a single simulation run, and we present various eﬃciency improvements. For
+models of biochemical signaling networks the method has a particularly simple implementation. We
+demonstrate its application to a signaling network showing stochastic focussing and to a bistable
+genetic switch, and present exact results for models with linear propensity functions.
+PACS numbers: 87.18.Tt, 87.10.Mn, 02.50.Ga
+I. INTRODUCTION
+Parameter sensitivity analysis is one of the most impor-
+tant tools available for modelling biochemical networks.
+Such analysis is particularly crucial in systems biology,
+where models may have hundreds of parameters whose
+values are uncertain. Sensitivity analysis allows one to
+rank parameters in order of their inﬂuence on network
+behaviour, and hence to target experimental measure-
+ments towards biologically relevant parameters and to
+identify possible drug targets. For deterministic models,
+the adjunct ODE method provides an eﬃcient way to
+compute the local sensitivity of a model to small changes
+in parameters. For stochastic models, however, parame-
+ter sensitivity analysis can be computationally intensive,
+requiring repeated simulations for perturbed values of
+the parameters. Here, we demonstrate a method, based
+on trajectory reweighting, for computing local parameter
+sensitivity coeﬃcients in stochastic kinetic Monte-Carlo
+simulations without the need for repeated simulations.
+Sensitivity analysis of biochemical network models
+may take a number of forms. One may wish to deter-
+mine how a model’s behaviour changes as a parameter
+is varied systematically within some range (a parameter
+sweep), its dependence on the initial conditions of a simu-
+lation, or its sensitivity to changes in the structure of the
+model itself (alternate mode-of-action hypotheses). In
+this paper, we focus on the computation of local param-
+eter sensitivity coeﬃcients. These coeﬃcients describe
+how a particular output f of the model varies when the
+α-th parameter of the model,kα, is varied by an inﬁnites-
+imal amount, kα→kα +h:
+∂f
+∂kα
+= lim
+h→0
+f′−f
+h . (1)
+where f′ is the output of the model computed in a sys-
+tem with kα changed to kα +h. For deterministic mod-
+els, where the dynamics of the variables xi(t) can be
+described by a set of deterministic ordinary diﬀerential
+equations (ODEs) ∂xi/∂t = g(xi,kα), diﬀerentiation of
+the ODEs with respect to kα shows that the sensitivity
+coeﬃcientsCi,α≡∂xi/∂kα obey an adjunct set of ODEs,
+∂Ci,α
+∂t =
+∑
+j
+∂g
+∂xj
+Cj,α + ∂g∂kα . (2)
+These adjunct ODEs can be integrated alongside the
+original ODEs to compute the sensitivity coeﬃcients “on
+the ﬂy” in a deterministic simulation of a biochemical
+network.
+Stochastic models of biochemical networks are (gen-
+erally) continuous-time Markov processes [1] which are
+solved numerically by kinetic Monte-Carlo simulation,
+using standard methods such as the Gillespie [2] or
+Gibson-Bruck [3] algorithms. Replicate simulations will
+produce diﬀerent trajectories; we wish to compute how
+the average value⟨f⟩ of some function f(t) of the model
+changes with the parameter kα:
+∂⟨f⟩
+∂kα
+= lim
+h→0
+⟨f⟩′−⟨f⟩
+h . (3)
+where the averages are taken across replicate simula-
+tion runs. If one is interested in steady-state ( i. e.
+time-independent) parameter sensitivities, the averages
+in Eq. (3) may instead be time averages taken over a sin-
+gle simulation run. Na¨ ıve evaluation of parameter sensi-
+tivities via Eq. (3) is very ineﬃcient, since one is likely
+to be looking for a small diﬀerence between two ﬂuctu-
+ating quantities. There are several existing approaches
+that get around this problem: spectral methods [4], a
+arXiv:1202.4704v1  [physics.comp-ph]  21 Feb 2012
+
+PDF PAGE 2
+2
+method based on the Girsanov measure transform [5],
+and methods which re-use the random number streams
+[6]. In this paper, we develop a method based on tra-
+jectory reweighting, which is simple to implement in ex-
+isting kinetic Monte Carlo codes and provides a way to
+compute steady-state parameter sensitivity coeﬃcients
+“on-the-ﬂy” in stochastic simulations of biochemical net-
+works. The method provides an accessible alternative to
+the Girsanov measure transform pioneered by Plyasunov
+and Arkin [5]. Indeed several of our equations in Sec-
+tion II are equivalent to those Ref. 5. However, we go
+beyond previous work by showing in practical terms how
+the method can be implemented in standard stochastic
+simulation algorithms, extending the method to the com-
+putation of parameter sensitivities in the steady state,
+and showing how time-step preaveraging can be used to
+improve the eﬃciency of the calculations.
+II. TRAJECTORY REWEIGHTING
+The basic idea behind trajectory reweighting is as fol-
+lows. In a kinetic Monte-Carlo simulation, for a given
+set of parameters any given trajectory has a statistical
+weight which measures the probability that it will be
+generated by the algorithm [7–9]; this weight can be ex-
+pressed as an analytical function of the states of the sys-
+tem along the trajectory and of the parameter set. This
+analytical function also allows us to compute the statisti-
+cal weight for thissame trajectory, in a system with adif-
+ferent set of parameters: i. e. its weight in the ensemble
+of trajectories with perturbed parameters. This allows
+us in principle to compute the average⟨f⟩′ in Eq. (3) for
+the perturbed parameter set, using only a set of trajecto-
+ries generated with the unperturbed parameter set. For
+most applications this is ineﬃcient, because the weight of
+a trajectory in the perturbed ensemble is typically very
+low, resulting in poor sampling. However, it turns out
+that trajectory reweighting does provide an eﬀective way
+to compute local parameter sensitivity coeﬃcients.
+Trajectory reweighting for kinetic Monte-Carlo
+simulations
+More speciﬁcally, let us consider a typical implementa-
+tion of the Gillespie algorithm [2] (similar arguments ap-
+ply to more recent algorithms, such as Gibson-Bruck [3]).
+Here, the state of the system is characterised by a set of
+discrete quantitiesNi, typically representing the number
+of molecules of chemical species i. Transitions between
+states are governed by propensity functions aµ(Ni,kα)
+where µ labels the possible reaction channels and the
+quantities kα are parameters in the problem, typically
+reaction rates (kα represents the α-th such parameter).
+A kinetic Monte-Carlo trajectory is generated by step-
+ping through the space of states Ni in the following way.
+We ﬁrst compute the propensity functions aµ(Ni) for all
+the possible transitions out of the current state. We then
+choose a time step ( i. e. waiting time) δt from an expo-
+nential distribution p(δt) = τ−1e−δt/τ , where the state-
+dependent mean timestep (the mean waiting time be-
+fore exiting the current state) is ⟨δt⟩ = τ≡ (∑µaµ)−1.
+We choose a reaction channel with probability pµ =
+aµ/∑µaµ. We advance time by δt and update the val-
+ues of Ni according to the chosen reaction channel. We
+are now in a new state, and the above steps are repeated.
+Now let us consider the statistical weight of a given tra-
+jectory generated by this algorithm [7–9]. In each step,
+the probability of choosing the value of δt that we actu-
+ally chose is proportional to τ−1e−δt/τ , and the proba-
+bility of choosing the reaction channel that we actually
+chose is equal to aµ/∑µaµ. We can therefore associate
+a weight P with the whole trajectory, which is propor-
+tional to the probability of generating the sequence of
+steps which we actually generated:
+P =∏steps (aµ/∑µaµ)× (τ−1e−δt/τ )
+=∏stepsaµe−(∑aµ)δt. (4)
+The second line follows by eliminating (1 /∑µaµ)×
+τ−1≡ 1 (note that because Eq. (4) is not normalized,
+P is a weight rather than a true probability).
+In a typical kinetic Monte-Carlo simulation, we gen-
+erate multiple independent trajectories of length t, for a
+given parameter set. The probability of generating any
+given trajectory in this sample will be proportional to
+its weight P , deﬁned in Eq. (4). We then compute the
+average⟨f(t)⟩ of some function f(t) of the state of the
+system by summing over the values of f, at time t, for
+these trajectories.
+Having generated this set of trajectories, let us now
+suppose we wish to re-use them to compute the aver-
+age⟨f(t)⟩′ which we would have obtained had we re-
+peated our simulations for some other parameter set. It
+turns out that we can compute this average by summing
+over the same set of trajectories, multiplied by the ratio
+of their statistical weights for the perturbed and unper-
+turbed parameter sets. To see this, we ﬁrst recall that an
+average, e. g.⟨f(t)⟩, can be written as a sum over all pos-
+sible trajectoriesj of lengtht, multiplied by their statisti-
+cal weights Pj:⟨f(t)⟩ = (∑jPjfj(t))/(∑jPj). Writing
+the perturbed average⟨f(t)⟩′ in this way, we obtain
+⟨f(t)⟩′ =
+∑
+jP ′jfj(t)∑
+jP ′j =
+∑
+j(P ′j/Pj)Pjfj(t)∑
+j(P ′j/Pj)Pj = ⟨f(t)P ′/P⟩⟨P ′/P⟩ (5)
+where P and P′ are the trajectory weights (calculated
+using Eq. (4)) for the original and perturbed models
+respectively. In another context, Eq.(5) has been used
+to reweight trajectory statistics in order to sample rare
+events in biochemical networks [9]; it also forms the basis
+of umbrella sampling methods for particle-based Monte
+Carlo simulations [10].
+Whilst in principle Eq.(5) provides a completely gen-
+eral way to transform between trajectory ensembles with
+
+PDF PAGE 3
+3
+diﬀerent parameter sets, in practice it is useless for any
+signiﬁcant deviation of the parameter set from the origi-
+nal values, for two reasons. First, the statistical errors in
+the computation of ⟨f⟩′ grow catastrophically with the
+size of the perturbation, because the original trajectories
+become increasingly unrepresentative of the perturbed
+model. Second, the computational cost of determining
+the trajectory weights for the perturbed and unperturbed
+parameter sets via Eq. (4) is only marginally less than the
+cost of computing ⟨f⟩′ directly by generating a new set
+of trajectories for the perturbed parameter set.
+Computation of parameter sensitivity coeﬃcients
+It turns out, however, that Eq. (5) is useful for the com-
+putation of parameter sensitivity coeﬃcients, where the
+deviation between the original and perturbed parameter
+sets is inﬁnitesimal. Let us suppose that the perturbed
+problem corresponds to a small change in a single param-
+eter, such as k′α = kα +h; the corresponding sensitivity
+coeﬃcient is deﬁned by Eq. (3). As we show in Supple-
+mentary Material Section 1, diﬀerentiating Eq. (5) with
+respect to k′α leads to the following expression for the
+sensitivity coeﬃcient:
+∂⟨f⟩
+∂kα
+=⟨fWkα⟩−⟨ f⟩⟨Wkα⟩. (6)
+where
+Wkα = 1P ∂P∂kα = ∂ lnP∂kα (7)
+Supplementary Material Section 1 also shows how to gen-
+eralize this approach to higher-order derivatives. Com-
+bining Eq. (4) with Eq. (7) shows that the “weight func-
+tion”Wkα can be expressed as a sum over all steps in the
+trajectory:
+Wkα =∑stepsδWkα (8)
+where
+δWkα = ∂ lnaµ∂kα − ∂(∑aµ)∂kα δt. (9)
+Eqs. (6)–(9) are the key results of this paper, since
+they point to a practical way to compute parameter sen-
+sitivity coeﬃcients in kinetic Monte-Carlo simulations.
+To evaluate the (time-dependent) parameter sensitivity
+∂⟨f(t)⟩/∂kα, one tracks a weight function Wkα(t), which
+evolves according to Eqs. (8) and (9). One also tracks
+the function f(t) of interest. The covariance between
+Wkα andf, at the time t of interest, computed over mul-
+tiple simulations, then gives the sensitivity of ⟨f(t)⟩ to
+the parameter in question (as in Eq. (6)). Tracking Wkα
+should be a straightforward addition to standard kinetic
+Monte-Carlo schemes. Moreover we note that f could
+be any function of the variables of the system—for ex-
+ample, if one were interested in the parameter sensitiv-
+ity of the noise in particle number Ni, one could choose
+f(Ni) = N2i . More complex functions of the particle
+numbers, involving multiple chemical species, could also
+be used (see examples below).
+This prescription for computing parameter sensitivities
+presents, however, some diﬃculties in terms of statisti-
+cal sampling. The two terms in Eq. (9) are statistically
+independent quantities with the same expectation value,
+∂ ln(∑aµ)/∂kα. Hence they cancel on average but the
+variances add. Thus we expect that Wkα is a stochastic
+process with a zero mean, ⟨Wkα⟩ = 0, and a variance
+that should grow approximately linearly with time—as
+shown for a simple example case in Supplementary Ma-
+terial Section 2—in eﬀectWkα behaves as a random walk
+(i. e. a Wiener process). In terms of controlling the sam-
+pling error, this means that the number of trajectories
+over which the covariance is evaluated should increase in
+proportion to the trajectory length, since the standard
+error in the mean is expected to go as the square root of
+the variance divided by the number of trajectories [11].
+In Section III, we discuss a way to avoid this problem,
+when computing steady-state parameter sensitivities.
+Simpliﬁcations and practical implementation
+Without loss of generality we can presume that the
+parameter kα will appear in only one of the propensity
+functions, which we call aα [12]. With this presumption,
+Eq. (9) becomes
+δWkα = ∂ lnaα∂kα (δµα−aαδt). (10)
+Eq. (10) makes a direct link with the Girsanov measure
+transform method introduced by Plyasunov and Arkin,
+being essentially the same as Eq. (31b) in Ref. 5.
+A further simpliﬁcation occurs if kα is the rate coef-
+ﬁcient of the α-th reaction, so that aα is linearly pro-
+portional to kα. One then has ∂ lnaα/∂kα = 1/kα and
+Eq. (8) becomes
+Wkα = 1kα[Qα−∑stepsaαδt] (11)
+where Qα counts the number of times that the α-th re-
+action is visited. This is essentially the same as Eq. (9b)
+of Plyasunov and Arkin’s work, Ref. 5.
+Eq. (11) suggests a very simple way to implement
+parameter sensitivity computations in existing kinetic
+Monte-Carlo codes. One simply modiﬁes the chemical
+reaction scheme such that each reaction whose rate con-
+stant is of interest generates a “ghost” particle in addi-
+tion to its other reaction products (this is similar to the
+clock trick in Ref. 13). There should be a diﬀerent ﬂavour
+of ghost particle for each reaction of interest, and ghost
+particles should not participate in any other reactions.
+
+PDF PAGE 4
+4
+Qα(t) is then simply given by the number of ghost parti-
+cles associated with the α-th reaction which are present
+at timet. In Section IV, we use this approach to compute
+sensitivity coeﬃcients using the unmodiﬁed copasi [14]
+simulation package. In Supplementary Material Section
+2 we also exploit this trick to obtain some exact results
+for linear propensity functions.
+III. STEADY STATE
+So far, we have discussed the computation of time-
+dependent parameter sensitivity coeﬃcients∂⟨f(t)⟩/∂kα,
+by evaluating the covariance of the weight function
+Wkα(t) with the function f(t) over multiple simulation
+runs. Often, however, one is interested in the parame-
+ter sensitivity of the steady-state properties of the system
+∂⟨f⟩ss/∂kα; this is a time-independent quantity. We now
+discuss the computation of steady-state parameter sen-
+sitivities using trajectory reweighting. We show that in
+this case, ﬁrst, the problem of poor sampling of Wkα(t)
+for long times can be circumvented, second, one can ob-
+tain sensitivity coeﬃcients from a single simulation run,
+and third, one can improve eﬃciency by a procedure
+which we call time-step pre-averaging.
+The ensemble-averaged correlation function method
+To compute steady-state parameter sensitivities, one
+might imagine that we could simply apply the method
+discussed in Section II, taking the limit of long times,
+when the system should have relaxed to its steady state.
+However, this does not work, because the variance be-
+tween trajectories of the weight function Wkα increases
+in time, making it impossible to obtain good statistics at
+long times. To circumvent this problem, we note that the
+right hand side of Eq. (6) is unaltered if Wkα is oﬀset by
+a constant. Thus we may write the parameter sensitivity
+in the form of a two-point time-correlation function:
+∂⟨f(t)⟩
+∂kα
+=C(t,t 0) =⟨f(Ni,t ) ∆Wkα(t,t 0)⟩
+−⟨f(Ni,t )⟩⟨ ∆Wkα(t,t 0)⟩
+(12)
+where
+∆Wkα(t,t 0) =Wkα(t)−Wkα(t0), (13)
+andt0 is some arbitrary reference time such that t−t0 =
+∆t > 0. This relation has the advantage that we may
+choose ∆t suﬃciently small to make the variance of
+∆Wkα(t,t 0) manageable. Importantly, in steady-state
+conditions, we expect that the correlation function de-
+pends only on the time diﬀerence and not separately on
+the two times, so that C(t,t 0) = C(∆t), with C(0) = 0
+and C(∆t) → ∂⟨f⟩ss/∂kα as ∆t → ∞. Thus to cal-
+culate the sensitivity coeﬃcient under steady state con-
+ditions, all we need to do is compute the steady-state
+correlation function deﬁned in Eq. (12), choosing a suit-
+able “reference” time t0 when the system is already in
+the steady-state, then take the asymptotic (large ∆ t)
+value of this correlation function. We expect the cor-
+relation function to approach its asymptotic value on a
+timescale governed by the (likely short) relaxation time
+spectrum in the steady state, so that for most problems
+large values of ∆t should not be required. Noting that
+in this method, as in Section II, the averages in Eq. (12)
+are computed over multiple independent simulation runs,
+we term this approach the ensemble-averaged correlation
+function method.
+From a practical point of view, this method involves
+the following set of steps or ‘recipe’:
+1. Choose two time points t1 and t2 such that the
+system has already reached its steady state at time
+t1 and t2 = t1 + ∆t where ∆t is greater than the
+typical relaxation time of the quantityf of interest
+(typically this is the same as the longest relaxation
+time in the system as a whole).
+2. Compute Wkα at times t1 and t2 and f at time t2.
+3. Calculate the diﬀerence ∆ Wkα = Wkα(t2)−
+Wkα(t1). Compute also the product f(t2)∆Wkα.
+4. Repeat steps 1-3 for many independent simulation
+runs and compute the averages⟨f(t2)⟩,⟨∆Wkα(t2−
+t1)⟩ and⟨f(t2)∆Wkα(t2−t1)⟩ over the replicate
+simulations.
+5. Calculate the correlation function C(∆t) =
+⟨f∆Wkα⟩−⟨ f⟩⟨∆Wkα⟩. As long as ∆ t is large
+enough this provides a measurement of∂⟨f⟩ss/∂kα.
+The time-averaged correlation function method
+It turns out, however, that for steady-state parameter
+sensitivities, we do not need to average over multiple sim-
+ulation runs—we can instead compute time-averages over
+a single simulation run. This amounts to replacing the
+steady-state ensemble averaged sensitivity∂⟨f⟩ss/∂kα by
+the time averaged version∂fss/∂kα, where
+f =
+∑
+steps fδt∑
+stepsδt (14)
+(recalling that in kinetic Monte Carlo, the timestep δt
+varies between steps). In principle, ∂fss/∂kα could
+be obtained by computing the time-averaged version of
+Eq. (12):
+Ctime av(∆t) =f(t) ∆Wkα(t,t 0)−f(t) ∆Wkα(t,t 0) (15)
+and taking the limit of large ∆t =t−t0. Eq. (15) requires
+one to keep track of Wkα a precise time ∆t in the past;
+since the time step is not constant in kinetic Monte Carlo,
+this is rather inconvenient to implement.
+
+PDF PAGE 5
+5
+Fortunately, however, tracking the weight function at
+a precise time in the past turns out to be unnecessary. As
+∆t becomes large, the stochastic diﬀerences between in-
+dividual time steps cancel out and it becomes equivalent
+simply to compute the average
+Ctime av(n) =f(t) ∆Wkα(n)−f(t) ∆Wkα(n) (16)
+where
+∆Wkα(n) =Wkα(t)−Wkα(n steps ago). (17)
+and to use the fact that Ctime av(n) → ∂fss/∂kα as
+n→∞ . One can quite easily keep track of ∆Wkα(n), for
+instance by maintaining a circular history array storing
+Wkα over the last n steps. This approach, which we de-
+note the time-averaged correlation function method , has
+the important advantage that one can obtain the steady
+state parameter sensitivity from a single simulation run.
+The recipe for using the time-averaged correlation
+function method is then:
+1. Choose a time interval ∆t which is greater than the
+typical relaxation time of the quantityf of interest.
+Estimate the typical number of steps n taken in
+time ∆t: n = ∆t/¯τ.
+2. For a simulation of the system in the steady state,
+recordf andWkα everyn steps (we denote each of
+these recordings a ‘timeslice’).
+3. For each timeslice i, compute the diﬀerence be-
+tweenW (i)kα and its value in the previous timeslice:
+∆W (i)kα =W (i)kα−W (i−1)kα . Compute also f(i)∆W (i)kα .
+4. Compute the averages over all timeslices of f,
+∆Wkα and f∆Wkα.
+5. Calculate the correlation function C(n) =
+f∆Wkα−(f)(∆Wkα). As long as n is large enough
+this provides a measurement of ∂fss/∂kα.
+Time-step pre-averaging
+The time-averaged correlation function method is a
+convenient way to compute parameter sensitivities in
+a standard kinetic Monte Carlo scheme, in which both
+a new timestep and a new reaction channel are cho-
+sen stochastically at every step. However, choosing a
+new time step at every iteration is computationally ex-
+pensive since it requires a random number, and is not
+strictly necessary for the computation of steady-state pa-
+rameter sensitivity coeﬃcients. Improved eﬃciency can
+be achieved by choosing only the new reaction channel
+stochastically at each iteration, and replacing δt by the
+mean timestep τ≡ (∑µaµ)−1 corresponding to the cur-
+rent state (note that this is state dependent since it de-
+pends on the propensity functions). This amounts to
+pre-averaging over the distribution of possible time steps
+for a given state of the system. It can be proved formally
+that if we run our simulations for a suﬃciently long time,
+Eq. (14) is equivalent to
+f =
+∑
+steps fτ∑
+steps τ . (18)
+Intuitively, this relation arises because a suﬃciently long
+trajectory, under steady state conditions, will visit each
+state an arbitrarily large number of times and thus thor-
+oughly sample the distribution of waiting times in each
+state.
+One cannot, however, compute the parameter sensitiv-
+ity ∂fss/∂kα simply by evaluating the time averages in
+Eq. (15) or (16) using the new deﬁnition, Eq. (18). This
+is becauseτ itself depends on the parameterkα. Instead,
+a slightly more complicated expression for ∂fss/∂kα is
+required; this is given in Supplementary Material Sec-
+tion 3. Thus, time-step pre-averaging provides a more
+eﬃcient way to compute the steady-state parameter sen-
+sitivity (since the time does not need to be updated in the
+Monte Carlo algorithm), at the cost of a slight increase
+in mathematical complexity.
+IV. EXAMPLES
+We now apply the methods described above to three
+case studies: a model for constitutive gene expression
+for which we can compare our results to analytical the-
+ory, a simple model for a signaling pathway with stochas-
+tic focussing, and a model for a bistable genetic switch.
+The second and third examples are chosen because they
+exhibit the kind of non-trivial behaviour found in real
+biochemical networks, yet the state space is suﬃciently
+compact that the parameter sensitivities can be checked
+using ﬁnite-state projection (FSP) methods [15]. Our im-
+plementation of the FSP methods is described more fully
+in Supplementary Material Section 4.
+A. Constitutive gene expression
+We ﬁrst consider a simple stochastic model for the ex-
+pression of a constitutive (unregulated) gene, represented
+by the following chemical reactions:
+∅
+k
+→ M
+λ
+→∅, M
+ρ
+→ M + N, N
+µ
+→∅. (19)
+Here, M represents messenger RNA (synthesis rate k,
+degradation rate γ) and N represents protein (synthe-
+sis rate ρ, degradation rate µ). This model has lin-
+ear propensities (as deﬁned in Supplementary Material
+Section 2), which implies that the mean copy numbers
+⟨M(t)⟩ and⟨N(t)⟩ of mRNA and protein respectively
+obey the chemical rate equations
+d⟨M⟩
+dt =k−λ⟨M⟩, d⟨N⟩dt =ρ⟨M⟩− µ⟨N⟩ (20)
+
+PDF PAGE 6
+6
+0 100 200 300
+-1.0
+-0.5
+0.0
+0.5
+1.0∂ ln⟨N ⟩/∂ ln kα
+k
+λ
+ρ
+µ
+0 20 40 60
+-1.0
+-0.5
+0.0
+0.5
+1.0
+∆t or n × τ (min)
+k
+λ
+ρ
+µ
+∂ ln⟨M ⟩/∂ ln kα
+FIG. 1: (color online) Time correlation functions C(∆t) for
+the sensitivity of the average protein number⟨N⟩ss (top) and
+the average mRNA number ⟨M⟩ss to the model parameters,
+for the constitutive gene expression model in Section IV A.
+Points with error bars are simulations using the ensemble-
+average correlation function method; error bars are esti-
+mated by block-averaging (100 blocks of 10 3 trajectories; to-
+tal≈ 1010 time steps). Open circles are simulations using the
+time-average correlation function method with time step pre-
+averaging (plotted as a function of n¯τ); results are averages
+over 10 trajectories each of length 10 9 steps (in this case the
+error bars are smaller than symbols). Solid lines are theoreti-
+cal predictions from Eq. (22). Parameters arek = 2.76 min−1,
+λ = 0.12 min−1,ρ = 3.2 min−1,µ = 0.016 min−1, correspond-
+ing to the cro gene in a recent model of phage lambda [16].
+For these parameters⟨M⟩ss = 23 and⟨N⟩ss = 4600.
+from which follow the steady state mean copy numbers:
+⟨M⟩ss = kλ, ⟨N⟩ss = ρkλµ. (21)
+For this problem, steady-state sensitivity coeﬃcients
+can be computed analytically by taking derivatives of
+Eqs. (21) with respect to the parameters of interest.
+Moreover, as shown in Supplementary Material Section
+2, explicit expressions can also be found for the compo-
+nents of the correlation functions deﬁned by Eqs. (12)
+and (13):
+⟨M∆Wlnk⟩ss =−⟨M∆Wlnλ⟩ss =⟨M⟩ss(1−e−λ∆t),
+⟨M∆Wlnρ⟩ss =⟨M∆Wlnµ⟩ss = 0,
+⟨N∆Wlnk⟩ss =−⟨N∆Wlnλ⟩ss
+=⟨N⟩ss[λ(1−e−µ∆t)−µ(1−e−λ∆t)]/(λ−µ),
+⟨N∆Wlnρ⟩ss =−⟨N∆Wlnµ⟩ss =⟨N⟩ss(1−e−µ∆t),
+(22)
+where for notational convenience we consider the sen-
+sitivity with respect to the logarithm of the parameter
+value (e. g.Wlnk≡kWk).
+Figure 1 shows the time correlation functions of
+Eqs. (12) and (13), computed over multiple stochastic
+simulation runs using the ensemble-averaged correlation
+function method, together with the analytical results of
+Eq. (22) (solid lines). The agreement between the ana-
+lytic theory and simulation results is excellent. The time
+correlation functions converge to the expected steady
+state sensitivity coeﬃcients (horizontal lines in Fig. 1).
+For the protein correlation functions (∂ ln⟨N⟩ss/∂ lnkα),
+this occurs on a timescale governed by the relaxation rate
+of protein number ﬂuctuations 1 /µ≈ 60 min, while the
+mRNA correlation functions ( ∂ ln⟨M⟩ss/∂ lnkα) reach
+their asymptotic values on a timescale governed by the
+mRNA decay rate 1/λ≈ 8 min.
+Figure 1 (open circles) also shows the same correla-
+tion functions, computed instead from a single stochastic
+simulation run, using the time-averaged correlation func-
+tion method, with time-step pre-averaging. Although
+this method gives correlation functions (Eqs. (16) and
+(17)) in terms of the number of steps n in the history
+array, rather than the time diﬀerence ∆ t, these can be
+converted to time correlation functions by multiplying n
+by the expected global mean time step τ (the average
+over states of the state-dependent mean time step τ).
+Comparing the results of the ensemble-averaged and
+time-averaged correlation function methods in Fig. 1 we
+see that the two methods give essentially the same re-
+sults, but the time-averaged method produces greater
+accuracy (smaller error bars), for the same total num-
+ber of simulation steps. Moreover, because we have used
+time-step pre-averaging with the time-averaged correla-
+tion function method, each simulation step is computed
+approximately twice as fast as in the original kinetic
+Monte Carlo algorithm, since one does not need to gen-
+erate random numbers for the time steps [17].
+B. Stochastic focusing
+We now turn to a more sophisticated case study, based
+on the stochastic focusing model of Paulsson et al. [18].
+In this biochemical network, a input signal molecule S
+downregulates the production of an output signal (or re-
+sponse) molecule R. Stochastic ﬂuctuations play a crucial
+role, making the output much more sensitive to changes
+
+PDF PAGE 7
+7
+in the input than would be predicted by a deterministic
+(mean-ﬁeld) model.
+Our reaction scheme, given in Eq. (23), contains just
+two chemical species, S and R. The production and degra-
+dation of S (the input signal) are straightforward Poisson
+processes with rates ks andkd respectively. The produc-
+tion of R (the output signal) is negatively regulated by
+S, and its degradation rate is set to unity to ﬁx the time
+scale. Thus we have
+∅
+ks
+→ S
+kd
+→∅ , ∅
+k⋆
+→ R
+1
+→∅ , (23)
+where we use a Michaelis-Menten-like form to represent
+the negative regulation: k⋆ =kp/(S +K), with S being
+the copy number of the input signal molecule. Taking a
+mean-ﬁeld approach, we might suppose that the average
+copy numbers⟨S⟩ and⟨R⟩ should obey the chemical rate
+equations
+d⟨S⟩
+dt =ks−kd⟨S⟩, d⟨R⟩dt = kr⟨S⟩ +K−⟨R⟩. (24)
+and that therefore the steady state copy numbers should
+be given by
+⟨S⟩ss = kskd , ⟨R⟩ss = kr⟨S⟩ss +K . (25)
+In reality, while Eq. (25) gives the correct result for the
+mean input signal⟨S⟩ss, it is manifestly incorrect for the
+mean output signal⟨R⟩ss. For example for
+ks = 500, k d = 100, k r = 900, K = 0.09 (26)
+we ﬁnd from kinetic Monte Carlo simulations ⟨S⟩ss = 5,
+as predicted by Eq. (25), but ⟨R⟩ss ≈ 290, whereas
+Eq. (25) predicts kr/(⟨S⟩ss +K) = 176.82. This failure
+of the mean-ﬁeld prediction arises because of the non-
+linearity of the Michaelis-Menten-like form of the pro-
+duction propensity for R.
+Our aim is to compute the diﬀerential gain,
+g = ∂ ln⟨R⟩ss
+∂ ln⟨S⟩ss
+. (27)
+which describes the local steepness of the signal-response
+relation (⟨R⟩ss∼⟨S⟩gss). The gain measures the sensitiv-
+ity of the system’s output ⟨R⟩ss to its input ⟨S⟩ss; this
+can be computed by measuring the sensitivities of ⟨R⟩ss
+and⟨S⟩ss to the production and degradation rates of the
+signal molecule. Let us suppose that the signal ⟨S⟩ss is
+varied by changing its production rate ks inﬁnitesimally
+at ﬁxed degradation rate kd (we could have chosen in-
+stead to vary kd or, in principle, both ks and kd). The
+gain is then
+g = ∂ ln⟨R⟩ss/∂ks
+∂ ln⟨S⟩ss/∂ks
+= ks
+⟨R⟩ss
+∂⟨R⟩ss
+∂ks
+(28)
+where the second equality follows from the fact that
+∂ ln⟨S⟩ss/∂ks = 1/ks, since ⟨S⟩ss = ks/kd. We use the
+2 4 6 8
+1.0
+1.5
+2.0
+⟨S⟩ss
+absolute gain, |g|
+MFT
+Gillespie
+FSP
+COPASI
+FIG. 2: (color online) Steady state absolute diﬀerential gain
+for the stochastic focusing model in Section IV B, where ks is
+varied to control⟨S⟩ss, with other parameters as in Eq. (26).
+Open circles are Gillespie simulations using the time-average
+correlation function method with time step pre-averaging; er-
+ror bars are estimated by averaging over 10 trajectories of
+length 10 8 steps. The history array length was n = 2× 104.
+The ﬁlled circle (blue) is from a Gibson-Bruck simulation
+in copasi using the ensemble-average correlation function
+method; error bars are from block averaging (10 blocks of
+103 samples). The thick solid line (red) is the numerical re-
+sult from the ﬁnite state projection (FSP) algorithm. The
+dashed line is the mean-ﬁeld theory (MFT) prediction.
+methods described in Section III to compute the steady-
+state sensitivity ∂⟨R⟩ss/∂ks, and hence the gain g.
+Figure 2 shows the absolute diﬀerential gain |g|
+computed using the time-averaged correlation function
+method, with time-step pre-averaging, as a function of
+the signal strength ⟨S⟩ss, as ks is varied (note that in
+this region the actual gain is negative so |g| = −g).
+The results are in excellent agreement with the ﬁnite
+state projection method (FSP, see Supplementary Ma-
+terial Section 4). Fig. 2 (dashed line) also shows the
+mean-ﬁeld theory prediction derived from the second of
+Eqs. (25), namely g = ⟨S⟩ss/(⟨S⟩ss + K). Stochastic
+focusing, as predicted by Paulsson et al [18], is clearly
+evident: the gain is much greater in magnitude for the
+stochastic model than the mean-ﬁeld theory predicts, im-
+plying that ﬂuctuations greatly increase the sensitivity of
+the output signal to the input signal [19].
+In this example, the parameter of interest ( ks) is the
+rate constant of a single reaction (production of S). As
+discussed in Section II, this implies that the parameter
+sensitivity can be computed simply by counting the num-
+ber of times this reaction is visited, which can be achieved
+by modifying the reaction scheme to
+∅
+ks
+→ S + Q, S
+kd
+→∅ , ∅
+k⋆
+→ R
+1
+→∅ . (29)
+then computing the weight function
+Wks = 1ks [Q(t)−kst] . (30)
+
+PDF PAGE 8
+8
+0 2000 4000 6000 8000 100000
+10
+20
+30
+40
+50
+60
+70
+t
+copy number
+U
+V
+FIG. 3: (color online) Representative time traces of U and
+V in the Gardner et al. genetic switch model (Section IV C).
+Parameters are α1 = 50, β = 2.5, α2 = 16, and γ = 1.
+(which is the analogue of Eq. (11)), and using this to
+obtain the relevant time-correlation functions. This re-
+quires no changes to the simulation algorithm, making
+it easy to use with existing software packages. As a
+demonstration, we computed the diﬀerential gain for the
+parameters in Eq. (26), using the open source simula-
+tion package copasi [14]. To achieve this, we used the
+Gibson-Bruck algorithm (as implemented in copasi) to
+generate samples ofWks andR at equi-spaced time points
+with a spacing ∆t = 10 time units (chosen to be longer
+than the expected relaxation time of the output signal,
+set by the decay constant for R). By taking the diﬀer-
+ence between successive time points we compute ∆ Wks
+and hence the correlation function deﬁned in Eq. (16).
+The result, shown in blue in Fig. 2, is in good agreement
+with our other calculations.
+C. A bistable genetic switch
+As a ﬁnal example, we consider a model for a bistable
+genetic switch, of the type constructed experimentally by
+Gardner et al. [20], in which two proteins U and V mu-
+tually repress each other’s production. We suppose that
+transcription factor binding to the operator is coopera-
+tive, and can be described by a Hill function; the rate
+of production of protein U is then given by α1/(1 +Vβ)
+while the rate of production of V is given by α2/(1+Uγ)
+(here α1 and α2 describe the maximal production rates
+while β and γ are the Hill exponents, describing the de-
+gree of cooperativity). The units of time are ﬁxed by set-
+ting the degradation rates of U and V to unity. For a suit-
+able choice of parameter values, stochastic simulations of
+this model show switching between a U-rich state and
+a V-rich state, as illustrated in Fig. 3; the steady-state
+probability distribution Pq for the quantity q≡ U−V
+is bimodal, as shown in Fig. 4. We use this example to
+illustrate the computation of parameter sensitivities for
+more complicated scenarios where the system property
+-40 -20 0 20 40 60 80-0.05
+0.00
+0.05
+0.10
+0.15
+q
+Pq
+∂Pq/∂β
+FIG. 4: (color online) Steady state probability distribution
+for the order parameter q ≡ U−V in the Gardner et al.
+switch, and the sensitivity toβ. Points (with small error bars
+in the case of the sensitivity) are from Gillespie simulations
+using the time-average correlation function method with time
+step pre-averaging; error bars are estimated by averaging over
+10 trajectories of 10 9 steps. The history array length was
+n = 5 × 104. The solid lines (red) are the results of FSP
+applied to this problem. Model parameters are as in Fig. 3.
+of interest is not simply a mean copy number and the
+parameter of interest is not a simple rate constant. In
+particular we compute the sensitivity of the steady-state
+probability distribution Pq to the Hill exponent β.
+Our model consists of the following reaction scheme:
+1
+→ U
+2
+→,
+3
+→ V
+4
+→. (31)
+in which proteins U and V are created and destroyed with
+propensities given by:
+a1 = α11 +Vβ, a 2 =U, a 3 = α21 +Uγ, a 4 =V (32)
+Let us ﬁrst suppose we wish to compute ∂Pq/∂β using
+the time-averaged correlation function method, without
+time step pre-averaging. We use the propensity func-
+tions in Eqs. (32) to run a standard kinetic Monte Carlo
+(Gillespie) simulation, choosing at each step a next reac-
+tion and a time step δt. At each simulation step, we also
+compute the quantity
+z≡ ∂ lna1
+∂β =−Vβ lnV1 +Vβ (33)
+and update the weight functionW according to Eq. (10),
+i. e. if reaction 1 is chosen as the next reaction, we incre-
+ment W by z(1−a1δt), otherwise, we increment W by
+−za1δt (note that it is correctly a1 that features in this,
+irrespective of the chosen next reaction). We keep track
+not only of the current value of W , but also of its value
+a ﬁxed number n steps ago. At the same time, we keep
+track of the function of interest (denoted f in Sections II
+and III). Because we are computing the parameter sensi-
+tivity of the distributionPq, we have a functionfq, and a
+
+PDF PAGE 9
+9
+time-correlation function Cq,time av(n), for each value of
+q. At each simulation step, we check the current value
+of q(t). The function fq is unity if q = q(t) and zero
+otherwise ( i. e. fq = δq(t),q). For each value of q, we
+then compute the time correlation function Cq,time av(n)
+as prescribed in Eq. (16). As long as n¯τ (where ¯τ is the
+global average time step) is longer than the typical re-
+laxation time of the system, Cq,time av(n) should give a
+good estimate for ∂Pq/∂β.
+If we are instead using time step pre-averaging, we em-
+ploy a slight modiﬁcation of the above procedure. At
+each simulation step, we choose a next reaction, but we
+do not choose a time step δt. In our update rules for
+W , we replace δt by the state-dependent mean timestep
+τ where τ−1 =∑4µ=1aµ. As well as keeping track of W
+and fq we also need to compute at each step
+∂τ
+∂β =a1
+∂τ
+∂a1
+· ∂ lna1
+∂β =−τ 2a1z. (34)
+This quantity is then used to compute Cq,time av(n) and
+hence∂Pq/∂β using the modiﬁed algorithm given in Sup-
+plementary Material Section 3.
+An important technical point here concerns the re-
+laxation time of the system, or the number of steps
+n over which we need to remember the system’s his-
+tory in order that the correlation function C(n) gives
+a good estimate of the steady-state parameter sensitiv-
+ity. For the previous examples studied, this timescale
+was given by the slowest decay rate (typically that of the
+protein molecules). The genetic switch, however, shows
+dynamical switching behaviour on a timescale that is
+much longer than the protein decay rate (see for example
+Fig. 3). We therefore need to choose a value of n such
+that n¯τ is longer than the typical switching time. Ki-
+netic Monte-Carlo simulations (like those in Fig. 3) show
+that for our model, the typical time between switching
+events is approximately 160 time units, while the global
+average time step ¯τ≈ 0.02. The typical number of steps
+per switching event is therefore 160/0.02 = 8× 103. Our
+chosen value of n should be at least this large. In prac-
+tice we ﬁnd that the correlation functions are fully con-
+verged (to within a reasonable accuracy) by n = 5× 104
+steps (≈ 6.3 switching events), but not quite converged
+by n = 2× 104 steps (≈ 2.5 switching events). These
+lengthy convergence times mean that much longer sim-
+ulations are needed to obtain good statistical estimates
+for the parameter sensitivity in this model than in the
+previous examples.
+Figure 4 shows the steady state probability distribu-
+tion Pq together with its sensitivity ∂Pq/∂β, computed
+using the time-averaged correlation function method with
+time step pre-averaging, for the same parameters as in
+Fig. 3. This method gives results in excellent agreement
+with FSP.Pq has the bimodal shape typical of a stochas-
+tic genetic switch, with a large peak at q ≈ −15 and
+a much broader peak around q≈ 45, with a minimum
+around q≈ 5. The sensitivity coeﬃcient ∂Pq/∂β mea-
+sures how the behaviour of the switch depends on the
+cooperativity β of binding of the transcription factor V.
+We see that increasing β leads to an increased peak at
+q < 0, and a decreased peak at q > 0, in other words
+the switch spends more time in the V-rich state. Also
+the minimum around q≈ 5 decreases, suggesting that
+the switching frequency decreases as β increases. This is
+conﬁrmed by further study using the ensemble-averaged
+correlation function method of the sensitivity coeﬃcient
+of the switching frequency to changes in β; the details of
+this will be presented elsewhere.
+V. DISCUSSION
+In this paper, we have shown how trajectory reweight-
+ing can be used to compute parameter sensitivity coeﬃ-
+cients in stochastic simulations without the need for re-
+peated simulations with perturbed values of the param-
+eters. The methods presented here are simple to imple-
+ment in standard kinetic Monte Carlo (Gillespie) simu-
+lation algorithms and in some cases can be used with-
+out any changes to the simulation code, making them
+compatible with packages such as copasi [14]. For com-
+putation of time-dependent sensitivity coeﬃcients, the
+method involves tracking a weight function (which de-
+pends on the derivative of the propensities with respect
+to the parameter of interest) and computing its covari-
+ance with the system property of interest, at the time
+of interest, across multiple simulations. For comput-
+ing time-independent steady-state parameter sensitivi-
+ties, we show that the sensitivity coeﬃcient can be ob-
+tained as the long-time limit of a time correlation func-
+tion, which can be computed either across multiple simu-
+lations (ensemble-averaged correlation function method),
+or as a time average in a single simulation run (time-
+averaged correlation function method). We further show
+that time step pre-averaging removes the need to choose
+a new time step at each simulation step, signiﬁcantly
+improving computational eﬃciency. In either the time-
+dependent or the time-independent case, it is a trivial
+matter to compute multiple sensitivity coeﬃcients (e.g.
+with respect to diﬀerent parameters) at the same time –
+one simply tracks each of the corresponding weight func-
+tions simultaneously.
+In deterministic models, parameter sensitivity coeﬃ-
+cients can be computed by simultaneous integration of
+a set of adjunct ODEs, alongside the set of ODEs de-
+scribing the model (see Eq. (2)). We consider the trajec-
+tory reweighting approach described here to be the ex-
+act stochastic analogue of the adjunct ODE method; the
+integration of the adjunct ODEs alongside the original
+ODEs is directly analogous to the procedure of generat-
+ing a trajectory weight alongside the normal trajectory
+in a kinetic Monte-Carlo scheme. Indeed, one can de-
+rive an adjunct chemical master equation by taking the
+derivative of the chemical master equation with respect
+to the parameter of interest; it turns out that the trajec-
+tory reweighting scheme is essentially a stochastic solu-
+
+PDF PAGE 10
+10
+tion method for the adjunct master equation [21].
+In Section IV B, we demonstrated the use of trajec-
+tory reweighting to compute parameter sensitivities, and
+hence the diﬀerential gain, for a model of a stochas-
+tic signaling network. We believe that this approach
+has widespread potential application to signaling path-
+ways, because it can be implemented for any existing
+model without any modiﬁcations to the underlying ki-
+netic Monte-Carlo simulation code. As long as a stochas-
+tic input signal is generated by a process∅→ S→∅ , one
+can use the ghost particle trick to compute the sensitiv-
+ity of any quantity of interest to the input signal (con-
+trolled by varying the rateks of the signal production re-
+action) by modifying the production step to ∅→ S + Q,
+computing the weight function from Wks = Q/ks− t
+(see Eq. (30)) and computing the appropriate correla-
+tion function for its covariance with the system property
+of interest. As proof-of-principle we calculated the dif-
+ferential gain for the model in Section IV B (see Fig. 2),
+using copasi [14] to generate the simulation data, and a
+standard spreadsheet package to compute the correlation
+function.
+In Section IV C, we used the methodology to com-
+pute the sensitivity of the probability distribution func-
+tion for a bistable genetic switch, to the degree of co-
+operativity (Hill exponent) of binding of one of its tran-
+scription factors. This example demonstrates that tra-
+jectory reweighting is not a panacea for all problems.
+The bistable genetic switch has a long relaxation time,
+which requires the correlation function of the weight to
+the computed over long times, with a corresponding need
+for large sample sizes to obtain good statistical sampling.
+While trajectory reweighting works for this example, pre-
+liminary attempts to compute the parameter dependence
+of the switching rate show that ﬁnite diﬀerencing may
+be more eﬃcient. In fact Plyasunov and Arkin [5] al-
+ready discuss in which cases it may be more eﬃcient to
+use ﬁnite-diﬀerencing. Because of their long relaxation
+times, genetic switches are notoriously diﬃcult to study
+in stochastic simulations [22]. A plethora of sophisti-
+cated schemes have been developed to address this prob-
+lem [23–25], some of which could perhaps be extended to
+incorporate trajectory reweighting.
+The present study considers how to compute parame-
+ter sensitivity coeﬃcients—i. e. ﬁrst derivatives of system
+properties with respect to the parameters. The same ap-
+proach can, however, easily be used to compute higher
+derivatives, such as the Hessian matrix, as discussed in
+Supplementary Material Section 1. This raises the pos-
+sibility of combining the present methods with gradient-
+based search algorithms, to make a sophisticated param-
+eter estimation algorithm for stochastic modeling. This
+would oﬀer a novel approach to a major class of problems
+in systems biology.
+To summarise, we believe the trajectory reweighting
+schemes presented here are an important and useful ad-
+dition to the stochastic simulation toolbox. Further re-
+search should address in detail their performance with
+respect to existing methods [4–6] and their application
+to challenging models such as those with long relaxation
+times, as well as their potential for use in more sophisti-
+cated parameter search algorithms.
+Acknowledgments
+The authors thank Mustafa Khammash for detailed
+advice about the FSP method and assistance with its
+implementation. RJA was supported by a Royal Society
+University Research Fellowship. The collaboration lead-
+ing to this work was facilitated by the StoMP research
+network under BBSRC grant BB/F00379X/1 and by the
+e-Science Institute under theme 14: “Modelling and Mi-
+crobiology”.
+[1] N. G. van Kampen, Stochastic processes in physics and
+chemistry (Elsevier, Amsterdam, 1992).
+[2] D. T. Gillespie, J. Phys. Chem. 81, 2340 (1977).
+[3] M. A. Gibson and J. Bruck, J. Phys. Chem. A 104, 1876
+(2000).
+[4] D. Kim, B. J. Debusschere, and H. N. Najm, Biophys. J.
+92, 379 (2007).
+[5] A. Plyasunov and A. P. Arkin, J. Comp. Phys. 221, 724
+(2007).
+[6] M. Rathinam, P. W. Sheppard, and M. Khammash, J.
+Chem. Phys. 132, 034103 (2010).
+[7] B. Harland and S. X. Sun, J. Chem. Phys. 127, 104103
+(2007).
+[8] H. Kuwahara and I. Mura, J. Chem. Phys. 129, 165101
+(2008).
+[9] M. K. Roh, D. T. Gillespie, and L. R. Petzold, J. Chem.
+Phys. 133, 174106 (2010).
+[10] D. Frenkel, B. Smit, Understanding Molecular Simula-
+tion, 2nd Ed. (Academic Press, San Diego, 2002)
+[11] The fact that the two terms in Eq. (9) cancel on av-
+erage could in principle be used to simplify Eq. (6) to
+∂⟨f⟩/∂kα =⟨fWkα⟩. However, in practice we have found
+that retaining the term in⟨Wkα⟩ improves the statistical
+sampling (for example if f is a constant then the right
+hand side of Eq. (6) vanishes exactly, as it should, even
+if the sampling error causes ⟨Wkα⟩⁄ = 0).
+[12] If this is not the case one can always make it so by aug-
+menting the parameter set.
+[13] D. C. Wylie, Y. Hori, A. R. Dinner, and A. K.
+Chakraborty, J. Phys. Chem. B 110, 12749 (2006).
+[14] S. Hoops, et al., Bioinformatics 22, 3067 (2006).
+[15] B. Munsky and M. Khammash, J. Chem. Phys. 124,
+044104 (2006).
+[16] M. Santill´ an and M. C. Mackey, Biophys J.86, 75 (2004).
+[17] The eﬃciency gain obtained by time-step pre-averaging
+depends of course on the balance between computing
+
+PDF PAGE 11
+11
+time steps and choosing reactions: this might diﬀer for
+diﬀerent algorithms and reaction schemes.
+[18] J. Paulsson, O. G. Berg, and M. Ehrenberg, Proc. Natl.
+Acad. Sci. (USA) 97, 7148 (2000).
+[19] For this model we ﬁnd that it does not make any de-
+tectable diﬀerence whether g is computed at ﬁxed kd (as
+here) or ﬁxed ks. This is almost certainly not generally
+true, and in the present case is likely connected to the
+fact that the noise in S is uncorrelated with the noise in
+P, in the sense of S. Tan˘ asa-Nicola, P. B. Warren, and
+P. R. ten Wolde, Phys. Rev. Lett. 97, 068102 (2006).
+[20] T. S. Gardner, C. R. Cantor, and J. J. Collins, Nature
+403, 339 (2000).
+[21] R. J. Allen and P. B. Warren, to be published elsewhere.
+[22] M. J. Morelli, P. R. ten Wolde, and R. J. Allen, Proc.
+Natl. Acad. Sci. USA 106, 8101 (2009).
+[23] R. J. Allen, P. B. Warren, and P. R. ten Wolde, Phys.
+Rev. Lett. 94, 018104 (2005).
+[24] R. J. Allen, C. Valeriani, and P. R. ten Wolde, J. Phys.
+Condens. Matter 21, 463102 (2009).
+[25] A. Dickson and A. R. Dinner, Annu. Rev. Phys. Chem.
+61, 441 (2010).
+[26] P. B. Warren, S. T˘ anase-Nicola, and P. R. ten Wolde, J.
+Chem. Phys. 125, 144904 (2006).
+[27] R. B. Lehoucq and D. C. Sorensen, SIAM. J. Matrix
+Anal. & Appl. 17, 789 (1996).
+SUPPLEMENTARY MATERIAL
+1. DERIVATIVES OF AVERAGES WITH RESPECT TO PARAMETERS
+Here, we present a convenient way to compute the derivatives of average quantities with respect
+to the parameters of the model, that are required to arrive at Eqs. (6) and (7) in the main text. We
+also show that this method generalizes easily to higher derivatives.
+Noting that in the perturbed system the parameter kα has been changed to k′α, we use Eq. (5) in
+the main text to write the average of the function f in the perturbed system as
+⟨f⟩′ =⟨fR(k′α,kα)⟩⟨R(k′α,kα)⟩ (35)
+where
+R(k′α,kα)≡ P (k′α)P (kα) =elnP (k′α)−lnP (kα). (36)
+The function R(k′α,kα) has the property that ∂R/∂k′α = W′k′αR where W′k′α = ∂ lnP (k′α)/∂k′α. Wethen have
+∂⟨f⟩′
+∂k′α =
+⟨fW′k′αR⟩
+⟨R⟩ −
+⟨fR⟩⟨W′k′αR⟩
+⟨R⟩2 . (37)
+Taking the limit k′α→ kα (for an inﬁnitesimal perturbation), and noting thereby that R→ 1 and
+W′k′α→Wkα, yields Eqs. (6) and (7) in the main text.Taking this procedure further allows the computation of higher derivatives; one can show for
+instance that the Hessian is
+∂2⟨f⟩
+∂kα∂kβ
+=⟨fWkαWkβ⟩ +⟨fWkαkβ⟩−⟨ fWkα⟩⟨Wkβ⟩−⟨ fWkβ⟩⟨Wkα⟩
+−⟨f⟩⟨WkαWkβ⟩−⟨ f⟩⟨Wkαkβ⟩ + 2⟨f⟩⟨Wkα⟩⟨Wkβ⟩.
+(38)
+where
+Wkαkβ = ∂2lnP∂kα∂kβ . (39)
+
+PDF PAGE 12
+12
+Eq. (38) is potentially useful for gradient search algorithms. This expression is likely to simplify in
+many cases – for instance we expect that ∂2lnP/∂kα∂kβ often vanishes forkα⁄=kβ. One might also
+use the fact that ⟨Wkα⟩ =⟨Wkβ⟩ = 0, but it may improve the statistical sampling to retain these
+terms (see discussion in main text).
+2. EXACT RESULTS FOR PROBLEMS WITH LINEAR PROPENSITIES
+In this Section we describe some exact results that can be obtained for models with linear propen-
+sity functions, in particular for the correlation functions deﬁned in Eqs. (12) and (13) in the main
+text. The analysis draws heavily on established literature results (which we summarize below). More
+details and links to earlier literature can be found in the appendix to Supplementary Ref. 26.
+To ﬁx notation, let us suppose that the α-th propensity function depends linearly on the copy
+numbers Nj, namely aα =∑jKαjNj +bα where Kαj and bα are constants which we assume to be
+proportional to the rate consant kα. Our aim is to compute the sensitivity coeﬃcients ∂⟨Ni⟩/∂ lnkα.
+It is well known that for linear propensity functions the moment equations close successively. Thus,
+the mean copy numbers⟨Ni⟩ obey
+∂⟨Ni⟩
+∂t =∑ανiα⟨aα⟩ =∑jKij⟨Nj⟩ +bi (40)
+where νiα is the stoichiometry matrix (describing the change in the copy number of the i-th species
+due to the ﬁring of the α-th reaction),Kij =∑ανiαKαj andbi =∑ανiαbα. Note that Kij is usually
+asymmetric. For the second moments, the variance-covariance matrix Sij(t) = ⟨∆Ni(t) ∆Nj(t)⟩,
+where ∆Ni =Ni−⟨Ni⟩, obeys
+∂Sij
+∂t =∑k(KikSjk +KjkSik) +Hij (41)
+where
+Hij =∑ανiανjα⟨aα⟩. (42)
+Note that Sij(t) is symmetric. Finally the time-ordered two-point correlation functions
+⟨∆Ni(t) ∆Nj(t′)⟩ with t>t ′ obey a regression theorem
+∂⟨∆Ni(t) ∆Nj(t′)⟩
+∂t =∑kKik⟨∆Nk(t) ∆Nj(t′)⟩. (43)
+This concludes our survey of the established literature results.
+We now employ the ghost particle trick of Section II in the main text, and suppose that reaction
+α now creates a noninteracting species Qα, in addition to its usual products. Following Eq. (40),
+the mean copy number⟨Qα⟩ obeys
+∂⟨Qα⟩
+∂t =⟨aα⟩. (44)
+For the second moments, Eq. (41) becomes
+∂Siα
+∂t =∑j(KijSjα +KαjSij) +Hiα. (45)
+where Siα =⟨∆Ni ∆Qα⟩. The second term in this can be rewritten as
+∑
+jKαjSij =⟨∆Ni(∑jKαj∆Nj)⟩ =⟨∆Ni∆aα⟩. (46)
+
+PDF PAGE 13
+13
+0 100 200 3000
+300
+∆t/min
+⟨∆W 2ln kα⟩/⟨aα⟩
+FIG. 5: (color online) Growth of variance of weight functions in steady state, normalised by the expected growth rate. Model
+and parameters as for Fig. 1 in the main text.
+The stoichiometry matrix entry for Qα consists of a ‘+1’ for the α-th reaction, and zero elsewhere,
+so that Eq. (42) becomes Hiα =νiα⟨aα⟩. Finally we have
+∂Siα
+∂t =∑jKijSjα +⟨∆Ni∆aα⟩ +νiα⟨aα⟩. (47)
+By similar argumentation we also obtain
+∂Sαα
+∂t = 2⟨∆Qα∆aα⟩ +⟨aα⟩ (48)
+where Sαα =⟨∆Q2α⟩.
+Armed with these results, let us now turn to the problem of computing the weight function Wkα.
+We write the continuous-time analogue of Eq. (11) in the main text:
+kαWkα(t) =Qα(t)−
+∫ t
+0
+dt′aα(t′) (49)
+(note that by substituting Eq. (44) into Eq. (49) we recover our previous observation that⟨Wkα⟩ = 0).
+Again writing Wlnkα≡kαWkα, it follows from Eq. (49) that
+⟨NiWlnkα⟩ =⟨∆Ni∆Wlnkα⟩ =Siα(t)−
+∫ t
+0
+dt′⟨∆Ni(t) ∆aα(t′)⟩. (50)
+Thus, now noting explicitly the time-dependence of the various terms, we obtain
+∂⟨NiWlnkα⟩
+∂t = ∂Siα∂t −⟨ ∆Ni(t) ∆aα(t)⟩− ∫ t0dt′∂⟨∆Ni(t) ∆aα(t′)⟩∂t . (51)
+Exploiting the linearity of the propensity functions, the regression theorem implies
+∂⟨∆Ni(t) ∆aα(t′)⟩
+∂t =∑jKij⟨∆Nj(t) ∆aα(t′)⟩. (52)
+Hence
+∂⟨NiWlnkα⟩
+∂t = ∂Siα∂t −⟨ ∆Ni(t) ∆aα(t)⟩− ∑j Kij∫ t0dt′⟨∆Nj(t) ∆aα(t′)⟩. (53)
+
+PDF PAGE 14
+14
+Eliminating the time integrals between this and Eq. (50), we get
+∂⟨NiWlnkα⟩
+∂t = ∂Siα∂t −⟨ ∆Ni(t) ∆aα(t)⟩− ∑j KijSjα(t) +∑j Kij⟨NjWlnkα⟩. (54)
+Eliminating ∂Siα/∂t between this and Eq. (47) gives ﬁnally
+∂⟨NiWlnkα⟩
+∂t =∑jKij⟨NjWlnkα⟩ +νiα⟨aα⟩. (55)
+This is an ODE which give the evolution of ⟨NiWlnkα⟩ in terms of known quantities. It can be
+compared with the adjunct ODE that is obtained by diﬀerentiating Eq. (40) with respect to ln kα.
+The two ODEs are identical and share the same initial conditions. For this speciﬁc case, this is a
+direct proof of the general result in the main text, namely that ⟨NiWlnkα⟩≡ ∂⟨Ni⟩/∂ lnkα. Whilst
+this is interesting, it is not quite what we are after, which is a theory for the correlation functions
+deﬁned in the main text. To ﬁnd this we ﬁrst note a generalisation of the regression theorem is
+∂⟨Ni(t)Wlnkα(t0)⟩
+∂t =∑kKij⟨Nj(t)Wlnkα(t0)⟩. (56)
+Subtracting this from Eq. (55) generates a set of coupled ODEs for the correlation functions
+Ci(t,t 0) = ⟨Ni(t)∆Wlnkα(t,t 0)⟩, which should be solved with the initial conditions Ci(t,t 0) = 0
+at t =t0. In steady state these ODEs are
+∂Ci(∆t)
+∂(∆t) =∑jKijCj(∆t) +νiα⟨aα⟩. (57)
+The initial conditions are Ci(0) = 0. This is the key result of this Section, as in principle it allows
+for explicit calculation of the correlation functions. Comparing to the adjunct ODE obtained by
+diﬀerentiating Eq. (40) with respect to ln kα, we see that for this case we also have a direct proof
+of the general result claimed in the main text, that Ci(∆t)→ ∂⟨Ni⟩/∂ lnkα as ∆t→∞ . For the
+constitutive gene expression model in Section IV A in the main text, we solved Eq. (57) to obtain
+the results given in Eq. (22) in the main text.
+To complete the general discussion here, let us derive an expression for the variance of ∆ Wlnkα.
+From the deﬁnition in Eq. (49) we have
+⟨W 2lnkα⟩ =Sαα− 2
+∫ t
+0
+dt′⟨∆Qα(t) ∆aα(t′)⟩ +
+∫ t
+0
+dt′
+∫ t
+0
+dt′′⟨∆aα(t′) ∆aα(t′′)⟩ (58)
+Thus
+∂⟨W 2lnkα⟩
+∂t = ∂Sαα∂t − 2⟨∆Qα ∆aα⟩− 2∫ t0dt′∂⟨∆Qα(t) ∆aα(t′)⟩∂t + 2∫ t0dt′⟨∆aα(t) ∆aα(t′)⟩. (59)
+The last two terms in this cancel, on account of the regression theorem. Further cancella-
+tions occur when Eq. (48) for ∂Sαα/∂t is inserted, giving ﬁnally ∂⟨W 2lnkα⟩/∂t = ⟨aα⟩. Since
+Wlnkα(t) = Wlnkα(t0) + ∆Wlnkα, and Wlnkα(t0) and ∆ Wlnkα are uncorrelated, it follows that
+⟨W 2lnkα(t)⟩ =⟨W 2lnkα(t0)⟩ +⟨∆W 2lnkα⟩. Integrating ∂⟨W 2lnkα⟩/∂t =⟨aα⟩ and inserting in this last
+expression gives⟨∆W 2lnkα⟩ =∫tt0dt′⟨aα⟩. As a particular case, in steady state, ⟨∆W 2lnkα⟩ =⟨aα⟩ ∆t.Thus we do indeed see that in steady state ∆ Wlnkα has a zero mean and a variance that grows
+linearly in time, justifying our claim that it behaves essentially like a random walk. Some results
+conﬁrming this analysis are shown in Fig. 5.
+
+PDF PAGE 15
+15
+3. TIME STEP PRE-AVERAGING
+In the time step pre-averaging approach, we do not select time steps as part of our kinetic Monte
+Carlo algorithm, but instead use the state-dependent average time step τ ≡ (∑µaµ)−1 in our
+expression for the time average of quantity f, as in Eq. (18) in the main text. For the purposes of
+this Section, we deﬁne a new notation:
+E(fτ ) =
+∑
+steps fτ
+Nsteps
+(60)
+in which the sum is over the values of the system function f multiplied by the (state-dependent)
+mean time step, computed at each step along a kinetic Monte-Carlo trajectory of lengthNsteps. Note
+that E(fτ ) can be computed using an algorithm that does not keep track of time but only of the
+choice of reaction channel. We can then rewrite Eq. (18) in the main text as
+f =
+∑
+steps fτ∑
+steps τ = E(fτ )E(τ) . (61)
+When using time step pre-averaging, the correlation function Eq. (16) in the main text must be
+modiﬁed because the relative probability of generating a given sequence of states (Eq. (4) in the
+main text) takes a diﬀerent form when the algorithm does not keep track of time, and because the
+average time step τ in Eq. (61) itself usually depends on the parameter in question.
+In a kinetic Monte Carlo scheme in which the next reaction is selected as normal, but time is not
+tracked, the probability of generating a given trajectory is proportional to
+P =∏steps (aµ/∑µaµ). (62)
+(i.e. the part of Eq. (4) in the main text concerning the time step distribution is discarded). In
+analogy to Eq. (5) in the main text, one can write the average E ′(fτ ) for the perturbed problem in
+terms of averages over unperturbed trajectories:
+E′(fτ ) = E(fτ′P′/P )E(P′/P ) . (63)
+Taking derivatives of Eq. (63) with respect to the parameter kα as described in Section 1 above, it
+follows that
+∂ E(fτ )
+∂kα
+= E(f ∂τ∂kα ) + E(fτWkα)− E(fτ ) E(Wkα) (64)
+where the fact that τ depends on kα leads to an extra term (the ﬁrst term) in comparison to Eq. (6)
+in the main text. Computing Wkα =∂ lnP/∂kα using Eq. (62), it turns out thatWkα =∑steps δWkα
+has the same form as before, but with δt replaced by τ,
+δWkα = ∂ lnaµ∂kα − ∂(∑aµ)∂kα τ. (65)
+Since the weight function in Eq. (65) behaves like a random walk, steady-state parameter sensitivities
+should be computed using the correlation function trick (as in Section III in the main text). From
+Eq. (64) we have:
+∂ E(fτ )
+∂kα
+= E(f ∂τ∂kα ) + limn→∞C(n) (66)
+
+PDF PAGE 16
+16
+where
+C(n) = E(fτ ∆Wkα(n))− E(fτ ) E(∆Wkα(n)) (67)
+with ∆Wkα(n) given by Eq. (17) in the main text, using the present Eq. (65) to generate Wkα.
+Finally, the parameter sensitivity coeﬃcient itself is given by diﬀerentiating Eq. (61),
+∂f
+∂kα
+= 1E(τ)∂ E(fτ )∂kα − E(fτ )E(τ)2 ∂ E(τ)∂kα . (68)
+The quantity ∂ E(τ)/∂kα in the second term is given by setting f = 1 in Eqs. (66) and (67). When
+using time step pre-averaging in combination with the time-averaged correlation function method,
+one computes the parameter sensitivity coeﬃcient using Eq. (68) rather than simply taking the limit
+of the correlation function as n→∞ .
+We note that while Eq. (68) looks formidable, its actual computation is fairly straightforward.
+To obtain both f and ∂f/∂kα, one computes trajectory averages of the set of quantities deﬁned by
+{1,f}⊗{ 1,τ}⊗{ 1, ∆Wkα(n)}, together with ∂τ/∂kα and f∂τ/∂k α. These averages are calculated
+by summing the respective quantities along the trajectory and dividing by the number of steps.
+4. THE FINITE STATE PROJECTION ALGORITHM
+The master equation describes the evolution of the probability P (Ni;t) that a system is in the
+stateNi at time t. For the sake of compactness we will adopt the notation s ands′ for the states Ni
+and N′i respectively. The master equation is [1]
+∂Ps
+∂t =∑s′[ws′sPs′−wss′Ps] (69)
+where wss′ is the transition rate from s to s′, given by
+wss′ =
+{
+aµ(Ni) µ-th reaction is Ni→N′i,
+0 otherwise . (70)
+The ﬁnite state projection (FSP) algorithm is a numerical solution scheme for the master equation
+based on the idea of truncating the state space. For full details of the original FSP algorithm we
+refer to the work of Munksy and Khammash [15]. Here we outline the basic principles of the scheme
+and the small changes needed to adapt it to the computation of steady-state sensitivity coeﬃcients.
+The starting point is to note that Eq. (69) is a linear ODE for P , and may be written in the matrix
+form
+∂P
+∂t = A· P (71)
+where A is an inﬁnite-dimensional sparse matrix. To make this into a tractable numerical propo-
+sition, the FSP algorithm truncates the state space to a ﬁnite size D. The truncation is chosen so
+as to contain almost all of the probability P (Ni) under the conditions of interest. For the prob-
+lems encountered here, a (hyper-)rectangular truncation scheme works, N 0i ≤ Ni≤ N 1i , for which
+D =∏i ∆Ni where ∆Ni =N 1i−N 0i + 1. The question then is how to handle the states not included
+in the truncation scheme. In the original FSP algorithm the extra states are lumped together into
+a single meta-state. All the transitions leaving the truncated state space are connected to this new
+meta-state, and all the transitions entering the truncated state space are discarded. With this ap-
+proximation A becomes a (D + 1)× (D + 1) sparse matrix, and one can use standard numerical
+
+PDF PAGE 17
+17
+methods to exponentiate the matrix and advance the probability distribution, i. e. P(t) =eAt· P(0).
+The advantage of introducing the meta-state is that Munsky and Khammash can prove some so-
+phisticated truncation theorems which provide a certiﬁcate of accuracy for the scheme.
+For the present problem we are interested in the steady state probability distributionPeq. However
+the meta-state is an absorbing state, which frustrates the direct computation of Peq. To avoid this,
+we discard all transitions which leave or enter the truncated state space whilst, obviously, retaining
+all the transitions contained entirely within the truncated state space. The meta-state is then no
+longer needed and A becomes a D×D sparse matrix. The steady state distribution is found by
+solving A· Peq = 0, in other words Peq is the right-eigenvector of A belonging to eigenvalue zero.
+That such an eigenvector exists is a textbook argument [1]: conservation of probability, ∑sPs = 1,
+implies ∑s∂Ps/∂t = 0 and hence 1· A = 0 where 1 is a row-vector with entries all equal to
+unity. Since therefore 1 is a left-eigenvector of A with eigenvalue zero, it follows under mild and
+non-restrictive conditions [1] that there is a corresponding right-eigenvector of A with the same
+eigenvalue. This is the desired steady state probability distribution.
+Well-established numerical methods exist to obtain the eigenvectors of a sparse matrix. For the
+present problems we have used the functionality provided in MathWorks matlab. For an open-
+source solution, we have also had good success with the octave interface to arpack which im-
+plements an implicitly restarted Arnoldi method [27]. From a practical point of view, we ﬁnd we
+are limited to truncated state spaces of size D ≲ 25 000 for matlab, and somewhat smaller for the
+octave interface to arpack. This eﬀectively limits consideration to problems involving at most
+two state variables Ni (i = 1, 2) and motivates the choice of examples in the main text.
+Once Peq is found we can calculate⟨f⟩ =∑sfsP eqs . Sensitivity coeﬃcients like ∂⟨f⟩/∂kα are then
+found by solving the FSP problem at kα and kα +h and using Eq. (3) in the main text, with h
+typically being a few percent of kα. Note that although the master equation describes a stochastic
+process, it is itself a deterministic ODE. Hence this method of computating sensitivity coeﬃcients
+by ﬁnite diﬀerencing is appropriate. In the absence of truncation theorems, convergence is veriﬁed
+empirically.

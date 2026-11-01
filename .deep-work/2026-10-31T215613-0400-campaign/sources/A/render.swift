@@ -1,0 +1,9 @@
+import Foundation
+import PDFKit
+import AppKit
+let args=CommandLine.arguments
+let doc=PDFDocument(url:URL(fileURLWithPath:args[1]))!
+let p=doc.page(at:Int(args[2])!-1)!
+let image=p.thumbnail(of:NSSize(width:1300,height:1800),for:.mediaBox)
+let data=NSBitmapImageRep(data:image.tiffRepresentation!)!.representation(using:.png,properties:[:])!
+try data.write(to:URL(fileURLWithPath:args[3]))

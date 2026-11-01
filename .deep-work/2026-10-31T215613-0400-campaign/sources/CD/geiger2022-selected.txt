@@ -1,0 +1,234 @@
+
+PDF PAGE 3
+
+Inducing Causal Structure for Interpretable Neural Networks
+are set to constant values v. Because we overwrite neurons
+with v in-place, gradients can back-propagate through v.
+This corresponds closely to the do operator of Pearl (2009),
+which characterizes interventions on models in the service
+of exploring hypothetical or counterfactual states.
+Interchange Interventions With the above definitions in
+place, we can straightforwardly characterize the interchange
+interventions of Geiger et al. (2020), in which a model M
+is used to process two different inputs, source and base,
+and then a particular internal state obtained by processing
+source is used in place of the corresponding internal state
+obtained by base. For a given set of variables V,
+MV←GETVALS(M,source,V)
+is a version of Mwith the values of V set to those obtained
+by processing source. In addition,
+GETVALS(M,base,VOut)
+is the setting of the outputs VOut obtained by processing
+base with model M. When we put these two steps together,
+we obtain the interchange intervention:
+INTINV(M,base,source,V) def
+=
+GETVALS(MV←GETVALS(M,source,V),base,VOut) (1)
+In short, the interchange intervention provides the output of
+the model Mfor the input base, except the variables V are
+set to the values they would have if source were the input.
+Causal Abstraction Relationships Suppose we have a
+high-level model MH and a low-level model ML with
+identical input spaces and a predetermined mapping of out-
+put values from the low to high level, κ (for example, if
+the low level model produces a probability distribution over
+output classes, then κcould be the arg max function, which
+selects the highest probability class). Further suppose we
+have an alignment Π mapping intermediate variables in VH
+to non-overlapping subsets of variables in VL. Consider
+some intermediate variable VH and define M∗
+Hto be MH
+with every variable marginalized other than VIn, VOut, and
+VH. We can use the definition of interchange interventions
+to define what it means for MLand MH
+∗to be in a causal
+abstraction relationship, namely, for all b,s ∈VIn:
+INTINV(M∗
+H,b,s,VH) =
+κ INTINV(ML,b,s,Π(VH)) (2)
+This is in fact a constructive abstraction relationship in
+the sense of Beckers & Halpern (2019), in which aligned
+interventions on the low-level model and high-level model
+have the same effect. This is especially suited for situations
+in which we seek to relate small symbolic models with large
+neural models with high-dimensional representations.
+Abstraction and Interpretability Causal abstraction anal-
+ysis is not a story about the reasoning a neural network might
+use to achieve its behavior, but instead is an intervention-
+based method that determines how it does, in fact, achieve
+its behavior. We can interpret the semantic content of neu-
+ral representations using the high-level variables they are
+aligned with, and understand how those neural representa-
+tions are composed using the high-level parenthood relation.
+Simply put, when a high-level causal model is an abstraction
+of a neural network, it is a faithful interpretation (Lipton,
+2018; Jacovi & Goldberg, 2020) of the network.
+Interchange Intervention Accuracy To quantify partial
+success when it comes to causal abstraction relationships,
+we measure the percentage of aligned interchange interven-
+tions that produce the same output, reporting this as the
+interchange intervention accuracy (INTINVACC):
+INTINVACC(MH,ML,VH,Π) def
+=
+1
+|Val(VIn)|2
+I INTINV(M∗
+H,b,s,VH) =
+b,s∈Val(VIn)
+κ INTINV(ML,b,s,Π(VH)) (3)
+Where every pair of inputs b and s is considered, and
+INTINVACC is 1, the two models are in the causal abstrac-
+tion relationship. However, we often only approximate this
+by evaluating a set of randomly sampled pairs of inputs, due
+to the enormous space of input pairs.
+INTINVACC provides a natural metric for quantifying the
+interpretability of a neural network in the following sense:
+when INTINVACC is 1, the causal model is an explanation
+of how the network behaves, providing a clear window into
+the network itself. In practice, we rarely observe perfect
+INTINVACC in complex networks, but we can still say that
+the higher the value of INTINVACC, the more we have li-
+cense to reason about the high-level causal model instead of
+reasoning directly about the low-level network. The causal
+model provides an interpretable proxy for the network itself.
+IIT Loss Functions The definition of IIT for high-level
+models with one intermediate variable falls out directly
+from the causal abstraction definition:
+LOSS INTINV(C,b,s,V),
+b,s∈VIn
+INTINV(Nθ
+,b,s,Π(V)) (4)
+where Cis the high-level causal model, V is a high-level
+variable, Nθ is the low-level neural network with learned
+parameters θ, Π(V) is a set of low-level variables (neurons)
+that are aligned with V, and LOSS is some loss function.
+Observe that we do not apply the output map κ, because the
+loss function takes in the logits directly.
+The crucial feature of an IIT update is that the interchange
+intervention intertwines two computation graphs, one gener-
+
+PDF PAGE 4
+
+Inducing Causal Structure for Interpretable Neural Networks
+FALSE
+FALSE
+FALSE
+-1
+-0.5
+0.05
+-0.45
+0.05
+TRUE
+0.55
+Y= w[h1; h2] + b
+H1 = W1[x1, x2] H2 = W2[x1, x2]
+X1 X2
+O= b1 ∧b2
+V1 = b1 V2 = b2
+B1 B2
+(a) A linear network with unspecified weights (left) and a symbolic
+causal model that computes boolean conjunction (right). An align-
+ment between the two is denoted by dashed lines. The causal model
+is an abstraction of the network when, for both V1 and V2, aligned
+interchange interventions on network and causal model result in
+the same output on all 16 ordered pairs of inputs. (The aligned
+intervention pair (b, s) in general differs from (s, b).)
+0 0
+0.45 0.05 0.5 0 0
+1 0
+1 1
+0.5
+0 1
+FALSE FALSE
+TRUE FALSE
+FALSE TRUE
+TRUE TRUE
+(b) We define a network with initial parameters W1 = [0.45, 0.05],
+W2 = [0.05, 0.5], output bias b=−1, and output weights w =
+[1, 1]. Input values are 0 for False and 1 for True. With the initial
+weights, the network has perfect behavioral accuracy, predicting
+true (red) iff both its inputs are 1, otherwise it predicts false (blue).
+Although correct when run on the four inputs (T, T), (T, F), (F, T),
+(F, F), the interchange intervention accuracy is 81.25%: between
+the two high-level variables V1 and V2, there are six ordered pairs of
+inputs where performing aligned interchange interventions results
+in the causal model and neural network producing different outputs
+(see figure 1c for one such pair).
+F
+F T
+F T
+FALSE
+T
+T T
+T F
+FALSE
+-0.45
+-0.05
+0.5
+0 1
+Require: High-level and low-level models MH and ML
+with variables VH and VL, an alignment Π that maps a
+VH ∈VH to a VL ⊆VL, training dataset D
+1: MH.eval()
+2: ML.train()
+3: while not converged do
+4: for (b, s) in enumerate(D×D) do // base and source
+5: VH ∼VH// sample a high-level variable
+6: VL = Π(VH) // aligned low-level variables
+7: with no grad:
+8: aH = GETVALS(MH
+, s, VH)
+9: oH = GETVALS(MH
+VH ←aH , b, VOut) // label
+10: aL = GETVALS(ML
+, s, VL)
+11: oL = GETVALS(ML
+VL ←aL , b, VOut) // pred
+12: LIIT = LOSS(oH, oL)
+13: L= LIIT + LOthers // combine with other losses
+14: L.backward()
+15: Update model parameters with gradients
+0.05 0.45 1 0
+FALSE TRUE
+TRUE FALSE
+(c) An illustration of an interchange intervention training update,
+where an intervened network is trained to predict the intervened
+output of the causal model. It can be seen that the intervention puts
+the network in a state that could not be achieved with any input
+representation.
+FALSE
+FALSE
+-0.95
+-0.39
+0 0
+0.05
+0.5
+0.5 FALSE
+-0.33
+0.05 0.55
+(d) Pseudocode for interchange intervention training.
+TRUE
+0.23
+TRUE
+0.6
+0.13
+0.55 0.5 0.55
+0 0
+1 0
+0 1
+1 1
+1 0
+TRUE FALSE
+TRUE FALSE
+FALSE TRUE
+TRUE TRUE
+TRUE FALSE
+(e) The network defined in figure 1b after the IIT training update from figure 1c has been applied, resulting in a network with 100%
+interchange intervention accuracy (though still nonzero loss), while maintaining the same behavior. The new network has parameters
+W1 = [0.5012, 0.05], W2 = [0.05, 0.5512], bias b=−0.9488, and output weights w = [1.0231, 1.0256].
+Figure 1. Interchange intervention training example. Network N∧performs boolean conjunction with perfect accuracy, or, equivalently, it
+agrees with C∧on the four possible inputs (figure 1b). However, C∧is not a causal abstraction of N∧under this alignment, because there
+are aligned interchange interventions that result in N∧and C∧producing different outputs, meaning that the internal dynamics of the
+network do not realize the structure of the causal model. To quantify this, we note that the interchange intervention accuracy (Eqn. 3) is
+81.25%. After a single interchange intervention training update (figure 1c, figure 1d), this is fixed: all aligned interchange interventions
+result in the same output (the interchange intervention accuracy is now 1), so C∧has become a causal abstraction of N∧(figure 1e).

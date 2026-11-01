@@ -1,0 +1,306 @@
+
+PDF PAGE 178
+
+Feed-forward transformations 157
+bj
+ωlj
+y
+dl
+ck
+ωkl
+z
+ai
+x
+m
+ωli
+Figure 6.6
+Schematic network for performing multiplication with LIF neurons. This is like the network for scalar addition
+(in figure 6.3), with the inclusion of a middle, or ‘hidden’, layer, .
+dent of any of the central assumptions of our framework. This is both good and bad. It is
+good because it means that any actual dendritic mechanism that implements multiplication
+can be merged with the framework. It is bad because it also means that there is no expla-
+nation of such mechanism to be found in the assumptions underlying the framework. In
+contrast, the two subsequent solutions to implementing multiplication, which do not have
+the undesirable consequences of this kind of coincidence detection, are more directly tied
+to the assumptions underlying our approach.
+Let us now consider how to implement multiplication in a network, without assuming
+nonlinearities in the dendrites. Perhaps surprisingly, most solutions for multiplication have
+been cellular solutions (although see Salinas and Abbott 1996). This is surprising because
+the neurons in most computational models do not have nonlinear dendrites.
+In order to implement multiplication in a network, we define our representations of ,
+, and as before. However, we also include a ‘middle layer’, , (or ‘hidden layer’) which
+is a vector representation that combines the two scalar inputs such that their product can be
+extracted (i.e., decoded). We define the representation for as we did before in equations
+(6.16) and (6.16) for vectors. The resulting network is shown in figure 6.6.
+
+PDF PAGE 179
+
+158 Chapter 6
+The transformation that relates to the input values is simply and .
+That is, the components of are equal to the inputs. The transformation that relates to
+the output variable is . In order to implement this second transfor-
+mation, we need to known how to decode , so we must also find the transformational
+decoder , where
+We can do this, as usual, by minimizing the error
+We can now find the appropriate expressions for the connection weights in the network.
+We do this, as before, by substituting our decoding rules into the encoding rules of the
+population that represents the output of the transformation. In this case, we have two sets
+of transformations to consider. First, we must relate the input to the middle layer:
+where and . Next, to find the weights for the second
+transformation, we proceed along the same lines:
+where . As usual, this transformation can be directly implemented in a noisy
+spiking network (see figure 6.7).
+Essentially, we have derived the middle (or ‘hidden’) layer of a standard artificial
+neural network (ANN) architecture. In the ANN literature, it is well known that such
+an architecture permits nonlinear and linear functions of the input to be learned (usually
+
+PDF PAGE 180
+
+Feed-forward transformations 159
+0.6
+estimate
+actual
+0.5
+0.4
+0.3
+0.2
+0.1
+0
+-0.1
+-0.2
+0 0.1 0.2 0.3 0.4 0.5
+time (sec)
+Figure 6.7
+Results of multiplication by the spiking network shown in 6.6. There are 200 LIF neurons in each of the , ,
+and populations and 400 in the middle layer, . The network is driven by ramp input to and . Shown here
+is the decoded output variable, , and the correct answer (grey line).
+by backpropagation). Here we have shown how to derive the weights for implementing
+the desired nonlinear function. Better yet, we have done so assuming neurobiologically
+reasonable neurons (unlike most ANNs). And, since we have done so with well-understood
+principles, we know how the network works and we can quantify its limitations (see section
+7.3 for a precise description of the principles governing this sort of network).
+However, the neurophysiological evidence suggests that multiplication is not imple-
+mented (or at least is not only implemented) at the network level (Mel 1999; Mel 1994;
+Koch and Poggio 1992). It has been reasonably well-established that dendrites tend to
+have nonlinear interactions with other nearby dendrites (Mel 1999; Koch 1999; Bugmann
+1991). If a cell has such nonlinear dendritic interactions, it should be able to perform some-
+thing akin to multiplication (although the precise mechanism is not yet well understood). It
+has been noted that such a cell (i.e., one that has nonlinear dendrites) has the computational
+power akin to two-layer ANNs (Mel 1999; McKenna et al. 1992). So, it is natural to think
+that we could implement the final two layers of the network in figure 6.6, in a single cell.8
+This is related to the historically common suggestion that neurons with nonlinear dendritic trees can be
+
+PDF PAGE 217
+
+196 Chapter 7
+Given the properties of SVD, we know that this is the same solution we would find by
+constructing the error explicitly (i.e., ), taking the derivative, and
+setting it to zero, as we have previously done.
+While SVD turns out to be useful for understanding both representation and transfor-
+mation, some of the representational analyses make more sense after we have characterized
+transformation. As a result, we begin by considering transformation first.
+7.3 DETERMINING POSSIBLE TRANSFORMATIONS
+We have already presented examples of both linear and nonlinear transformations using
+neural populations, but we have not presented a general, theoretical characterization of
+transformation. While such examples are useful, they do not show how to answer a pivotal
+question about transformations and neurobiology, namely: Given a neural population, what
+are the possible transformations that it can support? Here, we present a general analytical
+technique for answering this question.7
+In section 7.2 we used SVD to find the representational decoders of . Here, we
+perform a similar analysis to find an expression for the decoding vectors needed to decode
+any transformation of :
+Performing SVD on to find the inverse, as before, gives
+(7.15)
+where are the linear decoders for estimating the transformation . So, the represen-
+tational decoder, , is found in the special case where . Notice that regardless
+of which transformation we need decoders for, we always perform SVD on the same ma-
+trix, . This suggests that understanding the properties of can provide general
+insight into all possible decodings of the population, .
+Recall that singular value decomposition finds the matrix , whose columns are
+orthogonal vectors spanning the range and null-space of , and a diagonal matrix of
+singular values, . The singular values are useful because they tell us the importance of
+We have previously presented a similar analysis in Westover et al. (2002).
+
+PDF PAGE 218
+
+Analyzing representation and transformation 197
+the corresponding vector. There are a number of ways of thinking about ‘importance’
+in this case. For instance, we can think of ‘importance’ as being related to the error that
+would result if we left a particular vector out of the mapping. If we remove a vector with
+a high singular value from the decomposition and then reconstruct , we introduce a lot
+of error into the reconstructed matrix (and therefore into estimates of the inverse which
+determine the decoders). Conversely, if we remove a vector with a low singular value, we
+introduce little error. Or, we can think of ‘importance’ as being related to the variance
+of population firing along the vectors in the matrix. Under this interpretation, the
+vector with the largest corresponding singular value can account for the most variance in
+the population firing over the range of the population’s representation. The vector with
+the second largest singular value explains the next most variance, and so on. Relatedly,
+we can think of ‘importance’ as being the amount of (independent) information about
+changes in population firing that can be extracted by looking only at data projected onto
+the corresponding vector.
+In general, we can think of the magnitude of the singular value as telling us how
+relevant the dimension defined by the corresponding vector is to the identity of the
+matrix we have decomposed. Since the matrix we have decomposed is like the correlation
+matrix of the neuron tuning curves, the large singular values are most important for
+accounting for the structure of those correlations. It is that structure that encodes the input
+variable, so accounting for the correlational structure is equivalent to accounting for the
+encoding of the input variable. Knowing exactly what information was encoded permits us
+to determine what we can decode.8
+It is also relevant that the vectors in are orthogonal. Since these vectors can be used
+to reconstruct to original matrix, they provide an (ordered) orthogonal basis for that
+matrix. This is very useful because the original matrix was generated by a non-ordered
+non-orthogonal basis; the neuron tuning curves. To make this point more quantitative, let us
+begin by defining a point in the ‘neuron space’ (i.e., the space spanned by the overcomplete
+neuron tuning curves) as
+In this notation, the vectors serve as axes for the state space of the neural population. A
+point in this space is defined by the neuron firing rates from each neuron in the population
+(which, taken together, form the vector ).
+Because the neural responses are non-independently driven by some variable, , only a
+subspace of the space spanned by the vectors is ever actually occupied by the population.
+The matrix, because it tells us the correlations between all neurons in the population,
+See appendix E.1 for some related and important practical considerations regarding decoding of .
+
+PDF PAGE 219
+
+198 Chapter 7
+provides us with the information we need to determine what that subspace is. When we
+find the vectors in the SVD decomposition, we have characterized that subspace because
+those are the orthogonal vectors that span it. Better yet, as discussed previously, we know
+which vectors are most important and which least important for defining the subspace.
+This information is exactly what is needed in order to determine what functions can be
+computed by the particular encoding of found in the population. To see why, let us
+use (7.14) to write our estimate of in matrix form as
+or, more simply
+(7.16)
+where
+so
+(7.17)
+and
+so
+Notice that and in (7.16) are rotated versions of and respectively. Specifically,
+they are rotated into the coordinate system defined by . So we can think of as the
+rotation matrix that aligns the first axis of the coordinate system along the dimension with
+the greatest variance in the encoding of , the second axis along the dimension with the
+second greatest variance, and so on. As a result, and as shown in appendix E.2, the
+vectors also end up being orthogonal and ordered by importance. That is, they tell us what
+can be extracted, and how well it can be extracted, from the neural population.
+We can think of the components of as basis functions of the space that includes
+the ensemble of transformations definable on using the encoding in the population .
+This is more evident in (7.17) where we write in summation notation. There it is quite
+
+PDF PAGE 220
+
+Analyzing representation and transformation 199
+U3
+1
+0.5
+0
+-0.5
+-1
+-1.5
+-2
+-2
+-1
+-4
+0
+-2
+0
+1
+U2
+2
+2
+4
+U1
+Figure 7.3
+An example of a neural subspace (black line) and its projection onto the axes (grey lines). This example is
+taken from a population with monotonically increasing tuning curves (see section 7.3.1). The different scales of
+the axes indicate their relative importance, i.e., the magnitude of the associated singular value.
+obvious that at a particular value of is the neuron firing rates at that value of
+projected onto the th orthonormal vector (see figure 7.3). Whichever functions
+have reasonably large associated singular values, are exactly the functions that we can do
+a good job of extracting from our encoding of the input space, . Of course, we can also
+extract any linear combinations of those functions quite well. But, because these
+functions are ordered, the more useful the ‘first’ function is for reconstructing some
+transformation, , the better we can extract that transformation, .
+In practice, we can look at the resulting functions and determine what sort of
+basis we seem to have. For example, if the look like sines and cosines, we have
+a Fourier basis. So from that encoding of , we can compute any functions that can
+be constructed with the sines and cosines available. As we show in the next section, it
+is somewhat surprising, but very convenient, that we find recognizable bases when we
+analyze realistic neural populations.
+Before seeing two examples of this, it is useful to note that introducing noise into the
+matrix does not greatly change this analysis. Rather than think of the neural state vectors as
+defining points in the neural space, we can think of them as defining clouds of points, where
+the structure of the cloud is determined by the neural noise. Thus the subspace defined by
+
+PDF PAGE 221
+
+200 Chapter 7
+the encoding of some variable, , also becomes blurred. So, for instance, in figure 7.3,
+the thick dark line would look something like a tube whose boundary is determined by
+the magnitude of the noise. Notably, the noise is likely to have a constant variance along
+each axis in the space, so it will have a greater effect on axes with small corresponding
+singular values. Thus decoding functions that are linear combinations of functions
+with large singular values will also be the most robust to corruption by noise.
+Finally, before concluding this section, let us briefly discuss transformations of func-
+tion representations. Not surprisingly, the analysis of such transformations is a straight-
+forward extension of the analysis of vector transformations. This is true for two reasons.
+First, any function representation in the face of noise, will be equivalent to some high-
+dimensional vector representation under no noise. Second, we define function represen-
+tations as expansions in some orthonormal basis, with only a certain number of terms in
+the expansion. Thus, any function in such a representation can be perfectly described by
+its finite coefficients, which themselves can be treated as a vector space (as discussed in
+section 3.3). We provide more detailed examples of function transformations in the next
+chapter, but suffice it to say that, in some ways, they are nothing new.
+7.3.1 Linear tuning curves
+While it is useful to know the general theory that applies to any population, examining a
+specific example shows how the theory can be useful for analyzing real neural systems.
+In this section, we present the results from applying the above analysis to a population of
+neurons with broad, nearly linear tuning curves, like those seen in the neural integrator
+(see figure 7.4). These kinds of neurons are most common in peripheral motor systems, but
+are also found in vestibular systems and cortex. We first present an analysis of encoding
+a scalar variable, , and later discuss encoding of a vector, , which introduces some
+additional complexities to the analysis.
+As mentioned in section 7.3, in order to get a good idea of the kinds of functions that
+can be encoded by a given population, we must look at the functions to see what kind
+of basis they form. For the population in figure 7.4, these functions are given by
+Recall that the are the projection of the population state space onto the orthonormal
+vectors (see figure 7.3). Plotting the first five (i.e., the five with the highest corresponding
+singular values) of these functions gives us a good sense of what basis spans the neural
+space (see figure 7.5a). It is clear from this figure that this set of functions closely
+resembles a polynomial basis because the first function is approximately constant, the
+second approximately linear, the third approximately quadratic, etc. One of the most
+
+PDF PAGE 222
+
+Analyzing representation and transformation 201
+250
+200
+firing rate (Hz)
+150
+100
+50
+0
+-1 -0.8 -0.6 -0.4 -0.2 0 0.2 0.4 0.6 0.8 1
+x
+Figure 7.4
+Broadly tuned population of neuron tuning functions encoding the scalar . Fifty of the 200 neurons used are
+shown here. These resemble the population of neurons found in the neural integrator (see section 2.3).
+common polynomial bases used in mathematics is the Legendre basis, , which is
+defined over the interval [-1,1] and results from the orthogonalization of .
+9 Scaled
+versions of the first five elements of this basis are plotted in figure 7.5b. Surprisingly, the
+very closely approximate .
+This analysis highlights an important difference between our analysis of and a prin-
+ciple components analysis (PCA) of the correlation matrix (see footnote 3). In particular,
+we find that , an approximately constant function, can be well-approximated by this
+population (in fact it has the highest singular value). This fact is essential to our earlier
+solution to the problem of negative weights that we discussed in section 6.4, because we
+rely heavily on decoding a constant value.
+Generally, the similarity between and means that this neural population
+supports the extraction of functions that can be well-estimated using the standard Legendre
+basis. Recall, however, that the functions are ordered by their singular values. Thus,
+the higher-order polynomial terms are not as well encoded by our population as the lower-
+order ones. So, computing functions that depend strongly on precise high-order terms will
+be prone to error.
+One way of expressing the basis is: .

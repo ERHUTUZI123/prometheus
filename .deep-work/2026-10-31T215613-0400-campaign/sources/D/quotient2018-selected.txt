@@ -1,0 +1,183 @@
+
+quotient2018.pdf PDF PAGE 2
+80:2 S. Maina, A. Miltner, K. Fisher, B. C. Pierce, D. Walker, S. Zdancewic
+data can be represented as either CSV and TSV files, and web APIs can return data as either
+JSON or XML objects. A time-tested and appealing way to implement such conversions is to use
+lenses [Foster et al. 2007], programs that simultaneously define pairs of functions for translating
+the data from the source format to the target format (the get direction) and back again (the put
+direction). Lens programming languages guarantee that these put and get functions satisfy certain
+lens laws, which imply that round trips, from source to target and back again, behave properly.
+Recent work [Miltner et al. 2017] developed a tool called Optician to synthesize a subset of the
+bijective lenses that can be derived in the lens programming language Boomerang [Bohannon et al.
+2008]. Each lens ℓ : S⇔ T that Optician can synthesize specifies a bijection from the language of a
+source regular expression S to a target language of a target regular expression T :
+ℓ.get(ℓ.put t) = t, and ℓ.put(ℓ.get s) = s (1)
+Optician makes programming bijective lenses easier. However, many useful lenses are not strictly
+bijective in natureÐthe desired transformation might ignore whitespace or the exact ordering of
+data fields, for instanceÐand it is a shame that Optician’s synthesis algorithm cannot be directly
+applied in such cases. One observation, however, is that non-bijective transformations can often be
+structured as a bijective łcorež surrounded by some kind of data normalization at the edges. We
+can therefore hope to use the Optician algorithm as component in a system that synthesizes more
+complex lenses.
+This paper applies this idea to the problem of synthesizing quotient lenses [Foster et al. 2008].
+Quotient lenses are lenses in which the lens laws are loosened so that they hold modulo an
+equivalence relation on the source and target data respectively; in this paper we are concerned with
+bijective quotient lenses which are lenses for which Equation 1 holds modulo equivalence relations
+≡S and≡T defined on the source and target data respectively:
+ℓ.get(ℓ.put t)≡ T t, and ℓ.put(ℓ.get s)≡ S s (2)
+Quotient lenses are useful in situations where a programmer wishes for the transformation defined
+by a lens to have the same behavior on data that differ only in inessential details. For instance, a
+programmer may wish to łquotient awayž the number of white space characters between data
+items, the capitalization of various strings, the sequence of fields in a record, or the order of items
+in a list.
+Optician synthesizes bijective lenses from a pair (S,T) of regular expressions specifying the
+source and target types and a set of example input-output pairs that guide the synthesis algorithm.
+This presents a challenge for synthesizing quotient lenses since a specification of a lens’s source
+and target formats needs to account for the equivalence relations defined on the respective formats.
+Our solution is to introduce Quotient Regular Expressions (QREs), which are regular expressions
+augmented with extra syntax that enables programmers to simultaneously specify a regular ex-
+pression and an equivalence relation on the language of that regular expression. Further, given a
+QRE, we can automatically infer a canonizerÐa function that converts strings in the language of
+the regular expression to a canonical form.
+For example, consider the following QRE for writing author names:
+let wsp_sp = collapse wsp→ " ␣ "
+let comma_name = last_name . "," . wsp_sp . first_name
+In this example, wsp is an existing regular expression for a nonempty sequence of whitespace
+characters, and first_name and last_name are existing regular expressions for first and last names.
+The QRE wsp_sp is a QRE with the same underlying language as wsp, but with a single canonical
+representative: " ␣ ". It is used as a component ofcomma_name, a QRE with an underlying language
+Proc. ACM Program. Lang., Vol. 2, No. ICFP, Article 80. Publication date: September 2018.
+
+
+quotient2018.pdf PDF PAGE 7
+Synthesizing Quotient Lenses 80:7
+Fig. 3. QRE lens from source P to target Q. P and Q are QREs, each consisting of a łwholež set (W(P) and
+W(Q)) and a łkernelž part (K(P) and K(Q)) Between the two kernels is a plain bijective lens. Theget function of
+the whole lens takes an argument from W(P), applies the canonizer for P to obtain a canonical representative
+in K(P), then applies the get of the plain lens, yielding an element of K(Q), which is a subset of W(Q). The
+put function does the reverse, mapping fromW(Q) to K(P) (hence W(P). This lens is in normal form, with
+canonizers (specified by QREs) at the outer edges and an ordinary bijective lens in the center.
+with equivalence relations indicating the essential information (QREs). A tantalizing possibility
+would be to use the bijective string lens synthesis procedure as a subroutine for a quotient lens
+synthesis procedure. This new synthesizer would take as input source and target QREs and example
+input-output pairs, compute the canonical source/target formats from the QREs, map the example
+input-output pairs to their canonical representations, and then invoke the bijective string lens
+synthesis procedure on the canonical data formats and the canonical examples.
+Indeed this idea is what motivates our definition of QRE lenses. Intuitively, our QRE lenses are
+bijective lenses with łcanonizers at the edgesž. Figure 3 depicts the architecture of QRE lenses.
+Every QRE lens q has a type P⇔ Q where P and Q are QREs. In the get direction, a QRE lens
+q : P⇔ Q uses the source QRE P to compute a canonical representative for the data modulo the
+equivalence relation defined by P and then applies the get function of a bijective string lens ℓ to
+this representative. In the put direction, q operates similarly, but using the QRE Q and the put
+function of ℓ.
+Because the QREs P and Q determine the internal formats for data after canonization, and
+because the algorithm for synthesizing bijective string lenses is directed by these formats, P and Q
+are all that is required to synthesize QRE lenses end-to-end.
+However, our requirement that canonizers appear only at the edges raises a key technical
+question: Are we limiting the expressiveness of our transformations by demanding all programs fit
+into this normal form? It turns out that we are notÐany lens that uses canonizers internally can be
+transformed into a lens that uses canonizers only at the edges. The main technical contribution
+of this paper (Theorem 5.2) is a proof of this fact. This technical result justifies using synthesis to
+produce QRE lenses instead of manually writing them, which can lead to substantial savings in
+program complexity. For instance, after defining the BibTEX and EndNote QREs and binding them
+to the variables bibtex and endnote respectively, then all of the code in Figure 1 may be replaced
+by a single call to the synthesis prodedure:
+let bib_to_end : bibtex⇔ endnote =
+synth bibtex⇔ endnote using {(bib_example, end_example)}
+Proc. ACM Program. Lang., Vol. 2, No. ICFP, Article 80. Publication date: September 2018.
+
+
+quotient2018.pdf PDF PAGE 8
+80:8 S. Maina, A. Miltner, K. Fisher, B. C. Pierce, D. Walker, S. Zdancewic
+Here, the generated quotient lens synchronizes bibtex and endnote formats, using bib_example
+and end_example (the two concrete example strings given at the beginning of this section) to
+disambiguate. In addition, and as we saw earlier with the definition of c_to_s, the synthesis
+procedure itself can be used to create lenses that are in turn used to define other QREs. The ability
+to interleave QRE specification with QRE lens synthesis yields a powerful and flexible way of
+creating bidirectional transformations.
+4 QUOTIENT REGULAR EXPRESSIONS
+A Quotient Regular Expression (or QRE) is a regular expression R augmented with syntax that
+expresses an equivalence relation on the language of R. This section formalizes the set of QRE
+combinators that we introduced informally in Section 3.
+4.1 Syntax and Semantics of QREs
+Formally, the language of Quotient Regular Expressions (QREs) is given by the following grammar,
+Q := normalize(R1, R2, f) | id(R) | collapse R↦→ s | squash Q1→ Q2 using f
+| perm(Q1, . . . ,Qn) with Q | Q1 ; Q2 | Q1· Q2 | (Q1| Q2) | Q∗
+where Q ranges over QREs, R ranges over regular expressions, f ranges over functions between
+regular languages, and s ranges over character strings.
+Using the conventional notation thatL(R) is the language accepted by the regular expression R,
+each QRE Q yields four semantic objects:
+W(Q) A regular expression, denoting the łwholež of Q
+≡Q An equivalence relation onL(W(Q))
+K(Q) A regular expression, denoting the łkernelž of Q, such thatL(K(Q)) forms a
+complete set of representatives for≡Q
+canonize(Q) A łcanonizingž function. Given any w∈L( W(Q)), canonize(Q)(w)
+is the unique k inL(K(Q)) such that k≡Q w.
+Intuitively, W(Q) is the regular expression representing the external format, while K(Q) is the
+regular expression representing the internal format. The equivalence relation≡Q groups together
+elements in the language of W(Q) that contain the same essential information. The function
+canonize(Q) picks the representative element from each of the resulting equivalence classes.
+The well-formedness constraints for QREs ensure that these four semantic objects fit together to
+form a coherent quotient W(Q)/≡Q whose equivalence classes are determined by canonize(Q).
+4.2 The normalize Combinator
+The relationship among the semantic objects of a QRE can be understood in terms of the combinator
+normalize(R1, R2, f), which expresses each of these pieces explicitly. Its whole language is just R1,
+its kernel language is just R2, and its canonizer is just f ; its equivalence relation≡ is determined
+by the fibres of f , so we have s1≡ s2⇔ f(s1) = f(s2) for s1 and s2 inL(R1).
+These components form a coherent quotient language when the canonization function f is
+surjective and idempotent (intuitively, f picks out a unique representative for each equivalence
+class). We also require that the kernel language be a subset of the whole language, which enables
+QRE composition. These considerations lead to the following well-formedness rule.
+L(R2)⊆L( R1) f :L(R1)−→L( R2) f is surjective f = f 2 (Normalize)normalize(R1, R2, f) wf
+Semantically, the normalize QRE is universalÐeach of the other combinators Q is equivalent
+to normalize(W(Q), K(Q), f) for some surjective, idempotent function f :L(W(Q))−→L( K(Q)).
+Proc. ACM Program. Lang., Vol. 2, No. ICFP, Article 80. Publication date: September 2018.
+
+
+quotient2018.pdf PDF PAGE 17
+Synthesizing Quotient Lenses 80:17
+The other cases of the proof are similar, proceeding by a straightforward application of the
+induction hypothesis followed by unrolling the equations that give the denotation for QRE lenses.
+Full details can be found in the appendix. □
+6 SYNTHESIZING QRE LENSES
+QRE lenses address some of the limitations of bijective lenses because a single lens program
+expresses both the canonizers and the transformation between kernel languages simultaneously,
+which reduces programmer effort. But we can go even further by recognizing that the type structure
+of QRE lenses contains information that can be exploited to automatically synthesize lenses from
+their types. Rather than writing the QRE lens manually, the programmer can instead specify the
+desired behavior of a lens by giving its interface types and providing examples, if necessary, to
+disambiguate among possible implementations. This way of constructing lenses can often be much
+simpler than building them by hand, as we saw in Section 3.2.
+The Optician framework [Miltner et al. 2017] showed how to do such lens synthesis in the case
+for bijective lenses. Here we show how to reduce QRE lens synthesis to that case, so that we can
+re-use the Optician algorithm but in the more expressive context of QRE lenses. The basic idea is
+straightforward: we run the Optician algorithm to synthesize a lens between the kernels of two
+QREs and then apply the canonizers at the edges to recover a lens between the whole languages.
+This simple strategy turns out to be remarkably effective, and the idea of using Optician in this
+way inspired the design of our QRE lenses.
+The Optician bijective lens synthesis algorithm works as follows. Given regular expressions
+R and S and a set of example inputśoutput pairs{(r1, s1), . . . ,(rn, sn)}, Optician will try to find a
+bijective lens ℓ : R⇔ S that agrees on the examples,i.e., it maps ri to si in the forward direction and
+si to ri in the backward direction. The bijective lens synthesis algorithm is guaranteed to succeed
+(eventually!) if such a bijective lens exists. There are typically a large number of such lenses, so
+this algorithm chooses the one that corresponds to a minimal alignment of the regular expressions.
+Additional details on this algorithm can be found in the original paper on synthesizing bijective
+lenses [Miltner et al. 2017].
+In our setting, we want to synthesize a quotient lens q : Q1⇔ Q2 from the QREs Q1 and Q2 and
+a set of example input-output pairs{(x1, y1), . . . ,(xn, yn)} where the xi’s are in W(Q1) and the yi’s
+are in W(Q2). We furthermore wish q to map the equivalence class of xi to the equivalence class of
+yi and vice versa:
+q.get(xi)≡ Q2 yi, and
+q.put(yi)≡ Q1 xi
+Our approach to synthesizing QRE lenses is guided by Theorem 5.2, which says that, if there is a
+derivation q : Q1⇔ Q2 of a QRE lens, then there exists a bijective lens ℓ : K(Q1)⇔ K(Q2) such
+that:
+/llbracketq/rrbracket.get = /llbracketℓ/rrbracket◦ canonize(Q1)
+/llbracketq/rrbracket.put = /llbracketℓ/rrbracket−1◦ canonize(Q2)
+For the examples, the xi’s are in W(Q1) and the yi’s are in W(Q2), so we can construct x′i =
+canonize(Q1)(xi) in K(Q1) and y′i = canonize(Q2)(yi) is in K(Q2). To synthesize the desired quotient
+lens q : Q1⇔ Q2 that is consistent with the input-output examples{(x1, y1), . . . ,(xn, yn)} it suffices
+to synthesize a bijective lens ℓ : K(Q1)⇔ K(Q2) that is consistent with the canonized examples
+{(x′1, y′1), . . . ,(x′n, y′n)} and then apply the canonizers at the outside. Our procedure for QRE lens
+synthesis is given formally in Algorithm 1.
+Proc. ACM Program. Lang., Vol. 2, No. ICFP, Article 80. Publication date: September 2018.

@@ -1,0 +1,636 @@
+
+PDF PAGE 307
+Chapter 4 
+Metalinguistic Abstraction 
+... It's in words that the magic is -- Abracadabra, Open Sesame, and the rest -- but the 
+magic words in one story aren't magical in the next. The real magic is to understand which 
+words work, and when, and for what; the trick is to learn the trick. 
+... And those words are made from the letters of our alphabet: a couple-dozen squiggles 
+we can draw with the pen. This is the key! And the treasure, too, if we can only get our hands 
+on it! It's as if -- as if the key to the treasure is the treasure!  
+John Barth, Chimera  
+In our study of program design, we have seen that expert programmers control the complexity of 
+their designs with the same general techniques used by designers of all complex systems. They 
+combine primitive elements to form compound objects, they abstract compound objects to form 
+higher-level building blocks, and they preserve modularity by adopting appropriate large-scale 
+views of system structure. In illustrating these techniques, we have used Lisp as a language for 
+describing processes and for constructing computational data objects and processes to model 
+complex phenomena in the real world. However, as we confront increasingly complex problems, 
+we will find that Lisp, or indeed any fixed programming language, is not sufficient for our needs. 
+We must constantly turn to new languages in order to express our ideas more effectively. 
+Establishing new languages is a powerful strategy for controlling complexity in engineering 
+design; we can often enhance our ability to deal with a complex problem by adopting a new 
+language that enables us to describe (and hence to think about) the problem in a different way, 
+using primitives, means of combination, and means of abstraction that are particularly well suited 
+to the problem at hand. 1  
+Programming is endowed with a multitude of languages. There are physical languages, such as 
+the machine languages for particular computers. These languages are concerned with the 
+representation of data and control in terms of individual bits of storage and primitive machine 
+instructions. The machine-language programmer is concerned with using the given hardware to 
+erect systems and utilities for the efficient implementation of resource-limited computations. 
+High-level languages, erected on a machine-language substrate, hide concerns about the 
+representation of data as collections of bits and the representation of programs as sequences of 
+primitive instructions. These languages have means of combination and abstraction, such as 
+procedure definition, that are appropriate to the larger-scale organization of systems.  
+Metalinguistic abstraction  -- establishing new languages -- plays an important role in all 
+branches of engineering design. It is particularly important to computer programming, because in 
+programming not only can we formulate new languages but we can also implement these 
+languages by constructing evaluators. An evaluator (or interpreter) for a programming language 
+is a procedure that, when applied to an expression of the language, performs the actions required 
+to evaluate that expression.  
+It is no exaggeration to regard this as the most fundamental idea in programming:  
+
+PDF PAGE 308
+The evaluator, which determines the meaning of expressions in a programming language, is 
+just another program.  
+To appreciate this point is to change our images of ourselves as programmers. We come to see ourselves as 
+designers of languages, rather than only users of languages designed by others.  
+In fact, we can regard almost any program as the evaluator for some language. For instance, the 
+polynomial manipulation system of section 2.5.3 embodies the rules of polynomial arithmetic and 
+implements them in terms of operations on list-structured data. If we augment this system with 
+procedures to read and print polynomial expressions, we have the core of a special-purpose 
+language for dealing with problems in symbolic mathematics. The digital-logic simulator of 
+section 3.3.4 and the constraint propagator of section 3.3.5 are legitimate languages in their own 
+right, each with its own primitives, means of combination, and means of abstraction. Seen from 
+this perspective, the technology for coping with large-scale computer systems merges with the 
+technology for building new computer languages, and computer science itself becomes no more 
+(and no less) than the discipline of constructing appropriate descriptive languages.  
+We now embark on a tour of the technology by which languages are established in terms of other 
+languages. In this chapter we shall use Lisp as a base, implementing evaluators as Lisp 
+procedures. Lisp is particularly well suited to this task, because of its ability to represent and 
+manipulate symbolic expressions. We will take the first step in understanding how languages are 
+implemented by building an evaluator for Lisp itself. The language implemented by our evaluator 
+will be a subset of the Scheme dialect of Lisp that we use in this book. Although the evaluator 
+described in this chapter is written for a particular dialect of Lisp, it contains the essential 
+structure of an evaluator for any expression-oriented language designed for writing programs for 
+a sequential machine. (In fact, most language processors contain, deep within them, a little 
+``Lisp'' evaluator.) The evaluator has been simplified for the purposes of illustration and 
+discussion, and some features have been left out that would be important to include in a 
+production-quality Lisp system. Nevertheless, this simple evaluator is adequate to execute most 
+of the programs in this book.2  
+An important advantage of making the evaluator accessible as a Lisp program is that we can 
+implement alternative evaluation rules by describing these as modifications to the evaluator 
+program. One place where we can use this power to good effect is to gain extra control over the 
+ways in which computational models embody the notion of time, which was so central to the 
+discussion in chapter 3. There, we mitigated some of the complexities of state and assignment by 
+using streams to decouple the representation of time in the world from time in the computer. Our 
+stream programs, however, were sometimes cumbersome, because they were constrained by the 
+applicative-order evaluation of Scheme. In section 4.2, we'll change the underlying language to 
+provide for a more elegant approach, by modifying the evaluator to provide for normal-order 
+evaluation.  
+Section 4.3 implements a more ambitious linguistic change, whereby expressions have many 
+values, rather than just a single value. In this language of nondeterministic computing , it is 
+natural to express processes that generate all possible values for expressions and then search for 
+those values that satisfy certain constraints. In terms of models of computation and time, this is 
+like having time branch into a set of ``possible futures'' and then searching for appropriate time 
+lines. With our nondeterministic evaluator, keeping track of multiple values and performing 
+searches are handled automatically by the underlying mechanism of the language.  
+
+PDF PAGE 309
+In section 4.4 we implement a logic-programming  language in which knowledge is expressed in 
+terms of relations, rather than in terms of computations with inputs and outputs. Even though this 
+makes the language drastically different from Lisp, or indeed from any conventional language, 
+we will see that the logic-programming evaluator shares the essential structure of the Lisp 
+evaluator.  
+ 
+1 The same idea is pervasive throughout all of engineering. For example, electrical engineers use many different languages for 
+describing circuits. Two of these are the language of electrical networks and the language of electrical systems. The network 
+language emphasizes the physical modeling of devices in terms of discrete electrical elements. The primitive objects of the 
+network language are primitive electrical components such as resistors, capacitors, inductors, and transistors, which are 
+characterized in terms of physical variables called voltage and current. When describing circuits in the network language, the 
+engineer is concerned with the physical characteristics of a design. In contrast, the primitive objects of the system language are 
+signal-processing modules such as filters and amplifiers. Only the functional behavior of the modules is relevant, and signals are 
+manipulated without concern for their physical realization as voltages and currents. The system language is erected on the 
+network language, in the sense that the elements of signal-processing systems are constructed from electrical networks. Here, 
+however, the concerns are with the large-scale organization of electrical devices to solve a given application problem; the physical 
+feasibility of the parts is assumed. This layered collection of languages is another example of the stratified design technique 
+illustrated by the picture language of section 2.2.4.  
+2 The most important features that our evaluator leaves out are mechanisms for handling errors and supporting debugging. For a 
+more extensive discussion of evaluators, see Friedman, Wand, and Haynes 1992, which gives an exposition of programming 
+languages that proceeds via a sequence of evaluators written in Scheme.  
+4.1  The Metacircular Evaluator  
+Our evaluator for Lisp will be implemented as a Lisp program. It may seem circular to think 
+about evaluating Lisp programs using an evaluator that is itself implemented in Lisp. However, 
+evaluation is a process, so it is appropriate to describe the evaluation process using Lisp, which, 
+after all, is our tool for describing processes. 3 An evaluator that is written in the same language 
+that it evaluates is said to be metacircular.  
+The metacircular evaluator is essentially a Scheme formulation of the environment model of 
+evaluation described in section 3.2. Recall that the model has two basic parts:  
+1. To evaluate a combination (a compound expression other than a special form), 
+evaluate the subexpressions and then apply the value of the operator 
+subexpression to the values of the operand subexpressions.  
+2. To apply a compound procedure to a set of arguments, evaluate the body of the 
+procedure in a new environment. To construct this environment, extend the 
+environment part of the procedure object by a frame in which the formal 
+parameters of the procedure are bound to the arguments to which the procedure is 
+applied.  
+
+PDF PAGE 332
+b. Consider the following procedure, which includes mutually recursive internal definitions:  
+(define (f x) 
+  (define (even? n) 
+    (if (= n 0) 
+        true 
+        (odd? (- n 1)))) 
+  (define (odd? n) 
+    (if (= n 0) 
+        false 
+        (even? (- n 1)))) 
+  (even? x)) 
+Fill in the missing expressions to complete an alternative definition of f, which uses neither 
+internal definitions nor letrec:  
+(define (f x) 
+  ((lambda (even? odd?) 
+     (even? even? odd? x)) 
+   (lambda (ev? od? n) 
+     (if (= n 0) true (od? <??> <??> <??>))) 
+   (lambda (ev? od? n) 
+     (if (= n 0) false (ev? <??> <??> <??>))))) 
+4.1.7  Separating Syntactic Analysis from Execution 
+The evaluator implemented above is simple, but it is very inefficient, because the syntactic 
+analysis of expressions is interleaved with their execution. Thus if a program is executed many 
+times, its syntax is analyzed many times. Consider, for example, evaluating (factorial 4) using 
+the following definition of factorial:  
+(define (factorial n) 
+  (if (= n 1) 
+      1 
+      (* (factorial (- n 1)) n))) 
+Each time factorial is called, the evaluator must determine that the body is an if expression 
+and extract the predicate. Only then can it evaluate the predicate and dispatch on its value. Each 
+time it evaluates the expression (* (factorial (- n 1)) n), or the subexpressions (factorial 
+(- n 1)) and (- n 1), the evaluator must perform the case analysis in eval to determine that the 
+expression is an application, and must extract its operator and operands. This analysis is 
+expensive. Performing it repeatedly is wasteful.  
+We can transform the evaluator to be significantly more efficient by arranging things so that 
+syntactic analysis is performed only once.28 We split eval, which takes an expression and an 
+environment, into two parts. The procedure analyze takes only the expression. It performs the 
+syntactic analysis and returns a new procedure, the execution procedure, that encapsulates the 
+work to be done in executing the analyzed expression. The execution procedure takes an 
+environment as its argument and completes the evaluation. This saves work because analyze 
+
+PDF PAGE 333
+will be called only once on an expression, while the execution procedure may be called many 
+times.  
+With the separation into analysis and execution, eval now becomes  
+(define (eval exp env) 
+  ((analyze exp) env)) 
+The result of calling analyze is the execution procedure to be applied to the environment. The 
+analyze procedure is the same case analysis as performed by the original eval of section 4.1.1, 
+except that the procedures to which we dispatch perform only analysis, not full evaluation:  
+(define (analyze exp) 
+  (cond ((self-evaluating? exp)  
+         (analyze-self-evaluating exp)) 
+        ((quoted? exp) (analyze-quoted exp)) 
+        ((variable? exp) (analyze-variable exp)) 
+        ((assignment? exp) (analyze-assignment exp)) 
+        ((definition? exp) (analyze-definition exp)) 
+        ((if? exp) (analyze-if exp)) 
+        ((lambda? exp) (analyze-lambda exp)) 
+        ((begin? exp) (analyze-sequence (begin-actions exp))) 
+        ((cond? exp) (analyze (cond->if exp))) 
+        ((application? exp) (analyze-application exp)) 
+        (else 
+         (error "Unknown expression type -- ANALYZE" exp))))  
+Here is the simplest syntactic analysis procedure, which handles self-evaluating expressions. It 
+returns an execution procedure that ignores its environment argument and just returns the 
+expression:  
+(define (analyze-self-evaluating exp) 
+  (lambda (env) exp)) 
+For a quoted expression, we can gain a little efficiency by extracting the text of the quotation 
+only once, in the analysis phase, rather than in the execution phase.  
+(define (analyze-quoted exp) 
+  (let ((qval (text-of-quotation exp))) 
+    (lambda (env) qval))) 
+Looking up a variable value must still be done in the execution phase, since this depends upon 
+knowing the environment.29  
+(define (analyze-variable exp) 
+  (lambda (env) (lookup-variable-value exp env))) 
+Analyze-assignment also must defer actually setting the variable until the execution, when the 
+environment has been supplied. However, the fact that the assignment-value expression can be 
+
+PDF PAGE 334
+analyzed (recursively) during analysis is a major gain in efficiency, because the 
+assignment-value expression will now be analyzed only once. The same holds true for 
+definitions.  
+(define (analyze-assignment exp) 
+  (let ((var (assignment-variable exp)) 
+        (vproc (analyze (assignment-value exp)))) 
+    (lambda (env) 
+      (set-variable-value! var (vproc env) env) 
+      'ok))) 
+(define (analyze-definition exp) 
+  (let ((var (definition-variable exp)) 
+        (vproc (analyze (definition-value exp)))) 
+    (lambda (env) 
+      (define-variable! var (vproc env) env) 
+      'ok))) 
+For if expressions, we extract and analyze the predicate, consequent, and alternative at analysis 
+time.  
+(define (analyze-if exp) 
+  (let ((pproc (analyze (if-predicate exp))) 
+        (cproc (analyze (if-consequent exp))) 
+        (aproc (analyze (if-alternative exp)))) 
+    (lambda (env) 
+      (if (true? (pproc env)) 
+          (cproc env) 
+          (aproc env))))) 
+Analyzing a lambda expression also achieves a major gain in efficiency: We analyze the lambda 
+body only once, even though procedures resulting from evaluation of the lambda may be applied 
+many times.  
+(define (analyze-lambda exp) 
+  (let ((vars (lambda-parameters exp)) 
+        (bproc (analyze-sequence (lambda-body exp)))) 
+    (lambda (env) (make-procedure vars bproc env)))) 
+Analysis of a sequence of expressions (as in a begin or the body of a lambda expression) is more 
+involved.30 Each expression in the sequence is analyzed, yielding an execution procedure. These 
+execution procedures are combined to produce an execution procedure that takes an environment 
+as argument and sequentially calls each individual execution procedure with the environment as 
+argument.  
+(define (analyze-sequence exps) 
+  (define (sequentially proc1 proc2) 
+    (lambda (env) (proc1 env) (proc2 env))) 
+  (define (loop first-proc rest-procs) 
+    (if (null? rest-procs) 
+
+PDF PAGE 360
+                (simple-noun-phrase 
+                 (article the) (noun student)) 
+                (prep-phrase (prep with) 
+                             (simple-noun-phrase 
+                              (article the) (noun cat)))))))  
+Exercise 4.45.  With the grammar given above, the following sentence can be parsed in five 
+different ways: ``The professor lectures to the student in the class with the cat.'' Give the five 
+parses and explain the differences in shades of meaning among them.  
+Exercise 4.46.  The evaluators in sections 4.1 and 4.2 do not determine what order operands are 
+evaluated in. We will see that the amb evaluator evaluates them from left to right. Explain why 
+our parsing program wouldn't work if the operands were evaluated in some other order.  
+Exercise 4.47.  Louis Reasoner suggests that, since a verb phrase is either a verb or a verb phrase 
+followed by a prepositional phrase, it would be much more straightforward to define the 
+procedure parse-verb-phrase as follows (and similarly for noun phrases):  
+(define (parse-verb-phrase) 
+  (amb (parse-word verbs) 
+       (list 'verb-phrase 
+             (parse-verb-phrase) 
+             (parse-prepositional-phrase)))) 
+Does this work? Does the program's behavior change if we interchange the order of expressions 
+in the amb?  
+Exercise 4.48.  Extend the grammar given above to handle more complex sentences. For example, 
+you could extend noun phrases and verb phrases to include adjectives and adverbs, or you could 
+handle compound sentences.53  
+Exercise 4.49.  Alyssa P. Hacker is more interested in generating interesting sentences than in 
+parsing them. She reasons that by simply changing the procedure parse-word so that it ignores 
+the ``input sentence'' and instead always succeeds and generates an appropriate word, we can use 
+the programs we had built for parsing to do generation instead. Implement Alyssa's idea, and 
+show the first half-dozen or so sentences generated.54  
+4.3.3  Implementing the Amb Evaluator 
+The evaluation of an ordinary Scheme expression may return a value, may never terminate, or 
+may signal an error. In nondeterministic Scheme the evaluation of an expression may in addition 
+result in the discovery of a dead end, in which case evaluation must backtrack to a previous 
+choice point. The interpretation of nondeterministic Scheme is complicated by this extra case.  
+We will construct the amb evaluator for nondeterministic Scheme by modifying the analyzing 
+evaluator of section 4.1.7.55 As in the analyzing evaluator, evaluation of an expression is 
+accomplished by calling an execution procedure produced by analysis of that expression. The 
+
+PDF PAGE 361
+difference between the interpretation of ordinary Scheme and the interpretation of 
+nondeterministic Scheme will be entirely in the execution procedures.  
+Execution procedures and continuations  
+Recall that the execution procedures for the ordinary evaluator take one argument: the 
+environment of execution. In contrast, the execution procedures in the amb evaluator take three 
+arguments: the environment, and two procedures called continuation procedures . The evaluation 
+of an expression will finish by calling one of these two continuations: If the evaluation results in 
+a value, the success continuation  is called with that value; if the evaluation results in the 
+discovery of a dead end, the failure continuation  is called. Constructing and calling appropriate 
+continuations is the mechanism by which the nondeterministic evaluator implements 
+backtracking.  
+It is the job of the success continuation to receive a value and proceed with the computation. 
+Along with that value, the success continuation is passed another failure continuation, which is to 
+be called subsequently if the use of that value leads to a dead end.  
+It is the job of the failure continuation to try another branch of the nondeterministic process. The 
+essence of the nondeterministic language is in the fact that expressions may represent choices 
+among alternatives. The evaluation of such an expression must proceed with one of the indicated 
+alternative choices, even though it is not known in advance which choices will lead to acceptable 
+results. To deal with this, the evaluator picks one of the alternatives and passes this value to the 
+success continuation. Together with this value, the evaluator constructs and passes along a failure 
+continuation that can be called later to choose a different alternative.  
+A failure is triggered during evaluation (that is, a failure continuation is called) when a user 
+program explicitly rejects the current line of attack (for example, a call to require may result in 
+execution of (amb), an expression that always fails -- see section 4.3.1). The failure continuation 
+in hand at that point will cause the most recent choice point to choose another alternative. If there 
+are no more alternatives to be considered at that choice point, a failure at an earlier choice point is 
+triggered, and so on. Failure continuations are also invoked by the driver loop in response to a 
+try-again request, to find another value of the expression.  
+In addition, if a side-effect operation (such as assignment to a variable) occurs on a branch of the 
+process resulting from a choice, it may be necessary, when the process finds a dead end, to undo 
+the side effect before making a new choice. This is accomplished by having the side-effect 
+operation produce a failure continuation that undoes the side effect and propagates the failure.  
+In summary, failure continuations are constructed by  
+•  amb expressions -- to provide a mechanism to make alternative choices if the current choice made by 
+the amb expression leads to a dead end;  
+•  the top-level driver -- to provide a mechanism to report failure when the choices are exhausted;  
+•  assignments -- to intercept failures and undo assignments during backtracking.  
+Failures are initiated only when a dead end is encountered. This occurs  
+•  if the user program executes (amb);  
+
+PDF PAGE 362
+•  if the user types try-again at the top-level driver.  
+Failure continuations are also called during processing of a failure:  
+•  When the failure continuation created by an assignment finishes undoing a side effect, it calls the 
+failure continuation it intercepted, in order to propagate the failure back to the choice point that led to 
+this assignment or to the top level.  
+•  When the failure continuation for an amb runs out of choices, it calls the failure continuation that was 
+originally given to the amb, in order to propagate the failure back to the previous choice point or to the 
+top level.  
+Structure of the evaluator  
+The syntax- and data-representation procedures for the amb evaluator, and also the basic analyze 
+procedure, are identical to those in the evaluator of section 4.1.7, except for the fact that we need 
+additional syntax procedures to recognize the amb special form:56  
+(define (amb? exp) (tagged-list? exp 'amb)) 
+(define (amb-choices exp) (cdr exp)) 
+We must also add to the dispatch in analyze a clause that will recognize this special form and 
+generate an appropriate execution procedure:  
+((amb? exp) (analyze-amb exp)) 
+The top-level procedure ambeval (similar to the version of eval given in section 4.1.7) analyzes 
+the given expression and applies the resulting execution procedure to the given environment, 
+together with two given continuations:  
+(define (ambeval exp env succeed fail) 
+  ((analyze exp) env succeed fail)) 
+A success continuation is a procedure of two arguments: the value just obtained and another 
+failure continuation to be used if that value leads to a subsequent failure. A failure continuation is 
+a procedure of no arguments. So the general form of an execution procedure is  
+(lambda (env succeed fail) 
+  ;; succeed is (lambda (value fail) ...) 
+  ;; fail is (lambda () ...) 
+  ...) 
+For example, executing  
+(ambeval <exp> 
+         the-global-environment 
+         (lambda (value fail) value) 
+         (lambda () 'failed)) 
+
+PDF PAGE 363
+will attempt to evaluate the given expression and will return either the expression's value (if the 
+evaluation succeeds) or the symbol failed (if the evaluation fails). The call to ambeval in the 
+driver loop shown below uses much more complicated continuation procedures, which continue 
+the loop and support the try-again request.  
+Most of the complexity of the amb evaluator results from the mechanics of passing the 
+continuations around as the execution procedures call each other. In going through the following 
+code, you should compare each of the execution procedures with the corresponding procedure for 
+the ordinary evaluator given in section 4.1.7.  
+Simple expressions 
+The execution procedures for the simplest kinds of expressions are essentially the same as those 
+for the ordinary evaluator, except for the need to manage the continuations. The execution 
+procedures simply succeed with the value of the expression, passing along the failure 
+continuation that was passed to them.  
+(define (analyze-self-evaluating exp) 
+  (lambda (env succeed fail) 
+    (succeed exp fail))) 
+(define (analyze-quoted exp) 
+  (let ((qval (text-of-quotation exp))) 
+    (lambda (env succeed fail) 
+      (succeed qval fail)))) 
+(define (analyze-variable exp) 
+  (lambda (env succeed fail) 
+    (succeed (lookup-variable-value exp env) 
+             fail))) 
+(define (analyze-lambda exp) 
+  (let ((vars (lambda-parameters exp)) 
+        (bproc (analyze-sequence (lambda-body exp)))) 
+    (lambda (env succeed fail) 
+      (succeed (make-procedure vars bproc env) 
+               fail)))) 
+Notice that looking up a variable always ``succeeds.'' If lookup-variable-value fails to find 
+the variable, it signals an error, as usual. Such a ``failure'' indicates a program bug -- a reference 
+to an unbound variable; it is not an indication that we should try another nondeterministic choice 
+instead of the one that is currently being tried.  
+Conditionals and sequences 
+Conditionals are also handled in a similar way as in the ordinary evaluator. The execution 
+procedure generated by analyze-if invokes the predicate execution procedure pproc with a 
+success continuation that checks whether the predicate value is true and goes on to execute either 
+the consequent or the alternative. If the execution of pproc fails, the original failure continuation 
+for the if expression is called.  
+
+PDF PAGE 364
+(define (analyze-if exp) 
+  (let ((pproc (analyze (if-predicate exp))) 
+        (cproc (analyze (if-consequent exp))) 
+        (aproc (analyze (if-alternative exp)))) 
+    (lambda (env succeed fail) 
+      (pproc env 
+             ;; success continuation for evaluating the predicate 
+             ;; to obtain pred-value 
+             (lambda (pred-value fail2) 
+               (if (true? pred-value) 
+                   (cproc env succeed fail2) 
+                   (aproc env succeed fail2))) 
+             ;; failure continuation for evaluating the predicate 
+             fail)))) 
+Sequences are also handled in the same way as in the previous evaluator, except for the 
+machinations in the subprocedure sequentially that are required for passing the continuations. 
+Namely, to sequentially execute a and then b, we call a with a success continuation that calls b.  
+(define (analyze-sequence exps) 
+  (define (sequentially a b) 
+    (lambda (env succeed fail) 
+      (a env 
+         ;; success continuation for calling a 
+         (lambda (a-value fail2) 
+           (b env succeed fail2)) 
+         ;; failure continuation for calling a 
+         fail))) 
+  (define (loop first-proc rest-procs) 
+    (if (null? rest-procs) 
+        first-proc 
+        (loop (sequentially first-proc (car rest-procs)) 
+              (cdr rest-procs)))) 
+  (let ((procs (map analyze exps))) 
+    (if (null? procs) 
+        (error "Empty sequence -- ANALYZE")) 
+    (loop (car procs) (cdr procs)))) 
+Definitions and assignments 
+Definitions are another case where we must go to some trouble to manage the continuations, 
+because it is necessary to evaluate the definition-value expression before actually defining the 
+new variable. To accomplish this, the definition-value execution procedure vproc is called with 
+the environment, a success continuation, and the failure continuation. If the execution of vproc 
+succeeds, obtaining a value val for the defined variable, the variable is defined and the success is 
+propagated:  
+(define (analyze-definition exp) 
+  (let ((var (definition-variable exp)) 
+
+PDF PAGE 365
+        (vproc (analyze (definition-value exp)))) 
+    (lambda (env succeed fail) 
+      (vproc env                         
+             (lambda (val fail2) 
+               (define-variable! var val env) 
+               (succeed 'ok fail2)) 
+             fail)))) 
+Assignments are more interesting. This is the first place where we really use the continuations, 
+rather than just passing them around. The execution procedure for assignments starts out like the 
+one for definitions. It first attempts to obtain the new value to be assigned to the variable. If this 
+evaluation of vproc fails, the assignment fails.  
+If vproc succeeds, however, and we go on to make the assignment, we must consider the 
+possibility that this branch of the computation might later fail, which will require us to backtrack 
+out of the assignment. Thus, we must arrange to undo the assignment as part of the backtracking 
+process.57  
+This is accomplished by giving vproc a success continuation (marked with the comment ``*1*'' 
+below) that saves the old value of the variable before assigning the new value to the variable and 
+proceeding from the assignment. The failure continuation that is passed along with the value of 
+the assignment (marked with the comment ``*2*'' below) restores the old value of the variable 
+before continuing the failure. That is, a successful assignment provides a failure continuation that 
+will intercept a subsequent failure; whatever failure would otherwise have called fail2 calls this 
+procedure instead, to undo the assignment before actually calling fail2.  
+(define (analyze-assignment exp) 
+  (let ((var (assignment-variable exp)) 
+        (vproc (analyze (assignment-value exp)))) 
+    (lambda (env succeed fail) 
+      (vproc env 
+             (lambda (val fail2)        ; *1* 
+               (let ((old-value 
+                      (lookup-variable-value var env)))  
+                 (set-variable-value! var val env) 
+                 (succeed 'ok 
+                          (lambda ()    ; *2* 
+                            (set-variable-value! var 
+                                                 old-value 
+                                                 env) 
+                            (fail2))))) 
+             fail)))) 
+Procedure applications 
+The execution procedure for applications contains no new ideas except for the technical 
+complexity of managing the continuations. This complexity arises in analyze-application, due 
+to the need to keep track of the success and failure continuations as we evaluate the operands. We 
+
+PDF PAGE 366
+use a procedure get-args to evaluate the list of operands, rather than a simple map as in the 
+ordinary evaluator.  
+(define (analyze-application exp) 
+  (let ((fproc (analyze (operator exp))) 
+        (aprocs (map analyze (operands exp)))) 
+    (lambda (env succeed fail) 
+      (fproc env 
+             (lambda (proc fail2) 
+               (get-args aprocs 
+                         env 
+                         (lambda (args fail3) 
+                           (execute-application 
+                            proc args succeed fail3)) 
+                         fail2)) 
+             fail)))) 
+In get-args, notice how cdring down the list of aproc execution procedures and consing up the 
+resulting list of args is accomplished by calling each aproc in the list with a success 
+continuation that recursively calls get-args. Each of these recursive calls to get-args has a 
+success continuation whose value is the cons of the newly obtained argument onto the list of 
+accumulated arguments:  
+(define (get-args aprocs env succeed fail) 
+  (if (null? aprocs) 
+      (succeed '() fail) 
+      ((car aprocs) env 
+                    ;; success continuation for this aproc 
+                    (lambda (arg fail2) 
+                      (get-args (cdr aprocs) 
+                                env 
+                                ;; success continuation for recursive 
+                                ;; call to get-args 
+                                (lambda (args fail3) 
+                                  (succeed (cons arg args) 
+                                           fail3)) 
+                                fail2)) 
+                    fail))) 
+The actual procedure application, which is performed by execute-application, is 
+accomplished in the same way as for the ordinary evaluator, except for the need to manage the 
+continuations.  
+(define (execute-application proc args succeed fail) 
+  (cond ((primitive-procedure? proc) 
+         (succeed (apply-primitive-procedure proc args) 
+                  fail)) 
+        ((compound-procedure? proc) 
+         ((procedure-body proc) 
+
+PDF PAGE 367
+          (extend-environment (procedure-parameters proc) 
+                              args 
+                              (procedure-environment proc)) 
+          succeed 
+          fail)) 
+        (else 
+         (error 
+          "Unknown procedure type -- EXECUTE-APPLICATION" 
+          proc)))) 
+Evaluating amb expressions 
+The amb special form is the key element in the nondeterministic language. Here we see the 
+essence of the interpretation process and the reason for keeping track of the continuations. The 
+execution procedure for amb defines a loop try-next that cycles through the execution 
+procedures for all the possible values of the amb expression. Each execution procedure is called 
+with a failure continuation that will try the next one. When there are no more alternatives to try, 
+the entire amb expression fails.  
+(define (analyze-amb exp) 
+  (let ((cprocs (map analyze (amb-choices exp)))) 
+    (lambda (env succeed fail) 
+      (define (try-next choices) 
+        (if (null? choices) 
+            (fail) 
+            ((car choices) env 
+                           succeed 
+                           (lambda () 
+                             (try-next (cdr choices)))))) 
+      (try-next cprocs)))) 
+Driver loop 
+The driver loop for the amb evaluator is complex, due to the mechanism that permits the user to 
+try again in evaluating an expression. The driver uses a procedure called internal-loop, which 
+takes as argument a procedure try-again. The intent is that calling try-again should go on to 
+the next untried alternative in the nondeterministic evaluation. Internal-loop either calls 
+try-again in response to the user typing try-again at the driver loop, or else starts a new 
+evaluation by calling ambeval.  
+The failure continuation for this call to ambeval informs the user that there are no more values 
+and re-invokes the driver loop.  
+The success continuation for the call to ambeval is more subtle. We print the obtained value and 
+then invoke the internal loop again with a try-again procedure that will be able to try the next 
+alternative. This next-alternative procedure is the second argument that was passed to the 
+success continuation. Ordinarily, we think of this second argument as a failure continuation to be 
+used if the current evaluation branch later fails. In this case, however, we have completed a 
+
+PDF PAGE 368
+successful evaluation, so we can invoke the ``failure'' alternative branch in order to search for 
+additional successful evaluations.  
+(define input-prompt ";;; Amb-Eval input:") 
+(define output-prompt ";;; Amb-Eval value:") 
+(define (driver-loop) 
+  (define (internal-loop try-again) 
+    (prompt-for-input input-prompt) 
+    (let ((input (read))) 
+      (if (eq? input 'try-again) 
+          (try-again) 
+          (begin 
+            (newline) 
+            (display ";;; Starting a new problem ") 
+            (ambeval input 
+                     the-global-environment 
+                     ;; ambeval success 
+                     (lambda (val next-alternative) 
+                       (announce-output output-prompt) 
+                       (user-print val) 
+                       (internal-loop next-alternative)) 
+                     ;; ambeval failure 
+                     (lambda () 
+                       (announce-output 
+                        ";;; There are no more values of") 
+                       (user-print input) 
+                       (driver-loop))))))) 
+  (internal-loop 
+   (lambda () 
+     (newline) 
+     (display ";;; There is no current problem") 
+     (driver-loop)))) 
+The initial call to internal-loop uses a try-again procedure that complains that there is no 
+current problem and restarts the driver loop. This is the behavior that will happen if the user types 
+try-again when there is no evaluation in progress.  
+Exercise 4.50.  Implement a new special form ramb that is like amb except that it searches 
+alternatives in a random order, rather than from left to right. Show how this can help with 
+Alyssa's problem in exercise 4.49.  
+Exercise 4.51.  Implement a new kind of assignment called permanent-set! that is not undone 
+upon failure. For example, we can choose two distinct elements from a list and count the number 
+of trials required to make a successful choice as follows:  
+(define count 0) 
+(let ((x (an-element-of '(a b c))) 
+      (y (an-element-of '(a b c)))) 
+  (permanent-set! count (+ count 1)) 

@@ -1,0 +1,747 @@
+
+PDF PAGE 599
+function. A primitive-defining branch for defining a PF may be viewed as a
+truth table whose entries come from the set of the constants, frBoolean, of the
+Boolean domain (i.e., T and url).
+For example, suppose, as a consequence of some evolutionary Process,
+primitive function PFO came to have two arguments and came to be equiva-
+lent to the Boolean function we usually call uaNn, then the primitive-defining
+branch for pr'0 would be the truth table with four rows shown in table 22.1.
+NAND is two-argument Boolean rule 7 and is one of the L6 possible two-
+argurnent Boolean functions.
+br addition, suppose, as a consequence of some evolutionary process, that
+a second primitive functiory PF1, is evolved within the same overall pro-
+gram. pFl- might be the one-argument Boolean function that we usually call
+NoT. In that event, the primitive-definingbranch for PF1 would be the truth
+table with two rows shown in table 22.2. Not is one of four possible one-
+argument Boolean functions and is one-argument Boolean rule 1.
+Similarly, suppose that yet another primitive functioru PF2, is evolved within
+the same overall program. Tlable 22.3 has eight rows and defines a three-
+argument function pr'2 that is equivalent to (IF ARGO ARG1 ARG2 ) .The
+rF ftrnction is three-argument Boolean rule 216 and is one of 256 possible
+three*argument Boolean functions.
+When the initial random population is created, each overall program con-
+tains a randomly chosen number of primitive-defining branches (where this
+randomnumber is greater than or equal to one and less than or equal to some
+maximum number of primitive-defining branches). Each primitive-defining
+branch possesses a randomly chosen number of arguments; this random
+choice being made independently for each primitive-defining branch (in the
+same way as these choices were made for the number of arguments for each
+ADF in drapter 2L). Then, for each primitive-defining branch, a random con-
+stant (either T or Nr L) is randomly chosen and associated with each of the 2k
+possible combinations of the now-known number of arguments, k, of that
+branch. These random choices are made independently for each of the 2k
+possible combinations of arguments. Ir other words, we construct the last
+column (the ouput) of the truth table by randomly inserting the constants T
+OT NIL.
+During the run, structure-preserving crossover with point typirg will be
+performed on the various branches of the overall program. \A/hen neither
+crossover point is in a primitive-defining branch, the structure-preserving
+crossover proceeds in the same manner as in section 2L2. Howevet from
+time totime, one orbothcrossoverpoints will fallwithin aprimitive-defining
+branch.
+If both crossover points are in primitive-defining branches, then only the
+terminals in the tmth table are non-invariant points. hr this case, the cross-
+over operation simply inserts the constant (r or NIL) residing at the cross-
+overpointinthe truthtable of the contributingparentinto the receivingparent
+(at the point of insertion in its tmth table).
+3// Evolution of Primitives and Sufficiencv
+
+PDF PAGE 600
+Thble 22.L Truth table representing the primitive-defining branch for two-argument
+PFO equivalent to NAND.
+ARGl ARGO PFO
+0
+1
+2
+3
+NIL
+NIL
+T
+T
+NIL
+T
+N]L
+T NIL
+Table22.2 Tmth table representing the primitive-defining branch for one-argument
+PF1 equivalent to NOT.
+ARGO PF1
+NIL T
+T NIL
+T
+T
+T
+0
+1
+Table 223 Truth table representing
+argument PF2 equivalent to (IF ARGO
+ARG2 ARG1 ARGO PF2
+the primitive-defining branch for three-
+ARGI ARG2).
+0
+1.
+2
+a
+J
+4
+5
+6
+7
+NIL
+NTL
+N]L
+NIL
+T
+T
+T
+T
+NIL
+NTL
+T
+T
+NTL
+NIL
+T
+T
+NIL NIL
+T NTL
+NIL NIL
+TT
+N]L T
+T NIL
+NIL T
+If the crossover point in the contributing parent is in a primitive-defining
+branch but the crossover point in the receiving parent is not in a primitive-
+defining branch, then we must consider whether the random constants,
+9tBoolean, were included in the terminal set of the non-primitive-defining
+branch involved. For the remainder of this book, the random constants,
+9tBoolean, will always be included in the terminal sets of all branches. Given
+that this is the case, point typing then permits a random constant from a primi-
+tive-defining branch to be inserted into any branch. Conversely, point typing
+also permits a random constant (but nothing else) from a non-primitive-
+defining branch to be inserted as an entry in the tmth table of a primitive-
+defining branch.
+If the random constants, 9tBooleanT wer€ not included in the terminal
+sets of the non-primitive-defining branches, then the choice of a crossover
+point from the contributing parent fromwithin a primitive-definingbranch
+578 Chapter 22
+
+PDF PAGE 601
+would mandate that the crossover point of the receiving parent be a point
+lyi.g in one of its primitive-defining branches.
+Primitive-defining branches are implemented using a constrained syntac-
+tic structure. The following LISP code precisely defines the operation of the
+two-argument PFO for NAND shown rn tableZZ.L:
+1
+2
+3
+4
+E
+b
+7
+B
+(defun PFO (argO argl-)
+(values (IF argl (IF argrO NrL
+( TF arg0 T
+r)
+Lr this definition for pFO, nested rFs are used to implement the truth table.
+Line2,for example, deals with the case where both ARGO and aRcl are T and
+says that PFO retums NIL for that case.
+Figure 22.1 shows the above def un for pr'O as a rooted, point-labeled tree
+with ordered branches. The points above the upper dotted line (i.e., the de f un;
+the function name, PFO; the argument list, (argO arql- ); and the values)
+are the usual invariant points of the constrained syntactic structure conunon
+to all function definitions in this book. The six points between the two dotted
+lines (i.e., the three IFs, the two argOs, and the one argl) constifute the
+invariant points of the constrained syntactic structure for implementitg u
+two-argument tmth table. The only variable points in this figure are the four
+points below the lower dotted line. These four points are the entries of the
+truth table and correspond to the four Boolean constants (i.e., NIL, T, T, and
+r) that appear at the far right of lines 2,3,4, and 5 of the program above.
+The above LISP code and fi gure precisely specify the operation of this primi-
+tive-defining branch. For presentation purposes, the tmth table is abbrevi-
+ated with a function called TRUTH-TABLE as follows:
+(TRUTH-TABLETTTNIL).
+This expression is then interpreted as if all of the structure described above
+were present.
+Since the primitive-defining branches are created at random at the initial
+random generation, there is no guarantee that the particular set of primitive
+functionsbelonging to an overallprogramwillbe sufficient to solve the prob-
+lem. The potential insufficiency is automatically dealt with in two ways. First,
+some individual overall programs in the initial random population may con-
+tain a sufficient set of primitive functions. Th"y may consequently be more fit
+and enjoy a differential advantage in the competitive evolutionary process.
+Second, the primitive-defining branches are subject to crossover and are there-
+fore subject to modification during the run.
+Figure 22.2shows an illustrative five-branch overall program for the even-
+S-parity problem. The firstbranch is a primitive-definingbranch PFO for the
+one-argurnent NoT function; the second branch is a primitive-defining branch
+Evolution of Primitives and Sufficiencv
+
+PDF PAGE 602
+(argp argl)
+Figure 22.1 Primitive-definingbranch pFO for implementing uaxo.
+PF1 for the two-argument oR function; and the third branch is a primi-
+tive-defining branch prZ for the two-argument AND function. The fourth
+branch is a function-defining branch ADFO for the two-argument odd-
+2-parity function. Finally, the fifth branch is a result producing branch
+that invokes apr'0 four times and prO once in order to create the even-
+S-parity function. The points above the upper dotted line (i.e., the def un;
+the functionnames, pF0, pFl-, pF2,and aop0; the argument lists, (ARG0 ) ,
+(ARG0 ARGI- ), (aRCO ARG1), and (ARGO ARG1); and the five values
+functions) are the usual invariant points of the constrained syntactic struc-
+ture common to all function-defining branches and all result-producing
+branches in this book. The points between the two dotted lines (i.e., the
+IFs, the ARG0s, and the ARGIs) constitute the invariant points of the con-
+strained syntactic structure for implementing truth tables. The only
+noninvariant points associated with pF0, pF1, and pp2 are the ten points
+below the lower dotted line. The body of anrO and the result-producing
+branch also appear below the lower dotted line for those branches (indi-
+cating that they too are noninvariant points).
+RESUTTS FOR THE EVEN.s-PARITY PROBLEM
+All of the 14 runs of the even-S-parity problem using the evolutionary method
+of determiti^g a sufficient set of primitive functions produced a 100%-
+conect solution (scoring 32 hits) by generation 50.
+Table ?2.4 shows the wide variation among these L4 solutions in both the
+number of primitive-defining brandres, the number of arguments each pF
+possesses, the number of function-defining branches, and the number of
+arguments each automati cally defined function possesses. The average num-
+ber of pps is 3.00 and the average number of automatically defined functions
+is L.43 for the 14 solutions.
+580 Chapter 22
+
+PDF PAGE 603
+Figre22.2 Illustrative five-branch overall program with three primitive-defining branches,
+one function-defining branch, and one result-producing branch.
+Table 22.4 Distribution of architectures of the PFs and ADFs of 14 solutions to the
+even-s-parity problem with evolution of primitives and sufficiency.
+Evolution of Primitives and Sufficiency
+Run Generation
+when solved
+Number
+of PFs
+Argument
+map for
+PFs
+Number
+of ADFs
+Argument
+map for
+ADFs
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+L3
+1,4
+4
+6
+a
+J
+1
+2
+4
+L
+7
+10
+7
+4
+6
+1
+7
+J
+4
+J
+4
+1
+3
+1
+4
+2
+4
+3
+4
+2
+4
+12,3,11
+{2,1,,3,3}
+{3,2,2}
+{1,,1,3,U
+{2}
+13,"1,31
+{3}
+{3,3,1.,21
+12,31
+11.,3,3,21
+{3,3,Ll
+{1.,3,3,21
+{2,21
+l.3,1.,3,3\
+1,
+0
+2
+0
+4
+1
+3
+0
+0
+J
+J
+0
+0
+J
+{1}
+{}
+{.3,41
+{}
+{3,2,4,3}
+{3}
+[4,2,41
+tl
+{}
+{.1.,2,"i.1
+12,4,31
+t)
+t)
+14,'J',21
+
+PDF PAGE 604
+With Defined Functions
+-
+oct)
+aq)
+I
+lr'4.
+E
+q)
+-
+*.
+a-
+A
+)-
+.!l
+-
+a.l
+trl
+s
+a(n()
+I
+I
+!a
+-
+0
+CH
+h€
+a!
+-
+A-
+-
+L
+A.II
+(o'ooo
+50,lNVo)
+150,000
+Generation
+Figure 22.3 Performance curves for the even-S-parity problem showing fhat E*iry = M,000
+with evolution of primitives and sufficiency
+The average structural complexity, Swith rof the l00%-correct program from
+the L4 successful nrns (out of 14 runs) of the even-S-parity problem is 156.8
+points with evolution of primitives and sufficiency.
+Figure 22.3 presents the performance flrrves based on these 14 runs of the
+even-S-parity function with evolution of primitives and sfficienry. The cumu-
+lative probability of success, P(M,i ), is 1"00% by generation 10. The two nurn-
+bers in the oval indicate that if this problem is run through to generation 10,
+processing a total of E*u^ - M,000 (i.e.,4,000 x 11 generations x 1 run) individu-
+als is sufficient to yield a solution to this problem with 99% probability.
+An examination of one of the l-4 successful runs illustrates several points
+about the evolutionary method of determining a sufficient set of primitive
+functions.97% of the 4,000 programs from generation 0 of run 1 from table
+22.4 score L6 hits (out of 32). The best of generation 0 of this run scores 24 hits
+and consists of three primitive-defining branches and one function-defining
+branch. The argument map for the three pps is 12,3,U and the argument map
+for the one ADF is {U.
+(progn (defun PFO (ARG0 ARG1)
+(t.ruth-table T T T NIL) )
+(defun PFI (ARG0 ARG1 ARG2)
+(truth-table NIL T T NIL T NIL NIL T) )
+(defun PF2 (ARGO )
+(truth-table NIL T) )
+(defun ADF0 (ARGO )
+(values (PF2 (PF2 (PF]- (PFl- T ARGO ARGO) (PF2 T) (PF2
+NrL))))))
+(values (PFl- (PF1 (PFO (ADFO D3) (PF2 D3)) (PF0 (PF2 Dl-)
+(ADFO D3)) (pF1 (pF1 D1 Dl D0) (pFO D1 D3) (pFO D2 D3)))
+(pF1 (pF1 (pF1 NrL D0 Dl) (pFl D0 T Dl) (pFO D3 D0)) (pFO
+I0,I}OVo)
+M = 4,000
+z=99Vo
+R(z) = 1
+N= 1410 E = 44.000
+(l,ZIVo)
+582 Chapter 22
+
+PDF PAGE 605
+(ADFONIL)(ADFOD1))(PF]-(ADFODl)(PF1D1D2D2)(ppr
+T D2 D4))) (PFO (PF2 (PFl- D4 D4 D3)) (ADFO (PFO D2
+r) ))))).
+h this program the two-argument PF O is the NAND function (rule 7) and
+corresponds to the truth table shown in table 22.1..The three-argument PFI- is
+the odd-3-parity function (rule 150). The one-argument PF2 is the identity
+function (rule 2).
+Although ADFO contains 11 points and seems to be doing some work, it
+proves to be the "Always False" function (one-argument Boolean rule 0).
+In other words, ADFO has recreated the already-available Boolean con-
+stant NIL.
+The result-producing branch invokes the "Always False" ADFO six times,
+pFO eight times, pFI lztimes, and the identity function Pl'2 three times.
+The best of generation 1 scores 26 hits. Although there are three primitive-
+defining branches in this individual, the argument map for the primitive-
+defining branches is {L, 3, 3} as opposed to 12,3, Ll for the best of generation 0.
+Like the best of generation 0, the best of generation L has one function-defin-
+ing branch, but the argument map for its function-defining branch is {3},
+instead of {U.
+(progn (defun PFO (ARG0)
+(truth-table NIL NIL) )
+(defun PFl (ARGO ARG1 ARG2)
+(t.ruth-table NIL NIL NIL T T T T NIL) )
+(defun PF2 (ARGO ARGI ARG2)
+(truth-table T NIL NTL NIL NIL NIL NIL T) )
+(defun ADFO (ARG0 ARG1 ARG2 )
+(values (PF2 (PFl- (PF2 ARG2 ARG2 ARG2) (pFt- ARG2 ARG0
+ARGO) (ppo ARCO) ) (PFl- (PF0 ARGO) (PFl ARG2 NrL ARGO)
+(pF]- ARGO ARG2 ARG2)) (pFO (pF0 ARGI)))))
+(values (PF2 (ADFO (ADF0 D1 D3 D3) (PFO D0) (ADFO D4 D4 T) )
+(ADF0 (pF0 NrL) (ADFO NrL D0 D2) (ADFO D2 D1 D0)) (PF2
+(PF2 D3 D2 DO) (ADFO T D2 DO) (PFO T) )))).
+In this program PFO is one-argument Boolean rule 0 (i.e., it has recreated
+the already-available Boolean constant NrL). Here PF1 is the three-argument
+Boolean rule 120. Three-argument PF2 is rule 129. This program scores better
+than the best of generation 0 even though it does not have the seemitgly
+valuable odd-3-parity function.
+ADF0 is three-argument Boolean rule 165 which is equivalent to
+(EVEN-2-PARITY ARGO ARG2) .
+The best of generation 2 scores 28 hits. The three PFs and one ADF are iden-
+tical to the best of generation L; however, the result-producing branch has
+changed to
+(values (PF2 (ADFO (ADFO D1 D3 D3) (PF0 D0) (ADFO D4 D4 T) )
+(ADFO (PFO NrL) (ADFO NrL D0 D2) (ADFO D2 Dl D0))
+(pF2 (pF2 D3 D2 D0) (pFO NrL) (pFO r) ))).
+Evolution of Primitives and Sufficiency
+
+PDF PAGE 620
+function. However, suppose the terminal set were enlarged and became
+the superset
+f1 = {NorsE, Do, Dr,D2, D3, D4,9tBoolean},
+NOISE is an extraneous noise variable that is not correlated ir ary way to
+the five actual variables of the problem (i.e., n0, DL,D2, D3, and D4) or to the
+value of the even-S-parity function associated with these five actual variables.
+On each instance when the terminal Norsn is encountered in any branch of
+any pro$am, NOISE is randomly set to either T or NIL by a call to a random-
+izer. The random choice for the value of morse is made independently and
+anew on each instance when NOISE is encountered.
+As before, 9iBoolea' is the random Boolean constant ranging over the
+I - I ----
+values T and NIL.
+Apopulation size of 4,000 and the techniques of structure-preserving cross-
+over with point Vpirg (chapter 21) are used throughout this chapter.
+23.2 RESULTS FOR THE EVEN-s-PARITY PROBLEM
+The fihress of a program in the even-S-parify problem is the sum, over the 32
+fitness cases, of the errors between the value retumed by the program and the
+correct value of the even-S-parity function for that fitness case. If NOrsn is
+present in a part of a program that contributes to the eventual value retumed
+by the program for a fitness case, the effect is usually that the value retumed
+is not correlated to the correct value of the target even-5-parify function for
+that fifiress case.
+Lr one run,85% of the programs in generation 0 had a fitness of 1,6 and an
+additional7% of the programs had a fihress of either 15 or 17.
+hr generation 0 of one run of the even-S-parity problem with the noise vari-
+able, the best of generation 0 scores 23 hits (out of 32) and has an argument
+map for its primitive-defining branches of {3} and an argument map for its
+function-defining branches of {2,1}. enO is three-argument rule 85; ADFO is
+two-argument rule L0; ADFI- is one-argument rule L (NOr); and the result-
+producingbranch contains one reference to NOTSE.
+Between generations 1 and 7 , the number of hits for the best-of-generation
+program is 25, 27, 28, 28, 30,30, and 30 and the number of occurrences of
+NOISE in the best-of-generation programs is 5, 3, 9,5,I,3, and 3.
+On generation 8, the following L}}oh-correct program emerged with an
+argument map for its primitive-defining branches of {3} and an argument
+map for its function-definingbranches of {}:
+(progn (defun PFO (ARGO ARG1 ARG2)
+(truth-t.able NIL NIL T T T NIL NIL NIL) )
+(values (PFO (PF0 (PFO NoIsE D3 D0) (PF0 D2 D4 D0)
+(pF0 D2 D4 D0)) (pF0 D0 D0 D4) (pFO (pFO D3 D0 D3)
+(PFO NrL r D3) (PF0 NrL D2 D1))))).
+Even in this 100%-correct program, NorSE appears once (in boldface) in
+the result-producing branch.
+Chapter 23598
+
+PDF PAGE 621
+h this program, pFO is rule 28. When the entire program is rewrittenby
+expanding rule 28 and, for convenience, using NOT, EVEN-2 -PARITY, and
+ODD- 2 - PARITY, it becomes
+(OR (AND (NOT (OR (AND (EVEN_2_PARITY d1 d2) (NOT D3))
+(AND (ODD-2-PARIrY dl d2 ) d3 ) ) )
+(oDD-2-PARTTY d0 d4) )
+(AND (ON (AND (EVEN_2_PARITY d1 d2) (NOT D3))
+(ANn (ODD-2-PARrTY dl d2) d3))
+(NOT (OR (AND (OR (AI{D (NOT Pgl D4)
+(AND DO (NOT (OR D2 D4) ) ) )
+(NOT (OR (OR (Ar{D (NOT D0) D3)
+(AriID Do
+(NOT (OR NOrSE D3) ) ) )
+(OR (AI\ID (uor D0) D4)
+(AIID D0
+(NOr (oRD2D4)))))))
+(oDD-2-PARrrY d0 d4) ) ) ) ) .
+The entire section in boldface above (containing NOISE) is equivalent to
+NrL, so this expression can be simplified to
+(oR (AND (NOT (On (AND (EVEN-2-PARITY D1 D2) (NOT D3))
+(AND (ODD-2-PARrrY Dr D2) D3)))
+(oDD-2-PARrrY D0 D4) )
+(AND (OR (AND (EVEN-2_PARITY DL D2) (NOT D3))
+(AND (ODD-2-PARrrY Dl D2) D3))
+(EVEN-2-PARrrY D0 D4) ) ),
+which, in tum, is equivalent to the even-S-Panry function.
+599 Evolutionary Selection of Terminals
+
+PDF PAGE 622
+
+
+PDF PAGE 641
+r) 6 The Role of Representation andhrJ the Lens Effect
+Representation plays a key role in facilitating or thwarting the solution of
+problems by means of artificial intelligence and machine leaming. This chap-
+ter explores the question of how a representation employing automatically
+defined functions differs froma representationwithout automatically defined
+functions.
+The focus in this chapter is solely on the role of representation, not on the
+role of genetic programming in solving problems. This chapter considers only
+populations of random individuals (i.e., the initial random generation in
+genetic progamming). fn" initial random generation of a run of genetic pro-
+grammingis, of course, anexerciseinblind random searchinthe search sPace
+of permissible structures for possible solutions to the problem. Given an initial
+random population of computer programs, any one of many different paral-
+lel adaptive methods could potentially be used to modify the individuals in
+an initial random population. For example, one might define a modifying
+operator that mutates a single point in the Parse tree of the program to a
+different value having the same arity (number of branches radiating away
+from the point) and then employ parallel hill climbing, parallel simulated
+annealing, or some other adaptive method to create a new generation of pro-
+grams. However, at the time when the initial random population is created,
+no conunitment has yet been made as to which adaptive method might be
+used to try to discover better points in the search sPace of the problem.
+The Boolean even-3-parity problem (section 6.L) can be used to illustrate
+how representation can facilitate or thwart the solution of a problem. For
+example, if a three-argument Boolean function is represented as a truth table
+(suchas table 6.1), then the search space of the problem consists of 223 = 255
+possible eight-row trrth tables. Ablind random search procedure that fills in
+the value of the Boolean function for the eight rows of the tmth table with
+either T or NrL has a probabiliw of L:255 of finding an arbitrary three-argu-
+ment Boolean function. Thus, when a three-argument Boolean function is
+represented by meeil:rs of a truth table, a blind random search has a probabil-
+lty of success of I:256. This probability is independent of which of the 256
+three-argument Boolean functions is being sought.
+On the other hand, suppose that the search space of the problem consists of
+compositions of the terminals from the terminal set
+
+PDF PAGE 642
+t- {D0,DL,D2!
+and the functions from the function set
+f- {AND, OR, NAND, NOR}
+with an argument map for this function set of
+{2,2,2,2}.
+Ablind random searchhas avery differentprobability of success when three-
+argurnent Boolean functions are represented as such compositions (i.e., as
+parse trees or LISP S-expressions). Moreover, in contrast to the representation
+employing truth tables, the probability of success in the btind random search
+is dependent on the particular three-argument Boolean function chosen.
+Considel, for example, the Boolean €ven:3-parity function (three-argument
+Boolean rule 105). The probability of success of a blind random search in the
+sPace of compositions of functions from the function set, f, and terminals
+from the terminal set, { is so low that, after 10,000,000 tries, we never found
+even a single random Program that performed the even-3-parity function
+(Genetic Programming, table 9.3). In other words, in the space of computer
+Programs (over f and'T), the even-3-parity function is extremely difficult to
+find by means of a blind random search. The representation of Boolean func-
+tions as computer programs makes the leaming of the even-3-parity problem
+decidedly more difficult than a representation based on a truth table. The
+extreme dfficulty of solving the even-&parity problem by blind rand om search
+is reflecte dby the fact that the cumulative probabilify of success, p(M , i) , is0"/" for generation 0 in the performance curve in figure 6.2 for the even-
+3-parity function without automatically defined functions. The minimum
+number of individuals required to be processed to yield a solution to the even-
+3-parity problem (figure 6.2) was only SM,}}}individuals (i.e., 34 runs with a
+population of 16,000). This is considerably smaller than 10,000,000.
+In contrast, three-argument Boolean rule 000 ("Always of() is randomly
+generated with a probabilify of 7:6.76 in the space of compositions of func-
+tions from the same function seL, f,and terminals from the same terminal set,'I, so rule 000 is much easier to find in the space of programs than in the space
+of truth tables.
+The reader may have noticed that the cumulative probability of success,
+P(M,i), is 39% for generafion 0 in the performance curve in figure 6.10 for
+the even-3-parity function with automntically definedfunctionsfor a population
+of 16,000. That is, in approximately two out of five runs, there is at least one
+solution in generation 0 among the 16,000 programs. hr fact, there are 15 such
+Programs in the 528,000 individuals contained in the 33 runs involved, so the
+probability of solving this problem by means of blind random search with
+automatically defined functions is about L:35,200.
+A probability of success of L:35,200 is a considerable improvement over a
+failure to find a single solution in 10,000,000 tries. Representation is the rea-
+son for this difference in probability of success of these two blind random
+searches. \Aflhen automatically defined functions are not being used, the
+Chapter 26
+
+PDF PAGE 643
+elements of the searchspace are computerprograms consisting onlyof a result-
+producing branch. However, when automatically defined functions are being
+used, the elements of the search space are computer programs consisting of
+two function-definingbranches and one result-producing branch. The avail-
+ability of automatically defined functions provides a significantly different
+way of representing Boolean functions and a dramatically different way of
+viewing the space of Boolean functions.
+This chapter explores the way automatically defined functions change the
+way of looking at problem spaces for several different problems from this
+book. To do this, this chapter compares the distribution of values of fibress for
+1,000,000 randomly generated programs without automatically defined func-
+tions with the distribution of values of fitness for 1,000,000 randomly gener-
+ated programs with automatically defined functions. The distributions are
+examined in tabular form, visualized as histograms, quantified by their means
+and standard deviations, and further quantified by the values of their outli-
+ers. For each problem, the L,000,000 random Programs are generated in the
+same manner in which the programs were generated when the problem was
+first treated herein. Specifically, the Proglams were generated with the same
+function set, the same terminal set, the same arrangement of defined func-
+tions (if any), and the same limitations on program size or depth. The pro-
+grams were generated as if they belonged to generation 0 of a population of
+5,000 and then consolidated into a grouP of 1,000,000'
+26.1 EVEN-3r 4-,*,AND 6-PARITY PROBLEMS
+We start with the even-3-,4-,5-, and 6-panty problems'
+26.L.1 Even-3-PariW Problem
+Table 26.L shows the distribution of values of raw fitness for the even
+3-parity function for 1,000,000 randomly created programs with automati-
+.ully defined. functions and 1,000,000 randomly created programs with-
+out automatically defined functions. TWo two-argument automatically
+defined functions are used. Raw fitness (hits) ranges between 0 and 8 for
+this problem.
+As can be seen, no programs out of the 1,000,000 without automatically
+defined functions achieve a perfect score of eight hits. This result is consistent
+with the experiment cited above involving 10,000,000 random programs. Lr
+contrast, 33 programs out of the 1,000,000 with automatically defined func-
+tions score eight hits. These 33 lOO%-correct solutions suggest a probability of
+1:30,303 (which is close to the probabili} of 1:35,200 computed above with
+the different sample of size of 528,000).
+There are no programs that score zero hits without automatically defined
+functions, whereas there are 49 Proglams that do so with them.
+Lr additiory there are only 33 near-perfect programs scoring seven hits with-
+out automatically defined functions, whereas there are 55 such near-perfect
+The Role of Representation and the Lens Effect
+
+PDF PAGE 661
+Without Defined Functions
+hqJ
+o.)
+€)
+k
+E
+G13 t+n 2841 42-55 5669
+Hits
+7G83 84-97
+gs
+ga
+g3
+92
+6l
+hI
+o)
+€)
+L
+Fl
+Gl3 1+27 2847 42-55 5G69 7G83 8+n
+Hits
+Figure 26.15 Hits histograms for the minesweeper problem for 1,000,000 randomly generated
+programs with and without ADFs.
+26.5 MINESWEEPER PROBLEM
+The minesweeper problem (chapter L4) also shows evidence of the lens ef-
+fect. Raw fihress (hits) rzrnges between 0 and 116. There are no Programs scor-
+ing 21or more hits without automatically defined functions, but there are
+I4A1Sprograms (1.4% of the 1,000,000) scoring between 21 and 58 hits with
+automatically defined functions.
+Figure 26.15 shows the hits histograms for 1,000,000 randomly generated
+programs for the minesweeper problem with and without automatically de-
+fined ftrnctions. The mean of the distribution is 2.SL without automatically
+defined functions and 4.85 with them. The standard deviation is 1.96 without
+automatically defined functions and 4.23 with them.
+26.6 ARTIFICIAL ANT PROBLEM
+There is evidence of a slight lens effect for the artificial ant problem (chapter
+L2). Raw fitness (hits) ranges between 0 and 96 for this problem. There are no
+programs scoring between 88 and 92 hits without automatically defined func-
+tions, but there are four programs in this range with automatically defined
+functions. Moreover, between 57 and 87 hits, every entry in the table for
+With Defined Functions
+639 The RoIe of Representation and the Lens Effect
+
+PDF PAGE 662
+Without Defined Functions
+I
+1
+I
+I
+q)
+e)
+L
+103
+rc2
+l0l
+hI
+c)
+P
+-
+l2-t7 t8-23 2+29 30-35 3G4t 42_4-t 48_53 54-59 6U65 ff'-71 12_,1,t 78_83 84_89 90_95
+Hits
+1E-23 24-29 3G35 36-41 42-47 48-53 54 59 60-65 66-71 1T_.t.t .tB_83 8,t_89 90_95 96
+Figure 25.16 Hits histograms for the artificial ant problem for 1,000,000 randomly generated
+programs with and withoutADFs.
+automatically defined functions is higher than the corresponding entry with-
+out automatically defined functions. There are only L,SSgprograms (0.18% of
+the 1,000,000) without automatically defined functions between 57 and 8T
+hits, whereas there arc 4,007 programs (0.40%of the j.,000,000) without auto_
+matically defined functions.
+The mean of the distribution is 10.08 without automatically defined func-
+tions and L0.06 with them. The standard deviation is Lz.&without automati-
+cally defined functions and Ii.I7 with them.
+Figure 26.16 shows the hits histograms for 1,000,000 randomly generated
+Programs for the artificial ant problem with and without automatically defined
+functions
+26.7 DISCUSSION
+We have observed, for the problems reviewed in this chapteq, that when the
+representation of problem environments employs automatically defined func-
+tions, a blind random search yields higher scoring outliers than when the
+representation does not employ automatically defined functions. The pos-
+sible contribution of this lens effect to the operation of genetic programming
+with automatically defined functions warrants further investigation.
+With Defined Functions
+I
+l0s
+I
+I
+I
+640 Chapter 26
+
+PDF PAGE 663
+Relmolds $99a) considers three versions of a problem calling for the dis-
+covery of a controller for a corridor-following robot (subsection F.3.4 in
+appendix F). The robot had a roving sensol an arbitrary static sensor, and a
+predetermined static sensor in the three versions. The histograms of fibress
+in the initial random generation of Reymold's runs were distinctly different
+for the three versions. The version of Relmold's problem with the best outlier
+proved to be the easiest to solve. These differences foreshadowed the diffi-
+culty of solving the problem in the actual full runs of genetic programming
+and are another the existence of the lens effect.
+641 The Role of Representation and the Lens Effect

@@ -1,0 +1,225 @@
+{
+  "configuration": {
+    "seed": 314159,
+    "N_train_per_module": 256,
+    "N_validation_per_module": 64,
+    "N_queries_per_condition": 64,
+    "threshold": 0.8,
+    "observation_sigma": 0.05,
+    "fixed_ODE_horizon": 60.0,
+    "numpy": "2.5.4",
+    "platform": "macOS-15.4.1-arm64-arm-64bit-Mach-O"
+  },
+  "learning": {
+    "A": {
+      "dictionary_size": 9,
+      "selected": [
+        [
+          1,
+          -1,
+          -1,
+          1
+        ]
+      ],
+      "rho_train": [
+        0.9987051319766114
+      ],
+      "rho_validation": [
+        0.9989120862729239
+      ],
+      "delta_true": 0.43,
+      "delta_learned": 0.4285029867333292,
+      "max_unselected_rho": 0.07556750449297381,
+      "max_shuffled_rho": 0.114110758339095,
+      "expected_population_rho": 0.9987507809245809
+    },
+    "B": {
+      "dictionary_size": 9,
+      "selected": [
+        [
+          1,
+          -1,
+          -1,
+          1
+        ]
+      ],
+      "rho_train": [
+        0.9989133466512825
+      ],
+      "rho_validation": [
+        0.9987396359369016
+      ],
+      "delta_true": -0.31,
+      "delta_learned": -0.3044024539579113,
+      "max_unselected_rho": 0.10083847718619206,
+      "max_shuffled_rho": 0.09983555613684834,
+      "expected_population_rho": 0.9987507809245809
+    }
+  },
+  "constructed_rows": {
+    "A": [
+      1,
+      -1,
+      -1,
+      1,
+      0,
+      0
+    ],
+    "B": [
+      1,
+      0,
+      0,
+      -1,
+      -1,
+      1
+    ],
+    "shortcut": [
+      2,
+      -1,
+      -1,
+      0,
+      -1,
+      1
+    ]
+  },
+  "conditions": {
+    "forward": {
+      "n": 64,
+      "max_learned_solution_error": 2.021286199229721e-15,
+      "mean_ground_truth_output_error": 0.0014970132666708522,
+      "max_ground_truth_output_error": 0.0014970132666720876,
+      "settled_by_horizon": 64,
+      "median_settle_time": 7.550000000000001,
+      "max_energy_increase": 0.0
+    },
+    "inverse": {
+      "n": 64,
+      "max_learned_solution_error": 2.021286199229721e-15,
+      "mean_ground_truth_output_error": 5.060481776845338e-16,
+      "max_ground_truth_output_error": 2.021286199229721e-15,
+      "settled_by_horizon": 64,
+      "median_settle_time": 7.925000000000001,
+      "max_energy_increase": 0.0
+    },
+    "composition": {
+      "n": 64,
+      "max_learned_solution_error": 6.1547480674359386e-09,
+      "mean_ground_truth_output_error": 0.004100532674861687,
+      "max_ground_truth_output_error": 0.004100534718411097,
+      "settled_by_horizon": 64,
+      "median_settle_time": 20.075000000000003,
+      "max_energy_increase": 0.0
+    },
+    "shortcut_more_budget": {
+      "n": 64,
+      "max_learned_solution_error": 2.021286199229721e-15,
+      "mean_ground_truth_output_error": 0.0041005327754179794,
+      "max_ground_truth_output_error": 0.004100532775420042,
+      "settled_by_horizon": 64,
+      "median_settle_time": 7.625,
+      "max_energy_increase": 0.0
+    },
+    "shortcut_matched_proxy": {
+      "n": 64,
+      "max_learned_solution_error": 2.1243007353177745e-11,
+      "mean_ground_truth_output_error": 0.004100532775936515,
+      "max_ground_truth_output_error": 0.0041005327966609825,
+      "settled_by_horizon": 64,
+      "median_settle_time": 15.2,
+      "max_energy_increase": 0.0
+    },
+    "removed_A": {
+      "n": 64,
+      "max_learned_solution_error": 3.115638356145588,
+      "mean_ground_truth_output_error": 1.7748079822061174,
+      "max_ground_truth_output_error": 3.1197388889210056,
+      "settled_by_horizon": 0,
+      "median_settle_time": null,
+      "max_energy_increase": 0.0
+    }
+  },
+  "jacobians": {
+    "parents": {
+      "jacobian": [
+        [
+          -2.0,
+          1.0
+        ],
+        [
+          1.0,
+          -1.0
+        ]
+      ],
+      "eigenvalues": [
+        -2.618033988749895,
+        -0.38196601125010515
+      ],
+      "finite_difference_max_discrepancy": 8.243328242230064e-11,
+      "full_port_squared_coefficient_budget": 8.0
+    },
+    "shortcut_more_budget": {
+      "jacobian": [
+        [
+          -2.0,
+          1.0
+        ],
+        [
+          1.0,
+          -2.0
+        ]
+      ],
+      "eigenvalues": [
+        -3.0,
+        -1.0
+      ],
+      "finite_difference_max_discrepancy": 1.6486656484460127e-10,
+      "full_port_squared_coefficient_budget": 16.0
+    },
+    "shortcut_matched_proxy": {
+      "jacobian": [
+        [
+          -1.0,
+          0.5
+        ],
+        [
+          0.5,
+          -1.0
+        ]
+      ],
+      "eigenvalues": [
+        -1.5,
+        -0.5
+      ],
+      "finite_difference_max_discrepancy": 8.243328242230064e-11,
+      "full_port_squared_coefficient_budget": 8.0
+    }
+  },
+  "central_attack": {
+    "parent_count": 4,
+    "shortcut_is_sum_of_parent_rows": true,
+    "winding_state": [
+      1.2566370614359172,
+      2.5132741228718345,
+      3.7699111843077517,
+      5.026548245743669
+    ],
+    "parent_residuals": [
+      1.2566370614359172,
+      1.2566370614359172,
+      1.2566370614359172,
+      1.2566370614359172
+    ],
+    "shortcut_residual": 5.026548245743669,
+    "gradient_max": 1.1102230246251565e-16,
+    "hessian_eigenvalues": [
+      0.11803398874989479,
+      0.42705098312484224,
+      0.8090169943749478,
+      1.1180339887498947
+    ],
+    "settled_near_wrong_state_max_error": 4.3793685486903655e-06,
+    "wrong_output_phase_error": 1.256634354852918,
+    "interpretation": "Entailed positive shortcut can introduce stable incorrect minima; local-stiffness improvement is not global computational improvement."
+  },
+  "checks": "All explicit assertions passed. This is program-level verification of the stated model, not independent scientific validation."
+}

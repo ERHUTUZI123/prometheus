@@ -1,0 +1,8 @@
+# Frozen direct-substitution attack
+
+QUESTION: Does the executed BF phase-chain task require iterative nonlinear inference, or can an interpreter of the same stored integer rows and learned offsets solve the tested tree queries directly?
+GIVEN: B's actually selected rows/offsets in probes/B/results.json; BF's actual query and result records; no independent-rebuilder artifacts. Parent permits one inspected script under run_isolated.py, timeout 120 seconds.
+NON-GOALS: No hardware comparison, new learning experiment, cyclic/inconsistent constraint solver, general emulation argument, novelty claim, or claim that the SPD repair has no causal effect.
+VERIFIER: (1) Execute generic one-unknown substitution on BF's four anchored unit-difference rows, compare its residual/output with recorded solver outcomes. (2) Execute forward, inverse and composed B queries using the actual learned rows/offsets and 64 fresh random clamps per case; check stored-row residuals and analytic algebraic output. (3) Static operation accounting using published BF force/integrator counts, including training and Oja costs where specified. Arithmetic counts exclude dispatch/lookup/read/write costs and are not wall time.
+BUDGET: One offline script, fixed seed 20261101, 192 fresh B queries plus BF's 64 recorded starts, no tuning, no subprocess/network, timeout 120 seconds. Writes only probes/final-attack/. Stop after results/assertions including failure.
+OUTPUT: Script, JSON, execution log, and bounded mechanistic critique. A direct tree solve can refute a claim of demonstrated computational advantage on this family; it cannot refute analog hardware advantages under explicit local/continuous/noisy execution constraints.
