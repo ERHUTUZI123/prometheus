@@ -146,6 +146,8 @@ def source_model(checkpoint, device):
         from continuous_native_model import ContinuousNativeModel
         model_class = ContinuousNativeModel
         geometry_options['geometry_cache_capacity'] = int(extra.get('continuous_monodromy', {}).get('moment_cache_capacity', 0))
+        policy = extra.get('continuous_monodromy', {}).get('homotopy_lift_cache_policy') or {}
+        geometry_options['homotopy_lift_cache_capacity'] = int(policy.get('capacity', 0))
     model = model_class(n, vocab=vocab-1, max_len=18, n_tasks=n_tasks,
         latent_factor=d//n, protection=True, seed=int(checkpoint["args"]["seed"]),
         n_ops=count, slots=slots, emb_dim=emb_dim,

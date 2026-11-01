@@ -177,7 +177,8 @@ def make_model(name, args, restored_latent_factor=None):
         if getattr(args, 'continuous_monodromy', False):
             from continuous_native_model import ContinuousNativeModel
             TopologyExecutor = ContinuousNativeModel
-        geometry_options = ({'geometry_cache_capacity':getattr(args, 'geometry_moment_cache', 0)}
+        geometry_options = ({'geometry_cache_capacity':getattr(args, 'geometry_moment_cache', 0),
+                             'homotopy_lift_cache_capacity':getattr(args, 'homotopy_lift_cache', 0)}
                             if getattr(args, 'continuous_monodromy', False) else {})
         model=TopologyExecutor(args.scale, vocab=6, max_len=18, n_tasks=3,
                                 latent_factor=restored_latent_factor or args.latent_factor,
@@ -572,6 +573,7 @@ def arguments():
     parser.add_argument('--continuous-monodromy', action='store_true')
     parser.add_argument('--geometry-weight', type=float, default=.01)
     parser.add_argument('--geometry-moment-cache', type=int, choices=(0,32,128), default=0)
+    parser.add_argument('--homotopy-lift-cache', type=int, choices=(0,32,128), default=0)
     parser.add_argument('--program-v2', action='store_true')
     parser.add_argument('--program-plastic', action='store_true')
     parser.add_argument('--program-hard-assignment', choices=('rowargmax','bijective'), default='rowargmax')
@@ -605,6 +607,8 @@ def arguments():
         parser.error('continuous monodromy extends the current native-promotion architecture')
     if args.geometry_moment_cache and not args.continuous_monodromy:
         parser.error('geometry moment cache requires the continuous model')
+    if args.homotopy_lift_cache and not args.continuous_monodromy:
+        parser.error('homotopy lift cache requires the continuous model')
     if not 0 <= args.geometry_weight <= 1.:
         parser.error('geometry weight must lie in[0,1]')
     if args.start_stage >= args.stages or bool(args.resume_from) != bool(args.start_stage) or (args.resume_from and len(args.models)!=1):

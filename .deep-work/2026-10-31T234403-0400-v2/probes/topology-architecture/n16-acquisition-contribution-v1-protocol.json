@@ -1,0 +1,57 @@
+{
+  "schema": "step3-contribution-validation-v1",
+  "study": "acquisition",
+  "frozen_before_execution": true,
+  "MAIN": "TOPOLOGY human_only",
+  "M0": "NOT_PASSED",
+  "M3": "ultimate",
+  "primary_architecture_baseline": "Transformer",
+  "source_sha256": {
+    "train.py": "49da5bacd1a2b2bcb2556afa2ace3d4d24e5f04b62f6994f9b330ac8e3f1e123",
+    "tasks.py": "dbca2935925f713e2f5716d8ac5faf4892464918eed6b2e0a66b45680ec5d9bc",
+    "torch_baselines.py": "c22f59c4dd68385910f7df7f5c8be5d0268a479e6d5820ef6a636ce8efbde176",
+    "program_baseline_v2.py": "d14645a0a5af10c4fb83b830511be1e96a983a64705ba1e4ff5434336ac5d756",
+    "topology_model.py": "48f8f7aa5efe96297bef04e29ca6c52b8bd8bc38a2af409ce772619679e77acd",
+    "semantic_promotion_model.py": "e48d73903ec651976c9276a7280c90869668169ac11f9e669ba31a9fe5492cdc",
+    "workspace_refinement.py": "af0f623ce72dc3834aedbc9904e74bbf22c2a332f8069670fdda745741f6b32a",
+    "continuous_native_model.py": "b3d0ebf79feac59d3eae254b1e5d0a8267a2ef81768f0d9538d4ce9edbe98bcf",
+    "continuous_monodromy.py": "ad1852bba88393b85db8aa44553d5c85183a0dce5ada4a62460f52b3a52c2936",
+    "train_monodromy_extension.py": "8d0f3a3ce0e4bcd3added02bb69f1dc8aef060f1527011dcae5ebef88f090706",
+    "integrate_native_repair.py": "c33f2da473145b93c43e9b57768486468337d14696e4960efb103a3abfdc6fb5",
+    "path_moment_cache.py": "8e2b7ec24f14f117fb1991f5920be2c80910596df37026d013d1afa4c2277a36",
+    "observed_operation_formation.py": "8303e5c138127cb4373fd4a8b106807d3d32ab113b5d24871864a1cefabb12e8",
+    "history_operation_formation.py": "239a934d265d490da4446d7b36854f71657cc857479152987c9551548b6c42f9",
+    "diagnose_projection_numeric.py": "bd1d5ccbcdef230a2246561845b5973c9dcfbdc56115acaf7625d00172ac9ee5",
+    "acquisition_contribution_study.py": "3030cefbddfe58eeb9c5c9caff73c10a17fc10d8a8c4d43102f990c82da39dd8"
+  },
+  "source_readonly": true,
+  "new_output": "/workspace/prometheus-v2-m0-architecture/outputs/n16-acquisition-contribution-v1",
+  "limits": {
+    "external_seconds": 900,
+    "internal_seconds": 850,
+    "address_space_GiB": 512,
+    "file_MiB": 100,
+    "gpu_allocator_fraction": 0.3
+  },
+  "allowed_proc_exception": "self task WRITE_FILE/TRUNCATE only; existing authorized runner",
+  "tests": {
+    "arms": [
+      "continue_only",
+      "native_recompile",
+      "one_step",
+      "history_full",
+      "history_no_explicit_reuse"
+    ],
+    "source": "same actual V8 stage2-step800",
+    "steps": 200,
+    "seed": 9010,
+    "batch64": true,
+    "objective": "terminalCE+.01geometry",
+    "old_only_protection": [
+      0,
+      1
+    ],
+    "current_admission": "END only",
+    "compare": "TRAIN-only formation interventions; parameter/search resources measured"
+  }
+}

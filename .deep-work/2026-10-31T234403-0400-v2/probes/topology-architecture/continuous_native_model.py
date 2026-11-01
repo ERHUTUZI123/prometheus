@@ -43,14 +43,17 @@ def _new_costs():
         cold_configuration_snapshots=0, cold_distance_matrix_entries=0,
         cold_realization_seconds=0., warm_native_execution_seconds=0.,
         warm_native_primitive_calls=0, map_cache_bytes_current=0,
-        map_cache_bytes_peak=0, cache_restore_invalidations=0)
+        map_cache_bytes_peak=0, cache_restore_invalidations=0,
+        homotopy_family_get_calls=0, homotopy_family_reuses=0,
+        homotopy_family_get_seconds=0., homotopy_family_errors=0)
 
 
 class ContinuousNativeModel(SemanticPromotionModel):
     geometry_loss_weight = PATH_WEIGHT
 
     def __init__(self, *args, initial_omega=(0., 0., 0., 0.),
-                 continuous_lift_seconds=110., geometry_cache_capacity=0, **kwargs):
+                 continuous_lift_seconds=110., geometry_cache_capacity=0,
+                 homotopy_lift_cache_capacity=0, **kwargs):
         super().__init__(*args, **kwargs)
         value = self.encoder.new_tensor(initial_omega)
         if value.shape != (4,) or not torch.isfinite(value).all() or value.abs().max().item() > 8:
@@ -76,6 +79,32 @@ class ContinuousNativeModel(SemanticPromotionModel):
         if self.geometry_cache_capacity:
             from path_moment_cache import PathMomentCache
             self._path_moment_cache = PathMomentCache(self.geometry_cache_capacity)
+        self._homotopy_lift_cache = None
+        self.homotopy_lift_cache_capacity = 0
+        self.set_homotopy_lift_cache(homotopy_lift_cache_capacity)
+
+    def set_homotopy_lift_cache(self, capacity, shared_cache=None):
+        """Optional same-family ideal-map reuse, never cached new trajectories.
+
+        All neural/binding guards are unchanged. Maps are NOT serialized. A
+        restored model pays its own first lift; the current study can explicitly
+        share the bounded proof namespace across actual growth checkpoints.
+        """
+        if capacity not in (0, 32, 128):
+            raise ValueError('homotopy cache capacity must be0,32,128')
+        if shared_cache is not None and not capacity:
+            raise ValueError('disabled policy cannot receive a shared cache')
+        if capacity:
+            from homotopy_lift_cache import HomotopyLiftCache
+            if shared_cache is not None and (not isinstance(shared_cache, HomotopyLiftCache)
+                                              or shared_cache.capacity != capacity):
+                raise ValueError('bounded same-family cache type/capacity mismatch')
+            self._homotopy_lift_cache = (shared_cache if shared_cache is not None
+                                         else HomotopyLiftCache(int(capacity)))
+        else:
+            self._homotopy_lift_cache = None
+        self.homotopy_lift_cache_capacity = int(capacity)
+        self._invalidate_derived_caches()
 
     def set_stage(self, stage, new_token_ids=None):
         super().set_stage(stage, new_token_ids=new_token_ids)
@@ -179,6 +208,35 @@ class ContinuousNativeModel(SemanticPromotionModel):
         if key in self._lifted_maps:
             self._geometry_costs["hard_cache_class_hits"] += 1
             return self._lifted_maps[key]
+        if self._homotopy_lift_cache is not None:
+            began = time.perf_counter()
+            self._geometry_costs['homotopy_family_get_calls'] += 1
+            try:
+                actual, event = self._homotopy_lift_cache.get(permutation, omega, deadline)
+                if event['newactual_lift']:
+                    report = event['actual_lift_report']
+                    self._geometry_costs['cold_lift_attempts'] += 1
+                    self._geometry_costs['cold_realized_classes'] += 1
+                    self._geometry_costs['cold_configuration_snapshots'] += int(report['snapshots'])
+                    self._geometry_costs['cold_distance_matrix_entries'] += int(report['distance_matrix_entries_evaluated'])
+                    self._geometry_costs['cold_realization_seconds'] += float(event['actual_lift_seconds'])
+                else:
+                    self._geometry_costs['homotopy_family_reuses'] += 1
+                self._lifted_maps[key] = actual
+                self._last_realizations.append(dict(permutation=list(key), **event))
+                count = sum(value.nbytes for value in self._lifted_maps.values())
+                self._geometry_costs['map_cache_bytes_current'] = count
+                self._geometry_costs['map_cache_bytes_peak'] = max(
+                    self._geometry_costs['map_cache_bytes_peak'], count)
+                return actual
+            except BaseException:
+                # Actual attempt/failure counters on an unsuccessful get remain
+                # authoritative in the bounded cache report; no missing work is
+                # invented here as a successful numerical realization.
+                self._geometry_costs['homotopy_family_errors'] += 1
+                raise
+            finally:
+                self._geometry_costs['homotopy_family_get_seconds'] += time.perf_counter()-began
         started = time.perf_counter()
         self._geometry_costs["cold_lift_attempts"] += 1
         try:
@@ -257,6 +315,9 @@ class ContinuousNativeModel(SemanticPromotionModel):
             quadrature_point_strands=int(self._moments["quadrature_point_strands"]),
             active_learned_classes=[list(p) for p in self._moment_signature[1]])
         return dict(costs=copy.deepcopy(self._geometry_costs),
+            homotopy_lift_cache=(None if self._homotopy_lift_cache is None
+                                  else self._homotopy_lift_cache.statistics()),
+            map_storage_alias_note='current maps may reference the same immutable buffers as the family cache; do not add both numeric payloads',
             moment_cache=None if self._path_moment_cache is None else self._path_moment_cache.statistics(),
             current_omega=self.path_omega.detach().cpu().tolist(),
             current_path_omega_gradient=(None if self.path_omega.grad is None
@@ -264,7 +325,7 @@ class ContinuousNativeModel(SemanticPromotionModel):
             current_latent_states=int(self.d), bank_size=int(self.n_ops),
             moments=moments, current_cache_realizations=copy.deepcopy(self._last_realizations),
             execution="cold unordered-configuration lifts; exact cached maps for warm learned calls",
-            cache_signature="D + ALL actual assigned bank permutations + exact omega values",
+            cache_signature="current-geometry: D+bank+exactomega; optional family cache: checked namespace+D+baseanchors+operationclass",
             partial_failed_lift_snapshot_work_known=False,
             geometry_gradient_source="normalized kinetic action; terminal likelihood is invariant to this shear",
             timings="perf_counter; torch objective launch time may exclude asynchronous GPU completion")
@@ -292,6 +353,8 @@ class ContinuousNativeModel(SemanticPromotionModel):
             initial_omega=list(self._initial_path_omega),
             moment_cache_capacity=self.geometry_cache_capacity,
             moment_cache_entries_persisted=False,
+            homotopy_lift_cache_policy=(None if self._homotopy_lift_cache is None
+                                        else self._homotopy_lift_cache.policy()),
             kinetic_weight=PATH_WEIGHT, quadrature_per_segment=QUADRATURE_PER_SEGMENT,
             continuous_lift_seconds=self.continuous_lift_seconds,
             checkpoint_loader="continuous_native_model.ContinuousNativeModel",
@@ -319,6 +382,13 @@ class ContinuousNativeModel(SemanticPromotionModel):
                     self._geometry_costs[name] = saved_costs[name]
             if 'geometry_quadrature_reference_point_strands' not in saved_costs:
                 self._geometry_costs['geometry_quadrature_reference_point_strands'] = saved_costs.get('geometry_quadrature_point_strands', 0)
+            policy = metadata.get('homotopy_lift_cache_policy')
+            if policy:
+                if (self._homotopy_lift_cache is None
+                        or policy.get('family_fingerprint') != self._homotopy_lift_cache.family_fingerprint
+                        or int(policy.get('capacity', -1)) != self.homotopy_lift_cache_capacity
+                        or policy.get('maps_persisted') is not False):
+                    raise ValueError('saved homotopy policy differs from checked runtime namespace')
         self._invalidate_derived_caches()
         self._geometry_costs["cache_restore_invalidations"] += 1
 

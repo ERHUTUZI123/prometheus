@@ -24,6 +24,8 @@ SPECS = {
     'baseline': ('n16-matched-baselines-v1', 'matched_baseline_continuation.py'),
     'acquisition': ('n16-acquisition-contribution-v1', 'acquisition_contribution_study.py'),
     'monodromy': ('n16-monodromy-contribution-v1', 'monodromy_contribution_study.py'),
+    'growth': ('n16-homotopy-growth-cost-v1', 'growth_protection_cost_study.py'),
+    'growth_resume': ('n16-homotopy-growth-cost-v1a', 'growth_protection_cost_study.py'),
 }
 
 
@@ -32,7 +34,7 @@ def main():
     p.add_argument('study', choices=SPECS)
     a = p.parse_args()
     name, driver = SPECS[a.study]
-    files = COMMON + [driver]
+    files = COMMON + [driver] + (['homotopy_lift_cache.py'] if a.study in ('growth','growth_resume') else [])
     encoded = {}
     hashes = {}
     version = ROOT / 'versions' / ('code-' + name)
@@ -60,11 +62,27 @@ def main():
                     objective='terminalCE+.01geometry',old_only_protection=[0,1],current_admission='END only',
                     compare='TRAIN-only formation interventions; parameter/search resources measured')
                if a.study=='acquisition' else
+               dict(arms=['legacy','certified','cached_direct'], actual_growth_checkpoints=3,
+                    source='actual N16 learned stage0/1/2 sources; not fresh task acquisitions',
+                    steps_per_checkpoint_per_arm=200, seeds=[9020,9021,9022], batch64=True,
+                    objective='terminalCE+.01geometry', cache_entries=128,
+                    current_and_old_admitted_binding_contracts_preserved=True,
+                    native_monitor_every20=True, curves=[0,100,200],
+                    independent_final_fresh_trajectory_audits=9,
+                    targets='same200 parameter-update hashes, parameter growth, actual geometry maintenance, protection/cache/inference/total cost',
+                    interpretation='ideal-semantic homotopy reuse; digital work repair not physical execution or energy advantage')
+               if a.study in ('growth','growth_resume') else
                dict(arms=['monodromy_guard_on','direct_guard_on','monodromy_guard_off','direct_guard_off'],
                     source='same actual V8 stage2-step800',steps=200,seed=9011,batch64=True,
                     objective='terminalCE+.01geometry, all arms retain4omega',
                     scope='execution backend and binding guard factorial; not removal of all topology',
                     targets='raw proposal hashes/old violations/accepted updates/native-soft accuracy/full costs')))
+    if a.study == 'growth_resume':
+        protocol['engineering_recovery'] = dict(
+            failed_run='n16-homotopy-growth-cost-v1', error='FileExistsError: duplicate append-only partial-summary name',
+            completed_arms_not_rerun=[[0,'legacy'],[0,'certified']], remaining_arms=7,
+            warm_cache_not_fabricated='pay new actual origin lifts and record recovery cost',
+            scientific_state_transition_and_learning_rule_unchanged=True)
     protocol_path = ROOT / (name + '-protocol.json')
     with protocol_path.open('x') as f:
         json.dump(protocol, f, indent=2)
@@ -80,9 +98,15 @@ for n,b in c['files'].items():
     p=code/n; d=base64.b64decode(b); assert hashlib.sha256(d).hexdigest()==c['hashes'][n];p.write_bytes(d);p.chmod(0o444)
 code.chmod(0o555)
 inputs=pathlib.Path('/opt/prometheus-'+name+'-inputs');inputs.mkdir(exist_ok=False)
-source=r/'outputs'/('continuous-primary-v7-n16-seed0-baselines' if c['study']=='baseline' else 'n16-repaired-stage2-v8')/'learn'
+source=r/'outputs'/('continuous-primary-v7-n16-seed0-baselines' if c['study'] in ['baseline','growth','growth_resume'] else 'n16-repaired-stage2-v8')/'learn'
 shutil.copytree(source/'datasets',inputs/'datasets')
-if c['study']=='baseline':
+if c['study'] in ['growth','growth_resume']:
+    growthsources=[r/'outputs'/'continuous-primary-v7-n16-seed0'/'learn'/'checkpoints'/'topo-stage0-step800-consolidated.pt',
+        r/'outputs'/'n16-observed-formation-v1'/'learn'/'topo-stage1-step1000-observed-formation-trained.pt',
+        r/'outputs'/'n16-history-formation-v1'/'learn'/'topo-stage2-step1000-observed-formation-trained.pt']
+    for t,p in enumerate(growthsources):shutil.copyfile(p,inputs/('checkpoint'+str(t)+'.pt'))
+    if c['study']=='growth_resume':shutil.copyfile(r/'outputs'/'n16-homotopy-growth-cost-v1'/'learn'/'failure.json',inputs/'actual-v1-failure.json')
+elif c['study']=='baseline':
     for n in ['transformer','replay','adapter']:
         shutil.copyfile(source/'checkpoints'/(n+'-stage1-step800-consolidated.pt'), inputs/(n+'.pt'))
     shutil.copyfile(source/'batch-indices-stage2.npz',inputs/'stage2-indices.npz')
@@ -93,7 +117,11 @@ for p in inputs.rglob('*'):p.chmod(0o555 if p.is_dir() else 0o444)
 inputs.chmod(0o555)
 out=r/'outputs'/name
 cmd=[sys.executable,str(runner),'--script',str(code/c['driver']),'--out',str(out),'--timeout','900','--address-space-gib','512','--file-limit-mib','100','--gpu-fraction','.3','--cuda-init-before-seccomp','--','--out',str(out/'learn'),'--datasets',str(inputs/'datasets'),'--device','cuda:0']
-if c['study']=='baseline':
+if c['study'] in ['growth','growth_resume']:
+    for t in range(3):cmd+=['--checkpoint'+str(t),str(inputs/('checkpoint'+str(t)+'.pt'))]
+    cmd+=['--max-seconds','850']
+    if c['study']=='growth_resume':cmd+=['--resume-study',str(inputs/'actual-v1-failure.json')]
+elif c['study']=='baseline':
     for n in ['transformer','replay','adapter']:cmd+=['--'+n+'-checkpoint',str(inputs/(n+'.pt'))]
     cmd+=['--stage2-indices',str(inputs/'stage2-indices.npz'),'--seconds','850']
 else:

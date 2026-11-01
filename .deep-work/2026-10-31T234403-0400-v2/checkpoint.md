@@ -1,3 +1,11 @@
+## ACTIVE usercostpriority after actual Step3 tests — 2026-11-01T23:09:07.553234+00:00
+
+MAIN TOPOLOGY human_only; M0NOT_PASSED; M3ultimate; Transformerprimary. All3Step3GPUs completedret0 andraw/source/realcheckpoints SHAverifiedlocally. Fiveacquisitionarms: history_full+no_explicit_reuse all15=1 atstep0and200, othersIID.46484/.46484/.47656; oldall1. Historyparams16354vsothers10984/12058, capacityconfoundingretained. Bothhistoryarms same2candidates,explicitoldreuse addednouniquecandidate. StrongmatchedTF/Replay/Adapter chain2800updates(addedindicesbyteequal) newIID.3984375/.34765625/.244140625.
+
+Monodromy4arms:fixedguard200proposalhashesandfinalNNbitsidenticalmono/direct. GuardONold1/1,new.46484; OFFold.673828/1,new.484375. ON118rawoldviolationsstopped,82full/42backtrack/76reject. Currentbindingpreservationfromordinaryclosedrelationguard; noadditionalmonodromyacquisitioneffectdemonstrated. Cost/candidate/rawschemas inprobes/topology-architecture/runs/n16-{acquisition-contribution,monodromy-contribution,matched-baselines}-v1. Completecostledgerbeingassembledincludingoldsourcecosts,failedbranchesandnewlabeluses.
+
+NOactiveGPUatthischeckpoint. Latesthumanpriority:Monodromycontinuousgrowth parameter/train/protectioncost. NewcostrepairunderimplementationINsameMethod:certifiedsamefamilycrossomega lift-cache, firstactualclasslift,newclasspaid; cachedDIRECTgetsordinarymapcache. Rootgrowth_protection_cost_study.pywrittenASTonly;helperhomotopy_lift_cache.pyinprogress;coreintegrationnotyetexecuted. Planned3actualgrowthcheckpoint x3backend x200sameupdates isCOSTDIAGNOSTIC,not9freshacquisitions. Eachprocessoldlimits900/850sameauthorizedrunner. Review034actualinprogress,no reviewinvented. Method/NOWupdatedinplace. NoMAIN/model/install/permissionchange; nooff-hostpromise.
+
 ## ACTIVE Step3 actual baseline continuation — 2026-11-01T22:43:54.962202+00:00
 
 MAIN TOPOLOGY human_only; M0 NOT_PASSED/M3 ultimate; Transformer primary. Cache full-training control COMPLETED: new .46484375, old1/1 unchanged; train16.6344→14.4203, modelwall38.9777→38.9380 essentiallyunchanged. Kernel3.607x mustNOTbeclaimedwholetraininggain. Hashverifiedfulloutput+sources local.

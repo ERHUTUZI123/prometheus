@@ -25,8 +25,8 @@ class SemanticPromotionModel(TopologyExecutor):
                  fit_tolerance=1e-5, minimum_margin=1., head_scale=4.,
                  expert_scale=8., **kwargs):
         super().__init__(*args, **kwargs)
-        if not 1 <= self.n_ops <= max_bank <= 24:
-            raise ValueError("expert bank must contain1..24 entries")
+        if not 1 <= self.n_ops <= max_bank <= 48:
+            raise ValueError("expert bank must contain1..48 entries; legacy default remains24")
         self.max_bank = int(max_bank)
         self.condition_limit = float(condition_limit)
         self.fit_tolerance = float(fit_tolerance)
@@ -189,7 +189,7 @@ class SemanticPromotionModel(TopologyExecutor):
                     key = self._permutation_key(graph["trans"][token], self.d)
                     if key not in classes:
                         if len(permutations) - 1 >= self.max_bank:
-                            raise _PromotionFailure("24-expert bank cap; no state/bank-cap growth authorized")
+                            raise _PromotionFailure(f"{self.max_bank}-expert declared bank cap reached")
                         classes[key] = len(permutations)
                         permutations.append(np.asarray(key, dtype=np.int64))
                         births.append(self._class_record(classes[key], key, True))
