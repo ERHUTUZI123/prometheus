@@ -1,0 +1,5 @@
+# Latest explicit human directive — same V2
+
+User directs incremental merge of prometheus-topology-return/APPLY.md, no restart/old rerun. MAIN=TOPOLOGY; only later explicit human instruction changes/PARKs/transfers MAIN. All native contexts must actually receive lock. Persistent State safesave then pause independent investment; Online USER-PARK. Preserve all evidence, permanent principles, Vision and permissions.
+
+Human clarification: focus on continuing SHARED parameter change with lower TOTAL old-capability retention and new-capability acquisition cost. Quantum/topological physics is a motivating intuition, not an assumed result. Existing constructors do not decide this benefit question merely by existing. Rigorous matched comparisons still serve honest evaluation. Deep thinking/reasoning is central; review/workflow must serve it, and actual obstruction should be reported. No ordinary scientific approval required inside topology; if no informative in-scope action exists, preserve specific blocker for human decision.

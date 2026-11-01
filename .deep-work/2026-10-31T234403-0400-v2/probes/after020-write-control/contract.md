@@ -1,0 +1,35 @@
+# Exploratory control-learning diagnostic after actual persistence acquisition
+
+One same-lineage development process, not confirmation or a new architecture. This is new feedback/new rule; no old experiment rerun. Existing v1 code/raw remain immutable. Do not launch before final code inspection/hash freeze.
+
+## Scientific question and information
+
+Can the newly specified witness-local write credit acquire controllable writes while preserving the actual previously learned HOLD dynamics, and does joint write learning interfere with that persistence? First pilot exposed this question; not a pre-registered prediction independent of that pilot. No novelty/general advantage claim. A ordinary last-nonzero register is a strong solution to this researcher-supplied task; the issue here is how this recurrent state acquires its control law from endpoint episodes.
+
+Initialize ALL four arms from the actual recorded last checkpoint of v1's endpoint_plus_prefix_plus_local_carry (A1.3888860838531099,beta.31505394251752883,v1.2366219426063343); read/hash the existing raw file once, charge reading but no old training. Retain original2 single-cue episodes (+/-1 then64zeros, labels+/-1). Acquire4 NEW researcher-generated endpoint labels on two-write episodes (firstcue p,64zeros,lastcue s,64zeros), covering p,s in {−1,+1}, with desired answer the LAST write. The generator is designed supervision; latent intermediate memory labels are not supplied. Six received training labels total, each reused. Last-write semantics were not identified by the original2 labels or obtained by the old evaluation's alternate scoring columns.
+
+Actual miner pairs the originals and, for each fixed firstcue p, the two equal-length new episodes sharing that entire past but differing in lastcue s and endpoint label. Check full future input/context equality, scan last differing input: its immediately following state is the common-future CUT (stateindex1 for originals,66 for changed). Check incumbent's first exact merger separately (2/67). These cuts license a need for different internal states; assigning endpoint label sign to the new state is a DESIGNED coordinate/gauge choice, justified in this diagnostic by the sign-preserving zero continuation and positive common readout. It is not an observed true latent state, generic causal discovery, or valid in arbitrary future nonlinear consumers. All arms receive same cached episodes/cuts; only their active learning laws differ.
+
+## Actual changed learning rules
+
+r'=tanh(A r+beta*x), output v*r; old h=x remains unchanged. True full-endpoint mean half-squared loss uses analytic RTRL derivatives. On actual replayed predecessor states at each CUT, detach those states and use the mean individual local loss .5*(m-y*r_cut)_+^2 (m.4). Differentiate only this one actual transition; labels determine orientation. This replaces v1's exact-state target at later merger with a one-sided margin at the start of the common future. The backward update is an auxiliary semigradient, not a gradient of full endpoint loss.
+
+Carry uses mean quarter-normalized separation hinge over all actual common-suffix transitions after each cut (64 perpair,3pairs). Previous states are detached; resimulate/reselect after every update. No invented predecessor or stored true bit. Four fixed arms:
+1 full endpoint only;
+2 endpoint+joint local write hinge;
+3 endpoint+joint local write hinge+carry;
+4 endpoint+HOLD-Jacobian-projected local write hinge+carry.
+
+For4, collect one-step transition PARAMETER Jacobian rows on the observed ORIGINAL zero-input hold transitions, with actual predecessor held fixed. Use Gram-Schmidt (ranktolerance1e-12) to form the row span and P=I-sum b*b^T. Only local write gradient is projected; task and carry gradients remain unprojected. Cost all rows/scans/projections. In this scalar family rows((1-r'^2)*r_previous,0,0) make the local auxiliary update beta-only; no manual A freeze. This is known gradient-projection scaffolding, not an innovation claim. Preservation is exact for the zero-input transition under that isolated auxiliary component, not for full combined updates or all future states in general families.
+
+## Fixed run and observation
+
+Each arm512 updates, learningrate.05, coefficients1, globalgradientnormclip10, same A[0,2.5],beta[-4,4],v[-3,3] projections. No tuning/sweeps/new seeds. Log initial/every16th/final params, each componentgradient/loss, projectedwritegradient and holdbasis rank/residual, task loss by old/new episodes, margins, exact carry/task costs. Finite-difference checks for full endpoint and conditional write/carry gradients at declared interior point A1.05,beta.12,v.8; predecessor bank frozen for conditional sides. Add FD checks of one-step HOLD Jacobians; no running training during development/debug. Test projection annihilation residual and isolated-write step hold preservation on actual rows; do not claim full-training preservation. Check loss alreadyfit does not erase modelJacobian.
+
+Final no-update evaluation: holds32/128/512; 1,2,4 alternating writes, both initialsigns, same hold after every write. Desired answer lastwrite; no new evaluation labels enter training. Report old-task mean half-MSE and new-write/composed performance separately, worst signed state margin, noiseless sign, saturation. Failure remains informative. Multiple writes are held-out execution combinations of the specified ordinary operation, not new operations/general computational novelty. No clear/reset, transfer to arbitrary modes, or indefinite noise robustness claim.
+
+Costs: old acquisition separately from this process, new label acquisition, retainedrawinputs/objectbytes, miner comparisons/transitionsteps, fullreplay/RTRL, detachedwrite/carry/Jacobianrows/projectiondotops, FD, loggingaudits, eval. Same iterations not equal compute. A separately costed conventional first-write/last-write/sign-product3program library may select via6labels as a concrete supplied-grammar alternative; no search/teacher shortcut in recurrentarms. If implemented log actual candidate tests/storage/selectedambiguity; not necessary for runtime rule.
+
+One first-execution externally bounded30s wall/CPU process via existing isolated runner, internal25sbackup, network/secret reads denied, writes ONLY new probe dir, one thread. Raw exclusive/incremental <3MiB, max4*512 parameter updates,6trainingepisodes total650tokens perreplay; <=18 evaluationepisodes perarm. Existingv1raw read-only. Save partial failure; any implementation repair separately identified. No install, model/resource/permission change or old result modification. End process on timeout, FD failure, output cap or all fixedupdates; do not silently adjust settings. The protected hypothesis stays OPEN regardless one metric; subsequent action depends on what this diagnostic identifies.
+
+Pre-code refinement: new episodes include both repeated and opposing writes (4newlabels), not only opposing writes. This enables a same-past/different-write witness and removes prefix correlation from that pairing. No code had been executed or settings frozen when this refinement was made.

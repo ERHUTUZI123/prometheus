@@ -1,0 +1,9 @@
+# Review011 implemented in the same V2
+
+The reviewer admitted one new degree-four acquisition process, not a repetition of the completed degree-three witness. Root inspected/froze and executed `probes/topology-acquisition/pilot_v1.py` with the existing120-second isolated runner. Exit0; actual receipt/raw/summary are preserved. No outcome tuning or rerun occurred.
+
+The review materially changed the test: retaining supplied A alone was insufficient, so it now acquires C first, changes a shared coefficient using actual trace gradients, then checks retention of C and mixed programs. Root supplied an exact-rational critical-locus exclusion module; the reviewer and rival checked the mathematical logic before execution. The actual driver checks binary-rational coefficient endpoints, binds the fixed A/C paths to the certificate, transports state and anchors through the same coefficient homotopy, and executes afterward. The certificate conditions passed in the new process. They do not certify floating-point tracking error.
+
+Generic discovery and measured action selection replaced the earlier human selection of a useful upper critical point/path. Scalar task feedback selected a composed word; all inverse/reset paths and constructor/verifier work are charged. The conventional same-actuator algorithm is explicitly identical; the digital table comparator is actually executed and its allowed regime stated. No baseline run is falsely presented as independent.
+
+Outcome correction: the predeclared heldout list contains A,C, which coincides with the acquired task word. Root explicitly records only3 genuinely unseen compositions. The tiny sampled sensitivity decrease is not a resource or capability advantage. Root submitted packet012 for actual source/raw review before any larger significance judgment. Online-organization remains PARK by user decision.

@@ -1,0 +1,31 @@
+# Reliability construction: input-confusion obstruction and an operation-sensitive repair interface
+
+RECONSTRUCTION / ATTACK / constructive support, same V2. Root read complete unfamiliar v2 and source ledger. No scientific execution, training or formal compilation. This is a mathematical constraint on the actual new construction, not a new principle claim or a requirement that all its premises already be solved.
+
+## 1. Seven-bit witness checked in the declared model
+
+With c0=0^7, c1=1^7, one wrong bit per input, coordinatewise NOT/AND plus one U-output fault has at most2/3 wrong output bits. Each nonfaulty seven-input majority gate returns the logical value; at most one R-output fault renews radius1. Sharing input lines does not invalidate this deterministic argument. Per logical AND there are7 two-input gates and7 seven-input majorities:14 noisy output sites and63 incoming synapses/wires (NOT56). This assumes each majority is one legal bounded-fan-in threshold neuron; a substrate allowing only fan-in2 needs another counted construction and changed fault analysis. Encoding/learning/reference/version migration costs are not in14.
+
+If every noisy output site flips independently with probability p, each stage violates its <=1-fault budget with probability <=21p² by a pair union bound. H invocations give <=min(1,42Hp²) failure of the sufficient budget conditions. This is a conservative finite-run encoded-error bound, not an unlimited threshold or protection against correlated/common-mode semantic mistakes. Single final noisy scalar is unprotected. No experiment is needed to re-show this count.
+
+## 2. Output repair cannot reconstruct a distinction absent from its input
+
+Let s and v be two possible true incumbent input values with allowed corrupted-input sets X_s and X_v. Suppose F(s) and F(v) require disjoint accepted output sets A_F(s), A_F(v). If X_s intersects X_v, choose h in the intersection. Every downstream U/R pipeline receiving only h and the same other information has the same conditional output distribution in these two worlds. It cannot guarantee membership in both disjoint accepted sets. In particular if success probabilities are p_s,p_v at that h, p_s+p_v<=1. At least one is <=1/2. Randomness, more output neurons and a larger output code do not fix the information collision.
+
+For Hamming balls of radius t, d(c_s,c_v)<=2t is exactly the condition that an input collision exists. Example: codes00 and01, t=1, both admit h=00. A NOT-like operation that must distinguish the two true values cannot acquire a robust output simply by appending downstream channels. The upstream encoding, fault assumption, additional observation or task distinction must change. The same argument applies to product input neighborhoods for multi-input U.
+
+This is independent of whether a training search can find a U/R network. A restorer-only conflict after some chosen U may be repaired by changing U, but an indistinguishable incoming observation is a harder obstruction. Distinguish a sampled failure from a certified universal conflict.
+
+## 3. A precise operation-sensitive alternative to fixed global guard radius
+
+Supervisor proposed from actual v2: for each true output value y, compute or bound Y_y, the union of all pre-restoration U outputs from allowed input tuples mapping to y and declared local faults. Direct Y_y intersections are actual restoration conflicts. A conservative ball approximation needs certified upper guard q_y; a finite sampled maximum is only a lower witness of the required radius. Root agrees and adds the upstream obstruction above.
+
+For input values s,v at a particular interface, define the task-scoped confusion relation G_F by connecting them if some allowed common continuation/context maps them to distinct required final outputs. Robust encoding needs disjoint corruption neighborhoods at least on edges of this graph. Nonedges need not automatically be preserved as full raw values, but only if the declared task/continuation scope really permits their merger. Current v2 instead preserves every full value, so its separation graph is generic. Obtaining/refining G_F from actual operations can make representation demands causally operation-dependent. It also requires real information/verification about continuations and accounting for the old state retained during changes.
+
+Finite example: raw values (u,v) in {0,1}². For an interface used only to report u, required cross-class distinctions connect differing u; a bit u separates them. For a parity-only readout, required distinctions instead connect differing u XOR v; parity is the useful bit. This truly changes the selected bit. But computing this known finite quotient followed by ordinary error coding is a concrete conventional rival, not evidence for a new learning principle. If a new continuation later distinguishes previously merged values, a new bit cannot recover old discarded information without retaining/reobserving the original state. Paid replay from a retained input/reference route can supply it; a fresh label alone cannot recreate an unknown past value.
+
+The constructive remaining question is whether a learning system can acquire/refine a useful operation-sensitive reliable representation with meaningful resources beyond ordinary state abstraction plus coding/noise-aware distillation. Naming a quotient or an operation-dependent guard does not answer it. No experiment admitted from this note; do not retest the Boolean witness merely to generate numbers.
+
+## 4. Score estimator qualification
+
+The stochastic circuit score rule is valid for its finite expected loss if the pre-fault Bernoulli decisions and actual parent inputs are recorded, fault probabilities are parameter-independent, and the baseline is independent of the relevant current decisions conditional on its information (for example a pretrial constant, or causal per-node baselines). A fitted baseline depending arbitrarily on the same completed trajectory can bias the naive single-baseline formula. This qualification does not establish that deterministic argmax/rounded gates satisfy a worst-case contract, or that the discrete circuit search is efficient. Costs directly depending on continuous parameters require their own derivative if optimized rather than merely charged at acceptance.

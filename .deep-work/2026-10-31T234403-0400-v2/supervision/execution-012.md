@@ -1,0 +1,7 @@
+# Review012 implemented — finite frontier, topology priority unchanged
+
+Root accepts REFRAME on the specific interface factorization, not on model agreement: each task reads only the measured permutation product; A/C already generate S4; certified epsilon learning preserves that exact product map. The actual run establishes autonomous library/program acquisition and retained mutable realization in scope, but supplies no improved later capability acquisition or advantage over the explicit conventional constructor. Source/raw/certificate support that boundary.
+
+Action implemented: preserve all frozen driver/certificate/raw outputs; make the heldout overlap, tiny J decrease and conventional/FSM correspondence explicit in `final/topology-priority/result.md`; close further validation allocation for this apparatus without tuning/reruns. Update the single NOW and current run checkpoint with the actual result and unresolved mechanism, while preserving earlier reports. No new successor rule or unfinished predecessor review is invented.
+
+Topology remains MAIN by explicit user priority; online-organization remains PARK with no new budget unless the user explicitly reauthorizes it. This closes the finite admitted validation question, not the V2 campaign or Fundamental Question. No background research was scheduled; the saved checkpoint is the recoverable state. Ordinary future constructive choices within the authorized topology scope remain possible when they provide a real new causal question.

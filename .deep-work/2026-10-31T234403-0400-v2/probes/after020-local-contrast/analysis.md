@@ -1,0 +1,15 @@
+# First actual learning diagnostic: formation works here; control acquisition remains unresolved
+
+ACTUAL MEASUREMENT. One frozen exploratory process, 193 raw rows, 2048 parameter updates, nine finite-difference checks passed; no old experiment rerun or settings changed after outcomes. See execution-receipt.json and raw JSONL.
+
+The matched A=.5 runs end at endpoint half-MSE .5 (endpoint only), .4999997539 (+prefix), and 3.6609871e-16 (+prefix+mean local carry). The latter learns A=1.3888860839, beta=.3150539425, v=1.2366219426 and holds substantial separation at longer tested delays. The mean carry rule succeeded; the initial fixed-contracting gradient dilution bound does not predict its nonlinear learning trajectory. No need to replace averaging merely because that bound exists.
+
+The strong ordinary endpoint control, starting A=1.2, also succeeds (1.4622671e-25; final A=1.4205644314). Thus this diagnostic identifies a useful conditional learning signal from one initially contracting checkpoint, not a representational or general learning advantage over conventional recurrent models. The candidate is an ordinary recurrent scalar plus a witness-derived auxiliary learning rule, with known persistent-state scaffolds.
+
+All models preserve the original sign in the noiseless finite-precision delays actually tested. Tiny terminal amplitudes and half-MSE near .5 are not proof of total information loss or failed noiseless classification. A declared observation-noise/precision model would be needed for robust information-loss claims. No noise trial was run here.
+
+Both successful persistent models keep the FIRST cue after a later opposite write. For the carry model the actual positive prewrite state is .8086545600; an opposite pulse yields .6685270341 and returns to the positive basin. This is a concrete control gap, but single-cue training data cannot identify first-cue versus last-write task semantics. These final no-update evaluations do not show failure on a previously specified overwrite-learning task. New task feedback is required before training that distinction.
+
+Costs are in summary.json, with optimization, audit, mining and held-out evaluation separated. The carry arm uses 131072 optimization mode transitions versus 66560 for each other arm, plus detached local derivatives; equal update counts are not equal compute. Each arm reuses the same two labels 1024 times. Mining retains 130 raw input tokens and costs 130 incumbent transitions plus suffix/state comparisons; Python object estimate7438 bytes. Peak native macOS RSS19038208 bytes is not ideal storage, FLOPs or energy.
+
+DEVELOPMENT DECISION: continue the same protected hypothesis to learn controllable writes from newly specified actual endpoint feedback. Preserve v1/code/raw unchanged. Replace unsupported exact-state conventions only by an explicit new rule, and compare actual task replay against local learning and ordinary controls. The scientific gap is operation/control formation, not rescuing a loss score. Clear/reset, multi-mode composition and general transfer remain OPEN.

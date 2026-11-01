@@ -1,0 +1,13 @@
+# Actual topology return milestone — constructive scientific review, not strategic selection
+
+USER_LOCKED_TOPOLOGY / human-only MAIN change; PS standalone USER-PAUSE, online USER-PARK. Actual priority acknowledgement is saved. Same campaign, no new scientific experiment after the human return. Deployment checks do not certify research effectiveness.
+
+Central unverified hypothesis: during useful continuous SHARED parameter changes, topology can lower TOTAL old-capability retention/new-acquisition cost or improve that resource tradeoff. Existing constructor correspondence does not settle this unmeasured question. Read actual new mechanism before judging; first mark DIRECT/PARTIAL/OUT_OF_SCOPE.
+
+Root actual new construction/derivation: candidates/topology-return/candidate.md (fixed idle code + shared learned execution; semantic and finite-execution certificates separated; Duhamel operator bound, compositional error/migration accounting; rotating-spin exact finite-time excitation and amplitude/latency cost calculation). Root personally read original Karzig2015 Eq12/15–18; sources/topology-return/root-reading.md states exact body and unread limits. This is preliminary construction/analytic reconstruction, not a new optimizer or quantum-advantage claim.
+
+P/K assigned SAME core support, not independent unrelated MAIN: construct-p.md exact shared chart with physically observed analog ports (PARTIAL cost hypothesis) and construct-k.md phase-pump shared-controller finite-time certificate (forthcoming at packet creation). When saved, read actual documents rather than infer completion from these descriptions. No unperformed simulation, trained weights or new experimental results are evidence.
+
+Please help resolve the most consequential next in-scope uncertainty: does a proposed protected parameter family permit meaningful adaptation with finite execution/error/certificate cost, and can a small future diagnostic observe that tradeoff? Preserve baseline costs and old obstructions, but a baseline win or finished novelty law is not an admission condition. Distinguish ordinary implementation correspondence from independent competing retention strategies. Help construct a better certificate if a crude bound obscures actual safe learning. No per-line audits or broad prior-art sweep needed.
+
+Save actual review023 only after enough actual construct/derivation read; scope claim/version/allocation separately. Allowed decisions CONTINUE_TOPOLOGY / REVISE_TEST / REFRAME_WITHIN_TOPOLOGY / CLOSE_VERSION / PAUSE_BLOCKED. Any MAIN-change recommendation remains unapplied pending explicit human command. Historical reviews011–022 remain unchanged. Scientific review should not block ordinary derivation while waiting for it.

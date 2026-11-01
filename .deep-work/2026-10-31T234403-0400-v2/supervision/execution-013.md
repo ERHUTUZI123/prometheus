@@ -1,0 +1,7 @@
+# Execution of review013
+
+Root read actual review013 in full. Accept REFRAME for concrete A/B versions; not MAIN FINISH. Preserve constructive v0, source-informed repairs, reading, negative evidence and exact matched rivals. No A/B training/parity/rotation process admitted or run. Topology remains MAIN OPEN; online PARK unchanged.
+
+Actual different construction was started in parallel before review finalized and saved afterward in candidates/after013-dissipative/candidate-v0.md. It changes reversible path transport to learned constraint-energy relaxation; the move is a foundational reserve evaluation rather than a relabeling of EBM as topology or a unilateral replacement of user priorities. Read full v0. The initial generic factor learner is close to ordinary EBMs; constructor is making a serious factor-creation repair, not running a benchmark to claim novelty.
+
+Root proposes one necessary-submechanism falsifier: can exact individually correct relations compose into a unique Boolean answer yet the proposed relaxation possess a stable wrong attractor? This directly challenges reusable dissipative execution even under perfect factor acquisition; it does not test successful acquisition or prove every energy method impossible. Same factors to conventional GF2 elimination. Full analytic construction, scale and one-process cap go in packet014/contract before execution. No missing record reconstructed, no old experiment rerun.
