@@ -1,0 +1,46 @@
+{
+  "status": "frozen_before_baseline_supplement",
+  "MAIN": "TOPOLOGY human_only",
+  "primary_baseline": "Transformer",
+  "M0": "NOT_PASSED",
+  "M3": "ultimate",
+  "purpose": "Check whether priorTransformerdeficitissensitive to learningrate; completeAdapter andcredibleprogramcomparison instead ofusingweakidentitybiasedlegacyprogram",
+  "unchanged_primary_mechanism": "native-v6; no new topology candidate orbenchmarkchange",
+  "jobs": [
+    {
+      "models": "transformer,replay",
+      "lr": 0.003
+    },
+    {
+      "models": "adapter",
+      "lr": 0.003
+    },
+    {
+      "models": "program",
+      "lr": 0.01,
+      "program_v2": true,
+      "hard_assignment": "rowargmax"
+    }
+  ],
+  "fixed": {
+    "scale": 8,
+    "seed": 0,
+    "steps_per_stage": 800,
+    "stages": 3,
+    "batch": 64,
+    "same_data_and_schedules": true
+  },
+  "fairness": "all feedbackterminalonly; program16statesfromstart withchargedtaskresiduals/freezing; Transformerprimary; tune/developmentcostsretained; no superiority inferredfromoneLR",
+  "limits": {
+    "external_seconds_per_job": 900,
+    "internal_seconds_per_job": 850,
+    "gpu_fraction": 0.3,
+    "fileMiB": 100
+  },
+  "source_sha256": {
+    "train.py": "a8b7d5a9650c72e3aff1fd9b779c1f28e93ae655ed29716c92491bfbbd66eee6",
+    "program_baseline_v2.py": "d14645a0a5af10c4fb83b830511be1e96a983a64705ba1e4ff5434336ac5d756",
+    "torch_baselines.py": "c22f59c4dd68385910f7df7f5c8be5d0268a479e6d5820ef6a636ce8efbde176",
+    "tasks.py": "dbca2935925f713e2f5716d8ac5faf4892464918eed6b2e0a66b45680ec5d9bc"
+  }
+}

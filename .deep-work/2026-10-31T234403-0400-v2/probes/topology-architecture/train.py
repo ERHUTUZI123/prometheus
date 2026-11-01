@@ -162,6 +162,11 @@ def make_model(name, args, restored_latent_factor=None):
             head.load_state_dict(base.head.state_dict())
         return model
     if name == "program":
+        if args.program_v2:
+            from program_baseline_v2 import ProgramLearner as DirectProgramLearner
+            return DirectProgramLearner(args.scale, vocab=7, n_tasks=3,
+                                        latent_factor=2, modular=not args.program_plastic,
+                                        hard_assignment=args.program_hard_assignment)
         return ProgramLearner(args.scale, vocab=7, n_tasks=3,
                               latent_factor=2, modular=True)
     if name in ("topo", "topo_off", "constraint"):
@@ -535,6 +540,9 @@ def arguments():
     parser.add_argument('--router-mi', type=float, default=0.)
     parser.add_argument('--native-promotion', action='store_true')
     parser.add_argument('--workspace-refinement', action='store_true')
+    parser.add_argument('--program-v2', action='store_true')
+    parser.add_argument('--program-plastic', action='store_true')
+    parser.add_argument('--program-hard-assignment', choices=('rowargmax','bijective'), default='rowargmax')
     parser.add_argument('--start-stage', type=int, choices=(0,1,2), default=0)
     parser.add_argument('--resume-from', type=Path)
     parser.add_argument("--latent-factor", type=int, choices=(1, 2), default=1)
