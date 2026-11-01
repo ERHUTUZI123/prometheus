@@ -1,0 +1,180 @@
+{
+  "protocol_sha256": "b9e66f5ed592e90c923c211af50e83a7d18383c8e9be6035103b6ec4c1880a99",
+  "code_sha256": "d52e317a548e88f10ee9cd29933615c95894438d5846984bd5873498e52a3d26",
+  "runtime_seconds": 0.0908267920021899,
+  "boolean_semantic_classes_enumerated": 90,
+  "formula_generation_execution_units": {
+    "formula_candidates_generated": 318,
+    "truth_rows_evaluated": 5088,
+    "boolean_ast_nodes": 22336
+  },
+  "selection_accounting": {
+    "representation_pairs_tried": 630,
+    "roundtrip_cases_executed": 3807,
+    "representation_pairs_passing_raw_roundtrip": 40,
+    "task_programs_tried": 396,
+    "training_cases_executed": 412
+  },
+  "construction_execution_units": {
+    "source_symbol_reads": 9652,
+    "record_scalar_writes": 20324,
+    "record_scalar_reads": 17076,
+    "integer_ast_nodes": 20468,
+    "raw_output_writes": 7772,
+    "atom_evaluations": 23132,
+    "boolean_ast_nodes": 20358
+  },
+  "selected": {
+    "boundary": "(not a0)",
+    "atom_dictionary": [
+      "current == previous raw symbol",
+      "global index is even",
+      "current segment length is even",
+      "current == first symbol of current segment"
+    ],
+    "writer": "n",
+    "task_field_programs": {
+      "increment": [
+        1,
+        1
+      ],
+      "double": [
+        2,
+        0
+      ]
+    },
+    "ast_score_given_scaffold": 13
+  },
+  "all_winning_candidates": [
+    {
+      "boundary": "(not a0)",
+      "writer": "n",
+      "ast_score": 13
+    },
+    {
+      "boundary": "(not a3)",
+      "writer": "n",
+      "ast_score": 13
+    },
+    {
+      "boundary": "(not (and a0 a3))",
+      "writer": "n",
+      "ast_score": 15
+    },
+    {
+      "boundary": "(not (or a0 a3))",
+      "writer": "n",
+      "ast_score": 15
+    }
+  ],
+  "post_selection_checks": {
+    "GetPut": 1097,
+    "heldout_raw_task_outputs": 2194,
+    "PutGet": 2194,
+    "PutPut_lossless_special_case": 1097
+  },
+  "failures": [],
+  "heldout_case_count": 1097,
+  "semantic_check_execution_units": {
+    "source_symbol_reads": 28563,
+    "record_scalar_writes": 76776,
+    "record_scalar_reads": 103074,
+    "integer_ast_nodes": 113958,
+    "raw_output_writes": 63171,
+    "atom_evaluations": 101112,
+    "boolean_ast_nodes": 50556
+  },
+  "learned_view_execution_units": {
+    "source_symbol_reads": 12090,
+    "record_scalar_writes": 38388,
+    "record_scalar_reads": 38388,
+    "integer_ast_nodes": 52596,
+    "raw_output_writes": 22518,
+    "atom_evaluations": 39600,
+    "boolean_ast_nodes": 19800
+  },
+  "fused_raw_execution_units": {
+    "source_symbol_reads": 17040,
+    "raw_output_writes": 22518,
+    "scalar_comparisons": 4950
+  },
+  "adversarial_examples": {
+    "whole_input_as_one_record": {
+      "source": "ab",
+      "view": [
+        [
+          "a",
+          2
+        ]
+      ],
+      "output": "aa"
+    },
+    "wrong_decoder": {
+      "source": "a",
+      "view": [
+        [
+          "a",
+          1
+        ]
+      ],
+      "output": "aa"
+    },
+    "Get_only_identity_parser_increment": {
+      "input": "abbc",
+      "output": "aabbbbcc",
+      "expected": "aabbbcc"
+    },
+    "bag_counts_lose_order": {
+      "input": "aba",
+      "view": [
+        [
+          "a",
+          2
+        ],
+        [
+          "b",
+          1
+        ]
+      ],
+      "output": "aab"
+    },
+    "identity_merging_edit": {
+      "requested_view": [
+        [
+          "a",
+          1
+        ],
+        [
+          "a",
+          1
+        ]
+      ],
+      "raw": "aa",
+      "reparsed": [
+        [
+          "a",
+          2
+        ]
+      ],
+      "rejected": true
+    }
+  },
+  "source_reconstruction": {
+    "simon_magic_square_triples": 8,
+    "verified_equal": true
+  },
+  "frozen_v0_typo": {
+    "input": "aabccc",
+    "task": "double every count",
+    "frozen_output": "aaaabbbbbb",
+    "correct_output": "aaaabbcccccc"
+  },
+  "limits": [
+    "two-field fold/repeat-decode scaffold is supplied",
+    "full AST schema discovery unimplemented",
+    "neural proposal learning unimplemented",
+    "no task-discovery baseline was run",
+    "per-operation total execution is worse than fused direct raw algorithms in this accounting",
+    "PutPut special case is structurally guaranteed because decoder ignores the old source; not independent evidence for general lenses"
+  ]
+}

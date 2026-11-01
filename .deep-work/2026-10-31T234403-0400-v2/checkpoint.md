@@ -1,3 +1,21 @@
+# CORE M AXIS — human milestone directive applied
+
+Canonical full milestone text: water/now.md, Core M Axis. M0 active NOT PASSED: actual multi-stage new executable operation acquisition, topology-causal old-operation/task retention, reproducible important freedom/growth/full-cost advantage with strong fair baselines. M1 scaling, M2 transferable architecture, M3 paradigm evidence are later milestones, NOT achieved or parallel work quotas/timetable. Only human changes long-term goals/MAIN. MAINTOPOLOGY humanlocked, PSUSERPAUSE,onlineUSERPARK unchanged. Prior speed/control/calibration proofs remain supporting evidence, not M0 passage. Newest criteria override narrower speed-only scheduling below. Existing real children receive canonical section directly and must acknowledge.
+
+# ACTIVE same V2 — topology continual learning under PAID calibration
+
+Latest instruction inputs/topology-continual-directive.md; recovery verifies all16 topology-return scientific hashes. MAIN=TOPOLOGY USER_LOCKED/HUMAN_ONLY, PS standalone USER-PAUSE, Online USER-PARK. Current one-mechanism work: multiple useful shared controller updates with actual Born-outcome calibration and equal-information direct robust/frozen/modular comparators. P/K/supervisor native contexts resumed, disjoint new topology-continual files; no claim of fresh blind contexts. No new experiment/code/training yet, no model/resource/constitution change. Old Hamiltonian/derivations/reviews readonly. Deep technical construction first; supervisor at consequential nodes, not per-line novelty gate. Older checkpoints retained below.
+
+# RECOVER HERE — topology human-locked, after actual review024
+
+MAIN=TOPOLOGY; PRIORITY=USER_LOCKED; MAIN_CHANGE=HUMAN_ONLY. Only later explicit human instruction may replace/PARK/transfer MAIN. Current report: final/topology-return/result.md. Read inputs/topology-return-{directive.md,deployment.json,science-receipt.json}; actual reviews023–024 and execution receipts. Online USER-PARK; Persistent State standalone USER-PAUSED, all results/code saved, v2 never executed. Old FINISH/PIVOT/main-background messages below are historical and cannot override the lock.
+
+ACTUAL SCIENCE: deep constructive passes yielded useful shared plasticity, exact matched-retiming frontier, direction-changing positive mobility with uniform residual-tube protection, six-mode quantum shared control with finite-time/control bounds, and an explicit paid binary quantum calibration protocol. No new simulation, training, shots or hardware evidence after return. Strong retiming/scalar/direct-preconditioner/robust-control competitors and all old counterexamples retained. Comparative TOTAL-cost advantage remains OPEN. Do not rerun proofs as demos or revive independent PS/online work.
+
+NEXT consequential in-scope question: under a justified obtainable response model, does useful ongoing shared control learning save more lifecycle work than calibration/old-performance maintenance/control costs relative to same-information direct/frozen strategies? Calibration-observation.md provides a conditional fixed-gain protocol; nonlinear/drifting hardware validity is not supplied by topology. Root/agents may develop this question normally inside existing authorization, no per-line approval. If genuinely no informative in-scope action exists, save the blocker for human strategic decision.
+
+Actual native inventory at this checkpoint: all three children completed; no experimental/background process. This is an execution checkpoint, not MAIN completion, strategic PARK, or a promise of host-independent continuation. Provider-effective mode unknown. Historical checkpoints below preserved.
+
 # ACTIVE HUMAN LOCK — TOPOLOGY MAIN, same V2
 
 READ THIS BEFORE OLD CHECKPOINTS: MAIN=TOPOLOGY; PRIORITY=USER_LOCKED; MAIN_CHANGE=HUMAN_ONLY. Only a later explicit human command may replace/PARK/transfer MAIN. Old PIVOT/FINISH/background-only-topology scheduling below is historical. Online USER-PARK. Persistent State safesaved and standalone USER-PAUSED: inputs/persistent-state-paused.json; v2 code saved, not root-inspected or executed. No experimental process active at recovery; old experiments not rerun.
