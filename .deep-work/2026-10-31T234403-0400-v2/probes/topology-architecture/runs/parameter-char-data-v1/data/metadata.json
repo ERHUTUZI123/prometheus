@@ -1,0 +1,100 @@
+{
+  "schema": "sampled-char-context-terminal-v1",
+  "development_only": true,
+  "n_states": 100,
+  "n_tokens": 100,
+  "max_length": 128,
+  "stages": [
+    {
+      "stage": 0,
+      "files": {
+        "train": {
+          "file": "stage0-train.npz",
+          "sha256": "d2def91f4dcf62b2a0c76006a02a6817b776396511e87780fb30325e5d5b9169",
+          "positions_file": "stage0-train-positions.npy",
+          "positions_sha256": "3bca4b7b49d360e5fadd0473bc9a209bba8d5640f64fce92608856d650d48e02",
+          "source_split": "train",
+          "rows": 8192,
+          "context_length": 32,
+          "target_position_min": 597,
+          "target_position_max": 4998857,
+          "unknown_context_tokens": 0,
+          "unknown_targets": 0
+        },
+        "valid": {
+          "file": "stage0-valid.npz",
+          "sha256": "c36d66496868db86dd5421eb8795615b4d8114b864e755d0097ac2c8166bcd30",
+          "positions_file": "stage0-valid-positions.npy",
+          "positions_sha256": "924357bab9c342ac59f7f2ea6c1141dbdcd6ea062906ce5c8272830f8f677bb5",
+          "source_split": "valid",
+          "rows": 512,
+          "context_length": 32,
+          "target_position_min": 603,
+          "target_position_max": 277435,
+          "unknown_context_tokens": 0,
+          "unknown_targets": 0
+        },
+        "test_iid": {
+          "file": "stage0-test_iid.npz",
+          "sha256": "8bfecc151ca99e5c0a43202d019d3365456fecf7df296b14d0543d465fefbef9",
+          "positions_file": "stage0-test_iid-positions.npy",
+          "positions_sha256": "8fe1be9b8d2287e1f16d51f1805adc5a9b4bf4e690abf16956ce07d7c398d8e1",
+          "source_split": "test",
+          "rows": 512,
+          "context_length": 32,
+          "target_position_min": 297,
+          "target_position_max": 277653,
+          "unknown_context_tokens": 0,
+          "unknown_targets": 0
+        },
+        "test_long": {
+          "file": "stage0-test_long.npz",
+          "sha256": "86850d6ff6822ff9ffd5a58af14a84bb21c9dcab0430351accf67783535bd88f",
+          "positions_file": "stage0-test_long-positions.npy",
+          "positions_sha256": "8fe1be9b8d2287e1f16d51f1805adc5a9b4bf4e690abf16956ce07d7c398d8e1",
+          "source_split": "test",
+          "rows": 512,
+          "context_length": 128,
+          "target_position_min": 297,
+          "target_position_max": 277653,
+          "unknown_context_tokens": 0,
+          "unknown_targets": 0
+        },
+        "test_unseen": {
+          "file": "stage0-test_unseen.npz",
+          "sha256": "806b21c8d78dd090657bc4d5bb5d0bd4281e81f83fd41b5a4393e33722df8f65",
+          "positions_file": "stage0-test_unseen-positions.npy",
+          "positions_sha256": "8fe1be9b8d2287e1f16d51f1805adc5a9b4bf4e690abf16956ce07d7c398d8e1",
+          "source_split": "test",
+          "rows": 512,
+          "context_length": 64,
+          "target_position_min": 297,
+          "target_position_max": 277653,
+          "unknown_context_tokens": 0,
+          "unknown_targets": 0
+        }
+      }
+    }
+  ],
+  "seed": 0,
+  "numpy_version": "2.5.2",
+  "source_prepared": "/opt/prometheus-dev-data/prepared/shakespeare",
+  "source_manifest_sha256": "138ede6b0eee0f6305653f2bf1c1c864df196a687fc142c93fb26c4af3ec2232",
+  "source_files_sha256": {
+    "train.npy": "985577e79edaa6f685033e7dcb993a04e76eafa148d7b698f5b07b7af2598a3e",
+    "valid.npy": "61f1cc39c3163a9daf68a9d3c76863c6499ad3eadee5dc60cc2e020000103125",
+    "test.npy": "82390fc01fabec14838194fc2e546ceb7f8ce6eae29e27b1e530d09ba43578df",
+    "vocab.json": "228ba231f847bc35a7360a4f4a1a3ac50941f92ffd934217b0535046b3e32543"
+  },
+  "raw_corpus_sha256": "eb61e33cab23dbe712ad57091ded6c7292ba91ac3bb2764f51a3223ec0068fe5",
+  "vocabulary_policy": "source TRAIN-only characters; UNK0",
+  "input_contract": "initial=0 is an uninformative shared initializer; prefix is all available input; target is its following character",
+  "source_position_contract": "target at p; input ids[p-context:p], all inside own original split",
+  "test_pairing": "same512 original TEST target positions across32/64/128; dependent paired measurements",
+  "test_unseen_name_scope": "context64 untrained length, not a semantic novelty or separate corpus claim",
+  "metric": "sampled conditional next-character NLL and exp(meanNLL); NOT full-corpus/word PPL",
+  "target_count_per_example": 1,
+  "training_information": "no hidden state, route, taskID or future token in input",
+  "wall_seconds": 0.1809541379334405,
+  "source_sha256": "d9e9ae7b6bc2d7b64301a9023ac6fc0283c2e4a6b8f6e102b3aff8cb6b8415bc"
+}

@@ -1,0 +1,762 @@
+{
+  "accuracy_not_an_implementation_validity_gate": true,
+  "arm": "transformer",
+  "formal_Primary": false,
+  "frozen_test_reports": [
+    {
+      "all_seen_test_metrics": {
+        "0": {
+          "test_iid": {
+            "measurement_cost": {
+              "actual_forward_examples": 512,
+              "cpu_seconds": 0.017001036999999997,
+              "forward_MAC_proxy": 743440384,
+              "wall_seconds": 0.017186023062095046
+            },
+            "native": {
+              "accuracy": 0.609375,
+              "forward_MAC_proxy": 743440384,
+              "rows": 512,
+              "same_neural_interface": true,
+              "terminal_NLL": 0.9710025414824486
+            },
+            "soft": {
+              "accuracy": 0.609375,
+              "forward_MAC_proxy": 743440384,
+              "rows": 512,
+              "terminal_NLL": 0.9710025414824486
+            }
+          },
+          "test_long": {
+            "measurement_cost": {
+              "actual_forward_examples": 512,
+              "cpu_seconds": 0.018001208000001157,
+              "forward_MAC_proxy": 3008364544,
+              "wall_seconds": 0.018116654944606125
+            },
+            "native": {
+              "accuracy": 0.150390625,
+              "forward_MAC_proxy": 3008364544,
+              "rows": 512,
+              "same_neural_interface": true,
+              "terminal_NLL": 2.3629423677921295
+            },
+            "soft": {
+              "accuracy": 0.150390625,
+              "forward_MAC_proxy": 3008364544,
+              "rows": 512,
+              "terminal_NLL": 2.3629423677921295
+            }
+          },
+          "test_unseen": {
+            "measurement_cost": {
+              "actual_forward_examples": 512,
+              "cpu_seconds": 0.018002019000000757,
+              "forward_MAC_proxy": 1085538304,
+              "wall_seconds": 0.01776378706563264
+            },
+            "native": {
+              "accuracy": 0.193359375,
+              "forward_MAC_proxy": 1085538304,
+              "rows": 512,
+              "same_neural_interface": true,
+              "terminal_NLL": 2.0508954524993896
+            },
+            "soft": {
+              "accuracy": 0.193359375,
+              "forward_MAC_proxy": 1085538304,
+              "rows": 512,
+              "terminal_NLL": 2.0508954524993896
+            }
+          }
+        }
+      },
+      "frozen_checkpoint": "transformer-stage0-step600.pt",
+      "inference": {
+        "soft": {
+          "CUDA_stream_seconds_p50": 0.0009055359959602356,
+          "batch_size": 64,
+          "examples_per_wall_second": 59564.72153345655,
+          "proxy": {
+            "active_steps": 498,
+            "architecture": "ordinary3layer4head64Transformer, sinusoidal positions, prefixCLS, no taskID",
+            "proxy_forward_macs": 92930048,
+            "proxy_scope": "attention projections,QK/AV,2dFFN,readout dense MACs; padded attention work included; excludes nonlinearities,norm,backward and workspace"
+          },
+          "timed_forwards": 20,
+          "timing_scope": "actual process while other jobs may overlap; CUDA event elapsed is not GPU-busy time",
+          "wall_latency_p50": 0.0010744614992290735,
+          "wall_latency_p95": 0.0014623023685999227,
+          "warmups": 3,
+          "word_length_max": 12
+        }
+      },
+      "input_receipts": [
+        {
+          "array_bytes": 208896,
+          "array_sha256": "6c06208abd7e46ef35ae833533cbd69acaaf01059a83b3dbde8c10fca07ed41e",
+          "file_sha256": "6085edd321c5c43e3b2667d8dfa734bffb1b669592efe28b1370268ab4a3eeb5",
+          "observed_length_counts": {
+            "10": 51,
+            "11": 53,
+            "12": 55,
+            "2": 37,
+            "3": 42,
+            "4": 51,
+            "5": 46,
+            "6": 41,
+            "7": 35,
+            "8": 39,
+            "9": 62
+          },
+          "padded_length": 48,
+          "path": "/opt/prometheus-parameter-context-n8-seed0-transformer-stage1-v1-inputs/data/stage0-test_iid.npz",
+          "rows": 512,
+          "split": "test_iid",
+          "stage": 0
+        },
+        {
+          "array_bytes": 208896,
+          "array_sha256": "8d3792c25e8627800da6506125e90e517fb0679ab62858ca69fa46630f676dab",
+          "file_sha256": "0cd26f7027d0063f897947b811ac409be4d115c23fbbb153d09d360c3725023e",
+          "observed_length_counts": {
+            "24": 24,
+            "25": 19,
+            "26": 26,
+            "27": 13,
+            "28": 20,
+            "29": 20,
+            "30": 20,
+            "31": 19,
+            "32": 18,
+            "33": 16,
+            "34": 22,
+            "35": 15,
+            "36": 19,
+            "37": 21,
+            "38": 25,
+            "39": 18,
+            "40": 19,
+            "41": 22,
+            "42": 18,
+            "43": 25,
+            "44": 25,
+            "45": 31,
+            "46": 23,
+            "47": 15,
+            "48": 19
+          },
+          "padded_length": 48,
+          "path": "/opt/prometheus-parameter-context-n8-seed0-transformer-stage1-v1-inputs/data/stage0-test_long.npz",
+          "rows": 512,
+          "split": "test_long",
+          "stage": 0
+        },
+        {
+          "array_bytes": 208896,
+          "array_sha256": "a622f2aee8762b5c37ac057546f6eb72aafa498113bdf9283374fb4e0794794f",
+          "file_sha256": "7901b9116cb34651fa17b77ac68e336f8d4da0dbd26cb7bfe5c2b05c65258933",
+          "observed_length_counts": {
+            "13": 88,
+            "14": 90,
+            "15": 96,
+            "16": 70,
+            "17": 88,
+            "18": 80
+          },
+          "padded_length": 48,
+          "path": "/opt/prometheus-parameter-context-n8-seed0-transformer-stage1-v1-inputs/data/stage0-test_unseen.npz",
+          "rows": 512,
+          "split": "test_unseen",
+          "stage": 0
+        }
+      ],
+      "learned_through_stage": 0,
+      "no_test_based_selection": true,
+      "post_training_measurement_wall_seconds": 0.11685103492345661,
+      "resources": {
+        "cpu_peak_RSS_bytes": 1372712960,
+        "cuda_allocated_bytes": 19996672,
+        "cuda_peak_allocated_bytes": 30604288,
+        "cuda_peak_reserved_bytes": 54525952,
+        "cuda_reserved_bytes": 54525952,
+        "frozen_parameters": 102600,
+        "memory_scope": "actual process/allocator counters; peak is cumulative and includes audits; no energy claim",
+        "optimizer_tensor_bytes": 820972,
+        "parameter_bytes": 410400,
+        "parameters": 102600,
+        "registered_buffer_bytes": 12800,
+        "replay_bytes": 0,
+        "trainable_parameters": 0
+      },
+      "trace_receipt": null
+    }
+  ],
+  "no_claim_of_independent_novelty_or_Monodromy_benefit": true,
+  "seed": 0,
+  "source_sha256": {
+    "contextual_primitive_block.py": "27609309a78c2cfbc4be8c3404360010ef5688e4c08b597c51df4c2dd4ba8c29",
+    "train_contextual_primitives.py": "0800a67418f9d5f0202108b52ede18cd5c76b744e0dacdde83d2a896ed8b2c5b"
+  },
+  "states": 8,
+  "status": "DECLARED_DEVELOPMENT_COMPLETED",
+  "training_reports": [
+    {
+      "checkpoint": {
+        "bytes": 1317551,
+        "file": "transformer-stage0-step600.pt",
+        "sha256": "4ed089af5b65148ef83f4125e2f87b580315f56fcef991bfa227b20700a5fd56",
+        "wall_seconds": 0.01187824399676174
+      },
+      "costs": {
+        "CUDA_stream_elapsed_seconds": 5.681814113616946,
+        "SGD_updates": 600,
+        "batch_assembly_wall_seconds": 0.37369536177720875,
+        "evaluation_CPU_seconds": 1.3658745709999982,
+        "evaluation_forward_MAC_proxy": 43808923648,
+        "evaluation_forward_examples": 30464,
+        "evaluation_wall_seconds": 1.3685917400289327,
+        "old_examples_used_for_training": 0,
+        "training_CPU_seconds": 5.752119386999998,
+        "training_examples": 38400,
+        "training_forward_MAC_proxy": 55744118784,
+        "training_wall_seconds": 5.750092045171186
+      },
+      "curves": [
+        {
+          "costs": {
+            "CUDA_stream_elapsed_seconds": 0.0,
+            "SGD_updates": 0,
+            "batch_assembly_wall_seconds": 0.0,
+            "evaluation_CPU_seconds": 0.48640033800000015,
+            "evaluation_forward_MAC_proxy": 6258417664,
+            "evaluation_forward_examples": 4352,
+            "evaluation_wall_seconds": 0.49032793403603137,
+            "old_examples_used_for_training": 0,
+            "training_CPU_seconds": 0.0,
+            "training_examples": 0,
+            "training_forward_MAC_proxy": 0,
+            "training_wall_seconds": 0.0
+          },
+          "metrics": {
+            "0": {
+              "train": {
+                "native": {
+                  "accuracy": 0.109619140625,
+                  "forward_MAC_proxy": 5886697472,
+                  "rows": 4096,
+                  "same_neural_interface": true,
+                  "terminal_NLL": 2.4002087973058224
+                },
+                "soft": {
+                  "accuracy": 0.109619140625,
+                  "forward_MAC_proxy": 5886697472,
+                  "rows": 4096,
+                  "terminal_NLL": 2.4002087973058224
+                }
+              },
+              "valid": {
+                "native": {
+                  "accuracy": 0.08203125,
+                  "forward_MAC_proxy": 371720192,
+                  "rows": 256,
+                  "same_neural_interface": true,
+                  "terminal_NLL": 2.4920390248298645
+                },
+                "soft": {
+                  "accuracy": 0.08203125,
+                  "forward_MAC_proxy": 371720192,
+                  "rows": 256,
+                  "terminal_NLL": 2.4920390248298645
+                }
+              }
+            }
+          },
+          "resources": {
+            "cpu_peak_RSS_bytes": 1199697920,
+            "cuda_allocated_bytes": 8949760,
+            "cuda_peak_allocated_bytes": 11625472,
+            "cuda_peak_reserved_bytes": 25165824,
+            "cuda_reserved_bytes": 25165824,
+            "frozen_parameters": 0,
+            "memory_scope": "actual process/allocator counters; peak is cumulative and includes audits; no energy claim",
+            "optimizer_tensor_bytes": 0,
+            "parameter_bytes": 410400,
+            "parameters": 102600,
+            "registered_buffer_bytes": 12800,
+            "replay_bytes": 0,
+            "trainable_parameters": 102600
+          },
+          "stage": 0,
+          "step": 0
+        },
+        {
+          "costs": {
+            "CUDA_stream_elapsed_seconds": 1.0414714870452881,
+            "SGD_updates": 100,
+            "batch_assembly_wall_seconds": 0.06486804934684187,
+            "evaluation_CPU_seconds": 0.6376745189999999,
+            "evaluation_forward_MAC_proxy": 12516835328,
+            "evaluation_forward_examples": 8704,
+            "evaluation_wall_seconds": 0.6412049770588055,
+            "old_examples_used_for_training": 0,
+            "training_CPU_seconds": 1.0566670030000003,
+            "training_examples": 6400,
+            "training_forward_MAC_proxy": 9293004800,
+            "training_wall_seconds": 1.053130324697122
+          },
+          "metrics": {
+            "0": {
+              "train": {
+                "native": {
+                  "accuracy": 0.511474609375,
+                  "forward_MAC_proxy": 5886697472,
+                  "rows": 4096,
+                  "same_neural_interface": true,
+                  "terminal_NLL": 1.2065654527395964
+                },
+                "soft": {
+                  "accuracy": 0.511474609375,
+                  "forward_MAC_proxy": 5886697472,
+                  "rows": 4096,
+                  "terminal_NLL": 1.2065654527395964
+                }
+              },
+              "valid": {
+                "native": {
+                  "accuracy": 0.48046875,
+                  "forward_MAC_proxy": 371720192,
+                  "rows": 256,
+                  "same_neural_interface": true,
+                  "terminal_NLL": 1.2758165001869202
+                },
+                "soft": {
+                  "accuracy": 0.48046875,
+                  "forward_MAC_proxy": 371720192,
+                  "rows": 256,
+                  "terminal_NLL": 1.2758165001869202
+                }
+              }
+            }
+          },
+          "resources": {
+            "cpu_peak_RSS_bytes": 1356984320,
+            "cuda_allocated_bytes": 18732032,
+            "cuda_peak_allocated_bytes": 30604288,
+            "cuda_peak_reserved_bytes": 54525952,
+            "cuda_reserved_bytes": 54525952,
+            "frozen_parameters": 0,
+            "memory_scope": "actual process/allocator counters; peak is cumulative and includes audits; no energy claim",
+            "optimizer_tensor_bytes": 820972,
+            "parameter_bytes": 410400,
+            "parameters": 102600,
+            "registered_buffer_bytes": 12800,
+            "replay_bytes": 0,
+            "trainable_parameters": 102600
+          },
+          "stage": 0,
+          "step": 100
+        },
+        {
+          "costs": {
+            "CUDA_stream_elapsed_seconds": 1.968988766670228,
+            "SGD_updates": 200,
+            "batch_assembly_wall_seconds": 0.12018915207590908,
+            "evaluation_CPU_seconds": 0.7839471920000003,
+            "evaluation_forward_MAC_proxy": 18775252992,
+            "evaluation_forward_examples": 13056,
+            "evaluation_wall_seconds": 0.7870543400058523,
+            "old_examples_used_for_training": 0,
+            "training_CPU_seconds": 1.9923414470000038,
+            "training_examples": 12800,
+            "training_forward_MAC_proxy": 18579054592,
+            "training_wall_seconds": 1.9911242726957425
+          },
+          "metrics": {
+            "0": {
+              "train": {
+                "native": {
+                  "accuracy": 0.579345703125,
+                  "forward_MAC_proxy": 5886697472,
+                  "rows": 4096,
+                  "same_neural_interface": true,
+                  "terminal_NLL": 1.0570736285299063
+                },
+                "soft": {
+                  "accuracy": 0.579345703125,
+                  "forward_MAC_proxy": 5886697472,
+                  "rows": 4096,
+                  "terminal_NLL": 1.0570736285299063
+                }
+              },
+              "valid": {
+                "native": {
+                  "accuracy": 0.52734375,
+                  "forward_MAC_proxy": 371720192,
+                  "rows": 256,
+                  "same_neural_interface": true,
+                  "terminal_NLL": 1.1539864838123322
+                },
+                "soft": {
+                  "accuracy": 0.52734375,
+                  "forward_MAC_proxy": 371720192,
+                  "rows": 256,
+                  "terminal_NLL": 1.1539864838123322
+                }
+              }
+            }
+          },
+          "resources": {
+            "cpu_peak_RSS_bytes": 1358032896,
+            "cuda_allocated_bytes": 18732032,
+            "cuda_peak_allocated_bytes": 30604288,
+            "cuda_peak_reserved_bytes": 54525952,
+            "cuda_reserved_bytes": 54525952,
+            "frozen_parameters": 0,
+            "memory_scope": "actual process/allocator counters; peak is cumulative and includes audits; no energy claim",
+            "optimizer_tensor_bytes": 820972,
+            "parameter_bytes": 410400,
+            "parameters": 102600,
+            "registered_buffer_bytes": 12800,
+            "replay_bytes": 0,
+            "trainable_parameters": 102600
+          },
+          "stage": 0,
+          "step": 200
+        },
+        {
+          "costs": {
+            "CUDA_stream_elapsed_seconds": 2.8508394503593455,
+            "SGD_updates": 300,
+            "batch_assembly_wall_seconds": 0.18248325458262116,
+            "evaluation_CPU_seconds": 0.9291404659999989,
+            "evaluation_forward_MAC_proxy": 25033670656,
+            "evaluation_forward_examples": 17408,
+            "evaluation_wall_seconds": 0.9325552419759333,
+            "old_examples_used_for_training": 0,
+            "training_CPU_seconds": 2.881782848999994,
+            "training_examples": 19200,
+            "training_forward_MAC_proxy": 27872059392,
+            "training_wall_seconds": 2.8842489138478413
+          },
+          "metrics": {
+            "0": {
+              "train": {
+                "native": {
+                  "accuracy": 0.59326171875,
+                  "forward_MAC_proxy": 5886697472,
+                  "rows": 4096,
+                  "same_neural_interface": true,
+                  "terminal_NLL": 1.0244135726243258
+                },
+                "soft": {
+                  "accuracy": 0.59326171875,
+                  "forward_MAC_proxy": 5886697472,
+                  "rows": 4096,
+                  "terminal_NLL": 1.0244135726243258
+                }
+              },
+              "valid": {
+                "native": {
+                  "accuracy": 0.56640625,
+                  "forward_MAC_proxy": 371720192,
+                  "rows": 256,
+                  "same_neural_interface": true,
+                  "terminal_NLL": 1.0920071303844452
+                },
+                "soft": {
+                  "accuracy": 0.56640625,
+                  "forward_MAC_proxy": 371720192,
+                  "rows": 256,
+                  "terminal_NLL": 1.0920071303844452
+                }
+              }
+            }
+          },
+          "resources": {
+            "cpu_peak_RSS_bytes": 1358032896,
+            "cuda_allocated_bytes": 18732032,
+            "cuda_peak_allocated_bytes": 30604288,
+            "cuda_peak_reserved_bytes": 54525952,
+            "cuda_reserved_bytes": 54525952,
+            "frozen_parameters": 0,
+            "memory_scope": "actual process/allocator counters; peak is cumulative and includes audits; no energy claim",
+            "optimizer_tensor_bytes": 820972,
+            "parameter_bytes": 410400,
+            "parameters": 102600,
+            "registered_buffer_bytes": 12800,
+            "replay_bytes": 0,
+            "trainable_parameters": 102600
+          },
+          "stage": 0,
+          "step": 300
+        },
+        {
+          "costs": {
+            "CUDA_stream_elapsed_seconds": 3.9113366689682016,
+            "SGD_updates": 400,
+            "batch_assembly_wall_seconds": 0.2475984290940687,
+            "evaluation_CPU_seconds": 1.0733638549999993,
+            "evaluation_forward_MAC_proxy": 31292088320,
+            "evaluation_forward_examples": 21760,
+            "evaluation_wall_seconds": 1.076848266995512,
+            "old_examples_used_for_training": 0,
+            "training_CPU_seconds": 3.955356364999994,
+            "training_examples": 25600,
+            "training_forward_MAC_proxy": 37165064192,
+            "training_wall_seconds": 3.957552319741808
+          },
+          "metrics": {
+            "0": {
+              "train": {
+                "native": {
+                  "accuracy": 0.63134765625,
+                  "forward_MAC_proxy": 5886697472,
+                  "rows": 4096,
+                  "same_neural_interface": true,
+                  "terminal_NLL": 0.9101266390644014
+                },
+                "soft": {
+                  "accuracy": 0.63134765625,
+                  "forward_MAC_proxy": 5886697472,
+                  "rows": 4096,
+                  "terminal_NLL": 0.9101266390644014
+                }
+              },
+              "valid": {
+                "native": {
+                  "accuracy": 0.609375,
+                  "forward_MAC_proxy": 371720192,
+                  "rows": 256,
+                  "same_neural_interface": true,
+                  "terminal_NLL": 0.9635346680879593
+                },
+                "soft": {
+                  "accuracy": 0.609375,
+                  "forward_MAC_proxy": 371720192,
+                  "rows": 256,
+                  "terminal_NLL": 0.9635346680879593
+                }
+              }
+            }
+          },
+          "resources": {
+            "cpu_peak_RSS_bytes": 1358032896,
+            "cuda_allocated_bytes": 18732032,
+            "cuda_peak_allocated_bytes": 30604288,
+            "cuda_peak_reserved_bytes": 54525952,
+            "cuda_reserved_bytes": 54525952,
+            "frozen_parameters": 0,
+            "memory_scope": "actual process/allocator counters; peak is cumulative and includes audits; no energy claim",
+            "optimizer_tensor_bytes": 820972,
+            "parameter_bytes": 410400,
+            "parameters": 102600,
+            "registered_buffer_bytes": 12800,
+            "replay_bytes": 0,
+            "trainable_parameters": 102600
+          },
+          "stage": 0,
+          "step": 400
+        },
+        {
+          "costs": {
+            "CUDA_stream_elapsed_seconds": 4.748355261802675,
+            "SGD_updates": 500,
+            "batch_assembly_wall_seconds": 0.3102363583166152,
+            "evaluation_CPU_seconds": 1.2206359799999982,
+            "evaluation_forward_MAC_proxy": 37550505984,
+            "evaluation_forward_examples": 26112,
+            "evaluation_wall_seconds": 1.223418097011745,
+            "old_examples_used_for_training": 0,
+            "training_CPU_seconds": 4.803759664999997,
+            "training_examples": 32000,
+            "training_forward_MAC_proxy": 46451113984,
+            "training_wall_seconds": 4.805528739001602
+          },
+          "metrics": {
+            "0": {
+              "train": {
+                "native": {
+                  "accuracy": 0.656982421875,
+                  "forward_MAC_proxy": 5886697472,
+                  "rows": 4096,
+                  "same_neural_interface": true,
+                  "terminal_NLL": 0.8768571489490569
+                },
+                "soft": {
+                  "accuracy": 0.656982421875,
+                  "forward_MAC_proxy": 5886697472,
+                  "rows": 4096,
+                  "terminal_NLL": 0.8768571489490569
+                }
+              },
+              "valid": {
+                "native": {
+                  "accuracy": 0.640625,
+                  "forward_MAC_proxy": 371720192,
+                  "rows": 256,
+                  "same_neural_interface": true,
+                  "terminal_NLL": 0.9526021629571915
+                },
+                "soft": {
+                  "accuracy": 0.640625,
+                  "forward_MAC_proxy": 371720192,
+                  "rows": 256,
+                  "terminal_NLL": 0.9526021629571915
+                }
+              }
+            }
+          },
+          "resources": {
+            "cpu_peak_RSS_bytes": 1358032896,
+            "cuda_allocated_bytes": 18732032,
+            "cuda_peak_allocated_bytes": 30604288,
+            "cuda_peak_reserved_bytes": 54525952,
+            "cuda_reserved_bytes": 54525952,
+            "frozen_parameters": 0,
+            "memory_scope": "actual process/allocator counters; peak is cumulative and includes audits; no energy claim",
+            "optimizer_tensor_bytes": 820972,
+            "parameter_bytes": 410400,
+            "parameters": 102600,
+            "registered_buffer_bytes": 12800,
+            "replay_bytes": 0,
+            "trainable_parameters": 102600
+          },
+          "stage": 0,
+          "step": 500
+        },
+        {
+          "costs": {
+            "CUDA_stream_elapsed_seconds": 5.681814113616946,
+            "SGD_updates": 600,
+            "batch_assembly_wall_seconds": 0.37369536177720875,
+            "evaluation_CPU_seconds": 1.3658745709999982,
+            "evaluation_forward_MAC_proxy": 43808923648,
+            "evaluation_forward_examples": 30464,
+            "evaluation_wall_seconds": 1.3685917400289327,
+            "old_examples_used_for_training": 0,
+            "training_CPU_seconds": 5.752119386999998,
+            "training_examples": 38400,
+            "training_forward_MAC_proxy": 55744118784,
+            "training_wall_seconds": 5.750092045171186
+          },
+          "metrics": {
+            "0": {
+              "train": {
+                "native": {
+                  "accuracy": 0.69384765625,
+                  "forward_MAC_proxy": 5886697472,
+                  "rows": 4096,
+                  "same_neural_interface": true,
+                  "terminal_NLL": 0.7746362998150289
+                },
+                "soft": {
+                  "accuracy": 0.69384765625,
+                  "forward_MAC_proxy": 5886697472,
+                  "rows": 4096,
+                  "terminal_NLL": 0.7746362998150289
+                }
+              },
+              "valid": {
+                "native": {
+                  "accuracy": 0.62109375,
+                  "forward_MAC_proxy": 371720192,
+                  "rows": 256,
+                  "same_neural_interface": true,
+                  "terminal_NLL": 0.9011504650115967
+                },
+                "soft": {
+                  "accuracy": 0.62109375,
+                  "forward_MAC_proxy": 371720192,
+                  "rows": 256,
+                  "terminal_NLL": 0.9011504650115967
+                }
+              }
+            }
+          },
+          "resources": {
+            "cpu_peak_RSS_bytes": 1358032896,
+            "cuda_allocated_bytes": 18732032,
+            "cuda_peak_allocated_bytes": 30604288,
+            "cuda_peak_reserved_bytes": 54525952,
+            "cuda_reserved_bytes": 54525952,
+            "frozen_parameters": 0,
+            "memory_scope": "actual process/allocator counters; peak is cumulative and includes audits; no energy claim",
+            "optimizer_tensor_bytes": 820972,
+            "parameter_bytes": 410400,
+            "parameters": 102600,
+            "registered_buffer_bytes": 12800,
+            "replay_bytes": 0,
+            "trainable_parameters": 102600
+          },
+          "stage": 0,
+          "step": 600
+        }
+      ],
+      "final_TRAIN_VALID": {
+        "0": {
+          "train": {
+            "native": {
+              "accuracy": 0.69384765625,
+              "forward_MAC_proxy": 5886697472,
+              "rows": 4096,
+              "same_neural_interface": true,
+              "terminal_NLL": 0.7746362998150289
+            },
+            "soft": {
+              "accuracy": 0.69384765625,
+              "forward_MAC_proxy": 5886697472,
+              "rows": 4096,
+              "terminal_NLL": 0.7746362998150289
+            }
+          },
+          "valid": {
+            "native": {
+              "accuracy": 0.62109375,
+              "forward_MAC_proxy": 371720192,
+              "rows": 256,
+              "same_neural_interface": true,
+              "terminal_NLL": 0.9011504650115967
+            },
+            "soft": {
+              "accuracy": 0.62109375,
+              "forward_MAC_proxy": 371720192,
+              "rows": 256,
+              "terminal_NLL": 0.9011504650115967
+            }
+          }
+        }
+      },
+      "reload": {
+        "actual_forward_equal": true,
+        "actual_model_tensors_equal": true,
+        "checked_rows": 64,
+        "maximum_difference": {
+          "soft": 0.0
+        },
+        "optimizer_tensor_bytes_before": 820972,
+        "optimizer_tensor_bytes_restored": 820972,
+        "training_rng_restored_after_neutral_factory": true,
+        "wall_seconds": 0.04431912105064839
+      },
+      "resources": {
+        "cpu_peak_RSS_bytes": 1370615808,
+        "cuda_allocated_bytes": 18732032,
+        "cuda_peak_allocated_bytes": 30604288,
+        "cuda_peak_reserved_bytes": 54525952,
+        "cuda_reserved_bytes": 54525952,
+        "frozen_parameters": 0,
+        "memory_scope": "actual process/allocator counters; peak is cumulative and includes audits; no energy claim",
+        "optimizer_tensor_bytes": 820972,
+        "parameter_bytes": 410400,
+        "parameters": 102600,
+        "registered_buffer_bytes": 12800,
+        "replay_bytes": 0,
+        "trainable_parameters": 102600
+      },
+      "stage": 0,
+      "stage_CPU_seconds": 7.952205381,
+      "stage_wall_seconds": 7.949068684014492
+    }
+  ]
+}

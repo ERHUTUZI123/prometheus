@@ -1,3 +1,13 @@
+## ACTIVE human-updated competitive architecture checkpoint — 2026-11-02T03:43:33.206950+00:00
+
+The latest HUMAN directives explicitly supersede mandatory Topology/Monodromy in Primary. Keep six TODOs, TODO3 highest: context/state/history-dependent calling, content addressing, general/continuous/noninvertible state transforms and memory. Monodromy is optional; TODO2 no longer blocks freezing. Independent original fundamental rule is not a hard requirement. Broad significant reproducible strong-baseline capability AND complete-resource evidence is the empirical goal, not a promised outcome. Formal Primary still NOT frozen. Real-data development is now authorized immediately; formal results require frozen retraining. Original vision, permanent principles and all raw evidence remain; no new permissions/resources.
+
+Actual newest: reset pair repair succeeds on its bounded D3/D9 interface, but contextual Block V1 fails. CarryV2 improvesIID to29.88%, identicalto static control; GRU gets100%IID, Transformer60.94%, same600updates. Strongbaselineevidence retained, no advantage. Dataset/NN/raw/source hashes synced. New contextual core is ordinary learned row-transition bank+GRU memory+dynamic calls; no teacherops/routes.
+
+Active bounded jobs at last launch: charLMTransformer andGRU300updates each; selectiveSSMreference andstatic-expandedcontext600updates. Trusted public-dataset preparation session71972 (1800s internal/1860external) runs separately; PG100 prepared, CIFARinprogress, speechpending. ExistingL40S/CPUisolationunchanged. No off-hostcontinuationpromise. Inspectprocess/receiptsbefore assumingstillactive.
+
+Root next: inspectcarry mediator; targetedsoft-only/dense-backwardrepair basedonactualgradientstarvation ifconfirmed. Agents: topology_learning_principle diagnosingcontextcore; witness_repair_development preparedSSMreference; constructive_method_check preparedLMdata+training. CanonicalMethod iswater/method.md. Formalnewversionbenchmarksnotstarted. Oldmethods/results remainhistory/internalablationsonly.
+
 ## ACTIVE same-V2 checkpoint — 2026-11-02T02:29:11.574453+00:00
 
 MAIN remains human-locked TOPOLOGY. Six fixed paper TODOs remain the complete scope; no campaign completion and no off-host continuation promise.
