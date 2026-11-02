@@ -1,0 +1,171 @@
+\section{Experiments}
+\label{sec:experiments}
+
+Our evaluation asks whether learning executable topological operations improves
+continual acquisition, retention, or resource use beyond conventional learning
+and protection. The primary experimental object is the latest fully fused
+Prometheus architecture after its general Block validation. Its core mechanism,
+code version, and evaluation configuration will be frozen before retraining
+across all five evaluation layers. No publication results for the to-be-frozen
+Primary are available at the present manuscript checkpoint. Earlier coordinate-renderer
+streams and small integrated diagnostics are development evidence in
+Appendices~\ref{app:benchmarking} and~\ref{app:evidence}; they are not pooled
+with Primary results or used to supply its performance or efficiency claims.
+
+\subsection{Questions and comparison conditions}
+
+We distinguish three questions: whether new computations are acquired from
+terminal feedback, whether later learning preserves their complete execution,
+and whether topology independently changes the acquisition--retention--resource
+tradeoff. Preservation includes input encoding, operation selection, composition,
+and readout, rather than operation maps alone. All methods receive the same
+permitted examples, terminal labels, stage order, and inference information.
+Teacher transitions, intermediate execution states, correct routes, and
+preconstructed task-specific primitives are excluded as free supervision.
+Discovery, installation, observation-table passes, and protection are charged.
+
+We separately compare matched information, matched resource budgets, and matched
+attained quality. Equal update counts alone do not equate total learning work
+when a method also performs program discovery or verification. Accuracy--parameter,
+accuracy--training-cost, and accuracy--inference-cost frontiers expose these
+differences. Changes to input adapters and output heads are recorded and charged;
+a changed core learning rule constitutes a different architecture variant.
+
+\subsection{Tasks and continual streams}
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{p{0.09\linewidth}p{0.40\linewidth}p{0.40\linewidth}}
+\toprule
+Layer & Task family & Principal measurement\\
+\midrule
+I & Six-stage streams at $N=8,16,32$ & Acquisition, stage-boundary and
+within-stage retention, parameter growth\\
+II & Noncommuting programs, long compositions, key--value memory & Order
+sensitivity, unseen composition, delayed state use\\
+III & Reversible, nonreversible, continuous, variable-length computation &
+Generality of the same core Block\\
+IV & Speech Commands v2 and Split CIFAR-100 & No-task-ID class-incremental
+recognition and forgetting\\
+V & Architecture competitors and component interventions & Competitive
+frontiers and independent mechanism attribution\\
+\bottomrule
+\end{tabular}
+\caption{Five required empirical layers. Success on one does not replace
+measurements at another. The complete protocol is in Appendix~\ref{app:benchmarking}.}
+\label{tab:main-evaluation-layers}
+\end{table}
+
+The finite computational streams expose observable initial states, token
+programs, public task context, and terminal outputs. Context-dependent token
+semantics make that public context available to every competitor. We disclose
+short-word coverage, repeated examples, and every additional label access.
+Both differentiable neural execution and native deployment are evaluated on
+new and old tasks. Intermediate old-task minima and their subsequent recovery
+are reported separately from stage-boundary retention.
+
+The composition suite includes $AB\ne BA$, commutators, and unseen operation
+combinations. Training lengths are at most eight; tests at lengths 16, 32, and 64
+are reported separately. Key--value tasks require writing, overwriting,
+reading, and delayed queries from terminal supervision. Generality tests cover
+merging or erasing operations, continuous inputs/outputs, and variable-length
+execution. Reversible lifting, extra workspace, or external memory counts
+toward resources rather than making irreversibility free.
+
+Speech Commands v2 uses 35 classes in seven phases of five, the official
+train/validation/test split, and common 16-kHz preprocessing. Split CIFAR-100
+uses 100 fine classes in ten phases of ten, the official 50,000 training and
+10,000 test images, and a fixed class-stratified 10\% training holdout for
+validation. All methods share preprocessing and augmentation. Both tasks
+recognize all seen classes without a task ID or class-group identifier at
+inference. Their Memory-0 and Memory-500 conditions permit zero or at most 500
+stored old examples in total. Stored features, teacher outputs, and statistics
+are additionally disclosed. Main comparisons start from random initialization;
+pretraining is supplemental with equal access across methods.
+
+\subsection{Competitors and bounded development}
+
+The primary competing family is the Transformer: vanilla, experience replay,
+adapters, and replay plus adapters, at two prospectively selected scales.
+Continual-learning comparisons include DEN, PackNet, replay, and ER-ACE or a
+mature comparable class-incremental algorithm. Task-incremental PackNet is
+separated from no-ID class-incremental rankings. Mamba-2 participates in
+sequence/memory tests, Titans in applicable memory tasks, and HOPE/Nested
+Learning where a verifiable implementation supports the interface. Ordinary
+program learning, freezing, modular expansion, and constraint optimization
+provide additional matched-information controls; they do not replace neural
+architecture comparisons.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llll}
+\toprule
+Setting & Low budget & Medium budget & High budget\\
+\midrule
+Synthetic, updates/phase & B1:600 & B2:2,400 & B3:9,600\\
+Real data, epochs/phase &10&50&200\\
+\bottomrule
+\end{tabular}
+\caption{Prospective budget tiers available to every method. Discovery,
+maintenance, and configuration-development work are additional reported costs.}
+\label{tab:main-training-budgets}
+\end{table}
+
+Each main family has at most 24 development configurations. Development seed 0
+selects candidates using frozen validation criteria; the top three are checked
+with development seed 1. Configuration lock precedes final seeds 0, 1, 2, 3, 4.
+Test and OOD results never select hyperparameters, retries, stopping points,
+or configurations. Methods may use their appropriate optimizers and schedules.
+Extra-budget trajectories remain separately labeled supplemental configurations.
+Only localized, reproducible software, data, or training-logic defects qualify
+as bug fixes; ordinary tuning is development.
+
+Configuration validity depends on checked implementation, fidelity of any
+claimed reproduction, information fairness, and compliance with the prospective
+protocol, never on an accuracy threshold. High, intermediate, and random-level
+scores are all valid outcomes under those conditions. A low-scoring adaptation
+supports conclusions about that adaptation and budget, not an entire published
+family. Unfaithful reproductions and untested implementations are explicitly
+identified; they are not made invalid by low performance. Failed acquisition,
+all failed seeds, and additional resource use are retained without extending
+trials until a favorable result appears.
+
+Learning curves distinguish failure to acquire a first task from forgetting
+after later tasks. Training and validation diagnostics examine representation
+limits, optimization, and credit assignment without using held-out tests to
+choose a repair. A substantive architecture or optimizer revision receives a
+new configuration identifier and preserves its predecessor's results. Formation
+before gradient training, maintenance after training, and admission are separate
+events, with their own label accesses and costs. This prevents installed
+programs or confidence sharpening from being misreported as capabilities first
+discovered by the gradient updates.
+
+\subsection{Attribution, costs, and statistical analysis}
+
+Same-architecture interventions remove reuse, sharing, state growth,
+old-capability protection, graph constraints, and native compilation separately.
+Topology-specific controls substitute ordinary constraints, disable cross-class
+loop learning, disable within-class safe deformation, and compare ordinary
+boundary optimization or discrete search. Information, certificates, and caches
+are shared when applicable. Benefits from compression, replay, ordinary closure,
+or confidence maintenance are not attributed to monodromy. A topology benefit
+requires a measured residual effect under these concrete controls.
+
+We record total, trainable, and frozen parameters; actual model, optimizer,
+cache, replay, reference, and checkpoint storage; updates and sample accesses;
+training FLOPs and GPU time; discovery/search and rejected proposals; growth,
+maintenance, protection, verification, and reload. Controlled same-hardware
+inference reports latency p50/p95, throughput, and peak memory. Concurrent wall
+times are not ranked as isolated throughput, and overlapping timing/storage
+fields are not summed twice. Parameters per newly retained capability include
+the initial allocation and do not hide costs in nonparameter state.
+
+Final accuracy, average incremental accuracy, forgetting, backward transfer,
+acquisition cost, and equal-quality resource use are reported over all five
+independent final seeds. We report means, standard deviations, 95\% confidence
+intervals, and paired-seed differences; multiple primary tests receive
+multiplicity correction. Resumed fragments of one lineage are not independent
+replicates. Until these frozen-Primary measurements exist, this protocol
+specifies the evaluation rather than asserting an experimental advantage.

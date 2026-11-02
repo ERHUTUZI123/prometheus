@@ -1,0 +1,50 @@
+\section{Theoretical Analysis}
+\label{sec:theory-main}
+
+The following properties specify the architecture's retention and interface
+contracts. They concern exact finite semantics and real-arithmetic sufficient
+conditions; numerical execution additionally requires its declared precision
+and clearance checks. Detailed constructions and proofs appear in the appendix.
+
+\paragraph{Operation preservation.}
+Let $\delta$ be an admitted polygonal loop's minimum distance from the
+discriminant. If corresponding vertices move by less than $\delta$, every point
+of their linear interpolation moves by at most that amount. The interpolation
+therefore avoids the discriminant and preserves the endpoint permutation.
+Preserving each generator preserves every finite composition under fixed state
+ports. This property permits implementation changes while retaining the
+acquired operation.
+
+\paragraph{Task and soft-interface preservation.}
+For changing neural bindings, require a finite relation between reference and
+candidate states that contains every old encoded input pair, agrees on decoded
+outputs, and is closed under every old token transition. Induction on program
+length then preserves all native old words. Separately, let $p_E,p_R,p_C$ be
+minimum probabilities assigned to the model's own hard encoding, readout, and
+call choices. With $S$ slots and one-hot executed maps,
+\begin{equation}
+ m_L=p_Ep_Rp_C^{SL}>\tfrac12
+ \label{eq:main-path-mass}
+\end{equation}
+implies soft/native argmax agreement through length $L$: the designated path
+alone carries more probability than all alternatives combined. The native
+closure and finite-length soft guarantee have different scopes.
+
+\paragraph{Irreversible logical interfaces.}
+Let $Y$ be an $N$-element logical state set, let $f:Y\to Y$, and suppose
+its marked frame is a section of a physical decoder. Let
+$G$ be its retained permutation group, and require old operations to remain
+decoder-equivariant on an invariant set containing both the frame and the
+outputs of one reversible lift of $f$. The minimum physical-state count is
+\begin{equation}
+ D_{1,G}=\sum_{O\in Y/G}|O|
+       \max\!\left(1,\max_{y\in O}|f^{-1}(y)|\right).
+\end{equation}
+Fibers have equal cardinality along each orbit and must accommodate distinct
+preimages; assigning sufficient copies and extending a partial injection proves
+attainability. For transitive $G$, reset requires $N^2$ states. Repeated
+non-surjective reset cannot be a closed finite reversible quotient: injectivity
+makes its forward-invariant reachable set invariant, forcing the logical map
+to be surjective. Fresh ancillas or an explicit irreversible interface change
+this contract and incur storage or disposal costs. Configuration counts remain
+distinct from factorized memory bits and trainable parameters.

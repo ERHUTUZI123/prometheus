@@ -1,0 +1,258 @@
+\section{A trainable loop-based Prometheus Block}
+\label{sec:prometheus-block}
+
+The purpose of a Prometheus Block is to join operation formation with
+executable state updates, learned calls, composition and retention in one
+trainable state. The present implementation is a concrete fixed-three-state
+prototype of that interface. It removes the requirement to learn a
+permutation matrix first and render a loop afterward, but has not yet become
+a general computational architecture. We specify its actual computation and
+its observed failure before describing the remaining interface requirements.
+
+\subsection{Neural state and computation}
+
+The current \path{HybridLoopBlock} stores a trainable input encoder, a
+trainable readout, call heads and a shared loop controller. A public feature
+$e$ is transformed by a shared matrix $H$; a loop head $r$ produces
+\begin{equation}
+ h_\theta(e)=He,\qquad a_\theta(e)=r^\top h_\theta(e),
+ \qquad
+ \gamma_{a_\theta(e)}:0\to a_\theta(e)+i\to a_\theta(e)-i\to0.
+ \label{eq:block-loop-controller}
+\end{equation}
+The two operation features and two token features are the disclosed vectors
+$(1,0)$ and $(1,1)$. The same $H$ participates in both loop generation and
+calling, so changing a new operation can change the old operation's geometry
+and the call probabilities. For call slot $s$ and input token $b$,
+\begin{equation}
+ p_{\theta,s}(k\mid b)=\operatorname{softmax}(C_s h_\theta(e_b))_k,
+ \qquad k\in\{\mathrm{skip},0,1\}.
+ \label{eq:block-call-head}
+\end{equation}
+Skip supplies an identity computation. The other two choices refer to loop
+bank entries. There is no trainable permutation-score tensor $W_k$ in this
+prototype: endpoint maps are derived from paid actual root continuation.
+
+Let $E_\theta$ and $R_\theta$ be row-stochastic matrices obtained from the
+encoder and readout logits. For an input $x$ and a token word
+$b_1\cdots b_T$, the soft learning path is
+\begin{align}
+ q_0&=E_\theta[x,:],\\
+ q_{t,s+1}
+   &=q_{t,s}\left[\sum_k p_{\theta,s}(k\mid b_t)M_k(V)\right],
+       \qquad M_{\mathrm{skip}}=I,\\
+ p_\theta(y\mid x,b_{1:T},V)&=[q_{T,S}R_\theta]_y,
+ \label{eq:block-soft-execution}
+\end{align}
+where $M_k(V)$ is the one-hot matrix of the actually observed endpoint
+permutation for the sampled loop coordinates. These matrices are held
+constant during the within-chamber derivative in
+Equation~\eqref{eq:coupled-boundary-derivative}. The terminal training loss is
+$-\log p_\theta(y)$, with a declared numerical probability floor of
+$10^{-12}$. The target supplies only the final task output, not a correct
+route or an intermediate state.
+
+Native execution uses the encoder, call and readout argmax choices and
+composes the resulting permutations on the same sheet. This is the deployed
+discrete program against which task success is checked. Cached maps are
+derived observations of actual loops, not separately learned operations.
+Reusing a receipt implements the same endpoint semantics without claiming
+that the changed continuous trajectory has been freshly integrated. Cache
+namespace, payload, root observations and cold-reexecution audits are
+recorded and made available to conventional controls.
+
+The executed one-slot model has $30$ trainable scalars:
+$9$ encoder logits, $9$ readout logits, $4$ shared-backbone weights,
+$2$ loop-head weights and $6$ call-head weights. It also stores $8$ fixed
+feature-buffer scalars. Both the old operation and its call are supplied
+initial conditions, while the new call begins uniformly across all three
+choices. Encoder/readout logits begin near the identity but remain
+trainable. This starting ability is disclosed rather than counted as
+previously acquired learning. The exact executed source is
+\path{.deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/versions/code-parameter-hybrid-loop-learning-v1/hybrid_loop_block.py}.
+
+\subsection{One learning transaction, three retention obligations}
+
+The persistent state comprises neural parameters $\theta$, admitted loop
+receipts, a reference native binding relation, bounded derived-map storage
+and the numerical execution contract. Given current terminal examples, a
+learning transaction proceeds as follows.
+\begin{enumerate}
+ \item Sample the unadmitted operation's loop coordinates. Execute or reuse
+       legitimately certified maps, charge their observations, and evaluate
+       the actual soft terminal computation.
+ \item Compute within-chamber gradients for encoding, readout and calls,
+       together with the class-boundary term. Both derivatives pass through
+       the same neural backbone; no correct new call is inserted manually.
+ \item Propose an actual shared-weight update. Backtrack its finite scale
+       while checking numerical executability, admitted loop protection,
+       old native binding closure and soft/native agreement. Rejected
+       executions and checks remain in the cost ledger. An aborted
+       transaction restores the original parameter values in place.
+ \item Admit a new operation and its token binding only after deterministic
+       mean-loop execution gives perfect native and soft accuracy on the
+       stated training admission set and satisfies the expanded confidence
+       contract. The reference then records the actually acquired program,
+       rather than a teacher operation table. Generalization remains a
+       separate held-out test.
+\end{enumerate}
+
+These checks discharge different obligations. First, geometric clearance
+protects the endpoint action of an old loop, as in
+Equation~\eqref{eq:protected-vertex-transaction}. Second, an old task may
+still be forgotten if its encoder or call changes, even when every bank
+permutation is unchanged. The implementation therefore computes a finite
+relation $\mathcal R$ between the reference and proposed native states,
+starting from all old encoded input pairs, and requires
+\begin{equation}
+ \begin{split}
+ &(E^-(x),E^+(x))\in\mathcal R,\\
+ &(s,t)\in\mathcal R\ \Longrightarrow\
+   R^-(s)=R^+(t),\quad
+   (T_b^-(s),T_b^+(t))\in\mathcal R\quad(b\in\mathcal A_{\mathrm{old}}).
+ \end{split}
+ \label{eq:block-binding-closure}
+\end{equation}
+Here $E^\pm,R^\pm,T_b^\pm$ denote the complete hard native encoder,
+readout and token transition before and after the update, including all call
+slots. Exhausting this finite product-state closure preserves the decoded
+behavior of every finite old word. It does not require the two internal
+representations to use identical state labels. This is a conventional finite
+behavioral-relation check; its correctness is not a topology-exclusive claim.
+
+Third, native preservation alone is insufficient for the soft neural path.
+Let $\underline p_E$, $\underline p_R$ and $\underline p_C$ be the minimum
+probabilities assigned to the model's own hard encoder, readout and old-token
+call choices. Because every executed bank map here is exactly one-hot, the
+probability of following the entire own-native path through a word of length
+at most $L$ is bounded below by
+\begin{equation}
+ m_L=\underline p_E\,\underline p_R\,
+                 \underline p_C^{SL}.
+ \label{eq:block-soft-native-mass}
+\end{equation}
+If $m_L>1/2$, the soft output has the same unique argmax as that native
+program: the designated path alone carries more than half of the total
+probability. The current transaction uses a small additional tolerance above
+$1/2$ and $L=16$. The mathematical argument is real-arithmetic; the reported
+float64 evaluation is not interval certification. Native closure covers all
+finite old words, whereas this particular soft bound covers the specified
+finite length. Keeping these scopes distinct prevents a finite confidence
+check from becoming an unsupported unlimited-length neural guarantee.
+
+\subsection{Composition and a constructive module interface}
+
+The executable interface is a state transformation plus a receipt:
+\begin{equation}
+ (s,b,\theta,\mathcal M,\mathcal K)
+ \longmapsto (s',y,\mathrm{receipt}),
+ \qquad
+ s'=\Pi_{k_S}\circ\cdots\circ\Pi_{k_1}(s),
+ \label{eq:block-interface}
+\end{equation}
+where $\mathcal M$ is the admitted mechanism state and $\mathcal K$ contains
+the execution and protection contracts. Consecutive calls reuse the output
+sheet, making $AB$, $BA$ and longer words genuine computations rather than
+independent classifications. Learning can revise the shared controller and
+the call structure; admission converts a successfully acquired computation
+into a protected reusable entry. Stored receipts permit certified semantic
+reuse, with their maintenance and storage charged separately from parameters.
+
+This interface also identifies the obligations for a general Block. A layer
+must expose which state representation it passes to the next layer, and
+learning must preserve the composed input--operation--readout binding, not
+just each isolated loop. A capacity change must provide a state embedding,
+transferred operation semantics and an updated protection relation. An
+irreversible operation would require a disclosed reversible extension or a
+different state update, charging the extra workspace, cleanup and readout.
+Continuous inputs require a learned encoding and an explicit domain on which
+its binding is protected. These are implementable interface requirements;
+they are not achieved merely by calling the present $D=3$ module a general
+Block. The prototype currently supplies fixed finite input features and a
+fixed covering, and has not implemented capacity growth, noninvertible
+computation, continuous-domain generalization or verified multilayer stacking.
+
+\subsection{Executed hybrid V1: operation formation without task acquisition}
+
+Hybrid V1 is an actual negative architecture-development result. The frozen
+experiment uses four terminal training cases, four held-out composition
+cases, a supplied old operation, and $100$ parameter transactions per arm.
+The new call is initially uniform; success cannot be obtained by receiving a
+correct route. The three arms apply the coupled gradient, only its
+within-chamber component, or only its boundary component. Both components
+are nevertheless computed and charged in all arms, so their run times are
+not an ablation efficiency comparison.
+
+\begin{center}
+\begin{tabular}{l|rrrrr}
+arm & updates & no-op & map
+    & TRAIN (S/N) & held-out (S/N)\\\hline
+coupled & $100$ & $72$ & $A$ & $.25/.25$ & $0/0$\\
+within only & $100$ & $0$ & $I$ & $.25/.25$ & $0/0$\\
+boundary only & $100$ & $94$ & $A$ & $.25/.25$ & $0/0$
+\end{tabular}
+\end{center}
+
+All arms retain old-task soft and native accuracy $1$, and none admits the
+new operation--binding pair. Acquiring the endpoint map $A$ therefore does
+not establish acquisition of the task that should call it. A ``transaction''
+is explicitly a committed proposal, including a zero-scale proposal; it must
+not be reported as $100$ nonzero learning updates. Raw curves and actual
+neural checkpoint reloads are preserved in
+\path{.deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-hybrid-loop-learning-v1/learn/result.json}.
+
+The coupled arm exposes a specific repair target. At its final snapshot the
+within-chamber call-head gradient norm is approximately $1.2583$, but every
+tested positive joint step scale, down to $1/64$, is rejected by the old-loop
+geometry/map guard; the transaction commits scale zero. Thus learning credit
+exists while this single-direction transaction cannot use it. The observation
+does not prove that every feasible update is blocked. It motivates testing a
+component-wise or constrained repair that can preserve an admitted class
+without discarding usable binding credit. Such a fallback is development
+work, not an executed V1 result, and no outcome is predicted here.
+
+The implementation accounts for terminal callbacks, root continuation,
+event geometry, neural vector--Jacobian products, proposals and rejections,
+finite relation checks, cache bytes and real checkpoint storage. Ordinary
+controls receive the same mathematical certificates and execution
+observations. Consequently neither the small parameter count nor old-task
+retention in this failed acquisition test is evidence of an independent
+Monodromy advantage. The concrete contribution at this stage is the unified
+trainable interface and an observed, localized failure of its protection--
+plasticity transaction, with the general-Block and competitive-benefit
+questions still open.
+
+
+\subsection{Executed hybrid V2: a targeted feasible-direction repair}
+
+V2 retains V1's loss, examples, thirty trainable scalars, eight buffer scalars,
+and protection certificates. Its only transaction change is to try the same
+gradient on the existing encoder, readout, and call heads when all positive
+joint backtracking scales are rejected. The backbone and loop head stay fixed
+in that fallback; every proposed update still passes all three certificates.
+This is a disclosed block-coordinate repair, applicable to ordinary constrained
+optimization as well as this topological realization.
+
+The complete arm finishes after $31$ gradient transactions and one own-class
+confidence-maintenance transaction. Three commits use the head-only fallback.
+TRAIN and the four held-out composition cases attain soft/native accuracy $1$;
+old observed cases remain at $1$. Both single-component arms exhaust $100$
+transactions without acquiring the new calling behavior. The first $28$
+complete-arm transactions reproduce V1 exactly. New class acquisition occurs
+before the eventual calling success, distinguishing the two learning events.
+
+The complete arm uses $122$ executed programs, $716$ terminal callbacks,
+$11{,}526$ continuation steps, and $127$ proposals, of which $95$ are rejected.
+The one maintenance step sharpens its own acquired hard route without adding
+parameters or receiving a teacher route. Its length-16 designated-path mass
+rises from approximately $1.53\times10^{-5}$ to $.999779$. This validates the
+specified interface on the diagnostic, not an architecture-level advantage or
+a general multi-stage learner. Both gradient components are computed and charged
+in every arm; their measured times do not rank optimized ablation efficiency.
+
+The complete neural checkpoint and cold operation maps were actually reloaded.
+Independent review039 checked all $67$ synchronized source/result files,
+model tensors, raw curves, and the common prefix. The frozen run is
+\path{probes/topology-architecture/runs/parameter-hybrid-loop-learning-v2/}
+within the V2 campaign. This development component is not a frozen Primary
+Prometheus and supplies no primary five-layer benchmark numbers.

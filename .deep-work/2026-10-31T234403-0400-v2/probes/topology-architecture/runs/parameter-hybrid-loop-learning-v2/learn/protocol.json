@@ -1,0 +1,31 @@
+{
+  "version": "hybrid-loop-diagnostic-v1",
+  "main": "TOPOLOGY_USER_LOCKED",
+  "seed": 0,
+  "learning_rate": 0.05,
+  "seconds_internal": 90.0,
+  "transaction_policy": "block_fallback",
+  "targeted_repair": "joint positive trials, then optional same-gradient heads-only positive trials, then zero",
+  "outside_timeout_seconds_required": 120,
+  "max_actual_updates_per_arm": 100,
+  "limits_per_arm": {
+    "max_feedback": 12000,
+    "max_programs": 4000,
+    "max_continuation_steps": 160000
+  },
+  "arms": [
+    "full_coupled",
+    "within_only",
+    "class_only"
+  ],
+  "gradient_work": "both components always computed/charged; no ablation efficiency claim",
+  "heldout_policy": "only after frozen and saved final weights; no selection/retry",
+  "maintenance": "at most one own-current-class fit after TRAIN dual success, same transaction, no new P/info",
+  "source_sha256": {
+    "loop_boundary_learning.py": "ee9fb30546194218c9bda3307f2eaf941b2924a4da9a77233ff010fe60c0f199",
+    "hybrid_loop_block.py": "e2384721a4fe07135e0787d94e470e4911080b42084b0fc1704b33119af0c95a",
+    "run_hybrid_loop_diagnostic.py": "932a8a963e7255e1c63447b0ee7cf7ee9bb32c1842b5d7ceaaf2f879dd1733cf"
+  },
+  "scope": "bounded D3 integrated mechanism diagnostic; no six-stage, generality, M0, or superiority claim",
+  "wall_allocation": "equal share of remaining time, reserving 3 seconds global delivery; later budgets may differ"
+}

@@ -1,0 +1,219 @@
+\section{Learning executable monodromy classes}
+\label{sec:monodromy-principle}
+
+The mechanism studied here separates two operations that are easily conflated:
+changing the implementation of an existing computation, and acquiring a
+different executable computation. A deformation that is certified to preserve
+a based-loop homotopy class can support the former, but cannot by itself
+accomplish the latter. We therefore develop a learning interface with
+class-changing proposals for unadmitted operations and class-preserving
+transactions for admitted operations. The current evidence establishes this
+interface in a small supplied covering; it does not yet establish an independent
+topological advantage over equally informed conventional optimization.
+
+\subsection{Covering space, marked states, and executable composition}
+
+For an integer $D\geq 2$, consider the supplied polynomial family
+\begin{equation}
+ F_D(z,u)=z^D-Dz-u,
+ \qquad
+ \mathcal C_D=\{-(D-1)\zeta:\zeta^{D-1}=1\},
+ \qquad U_D=\mathbb C\setminus\mathcal C_D.
+ \label{eq:cover-and-critical-set}
+\end{equation}
+Projection onto $u$ defines an unbranched $D$-sheet covering over $U_D$.
+We fix the control basepoint $u_*=0$ and mark its $D$ distinct roots once.
+Lifting a based loop $\gamma:[0,1]\to U_D$ transports each marked root to
+another root in the same fiber. Its endpoint action is a permutation
+$\Pi_\gamma=\rho_D([\gamma])$. For chronological concatenation, defined so
+that $\gamma_1\star\gamma_2$ executes $\gamma_1$ first,
+\begin{equation}
+ \Pi_{\gamma_1\star\gamma_2}
+   =\Pi_{\gamma_2}\circ\Pi_{\gamma_1}.
+ \label{eq:chronological-composition}
+\end{equation}
+An internal state is a sheet index, not a freshly initialized root at every
+call. Equation~\eqref{eq:chronological-composition} consequently specifies an
+executable, generally noncommutative composition rule.
+
+The executed class-acquisition diagnostic uses $D=3$. The roots at $u_*=0$
+are labelled $0,1,2$ in the order $(-\sqrt{3},0,\sqrt{3})$, and the critical
+controls are $-2$ and $2$. Its one-parameter family is the polygonal loop
+\begin{equation}
+ \gamma_a:0\longrightarrow a+i\longrightarrow a-i\longrightarrow0,
+ \qquad
+ \Pi_{\gamma_a}=
+ \begin{cases}
+ B=(12),&a<-2,\\
+ I,&-2<a<2,\\
+ A=(01),&a>2.
+ \end{cases}
+ \label{eq:cubic-triangle-chambers}
+\end{equation}
+The singular cases $a=\pm2$ are not executable. For example,
+$\Pi_B(\Pi_A(0))=2$, whereas $\Pi_A(\Pi_B(0))=1$; the order of calls matters.
+The permutation labels in \eqref{eq:cubic-triangle-chambers} describe the
+independently checked outcome, rather than an operation table provided to the
+learner. The numerical executor actually continues all three roots with a
+safeguarded predictor/Newton corrector. Its full-fiber endpoint observations,
+known covering, critical controls, and numerical costs are available to every
+comparison arm. Thus the protocol combines terminal task labels with
+full-fiber execution observations; it is not a single-sheet-only observation
+protocol. The executed source and independent reconstruction are preserved in
+\path{.deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/versions/code-parameter-loop-boundary-learning-v1/loop_boundary_learning.py}
+and
+\path{.deep-work/2026-10-31T234403-0400-v2/supervision/reviews/review-038-loop-boundary-learning.md}.
+
+\subsection{What safe implementation deformation does and does not learn}
+
+An earlier construction first identifies a permutation, compiles it into a
+loop of distinct root configurations, and then changes its geometry using a
+time-dependent ambient shear. Writing a point as $x+iy$, this shear is
+\begin{equation}
+ \Phi_{\omega,t}(x+iy)
+ =x+i\left[y+\sin^2(\pi t/T)h_\omega(x)\right],
+ \qquad h_\omega(x)=\sum_\ell\omega_\ell\tanh(v_\ell x+b_\ell),
+ \label{eq:safe-ambient-shear}
+\end{equation}
+where $v_\ell,b_\ell$ are fixed. Every finite $\omega$ gives a global
+diffeomorphism, with an explicit inverse obtained by subtracting the same
+vertical displacement. At both execution endpoints it is the identity.
+Interpolating $\omega$ therefore gives a collision-free homotopy of
+\emph{configuration-space} loops with a fixed base configuration, preserving
+their braid and endpoint permutation. This is a useful within-class learning
+freedom, but it is not a mechanism for discovering a new permutation. It is
+also a different construction from the control-plane covering in
+\eqref{eq:cover-and-critical-set}; the two spaces must not be identified
+without an additional map between them.
+
+The new class-learning interface instead trains the raw vertices of a loop in
+the fixed control plane. A controller $a_\theta(e)$ maps a public operation
+feature $e$ to coordinates in a supplied affine polygon family. For an
+unadmitted operation, a finite update $\theta\mapsto\theta^+$ may place the
+two regular endpoint snapshots in different chambers. The parameter
+interpolation between them may pass through a singular loop, but that
+interpolation is not executed. Only the separately checked regular snapshots
+are run. There is consequently no claim that a nonsingular based homotopy can
+change monodromy. The covering, basepoint, critical set and sheet labels remain
+fixed. Moreover, a change of homotopy class in the kernel of $\rho_D$ would
+not count as a new executable operation.
+
+\subsection{Terminal boundary feedback and neural credit}
+
+An exact endpoint-semantic loss is locally constant in regular loop
+coordinates. Ordinary within-chamber differentiation alone therefore provides
+no direct derivative for acquiring a different endpoint action. Let $V$ be
+raw loop coordinates drawn from a smooth location kernel centered at
+$a_\theta$, and let $\ell(V;\theta)$ denote the terminal loss obtained by
+executing that loop and the current neural bindings. Define
+\begin{equation}
+ J_\sigma(\theta)
+ =\int \ell(v;\theta)p_\sigma(v-a_\theta)\,dv.
+ \label{eq:coupled-smoothed-objective}
+\end{equation}
+For the current fixed-cover, endpoint-semantic objective, the coupled
+derivative has two contributions:
+\begin{equation}
+ \nabla_\theta J_\sigma
+ =\mathbb E\!\left[\left.\partial_\theta\ell(V;\theta)
+                    \right|_{V\ \mathrm{fixed}}\right]
+ +(D_\theta a_\theta)^\top g_{\mathrm{boundary}}.
+ \label{eq:coupled-boundary-derivative}
+\end{equation}
+The first term trains the input encoding, readout, calls and their shared
+backbone while holding the actually observed endpoint maps fixed. For a
+coordinate slice with crossing events $b_r$ and terminal-loss jumps
+$\Delta\ell_r=\ell(b_r^+;\theta)-\ell(b_r^-;\theta)$, the second term uses
+\begin{equation}
+ (g_{\mathrm{boundary}})_j
+ =\mathbb E_{V_{-j}}\!\left[
+       \sum_r\Delta\ell_r\,p_\sigma(b_r-a_{\theta,j})\right].
+ \label{eq:boundary-jump-estimator}
+\end{equation}
+Safe representatives of the neighboring chambers are actually executed to
+obtain these terminal losses. The implementation uses a normalized
+raised-cosine kernel and charges event detection, representatives, terminal
+callbacks and continuation. A coordinate moving one free vertex affects its
+two adjacent segments; tied coordinates moving several vertices are charged
+for every affected segment instead of silently inheriting the smaller bound.
+
+Equations~\eqref{eq:coupled-boundary-derivative}--\eqref{eq:boundary-jump-estimator}
+are applications of known differentiation of piecewise-smooth objectives,
+not a claimed new calculus theorem. A path-work objective with smooth
+within-chamber dependence on $v$ would require its corresponding continuous
+derivative as well. The implemented boundary term changes how probability
+mass is assigned to executable classes; it does not replace successful
+discrete execution by a mixture of several operations.
+
+The ideal smoothing distribution assigns mass arbitrarily close to a
+discriminant. The numerical executor additionally requires positive finite
+clearance. These are distinct domains. The initial score-function arm was
+censored by a probe entering the exclusion band, rather than assigned a
+fabricated failure loss. The later hybrid interface evaluates an ideal
+sample's class at a paid safe representative when available, while still
+requiring the deterministic candidate loop itself to be executable. This
+scalar-family convention is exposed to the conventional controls and is not
+assumed to solve the general high-dimensional feasibility problem.
+
+\subsection{A sufficient protected transaction}
+
+For an admitted polygonal loop $\gamma$, let
+$\delta=\min_{t,c\in\mathcal C_D}|\gamma(t)-c|>0$. If its updated vertices
+satisfy
+\begin{equation}
+ \max_k|v_k(\theta^+,e)-v_k(\theta,e)|<\delta,
+ \label{eq:protected-vertex-transaction}
+\end{equation}
+with the same segmentation and fixed endpoints, linear interpolation gives a
+based homotopy avoiding $\mathcal C_D$. Indeed, the displacement of every
+point on every interpolated segment is bounded by the maximum vertex
+displacement; its distance from the critical set remains positive. Hence its
+endpoint permutation is unchanged. Preserving each admitted generator then
+preserves every word of those generators under fixed input/output bindings.
+
+This sufficient topological certificate is accompanied by separate checks of
+the executor's coordinate box and numerical clearance. In the diagnostic the
+minimum allowed control clearance is $.015$. Protection of a permutation
+alone does not protect a changing encoder, router or decoder; the additional
+binding and soft-execution contracts are specified in
+Section~\ref{sec:prometheus-block}. None of these conditions implies hardware
+noise protection or a quantum energy advantage from a CPU simulation.
+
+\subsection{Executed class acquisition and the unresolved advantage}
+
+The initial scalar diagnostic uses two real shared weights,
+\begin{equation}
+ a_{\mathrm{old}}=w_0,\qquad
+ a_{\mathrm{new}}=w_0+w_1,\qquad (w_0,w_1)=(-3,4).
+\end{equation}
+The old operation $B$ is supplied as the starting mechanism and verified by
+continuation; it is not credited as learned in an earlier stage. Four
+terminal training cases require $A$, which is outside the admitted subgroup
+$\{I,B\}$. Two accepted neural updates produce
+\begin{center}
+\begin{tabular}{c|rr|rr}
+snapshot & $a_{\mathrm{old}}$ & $a_{\mathrm{new}}$
+         & training error & old error\\\hline
+initial & $-3$ & $1$ & $.75$ & $0$\\
+first & $-2.625$ & $1.75$ & $.75$ & $0$\\
+second & $-2.26427259$ & $2.47145482$ & $0$ & $0$
+\end{tabular}
+\end{center}
+The old loop actually changes geometry while retaining $B$; the new loop
+crosses its class boundary and acquires $A$. Four frozen held-out composition
+cases and an actual checkpoint reload also have zero error. These are finite
+length-at-most-three tests, not a scaling or long-term continual-learning
+result. The raw execution is
+\path{.deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-loop-boundary-learning-v1/learn/result.json}.
+
+The equally informed ordinary event optimizer produces the same weights,
+parameter hashes and counted trajectory. Discrete chamber search succeeds
+with one update, $35$ program executions and $37$ terminal callbacks, versus
+$70$ executions and $72$ callbacks for the event arm. Those totals include
+their disclosed calibration and audit work. A reexecution guard spends more
+continuation work than the analytic certificate on this instance, but the
+ordinary optimizer is also allowed that certificate. Thus the result closes
+the earlier map-first learning gap, while the principal question remains open:
+does monodromy organization improve acquisition, retention, verification or
+parameter growth beyond the strongest ordinary constraint and search methods
+under matched information and complete cost?

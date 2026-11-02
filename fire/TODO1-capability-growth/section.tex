@@ -1,0 +1,234 @@
+\section{Continual acquisition and capability growth}
+\label{sec:capability-growth}
+
+\paragraph{Historical mechanism and Primary architecture boundary.}
+This section records the earlier native/coordinate-renderer prototype as
+historical mechanism evidence and internal ablations. It is not the Primary
+Prometheus architecture for the publication benchmark. Primary Prometheus must
+be the latest fully fused architecture actually validated under TODO~3; its
+core mechanism, code version, and evaluation configuration must be frozen
+before all five benchmark layers are retrained. Historical streams cannot be
+pooled with those new Primary results or used to supply their parameter and
+cost claims. The limited D3 hybrid V2 diagnostic is subsequent development,
+not completed TODO~3 validation or a frozen Primary architecture.
+
+The historical acquisition system learns finite recurrent computations from terminal
+examples, installs the inferred operations in neural parameters, and subsequently
+trains and maintains a differentiable calling interface. This is a hybrid
+identification--installation--gradient-learning procedure. Its successful
+synthetic executions establish a working accumulation mechanism within the
+tested task family; they do not yet establish that topology improves acquisition
+or parameter growth. In particular, an ordinary constrained implementation with
+the same formation and maintenance rules matches the measured results.
+
+\subsection{Historical representations, operations, and calling}
+
+A task example consists of an observable initial state $x\in\{1,\ldots,N\}$,
+a token word $w=(a_1,\ldots,a_L)$, a public context $c$, and a terminal label
+$y\in\{1,\ldots,N\}$. The public context is necessary in these synthetic
+streams because identical tokens have different meanings in different tasks.
+It is not a hidden-state label. The learner does not receive target transition
+tables, intermediate execution states, or correct call routes.
+
+The shared neural state is a row distribution $\alpha\in\mathbb{R}^{1\times D}$.
+Let $E\in\mathbb{R}^{N\times D}$ and $R\in\mathbb{R}^{D\times N}$ denote
+encoder and readout logits. At temperature $\tau>0$, encoding and decoding use
+row softmaxes, denoted $\overline E$ and $\overline R$. A bank contains $K$
+learned operations and a provided identity operation $P_0=I_D$. The latter is an
+execution substrate primitive, not a learned discovery. For token $a$ in context
+$c$, a learned network produces $S$ slot distributions
+$q_{c,a,s}(k)$, $k\in\{0,\ldots,K\}$. Soft execution is
+\begin{align}
+ \alpha_0 &= \overline E_{x,:},\\
+ T_{c,a} &= \prod_{s=1}^{S}\left(\sum_{k=0}^{K}
+                    q_{c,a,s}(k)\,\overline P_k\right),\\
+ \alpha_{\ell} &= \alpha_{\ell-1}T_{c,a_\ell},
+ \qquad \widehat p(y\mid x,w,c)=(\alpha_L\overline R)_y.
+ \label{eq:growth-soft-execution}
+\end{align}
+Products are ordered left to right in execution order because states are row
+vectors. Hard execution selects the encoder state, slot calls, operation
+matchings, and decoded label. For a destination permutation $\pi_k$,
+$(P_k)_{ij}=\mathbf{1}\{j=\pi_k(i)\}$; consequently $e_iP_k=e_{\pi_k(i)}$.
+The continuous monodromy realization executes the selected operation through
+path lifting. Its mathematical role and later coupling to learning are
+developed in the monodromy section.
+
+The compact bank stores destination coordinates
+$\xi\in\mathbb{R}^{K\times D}$ and generates matching scores
+\begin{equation}
+ W_{kij}=-8(j-\xi_{ki})^2.
+ \label{eq:compact-destination-scores}
+\end{equation}
+Every permutation is representable by setting $\xi_{ki}=\pi_k(i)$.
+The persistent bank therefore contains $KD$ learned scalars, although forming
+and differentiating its dense scores still incurs $KD^2$ temporary work and
+storage. The ordinary constrained control receives this identical compression;
+it is not a topology-specific saving.
+
+With token vocabulary size $|\mathcal A|$, $C$ allocated contexts, embedding
+width $H$, and $S$ slots, the implemented shared model has
+\begin{equation}
+ P_t=2ND_t+(|\mathcal A|+1+C)H
+       +S(K_t+1)(H+1)+K_tD_t+4.
+ \label{eq:growth-parameter-count}
+\end{equation}
+The final four scalars parameterize the shared geometric deformation. They are
+absent from the ordinary constrained control. Preallocated context embeddings
+and every frozen parameter are included. The reported runs use
+$|\mathcal A|=6$, $C=6$, $H=48$, and $S=2$.
+
+\subsection{Learning operations from terminal continuation profiles}
+
+For a fixed context, write $F_c(x,w)$ for observed terminal feedback. A history
+$h=(x,p)$ has a finite continuation profile
+\begin{equation}
+ \sigma_{\mathcal S}(h)=\big(F_c(x,ps)\big)_{s\in\mathcal S}.
+ \label{eq:terminal-profile}
+\end{equation}
+The implemented observation table uses the empty word and all one-token words
+as both prefixes and suffixes. Its successor check also consults words of
+length three. All such observations come from the supplied TRAIN examples.
+Different profiles provide explicit state-separation witnesses; equal profiles
+are a provisional finite-data equivalence, not a claim of equivalence under
+every future continuation.
+
+The formation routine partitions observed histories by their profiles, checks
+that observed successors close on the resulting classes, and rejects conflicting
+or nonreversible successors. If the number of separated classes exceeds $D$,
+the workspace grows. An assignment then aligns these classes to the current
+encoder/readout coordinates. Already learned operations are reused when their
+actions agree on every constrained reachable state. Otherwise, a constrained
+matching completes an executable permutation, which is checked against the
+entire current TRAIN set before neural installation. Candidate search,
+matching, full-data checks, state expansion, and installation are all part of
+learning cost. This procedure does not learn from hidden teacher states, but
+does exploit the deliberately extensive short-word coverage of this benchmark.
+
+After installation, the learner executes real gradient updates of the neural
+encoder, readout, coordinates, embeddings, and calling network. In the measured
+streams, new-task validation already equals one immediately after formation and
+installation, before these updates. Thus the first acquisition in these runs is
+attributable to terminal-profile identification and installation, rather than
+to the subsequent 600 Adam updates alone.
+
+\subsection{Binding protection and neural--native consistency}
+
+Protecting an operation permutation alone does not protect a task: changing
+the input encoding or call route can destroy an old computation even if every
+bank operation remains unchanged. The implementation therefore stores admitted
+native computation references and checks a transition-closed relation between
+their reachable states and the updated computation. Shared proposals are
+accepted, backtracked, or rejected according to this binding-level contract.
+The relation permits state expansion and alternative internal coordinates when
+they preserve decoded execution. It is a conventional semantic protection
+condition, distinct from continuous-loop homotopy protection.
+
+The soft interface requires an additional maintenance step. At each task
+boundary, the implemented consistency refresh sharpens the model's own current
+encoder, decoder, operation classes, and both original call slots. It obtains
+no new task labels and adds no parameters. It preserves the current native
+graph while increasing the probability assigned to its execution path. A
+sufficient path-mass condition is stated in
+Section~\ref{sec:theory-reproducibility}. Frozen models preserve aliased frozen
+endpoints during this refresh. The same maintenance is available to ordinary
+constrained and modular controls.
+
+\subsection{Historical six-stage acquisition measurements}
+
+Each stream contains six tasks. The first three use unknown reversible
+$N$-state operations. The next three require a hidden-memory workspace with
+$2N$ recurrent states and only $N$ observable output labels. The target hidden
+mode and transition rules are never provided to the learner. TRAIN contains
+all initial states paired with every word of length at most three, followed by
+random words of lengths four through eight: 8,192 examples per task for
+$N=8,16$ and 16,384 for $N=32$. The larger pool is required to include the
+$259N=8,288$ mandatory short examples at $N=32$.
+
+Validation, IID, OOD, and length-16 evaluations each contain 512 examples per
+task. IID and validation use lengths at most eight and can overlap the exhaustive
+short training coverage; reported OOD uses lengths nine through twelve.
+Length-16 examples are disjoint from TRAIN by length. These are finite held-out
+computations, not evidence about arbitrary lengths. This historical prototype is
+bounded to lengths at most 18 and does not supply the required length-32/64
+publication measurements.
+
+Define $c_i(t)=1$ when task $i$ meets both neural and deployed thresholds at
+the end of stage $t$: IID accuracy at least $0.95$ and both OOD and length-16
+accuracy at least $0.90$. Admission additionally requires validation accuracy at
+least $0.95$. The strictly retained boundary count is
+\begin{equation}
+ Q_t=\sum_{i\leq t}\prod_{u=i}^{t}c_i(u).
+ \label{eq:boundary-retained-count}
+\end{equation}
+We report $\Delta P_t/\Delta Q_t$ only when a positive new stable capability
+is obtained without losing an already stable one. The first acquisition pays
+the entire initial allocation, $P_{-1}=0$. This is a stage-boundary criterion,
+not an unobserved guarantee between measurements. These capability thresholds
+define a reported outcome, not an accuracy-based eligibility test for baselines.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrrrrl}
+\toprule
+Scale & $P_0$ & $P_1$ & $P_2$ & $P_3$ & $P_4$ & $P_5$ & Completed seeds\\
+\midrule
+$N=8$  & 1596 & 2232 & 2868 & 3946 & 4630 & 5314 & 0, 1, 2\\
+$N=16$ & 2036 & 2720 & 3404 & 5130 & 5910 & 6690 & 0, 1, 2\\
+$N=32$ & 3684 & 4464 & 5244 & 9034 &10006 &10978 & 0\\
+\bottomrule
+\end{tabular}
+\caption{Historical native/coordinate-renderer streams, retained as internal
+ablations rather than Primary Prometheus benchmark results. For every completed
+seed shown, $Q_t=1,2,3,4,5,6$ and every seen-task neural/deployed accuracy equals
+one on each of the four measured splits at each recorded stage boundary.
+This table preserves the locally audited historical snapshot; it does not
+complete the five-final-seed protocol for the future frozen Primary.}
+\label{tab:growth-parameters}
+\end{table}
+
+At $N=8$, seed 0, the final bank contains 38 learned operations and $D=16$;
+the analogous final workspaces are $D=32$ and $64$ at the larger scales.
+The $N=32$ runs use a factored realization backend that preserves the learned
+finite operation semantics without extra trainable parameters. This engineering
+change and the differing acquisition pools prevent interpreting the table as
+a controlled timing-scaling law.
+
+Boundary maintenance resolves a measured neural/native mismatch, rather than
+proving that the neural interface never forgets. In the repaired $N=8$, seed-0
+stream, the minimum recorded old-task soft accuracies in the successive later
+stages are approximately $0.348,0.309,0.252,0.242,0.178$, before returning to
+one at the maintained boundary. Recorded deployed execution remains correct.
+The original unrefreshed version retained only one task under the strict
+boundary-stability criterion; its failed trajectory is preserved separately.
+
+The strongest matched finite-program control is decisive for attribution:
+ordinary constrained compact learning attains the same six-task boundary
+result at $N=8$ and $N=16$, seed 0, with respectively 5,310 and 6,686 parameters,
+exactly four fewer than the topology model. A repaired frozen-backbone policy
+and separate task modules also attain six retained tasks at $N=8$, with 6,384
+and 8,664 parameters. Therefore these measurements support compact shared
+acquisition and a useful consistency repair, but do not isolate a monodromy
+advantage in parameter growth for this historical version. In particular,
+5,314 is not a measured parameter count for the future fully fused Primary.
+Primary acquisition, retention, parameter growth, and all resource comparisons
+must be established by actual retraining after the new architecture freeze.
+
+\paragraph{Evidence locations.}
+The frozen seed-0 growth and learning-curve extract is
+\path{.deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/parameter-boundary-growth-evidence.json}
+and
+\path{.deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/parameter-boundary-learning-curves.csv}.
+This extract predates the additional seeds. Their original summaries, raw
+updates, checkpoints, and synchronization hashes are under
+\path{.deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/},
+including \path{parameter-n8-seed1-topology-full-consistent},
+\path{parameter-n8-seed2-topology-full-consistent},
+\path{parameter-n16-seed1-topology-full-consistent}, and
+\path{parameter-n16-seed2-topology-full-consistent}.
+The $N=32$, seed-0 lineage is preserved in the
+\path{parameter-n32-seed0-topology-through0-consistent},
+\path{parameter-n32-seed0-topology-resumed-through2-consistent},
+\path{parameter-n32-seed0-topology-resumed-through3-consistent}, and
+\path{parameter-n32-seed0-topology-resumed-consistent} run directories.

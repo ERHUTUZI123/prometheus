@@ -1,0 +1,93 @@
+\section{Prometheus Architecture}
+\label{sec:architecture-main}
+
+Prometheus is a candidate architecture in which a neural controller constructs
+executable operations, calls them on a persistent internal state, and retains
+their acquired meanings during subsequent learning. Its computational unit is a
+Block with a marked state interface, an operation bank, and learned input,
+calling, and output maps. The architecture separates the representation of an
+operation from the neural decision to invoke it, while training both through
+terminal task feedback. Repeated Blocks are intended to communicate through
+explicit state ports rather than independently classify intermediate outputs.
+
+\subsection{State and executable operations}
+
+A Block maintains neural parameters $\theta$, a logical state
+$q\in\{1,\ldots,D\}$, and a bank of based loops
+$\{\gamma_{k,\theta}\}_{k=1}^{K}$. A supplied covering
+$p:\mathcal E\rightarrow X$ has a fixed control basepoint $x_*$ and a marked
+$D$-element fiber. Lifting a loop transports the current marked state to another
+point of that fiber, defining an endpoint permutation
+$\Pi_k=\rho([\gamma_{k,\theta}])$. Consecutive calls carry the same state through
+their operations. Their order therefore determines a genuine composed
+computation, including when the endpoint actions do not commute.
+
+The bank stores operation inputs, source versions, and execution receipts.
+Endpoint maps are obtained from actual continuation and may subsequently be
+cached as derived computational state. Such reuse distinguishes a paid cold
+identification from a warm discrete application. A receipt certifying unchanged
+semantics does not assert that a newly deformed trajectory has been integrated.
+The numerical precision, domain checks, cache payload, and source observations
+are part of the execution interface.
+
+\subsection{Shared neural control and terminal learning}
+
+Shared features $h_\theta(e)$ feed both a loop head, producing raw path
+coordinates $a_\theta(e)$, and call heads, producing probabilities over bank
+entries and an identity operation. Learned encoder and readout logits define
+row-stochastic matrices $E_\theta$ and $R_\theta$. For a token $b_t$, optional
+public context $c$, and $S$ call slots, the differentiable computation is
+\begin{align}
+ \alpha_0&=E_\theta[x,:],\\
+ A_{b_t,c}&=\prod_{s=1}^{S}
+       \left[\sum_{k=0}^{K}p_{\theta,s}(k\mid b_t,c)\Pi_k\right],
+       \qquad \Pi_0=I,\\
+ p_\theta(y\mid x,b_{1:T},c)&=
+       [\alpha_0 A_{b_1,c}\cdots A_{b_T,c}R_\theta]_y.
+ \label{eq:main-block-computation}
+\end{align}
+The matrices $\Pi_k$ are detached observations of executed loops. There is no
+additional trainable permutation-score tensor. Gradients through the smooth
+encoder, calls, and readout are combined with the class-boundary contribution
+derived in Section~\ref{sec:monodromy-learning-main}. Because the backbone is
+shared, either contribution can change several parts of the computation.
+
+The native interface selects the encoder, calls, and readout by their hard
+choices and executes the resulting program. Soft likelihood supplies learning
+credit; successful acquisition additionally requires a correct native program.
+The target specifies a terminal output, without supplying an intermediate
+state, desired loop, or correct call. Known substrate equations and any observed
+full-fiber actions are disclosed information available to comparison methods.
+
+\subsection{Formation, retention, and extensibility}
+
+An unadmitted entry can move between executable classes while terminal feedback
+shapes its controller and binding. Admission installs the acquired operation
+and its calling contract after deterministic execution and confidence checks.
+Later updates preserve admitted loop actions, the complete old
+input--call--readout relation, and agreement between the native and soft
+interfaces over a specified length range. The reference records the acquired
+mechanism rather than a teacher transition table. Subsequent compression or
+reuse must preserve that contract.
+
+The proposed general Block includes typed ports for state expansion and
+auxiliary storage. Expansion requires an explicit correspondence between old
+and new states and compatible old operations. An irreversible logical update
+can use a reversible lift on the core and a fresh auxiliary register, with a
+projection defining its visible result. The consumed blank, retained garbage,
+and later cleanup are charged resources, following the established reversible
+computation construction~\cite{bennett1973logical}. Local factorization permits
+register storage without enumerating the entire history state space; efficient
+learning and execution still require their own construction. Continuous
+inputs and stacked Blocks additionally require compatible learned encodings
+and a specified protected input domain.
+
+The tested integrated component instantiates the encoder, shared controller,
+calls, and loop bank in a fixed three-state covering. It provides an executable
+example of the learning interface. The broader architecture specifies the
+interfaces for growth, noninvertible computation, and composition across
+Blocks; validating their common implementation precedes the primary benchmark.
+That benchmark will freeze the complete architecture and retrain every method
+under the same five-layer evaluation protocol. Resource comparisons will count
+neural parameters together with auxiliary state, program and cache storage,
+formation queries, rejected proposals, protection, and cold and warm execution.

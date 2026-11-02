@@ -1,0 +1,66 @@
+\section{Introduction}
+\label{sec:introduction}
+
+How can a learning system construct, compose, and improve its own internal
+computational mechanisms? Neural architectures already learn representations,
+select information, implement memory, and organize reusable computation.
+Attention, for example, learns input-dependent interactions through shared
+projections and weighted aggregation~\cite{vaswani2017attention}. The question
+is how computational capabilities can accumulate under continued learning:
+which internal operations are acquired, how later tasks reuse them, and what
+must be preserved when the parameters implementing those operations change.
+An adequate answer should expose the executed computation and its learning
+history, together with the resources required to retain it.
+
+This problem has two coupled scales. At the implementation scale, a shared
+parameter update changes representations, operations, and their invocation.
+At the semantic scale, a capability is a complete input--computation--output
+relation. Preserving an isolated operator is insufficient if its old inputs
+are subsequently encoded differently or routed elsewhere. Conversely,
+preserving all implementation details can prevent useful adaptation or require
+separate capacity for each task. Dynamically expandable networks illustrate
+that selective sharing, structural growth, and protection can be organized
+jointly~\cite{yoon2018lifelong}; their existence motivates a precise comparison
+of learning organizations, rather than a claim that conventional neural
+networks cannot support these functions.
+
+We investigate \emph{Prometheus}, a candidate organization in which executable
+operations are represented by monodromy actions of learned loops. Continuation
+around a regular loop transports an internal state to another state, and
+concatenating loops composes their actions in execution order. Different
+geometric implementations can realize the same operation. A certified
+deformation within a loop class therefore supplies shared implementation
+freedom while preserving its endpoint semantics. Acquiring a different
+operation requires a different learning action: a finite controller update can
+move an unadmitted loop between regular regions separated by a discriminant.
+The intermediate singular path is not executed.
+
+The learning interface couples this class-changing process to neural encoding,
+readout, and operation calls. Terminal task feedback trains those bindings
+through the currently executed operations. For class acquisition, a smoothed
+objective assigns credit to measured loss changes across loop-class
+boundaries. The resulting update combines ordinary neural derivatives with a
+boundary contribution. Once a capability is admitted, geometric protection,
+closure of its native input--operation relation, and a finite-length
+soft-execution agreement condition address distinct retention obligations.
+This organization makes the relationship between operation formation and
+protected shared learning explicit and testable.
+
+The central hypothesis is that this separation of executable semantics from
+its mutable implementation can improve capability acquisition and retention
+at a useful resource tradeoff. Homotopy invariance alone does not establish
+that benefit. The comparison must give conventional learners the same task
+information, feedback, execution observations, and usable certificates. It
+must also charge operation discovery, failed proposals, state growth,
+verification, storage, and execution alongside neural parameters and gradient
+updates. Parameter sharing, ordinary behavioral constraints, and compilation
+remain separate possible explanations of an observed gain.
+
+We develop the mathematical learning interface and an inspectable Block
+proposal around this hypothesis. An independent advantage remains
+unestablished: the fully integrated architecture must be fixed and evaluated
+across continual acquisition, demanding compositions, broader computational
+domains, real inputs, and competitive learning systems. These requirements
+connect the proposed mechanism to the original question of self-organizing
+computation while keeping its scientific claims conditional on executable
+evidence.

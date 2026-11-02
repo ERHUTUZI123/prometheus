@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-hybrid-training-recovery-v1/check_hybrid_training_resume.py", line 168, in main
+    source, original, choices = choose_source(args.checkpoint)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-hybrid-training-recovery-v1/check_hybrid_training_resume.py", line 76, in choose_source
+    payload = owned_input(path)
+              ^^^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-hybrid-training-recovery-v1/check_hybrid_training_resume.py", line 56, in owned_input
+    payload = torch.load(path, map_location="cpu", weights_only=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/serialization.py", line 1484, in load
+    with _open_file_like(f, "rb") as opened_file:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/serialization.py", line 759, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/serialization.py", line 740, in __init__
+    super().__init__(open(name, mode))
+                     ^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/workspace/prometheus-v2-m0-architecture/code-parameter-hybrid-training-recovery-v1/source.pt'

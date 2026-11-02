@@ -1,0 +1,280 @@
+\section{Benchmarking and competitive evaluation}
+\label{sec:benchmarking}
+\label{app:benchmarking}
+
+\paragraph{Primary architecture and historical evidence.}
+Primary Prometheus is the latest fully fused architecture actually validated
+under TODO~3. Its core mechanism, code version, and evaluation configuration
+are frozen before actual retraining across all five benchmark layers. The
+earlier native/coordinate-renderer streams are historical results and internal
+ablations only; their outcomes, parameters, and costs are not pooled with or
+substituted for new Primary measurements. The limited D3 hybrid V2 diagnostic
+is development evidence, not completed TODO~3 validation or a Primary freeze.
+
+\paragraph{Baseline validity is independent of accuracy.}
+A configuration is valid evidence when its implementation is checked, any
+claimed reproduction is faithful, information is fair, and its prospective
+training/tuning protocol is followed and disclosed. No accuracy threshold
+determines validity: 100\%, 37\%, and random-level accuracy are all retained
+outcomes of valid configurations. Low performance can support a conclusion
+conditional on the tested model, information, and budget; it does not establish
+that a complete algorithm family has failed. An equal-quality parameter
+comparison is simply unavailable when the measured qualities differ, rather
+than making either run invalid. All failures, configuration trials, retries,
+maintenance, and extra training remain charged. A low result is not a software
+defect and does not trigger trials until a desired number appears.
+
+\subsection{Five-layer evaluation scope}
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{p{0.07\linewidth}p{0.40\linewidth}p{0.43\linewidth}}
+\toprule
+Layer & Required scientific coverage & Current evidence boundary\\
+\midrule
+I & Six-stage acquisition at $N=8,16,32$ & Historical streams in
+Table~\ref{tab:growth-parameters}; the frozen fully fused Primary must be
+retrained under the five-seed protocol.\\
+II & Noncommuting programs, unseen combinations, lengths 16/32/64, dynamic
+write/overwrite/read/delay memory & Finite held-out words and length 16 tested;
+the complete complex-program and dynamic-memory suite is not completed.\\
+III & One Block for reversible, nonreversible, continuous, and variable-length
+computation & Current finite reversible operations do not establish this
+generality.\\
+IV & Speech Commands v2 and Split CIFAR-100 & No competitive real-data result
+is claimed in this manuscript checkpoint.\\
+V & Applicable architectures, continual-learning controls, and mechanism
+ablations & Historical valid measured configurations and working program
+controls; prospective bounded family comparisons remain incomplete.\\
+\bottomrule
+\end{tabular}
+\caption{All five layers require direct measurements. Evidence at one layer
+does not replace another layer.}
+\label{tab:benchmark-layers}
+\end{table}
+
+Layer II will distinguish operation-order dependence, including $AB\ne BA$
+and commutators, from memorization of an observed word distribution. Programs
+are trained at length at most eight and evaluated separately at lengths
+16, 32, and 64. A separate key--value stream requires writing, overwriting,
+reading, and delayed queries. Every architecture receives terminal task feedback
+without teacher intermediate execution traces. Layer III keeps the Block's
+core state-transition and learning mechanism fixed across task types; a change
+to that core is reported as an architecture variant, rather than silently
+counted as generalization.
+
+\subsection{Information, development budgets, and final evaluation}
+
+The synthetic comparison uses the same terminal data, stage order, public
+context, and evaluation protocol. Dedicated constructors, teacher operator
+tables, hidden state labels, and correct routes are not free priors for any
+method. Formation passes and terminal-label accesses beyond minibatch training
+are charged explicitly. Equal gradient-update counts do not imply equal total
+learning compute when one method additionally solves a full observation table.
+
+The locked synthetic update limits are B1: 600, B2: 2,400, and B3: 9,600
+gradient updates per stage, available to every method including Prometheus.
+Each main model family has at most 24 development configurations: development
+seed 0 selects candidates, the top three are checked with development seed 1,
+and the ranking uses a frozen validation criterion. After configuration lock,
+the final evaluation uses seeds $0,1,2,3,4$ without test-based tuning. Shared
+early checkpoints and resumed run fragments count as one lineage, not multiple
+independent seeds. The real-data budgets are 10, 50, and 200 epochs per phase
+under the same validation-only selection principle.
+
+Only a localized, reproducible software, data, or training-logic error qualifies
+as a bug fix. Optimizer, architecture, curriculum, or initialization changes
+are configuration development unless they repair such a demonstrated error.
+Any supplemental trajectory outside the registered main budget is disclosed
+separately. Reaching the highest budget without acquisition remains an allowed
+negative result. Test and OOD measurements do not select configurations,
+training duration, or stopping points.
+
+Three comparisons are kept distinct: identical information/protocol, matched
+training and total-compute budgets, and equal attained capability quality.
+The final analysis requires accuracy--parameter, accuracy--training-cost, and
+accuracy--inference-cost frontiers. Different method families may use the
+optimizers and schedules appropriate to their original algorithms; forcing one
+recipe on all competitors is not a fairness requirement.
+
+\subsection{Fixed real-data protocols and strong competitors}
+
+Speech Commands v2 uses 35 word classes in seven class-incremental phases of
+five classes. It uses the official train/validation/test split and common
+16-kHz preprocessing. Each model classifies all seen words at inference
+without a phase identifier or true class group. Split CIFAR-100 uses ten phases
+of ten fine classes, the official 50,000 training and 10,000 test images, and a
+fixed class-stratified 10\% training holdout for validation. It uses an expanding
+single head and supplies no task ID at inference. Input processing,
+augmentation, and data access are matched across architectures.
+
+Both datasets have Memory-0 and Memory-500 conditions, where 500 is the total
+number of stored old examples across all classes. Stored features, teacher
+outputs, task statistics, and other historical state are additionally recorded;
+they are not an exemption from the memory comparison. Main runs start from
+random initialization. Pretrained variants are supplemental and give every
+method the same pretraining information. These no-ID class-incremental
+protocols are distinct from the public-context synthetic benchmark.
+
+The primary competing architecture family is the Transformer: vanilla, replay,
+adapters, and replay plus adapters, at two or more prospectively selected scales.
+Parameter-matched and quality-matched comparisons are both required.
+Continual-learning comparisons include DEN, PackNet, replay, and ER-ACE or an
+equally mature class-incremental method. PackNet task-incremental results, when
+applicable, are explicitly separated from no-ID class-incremental rankings.
+Mamba-2 participates in appropriate sequence/memory tasks, and Titans in tasks
+suited to its memory interface. HOPE/Nested Learning participates only with a
+verifiable, applicable implementation. An unfaithful reproduction or untested
+implementation is marked \texttt{NOT\_VALIDATED}, with its specific fidelity
+or implementation gap stated. Low accuracy alone never assigns that status.
+
+\subsection{Measured baseline results at the historical B1 budget}
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrrrrr}
+\toprule
+ & & \multicolumn{3}{c}{First task} & \multicolumn{3}{c}{New task at phase 6}\\
+Method & Total $P$ & IID & OOD & L16 & IID & OOD & L16\\
+\midrule
+Transformer-64 &103752&.1836&.1230&.1348&.1152&.1094&.1016\\
+Transformer-64+Replay &103752&.1836&.1230&.1348&.1191&.1172&.1055\\
+Transformer-96 &229352&.1348&.1094&.1035&.1328&.1406&.1191\\
+Transformer-96+Replay &229352&.1348&.1094&.1035&.1133&.1289&.1152\\
+\bottomrule
+\end{tabular}
+\caption{Actual $N=8$, seed-0 historical streams, each with 600 updates per
+phase and 3,600 updates overall. ``Phase 6'' is the newly introduced task at
+the final phase, not an average over old tasks. These are valid measured B1
+configurations under their reported historical protocol, regardless of their
+low acquisition. They are not pooled with a future frozen Primary evaluation.}
+\label{tab:historical-transformers}
+\end{table}
+
+All four runs in Table~\ref{tab:historical-transformers} have zero tasks passing
+the dual-interface capability criterion. Their low first-task performance
+shows that the result is not explained by forgetting alone. The $N=16$
+width-64 Transformer similarly has no passing task in the measured stream.
+These are valid budget- and configuration-conditional observations. They do
+not by themselves characterize every Transformer configuration or establish an
+equal-quality parameter ratio, and they are not new Primary Prometheus results.
+
+A separately recorded anchored Transformer trial uses a 100-update source
+prefix and 2,200 additional updates, totaling 2,300 updates. It is a supplemental
+configuration trajectory, not a software bug fix or an equal-600-budget result.
+It is valid configuration evidence under its own disclosed supplemental protocol.
+The fixed development progression stops at its prospective budget. The
+validation-selected frozen checkpoint is then tested once, obtaining IID
+$0.37109375$, OOD $0.134765625$, and length-16 $0.111328125$. This improves
+some short-word behavior without establishing full-task competence; the low
+test result is not a trigger for unbounded additional trials.
+
+The first 600-update task runs of the adapted DEN-RNN and linear
+self-modifying CMS reconstruction obtain IID $0.115234375$ and
+$0.138671875$, respectively. Their parameter counts are 1,800 and 81,224.
+The former adapts DEN-style selection, expansion, splitting, and timestamps to
+a recurrent terminal-feedback interface; the latter is not an official HOPE
+reproduction. These are valid executed adaptations under their reported
+600-update protocols; their low scores do not invalidate them. Conclusions
+apply to these particular DEN-RNN and CMS variants. Faithful full-original
+DEN and HOPE reproduction remains \texttt{NOT\_VALIDATED} because that fidelity
+has not been established, not because an accuracy threshold was missed.
+
+For the historical finite-program question, matched conventional controls are available.
+At $N=8$, seed 0, ordinary constrained compact learning matches all six
+stage-boundary capabilities using 5,310 parameters, versus 5,314 for the
+topology model. Repaired freezing uses 6,384 and separate task modules 8,664.
+The frozen repair adds a compatible 128-parameter readout when terminal-profile
+output multiplicities require it, and later tasks reuse that readout. Its
+initial failed version remains recorded. These controls explain the historical
+shared/compressed parameter benefit without attributing it to monodromy; they
+complement rather than replace the required Transformer comparison.
+
+\subsection{Costs and causal attribution}
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+ & Weight & Extra-state & Optimizer & Checkpoint & Old guard\\
+Policy & bytes & JSON bytes & tensor bytes & bytes & seconds\\
+\midrule
+Topology compact &21256&208326&42544&341373&47.4276\\
+Ordinary constraints &21240&104105&42508&202737&45.6787\\
+Frozen + readout &25536&83598&7568&146821&0\\
+Private modules &34656&81825&12316&160265&0\\
+\bottomrule
+\end{tabular}
+\caption{Historical final-phase $N=8$, seed-0 resource fields for the
+native/coordinate-renderer policies, not the future fully fused Primary.
+The guard covers the phase's 600 updates.
+These are format-specific fields and overlapping cost scopes, not a disjoint
+sum or a controlled wall-time ranking.}
+\label{tab:resource-fields}
+\end{table}
+
+All stored and frozen parameters count. Reference arrays are contained within
+extra-state metadata; cache maps and certificates can also share storage.
+Checkpoint sizes include optimizer, RNG, and container state. JSON size is not
+minimal sufficient information or peak RAM. Phase wall time includes nested
+training, evaluation, and protection scopes, which are not added twice.
+Some jobs overlap on the GPU, so their individual wall times do not support a
+throughput ranking. One ordinary-control initial-stage report is missing
+post-training timing fields after a reload-helper failure; these remain null,
+rather than being reconstructed as measured values.
+
+Complete comparison additionally requires development and failed-run costs,
+primitive discovery, data accesses, solver and installation work, temporary
+dense tensors, replay, cache preparation, old-binding checks, rollback, and
+checkpoint reload. Controlled same-hardware training FLOPs/GPU time,
+end-to-end inference p50/p95, throughput, and peak memory are not yet complete.
+Neither software simulation nor these parameter counts measure hardware energy
+or establish a quantum advantage.
+
+The causal matrix removes, separately, primitive reuse, sharing, workspace
+growth, old capability protection, graph constraints, and native compilation.
+Topology-specific comparisons substitute ordinary constraints for monodromy,
+disable cross-class loop learning, disable within-class safe deformations,
+and compare ordinary cross-class optimization and discrete search under the
+same information and costs. Shared compression, program formation, graph
+closure, and generic consistency repair are not credited to monodromy. A
+same-mechanism reimplementation tests executable correspondence; it is not by
+itself a historical-priority finding or a general impossibility result.
+
+\subsection{Statistical reporting and completion status}
+
+Formal comparisons use all five independent final seeds, mean, standard
+deviation, and 95\% confidence intervals; paired-seed differences and their
+intervals are primary. Multiple primary tests receive multiplicity correction,
+and failed seeds remain included with their actual censoring or failure status.
+The principal outcomes are final/average-incremental accuracy, forgetting,
+backward transfer, acquisition cost, and total parameters and resources at
+equal retained quality. The earlier scale/seed lineages remain historical or
+internal ablations; they cannot count as retraining of the newly frozen Primary,
+be pooled across architecture versions, or supply its five-seed statistics.
+
+Publication-grade benchmarking remains \texttt{INCOMPLETE}: the fully fused
+TODO~3 architecture must first be validated and frozen, then actually retrained
+across every layer against protocol-valid competitors under the bounded
+development procedure. The two fixed real-data benchmarks, causal attribution,
+and full resource/statistical evidence remain required. No competitor must
+cross an accuracy gate to have its measured result included, and no favorable
+historical finite-task result substitutes for the new Primary evaluation.
+
+\paragraph{Evidence locations.}
+Original neural streams and their actual checkpoints reside under
+\path{.deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/},
+including \path{parameter-n8-seed0-transformer64-full},
+\path{parameter-n8-seed0-transformer64-anchored-competence-v1},
+\path{parameter-n8-seed0-den32-through0-v2}, and
+\path{parameter-n8-seed0-selfmod_cms64-l1-through0-v2}.
+The frozen stage-level extract is
+\path{.deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/parameter-boundary-growth-evidence.csv}.
+Actual original-source reading and adaptation boundaries for DEN are in
+\path{.deep-work/2026-10-31T234403-0400-v2/sources/parameter-den/reading-and-adaptation.md}.
+The governing prospective benchmark protocol is \path{ALL.md}, TODO~5, with
+the latest explicit human directives controlling architecture identity and
+accuracy-independent configuration validity if older wording conflicts.

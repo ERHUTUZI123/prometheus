@@ -1,58 +1,68 @@
-\documentclass[11pt]{article}
+\documentclass[10pt]{article}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[margin=1in]{geometry}
+\usepackage{microtype}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{booktabs,array,longtable}
 \usepackage{xurl}
 \usepackage[hidelinks]{hyperref}
 \usepackage{graphicx}
+\setlength{\emergencystretch}{2em}
 \newtheorem{proposition}{Proposition}
 \newtheorem{definition}{Definition}
 \newcommand{\method}{Prometheus}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\E}{\mathbb{E}}
-\title{Prometheus: Towards Topology-Protected Continual Acquisition\
-\large Working manuscript aligned with the six research tasks}
+\title{Prometheus: Learning and Preserving\\Executable Operations through Monodromy}
 \author{Prometheus Research Project}
-\date{Research draft: 1 November 2026}
+\date{Working manuscript: 1 November 2026}
 
-% Manuscript exposition, not another live Method or planning dashboard.
-% Current algorithm authority: water/method.md.
-% Direction and actions: water/now.md; latest benchmark policy: ALL.md, TODO 5.
-% Raw evidence: .deep-work/2026-10-31T234403-0400-v2/.
-% No result is inferred from the existence of this document or its compilation.
-
+% Canonical method: water/method.md. Direction: water/now.md.
+% Protocol authority: ALL.md, TODO 5. Source and evidence remain versioned.
+% Main text follows the human-specified eight-section paper structure.
+% All detailed development records and unvalidated extensions are in the appendix.
 \begin{document}
 \maketitle
 \begin{abstract}
-How can learning systems construct, compose, retain, and improve their own
-computational mechanisms? We investigate executable operations represented by
-monodromy, and distinguish learning an operation class from adapting its
-continuous implementation. This working manuscript records current mechanisms,
-preliminary continual-acquisition measurements, conventional explanations, and
-the experiments still required for a general architecture claim. Existing
-synthetic results demonstrate stage-boundary retention under a compact shared
-representation; a matched ordinary constrained learner reproduces those results.
-A separate terminal-feedback diagnostic learns a new loop class while retaining
-an old operation, and exposes the remaining coupling between operation formation
-and neural calling. No topology-specific competitive advantage or general-purpose
-architecture is established by the present evidence.
+Learning systems can retain individual operations yet lose the ability to call
+and compose them when shared representations change. We investigate Prometheus,
+a candidate computational architecture that represents executable operations by
+monodromy and learns their neural bindings from terminal task feedback. A Block
+combines a learned state encoder, shared loop controller, operation calls, and
+readout. Operation formation changes a loop's executable class; subsequent
+within-class deformation preserves its action through a nonsingular homotopy.
+A coupled gradient combines ordinary credit through the neural computation with
+loss jumps at class boundaries. Protected update transactions additionally check
+old task bindings and soft/native execution consistency, since preserving an
+operation alone does not preserve its use. We derive sufficient retention
+conditions and quantify workspace requirements for irreversible logical
+interfaces. In a bounded integrated diagnostic, the coupled learner acquires a
+new operation and calling behavior while retaining its supplied old capability;
+a targeted block-coordinate repair resolves a measured feasibility bottleneck
+without adding parameters. Historical continual-learning prototypes and matched
+ordinary constraints are documented separately. These development results do
+not establish topology-specific competitive advantage. We specify a frozen,
+five-layer evaluation against Transformers and continual-learning baselines,
+including acquisition, forgetting, composition, parameter growth, and complete
+resource accounting. The complete general Block and its primary benchmark
+remain under development. The central hypothesis is that topology can enlarge
+useful shared adaptation while reducing the cost of preserving executable
+computational capabilities.
 \end{abstract}
+\input{sections/01-introduction.tex}
+\input{sections/02-related-work.tex}
+\input{sections/03-architecture.tex}
+\input{sections/04-monodromy-learning.tex}
+\input{sections/05-theory.tex}
+\input{sections/06-experiments.tex}
+\input{sections/07-discussion.tex}
+\input{sections/08-conclusion.tex}
 
-\paragraph{Scientific objective.}
-The target is an original computational learning architecture with broad technical
-significance, not a favorable result on one finite task. The six sections below
-correspond exactly to the human-defined research tasks. Manuscript completion
-does not establish that the associated scientific acceptance criteria have passed.
-The current method is maintained in \path{water/method.md}; this document develops
-its paper exposition from preserved, versioned evidence.
-
-\tableofcontents
-\input{TODO1-capability-growth/section.tex}
-\input{TODO2-monodromy-principle/section.tex}
-\input{TODO3-prometheus-block/section.tex}
-\input{TODO4-real-world-transfer/section.tex}
-\input{TODO5-benchmarking/section.tex}
-\input{TODO6-theory-reproducibility/section.tex}
+\clearpage
+\bibliographystyle{plain}
+\bibliography{references}
+\clearpage
+\appendix
+\input{appendix/materials.tex}
 \end{document}

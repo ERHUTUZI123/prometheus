@@ -1,0 +1,47 @@
+\section{Related Work}
+\label{sec:related-work}
+
+\paragraph{Learned computation and continual organization.}
+The Transformer couples learned projections, attention-based information
+selection, and feedforward transformations to build compositional sequence
+models~\cite{vaswani2017attention}. Prometheus shares the use of neural
+representations and task-driven credit assignment; its proposed distinction
+concerns how executable operations change and remain reusable during later
+learning. Continual learning already offers architectural mechanisms for this
+problem. DEN selectively retrains relevant subnetworks, conditionally expands
+capacity, and uses splitting and timestamped inference to manage semantic
+drift~\cite{yoon2018lifelong}. Thus growth, sharing, and retention are established
+capabilities. A comparison with such methods must identify the additional work
+performed by loop semantics and include each method's stored capacity and
+maintenance costs.
+
+\paragraph{Learning through discrete changes.}
+Stochastic computation graphs combine differentiable computation with
+score-function gradient terms and support surrogate-loss
+implementations~\cite{schulman2015stochastic}. For discontinuous models, Lee
+et al. explicitly separate regionwise reparameterization derivatives from
+boundary contributions~\cite{lee2018reparameterization}. Our coupled
+within-class and boundary update uses this established distinction: ordinary
+neural credit learns encoders, readouts, and calls, while class-boundary
+feedback changes the distribution over executable loop actions. The
+derivative decomposition itself is not a novelty claim. Its value here must
+come from the computational organization and a measured advantage over
+equally informed ordinary boundary optimization or search.
+
+\paragraph{Topology and reversible computation.}
+Topology has an established computational role. Kitaev's anyon construction
+uses braiding to implement transformations in a physically protected quantum
+system~\cite{kitaev2003fault}. Our present algebraic-cover construction instead
+uses continuation to define inspectable state permutations; digital simulation
+does not inherit physical fault tolerance or energy savings. The relevant
+question is whether homotopy-preserving implementation freedom helps a
+learning system acquire and retain useful computations.
+
+Permutation operations also delimit the current computational domain.
+Bennett's reversible simulation retains auxiliary information, copies the
+result, and reverses the computation to clean its history~\cite{bennett1973logical}.
+It provides a constructive route toward irreversible tasks while making the
+extra workspace and computation explicit. Such an extension would need to
+preserve the same learning interface and account for those resources;
+reversible representability alone does not establish a general trainable
+Block or an efficient acquisition mechanism.

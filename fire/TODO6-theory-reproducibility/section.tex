@@ -1,0 +1,276 @@
+\section{Theory, evidence boundaries, and reproducibility}
+\label{sec:theory-reproducibility}
+\label{app:evidence}
+
+The role of theory is to identify the conditions under which an executable
+operation, its task binding, and its soft neural realization remain correct.
+These are distinct obligations. A mathematical invariant is not a proof of
+task acquisition, a finite successful training stream is not a generalization
+theorem, and an independent agent's agreement is not a scientific certificate.
+The results below describe conditional finite mechanisms; they do not assert
+an original general learning principle or a topology-specific cost advantage.
+Historical native/coordinate-renderer results and limited hybrid diagnostics
+remain separately versioned evidence. They are not measurements of Primary
+Prometheus, which is defined by the latest fully fused TODO~3-validated
+architecture and its subsequent frozen, actually retrained benchmark lineage.
+
+\subsection{Continuation witnesses and finite-state identification}
+
+\begin{proposition}[Observed state separation]
+Fix a deterministic recurrent system and one task context. Suppose histories
+$h$ and $h'$ have different observed outputs under the same continuation $s$.
+Then any deterministic internal-state realization of both observations must
+assign different recurrent states to $h$ and $h'$.
+\end{proposition}
+\begin{proof}
+If their recurrent states were equal, applying the same continuation under the
+same transition rule would produce equal final states and decoded outputs,
+contrary to the observations.
+\end{proof}
+
+Thus $m$ pairwise distinct terminal continuation profiles require at least $m$
+distinguishable states in this deterministic representation. This justifies
+the historical prototype's witness-triggered workspace expansion. It does not show that equal
+finite profiles are equivalent under all unobserved suffixes. The implemented
+closure and full-TRAIN checks identify a model consistent with available
+observations; its held-out behavior remains an empirical question. No
+exponential global-closure conclusion is inferred from this finite witness.
+
+\subsection{Binding-level protection under state expansion}
+
+Let an old task model be $(X,\iota,T,r)$ and an updated model be
+$(X',\iota',T',r')$, with a shared observable input domain and alphabet
+$\mathcal A$. The encoders are $\iota,\iota'$, transitions are
+$T_a,T'_a$, and readouts are $r,r'$. A relation
+$\mathcal R\subseteq X\times X'$ protects the old computation if
+\begin{align}
+ &(\iota(x),\iota'(x))\in\mathcal R\quad\text{for every protected input }x,
+ \label{eq:relation-encoding}\\
+ &(z,z')\in\mathcal R\ \Longrightarrow\ r(z)=r'(z'),\\
+ &(z,z')\in\mathcal R\ \Longrightarrow\
+       (T_a(z),T'_a(z'))\in\mathcal R\quad(a\in\mathcal A).
+ \label{eq:relation-closure}
+\end{align}
+\begin{proposition}[Native execution preservation]
+Under these conditions, the old and updated systems have the same decoded
+output for every finite word over the protected alphabet, starting from any
+protected input.
+\end{proposition}
+\begin{proof}
+The empty-word state pair belongs to $\mathcal R$ by
+\eqref{eq:relation-encoding}. Each next token preserves membership by
+\eqref{eq:relation-closure}. Induction on word length and readout agreement
+give the result.
+\end{proof}
+
+The relation can connect different-sized state spaces, so it permits expansion
+and internal reorganization without requiring every old parameter to freeze.
+It protects equivalence to the admitted reference, not correctness of that
+reference against an unknown task. Checking a finite reachable relation is
+ordinary semantic verification, not by itself a topological contribution.
+The reference construction, breadth-first exploration, acceptance/backtracking,
+and stored relation all have measured maintenance costs.
+
+\subsection{What continuous-loop protection establishes}
+
+For the present permutation-valued realization, a loop in the unordered
+configuration space of $D$ distinct points induces a permutation of the marked
+fiber. With a fixed initial labeling, monodromy gives a representation
+\begin{equation}
+ \rho:\pi_1\!\left(\operatorname{Conf}_D(\mathbb C)/S_D\right)
+       =B_D\longrightarrow S_D.
+ \label{eq:permutation-monodromy}
+\end{equation}
+The quotient action records endpoint permutations; it is not a faithful
+representation of the whole braid group. Different braid classes, including
+pure braids, can have identical permutation actions. Ordinary graph equivalence
+is likewise not a new topological invariant merely because it is used alongside
+this realization.
+
+\begin{proposition}[A clearance condition for based-loop retention]
+Let $X=\mathbb C\setminus\mathcal B$ for a fixed finite branch set
+$\mathcal B$ and a fixed covering over $X$. Let $\gamma$ be a polygonal based
+loop with clearance
+$\delta=\inf_{s,b\in\mathcal B}|\gamma(s)-b|>0$.
+Let $\gamma'$ have the same parameterized polygon structure and the same
+basepoint, and suppose the maximum corresponding vertex displacement is less
+than $\delta$. Then $\gamma$ and $\gamma'$ are based-homotopic in $X$ and
+induce the same marked-fiber monodromy.
+\end{proposition}
+\begin{proof}
+Linear interpolation on each segment bounds every pointwise loop displacement
+by the largest vertex displacement. For
+$H(t,s)=(1-t)\gamma(s)+t\gamma'(s)$,
+$|H(t,s)-b|\geq\delta-\sup_s|\gamma'(s)-\gamma(s)|>0$.
+Thus the interpolation misses every branch point and fixes the endpoints.
+Homotopy invariance of covering-space lifting gives the same monodromy.
+\end{proof}
+
+This is a conditional geometric protection rule: it permits real continuous
+motion, rather than manually freezing all loop parameters. The covering,
+singular set, basepoint, and labeling must satisfy the stated fixed conditions;
+changing them requires its own argument. Applying it to a learned family also
+requires a bound for every protected loop/input in the claimed domain.
+Numerical continuation, finite-grid checks, and floating-point clearances are
+not automatically rigorous interval certificates. A certified deformation
+family may reuse an already paid-for realization across parameter changes, but
+its assumptions, initial lift, invalidation, and checkpoint reconstruction must
+all be included in the resource account.
+
+Loop-class preservation, task-binding preservation, and accurate finite-time
+execution remain separate. A gate can remain topologically unchanged while a
+shared task router selects the wrong gate. Conversely, unchanged endpoint
+behavior under a conventional constrained program is not evidence that its
+learning benefit is topological. The software monodromy simulator is not a
+physical quantum computer; no hardware energy or quantum speedup follows from
+its numerical execution.
+
+\subsection{A sufficient soft/native consistency bound}
+
+Consider nonnegative stochastic soft execution as in
+\eqref{eq:growth-soft-execution}. Suppose the hard computation uses at most
+$S L_{\max}$ operation slots. Let $p_E,p_R,p_C,p_O$ be lower bounds on the
+probabilities assigned, respectively, to the selected native encoding,
+selected readout, every selected slot call, and every selected operation edge.
+The probability mass following that particular native execution path is at
+least
+\begin{equation}
+ p_{\mathrm{path}}\geq p_Ep_R(p_Cp_O)^{S L_{\max}}.
+ \label{eq:soft-native-path-bound}
+\end{equation}
+If this bound exceeds $1/2$, the native output is the unique soft argmax for
+every covered word, because all alternative output mass together is less than
+$1/2$. The same conclusion can hold with a weaker bound, since several paths
+may decode to the same output; this is only a sufficient condition.
+
+The actual refresh evaluates these minima from the model's current soft
+operation tensors and its own hard calls. It checks parameter count, original
+slot structure, current native graphs, and frozen alias integrity. Subsequent
+weight or temperature changes require renewed checking. Floating-point
+evaluation of the analytical bound is not interval-certified verification.
+The result transfers current native correctness to a bounded-length soft
+interface; it does not teach a new class or prove always-online retention
+between maintenance points. The rule is available to the non-topological
+controls and therefore cannot establish a monodromy-exclusive effect.
+
+\subsection{Executed evidence and version lineage}
+
+Every reported run is tied to actual task arrays, configuration, code version,
+raw update, formation, and guard records, curves, saved neural tensors, extra state,
+and reload checks. Synchronization manifests supply file hashes for completed
+copies. A successful exit alone does not demonstrate learning; measured
+predictions and restored-checkpoint behavior supply the execution evidence.
+Missing records are retained as missing. A completed server-side artifact and
+a locally received runner exit receipt are distinct evidence: a transport
+timeout does not authorize inventing the latter. Failed code, unsuccessful model
+versions, and additional computation remain separate from the eventual
+successful trajectory, rather than being relabeled as if success occurred
+earlier.
+
+The boundary evidence extraction reads original JSON/JSONL records and safe ZIP
+metadata without training or executing checkpoint code. Its CSV exposes
+stage-boundary outcomes and intermediate curves separately. Subsequent
+additional seeds remain traceable to their own original run manifests rather
+than being silently attributed to that older extract. Frozen-backbone storage
+audits additionally check tensor aliasing and unchanged old weights; these
+audits establish stored values and counts, not independent neural inference.
+The raw GPU reload records provide the latter within the execution environment.
+
+Inference reload is also distinct from exact training continuation. In the
+limited hybrid V2 diagnostic, actual neural weights and cold reexecuted maps
+were checked after reload, but the external Python smoothing RNG state was not
+saved. That checkpoint therefore establishes inference restoration, not
+bit-exact interrupted training recovery. Exact recovery requires the relevant
+RNG state, sampler/transaction position, and any optimizer or pending-update
+state, with an actual continuation check before making that stronger claim.
+
+\paragraph{Reproducibility artifacts.}
+The source, data generators, and raw run tree are under
+\path{.deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/}.
+The historical finite formation implementation is \path{terminal_profile_formation.py},
+the historical compact model is \path{parameter_native_models.py}, the experiment driver
+is \path{parameter_efficiency_study.py}, and neural/native maintenance is
+\path{parameter_consistency_refresh.py} within that directory. Independent
+within-campaign examinations are preserved at
+\path{.deep-work/2026-10-31T234403-0400-v2/supervision/reviews/review-037-boundary-growth-and-frozen-readout.md}
+and
+\path{.deep-work/2026-10-31T234403-0400-v2/supervision/reviews/review-038-loop-boundary-learning.md}.
+The latter concerns a distinct, small terminal-feedback loop-class diagnostic;
+it does not substitute for the six-stage architecture or publication benchmark.
+The subsequent integrated hybrid V1/V2 evidence and its inference-versus-RNG
+recovery boundary are examined in
+\path{.deep-work/2026-10-31T234403-0400-v2/supervision/reviews/review-039-hybrid-loop-development.md}.
+That limited D3 development result is not full TODO~3 validation or a Primary
+architecture freeze.
+
+The frozen growth extract's SHA256 is
+\path{311a5073e8f777fc6c6270d5323ebee258542b9be15a50d1bae2fa3ddb3e6c12},
+and its learning-curve CSV has SHA256
+\path{b7e9a6b9e11ce327e0e2b1d108ae3ea95b82e3f1483f32cc7e51d50f88af28b4}.
+These identify particular evidence snapshots, not a claim that every later
+artifact or current source has the same hash. Each executed version and later
+run must retain its own provenance.
+
+\subsection{Independent checking and limits of present claims}
+
+The campaign uses independent agent contexts to inspect original equations,
+code, raw outputs, costs, and saved tensor metadata. Such inspection has
+corrected coding, physical-model, cost, and claim-scope errors. It is not
+independent laboratory replication, community peer review, or proof by model
+consensus. The finite propositions above are mathematical arguments in the
+stated models; this manuscript does not claim Lean compilation or formal
+verification of their implementations. Primary-source reading records preserve
+what was actually read and the boundaries of adaptations. Historical novelty
+requires a checked comparison with substantive original work, beyond an
+independent reimplementation of the same rule.
+
+The final reproducibility package requires fixed data splits, all five final
+seeds, locked configurations, executable environments, checkpoints, curves,
+raw failures, causal ablations, and statistical analysis scripts. Formal
+confidence intervals and paired comparisons remain to be produced under the
+protocol in Section~\ref{sec:benchmarking} after the fully fused Primary's core,
+code, and configuration freeze. Historical architecture versions cannot be
+pooled into that lineage or selected as its substitute. Baseline configuration
+validity depends on implementation, claimed reproduction fidelity, fair
+information, and the prospective protocol, never on attaining an accuracy
+threshold. Low-scoring valid configurations and unsuccessful development
+trials remain in the evidence. Complete cost reporting must include
+development, discovery, formation, maintenance, storage, verification, and
+inference in addition to gradient updates.
+
+At this checkpoint, historical evidence supports finite executable continual
+acquisition with boundary consistency and matched ordinary controls; the
+separate hybrid diagnostic supports a limited integrated learning repair.
+Neither supplies newly retrained Primary results. An independently useful
+topological learning contribution, a general
+nonreversible/continuous Block, competitive real-data results, and the complete
+publication-grade evidence package remain unresolved. This manuscript is a
+working scientific record, not a declaration of breakthrough, publication
+readiness, or public release; authorship and intellectual-property conditions
+must be settled before external dissemination.
+
+
+\subsection{Training-state recovery: executed new audit}
+
+The original hybrid V1/V2 checkpoints support inference reload but omit their
+external smoothing RNG state. That missing history remains missing. A new
+checkpoint wrapper additionally records the Python sampling generator, Torch
+CPU RNG, tensor bits and strides, parameter gradient flags, training control,
+source hashes, semantic receipts, cache state, and logical work counters.
+
+A separately seeded audit starts from the actual V2 transaction-30 checkpoint,
+performs one new gradient calculation, saves, and compares the next continuous
+step against the next step after disk reload. The three actual new gradient
+calculations match in all ten frozen comparison groups, including both credit
+components, complete gradients, neural tensors, RNG, execution outputs, semantic
+state, and work counts. Physical restore/constructor overhead is recorded
+separately from restored logical training history. This is a CPU explicit-SGD
+recovery check, not reconstructed original V2 training or a CUDA guarantee.
+
+The first audit attempt failed before any gradient calculation because the
+isolated process could not read a checkpoint placed beside its inspected source
+files. The retry places the identical input in the runner's existing read-only
+input allowance; isolation and source rules are unchanged. Both attempts and
+their actual exit receipts are retained under
+\path{probes/topology-architecture/runs/parameter-hybrid-training-recovery-v1/}
+and \path{parameter-hybrid-training-recovery-v2/} in the same campaign.
