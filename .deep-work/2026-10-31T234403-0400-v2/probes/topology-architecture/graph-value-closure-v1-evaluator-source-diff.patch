@@ -1,0 +1,70 @@
+--- originalsevenclosure
++++ matchedGraphvalueclosure
+@@ -1,4 +1,8 @@
+-"""Fixed OWN NN evaluation; no training, oracle, search or criterion tuning."""
++"""Fixed actual Graph-baseline/softbridge seven-suffix closure, zeroSGD.
++
++Same frozen3584cases, metrics, lengthstrata and oneNNforward each; additionally
++export the alreadycomputed finalcarry and CPUgeometry (not a full-state label).
++"""
+ import argparse,hashlib,importlib.util,json,time,resource
+ from pathlib import Path
+ import numpy as np
+@@ -65,16 +69,19 @@
+  if not np.array_equal(data['within_original48'],(data['lengths']<=48).astype(np.int64)):raise ValueError('length-only stratum changed')
+  expected_order=np.asarray([(c,b,s)for c in range(2)for b in range(256)for s in range(7)])
+  if not np.array_equal(np.column_stack([data['condition'],data['base_local_index'],data['suffix']]),expected_order):raise ValueError('fixed condition/base/suffix flatten order differs')
+- outputs=[];costs=dict(rows=0,active_token_steps=0,forward_MAC_proxy=0,forward_wall_seconds=0.,CUDA_stream_seconds=0.,H2D_wall_seconds=0.)
++ outputs=[];carry_outputs={key:[]for key in('h','controller','keys','values')};carry_D2H_seconds=0.;costs=dict(rows=0,active_token_steps=0,forward_MAC_proxy=0,forward_wall_seconds=0.,CUDA_stream_seconds=0.,H2D_wall_seconds=0.)
+  with torch.no_grad():
+   for start in range(0,n,64):
+    if time.perf_counter()-tick>800:raise TimeoutError('bounded800s')
+    ids=np.arange(start,start+64);t=time.perf_counter();b,l,active=old.batch(data,ids,device);old.synchronize(device);costs['H2D_wall_seconds']+=time.perf_counter()-t
+    t=time.perf_counter();begin,end=torch.cuda.Event(enable_timing=True),torch.cuda.Event(enable_timing=True);begin.record()
+-   value=model(b['initial'],b['tokens'],b['lengths'],output='logits')if family=='block'else F.log_softmax(model(b['initial'],b['tokens'],b['lengths']),-1)
++   if family!='block':raise ValueError('only the two fixed actual Block NNs are admitted')
++   value,final_carry=model.forward_value(b['initial'],b['tokens'],b['lengths'],execution='soft')
+    end.record();old.synchronize(device);costs['forward_wall_seconds']+=time.perf_counter()-t;costs['CUDA_stream_seconds']+=begin.elapsed_time(end)/1000.
+    if value.shape!=(64,8)or not bool(torch.isfinite(value).all()):raise ValueError('finite outputs required')
+-   outputs.append(value.cpu().numpy());costs['rows']+=64;costs['active_token_steps']+=active
++   copy_tick=time.perf_counter();outputs.append(value.cpu().numpy())
++   for key in carry_outputs:carry_outputs[key].append(final_carry[key].detach().cpu().numpy())
++   carry_D2H_seconds+=time.perf_counter()-copy_tick;costs['rows']+=64;costs['active_token_steps']+=active
+    costs['forward_MAC_proxy']+=(model.resource_report(batch_size=64,sequence_length=l,active_steps=active)if family=='block'else model.proxy(64,l,active))['proxy_forward_macs']
+  logp=np.concatenate(outputs);pred=logp.argmax(-1);scores={}
+  for condition in(0,1):
+@@ -90,14 +97,32 @@
+     continuation_role='base case'if suffix==0 else('TRAINED four-word cache continuation'if manifest['profile_cache_trained']and name in('SET0_STEP','SET1_STEP')else'outside profile four-word cache'),
+     caution='empty consistency is tautological'if suffix==0 else('CLEAR consistency equals CLEAR accuracy'if suffix==3 else'functional consistency can hold with an incorrect base prediction'))
+    scores[str(condition)][name]=metric
+- with(a.out/'raw-outputs.npz').open('xb')as f:np.savez_compressed(f,log_probabilities=logp,predictions=pred,targets=data['targets'],source_train_index=data['source_train_index'],base_local_index=data['base_local_index'],condition=data['condition'],suffix=data['suffix'],within_original48=data['within_original48'],lengths=data['lengths'])
++ carry_arrays={key:np.concatenate(values)for key,values in carry_outputs.items()}
++ if any(not np.isfinite(value).all()for value in carry_arrays.values()):raise ValueError('finite actual finalcarry required')
++ geometry_started=time.perf_counter();carry_metrics={}
++ for key,value in carry_arrays.items():
++  norms=np.linalg.norm(value.reshape(n,-1).astype(np.float64),axis=1)
++  carry_metrics[key]=dict(shape=list(value.shape),array_bytes=value.nbytes,L2_mean=float(norms.mean()),L2_p95=float(np.quantile(norms,.95)),L2_max=float(norms.max()),all_finite=True)
++ # Evaluation-only geometry uses the model's own posterior and learned input
++ # basis. It neither feeds new labels into execution nor resets any context.
++ raw_basis=model.encoder.weight.detach().cpu().numpy().astype(np.float64);basis=raw_basis/np.maximum(np.linalg.norm(raw_basis,axis=-1,keepdims=True),1e-6)*model.internal_states**.5
++ probabilities=np.exp(logp.astype(np.float64));projected=probabilities@basis;h=carry_arrays['h'].astype(np.float64)
++ R_h=projected/np.maximum(np.linalg.norm(projected,axis=-1,keepdims=True),1e-6)*np.linalg.norm(h,axis=-1,keepdims=True)
++ bridge_distance=np.linalg.norm(R_h-h,axis=-1);correct=pred==data['targets']
++ bridge_alpha=float(model.value_bridge_alpha.detach().cpu())if hasattr(model,'value_bridge_alpha')else None
++ bridge_strength=float(np.tanh(bridge_alpha))if bridge_alpha is not None else None
++ carry_geometry=dict(scope='finalcarry values only; terminal label is not full state/context; R(h) uses own finalposterior, not the prebridge candidate; no proved retraction/idempotence',
++  own_posterior_R_h_distance_mean=float(bridge_distance.mean()),own_posterior_R_h_distance_p95=float(np.quantile(bridge_distance,.95)),
++  own_posterior_R_h_distance_on_correct_mean=float(bridge_distance[correct].mean())if correct.any()else None,
++  value_bridge_alpha=bridge_alpha,value_bridge_strength=bridge_strength,geometry_CPU_wall_seconds=time.perf_counter()-geometry_started)
++ with(a.out/'raw-outputs.npz').open('xb')as f:np.savez_compressed(f,log_probabilities=logp,predictions=pred,targets=data['targets'],source_train_index=data['source_train_index'],base_local_index=data['base_local_index'],condition=data['condition'],suffix=data['suffix'],within_original48=data['within_original48'],lengths=data['lengths'],own_posterior_R_h_distance=bridge_distance,**{'carry_'+key:value for key,value in carry_arrays.items()})
+  if not old.tensor_state_equal(before,model.state_dict())or sha(cp)!=manifest['checkpoint_sha256']:raise ValueError('NN or checkpoint changed')
+  for leaf,digest in manifest['source_sha256'].items():
+   if sha(Path(__file__).with_name(leaf))!=digest:raise ValueError('execution source changed after evaluation')
+  for leaf,digest in [('closure.npz',manifest['data_sha256']),('metadata.json',manifest['metadata_sha256'])]:
+   if sha(a.inputs/leaf)!=digest:raise ValueError('frozen data changed after evaluation')
+  result=dict(status='ACTUAL_EXTENDED_CLOSURE_FROZEN_EVAL_COMPLETE',model=manifest['model'],P=P,parameter_bytes=sum(v.numel()*v.element_size()for v in model.parameters()),checkpoint_bytes=cp.stat().st_size,saved_optimizer_bytes=saved_optimizer_bytes,live_optimizer_bytes=0,model_unchanged=True,SGD_updates=0,scores=scores,costs=costs,driver_wall_seconds=time.perf_counter()-tick,cpu_peak_RSS_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,cuda_peak_allocated_bytes=torch.cuda.max_memory_allocated(),cuda_peak_reserved_bytes=torch.cuda.max_memory_reserved(),source_sha256=manifest['source_sha256'],parent_checkpoint_sha256=manifest['checkpoint_sha256'],data_sha256=manifest['data_sha256'],raw_sha256=sha(a.out/'raw-outputs.npz'),training_lineage=manifest['training_lineage'],formal_Primary=False,scope='development; cache-overlap closures are trained for newprofilearms; NOP/composed/CLEAR are outside4wordcache; full and <=48 strata kept, not matched-quality architecture victory')
+- result.update(condition_names={'0':'MIX15','1':'last15 replaced by READ10'},checkpoint_schema=manifest['checkpoint_schema'],block_checkpoint_header=manifest['block_checkpoint_header'],logical_carry=carry,
++ result.update(actual_final_carry_metrics=carry_metrics,carry_geometry=carry_geometry,raw_carry_array_bytes=sum(v.nbytes for v in carry_arrays.values()),raw_output_and_carry_D2H_wall_seconds=carry_D2H_seconds,value_bridge_alpha=bridge_alpha,value_bridge_strength=bridge_strength,carry_export_scope='same singleforward forward_value returns alreadycomputed carry; no additionalNNforward, finalcarry rawarrays retained; geometricCPUwork andD2H separatelytimed andwhole drivercharged',condition_names={'0':'MIX15','1':'last15 replaced by READ10'},checkpoint_schema=manifest['checkpoint_schema'],block_checkpoint_header=manifest['block_checkpoint_header'],logical_carry=carry,
+   registered_buffer_bytes=sum(v.numel()*v.element_size()for v in model.buffers()),source_code_bytes=sum(Path(__file__).with_name(leaf).stat().st_size for leaf in manifest['source_sha256']),
+   data_file_bytes=(a.inputs/'closure.npz').stat().st_size,data_array_bytes=sum(v.nbytes for v in data.values()),metadata_bytes=(a.inputs/'metadata.json').stat().st_size,
+   input_manifest_bytes=(a.inputs/'manifest.json').stat().st_size,raw_output_bytes=(a.out/'raw-outputs.npz').stat().st_size,

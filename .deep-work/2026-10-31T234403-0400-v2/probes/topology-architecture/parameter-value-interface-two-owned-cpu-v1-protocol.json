@@ -1,0 +1,98 @@
+{
+  "SGD_updates": 0,
+  "address_space_GiB": 64,
+  "before_execution": true,
+  "calculation": "E=encode_state(arange8); logp=logsoftmax(readout(E)); R(v)=||v||normalize(softmax(readout(v))@E), norms/dot/geometryonly; no_transition/token/taskinputs",
+  "costs": "oneCPUjob,2readoutB8calls+2B8weightedbasisproducts+Gram=10240linear/dotMACproxy perNN; nonlinearity/norm/cdist/IO/wholewall/RSS/NN/checkpoint/historicalAdam/replay storagecharged; fullFLOPs/provider-effective unknown",
+  "file_limit_MiB": 100,
+  "formal_Primary": false,
+  "models": {
+    "baseline": {
+      "P": 13397,
+      "bytes": 574701,
+      "historical_cost_scope": "actual NN/Adam/replay/training costs retained in parent, not zeroed by this0SGDjob",
+      "historical_resources": {
+        "cpu_peak_RSS_bytes": 1631752192,
+        "cuda_allocated_bytes": 34375168,
+        "cuda_peak_allocated_bytes": 55359488,
+        "cuda_peak_reserved_bytes": 83886080,
+        "cuda_reserved_bytes": 83886080,
+        "frozen_parameters": 0,
+        "memory_scope": "actual process/allocator counters; peak is cumulative and includes audits; no energy claim",
+        "optimizer_tensor_bytes": 107284,
+        "parameter_bytes": 53588,
+        "parameters": 13397,
+        "registered_buffer_bytes": 0,
+        "replay_bytes": 55296,
+        "replay_metadata_JSON_payload_bytes": 1738,
+        "replay_storage_scope": "128 raw/provenance array slots plus separately reported metadata; dataset/evidence arrays are not training replay capacity",
+        "trainable_parameters": 13397
+      },
+      "leaf": "baseline.pt",
+      "parent": "parameter-factorized-graph-stage3-anchor0-n8-seed0-600-v1",
+      "parent_result_sha256": "01a97e46d8a8ddf8b861e8176632029358ec5c161c93288d587f2eb63d8cf177",
+      "parent_source_sha256": {
+        "context_replay128.py": "cbe370360f0bf52efc82d614db54551f000c9f7e44230dc358dfdb76bcbad140",
+        "continuous_primitive_block.py": "fcba2e82defe2e3fdb9b02efe1eee37456f33defa172c7eb632ea07774b88158",
+        "factorized_masked_graph_fb.py": "f2e3e16d75c02ce68b62189ab808debe71c5ed43e0f12107c212fcd0341af4f5",
+        "memory_live_stage_train.py": "dd5fc0b869d216f29c6ccb7202a1d965086c3fedb060d3c4c3bc4e5620042ad6",
+        "owned_parent_driver.py": "cc1b8b2a2102050b071376bd26329bbb3ead8d5a540cff4e79a7e73cfaf5cccc",
+        "train_factorized_graph_stage3.py": "2cda29ff225ace26d2f8695c7621401c9ba82120ed46e273386bdf791953f5f2"
+      },
+      "schema": "factorized-graph-stage3-training-v1",
+      "sha256": "7d8a75f960bd55fedbe4afa68eccf59b18d05de759b2eb1e0724818c3acedd5d"
+    },
+    "bridge": {
+      "P": 13398,
+      "bytes": 578147,
+      "historical_cost_scope": "actual NN/Adam/replay/training costs retained in parent, not zeroed by this0SGDjob",
+      "historical_resources": {
+        "cpu_peak_RSS_bytes": 1676939264,
+        "cuda_allocated_bytes": 34377216,
+        "cuda_peak_allocated_bytes": 57230336,
+        "cuda_peak_reserved_bytes": 83886080,
+        "cuda_reserved_bytes": 83886080,
+        "frozen_parameters": 0,
+        "memory_scope": "actual process/allocator counters; peak is cumulative and includes audits; no energy claim",
+        "optimizer_tensor_bytes": 107296,
+        "parameter_bytes": 53592,
+        "parameters": 13398,
+        "registered_buffer_bytes": 0,
+        "replay_bytes": 55296,
+        "replay_metadata_JSON_payload_bytes": 1739,
+        "replay_storage_scope": "128 raw/provenance array slots plus separately reported metadata; dataset/evidence arrays are not training replay capacity",
+        "trainable_parameters": 13398
+      },
+      "leaf": "bridge.pt",
+      "parent": "parameter-value-bridge-graph-n8-seed0-stage3-v3",
+      "parent_result_sha256": "73e03cc82de3f0ee6bcfd91996a7d9437dcdc5090bcb83c7e42afdf5878b5080",
+      "parent_source_sha256": {
+        "context_replay128.py": "cbe370360f0bf52efc82d614db54551f000c9f7e44230dc358dfdb76bcbad140",
+        "continuous_primitive_block.py": "f1ccdc83fbae14754e4271da9cdfb949f4f656c9704e35df283f899806c95da3",
+        "factorized_masked_graph_fb.py": "f2e3e16d75c02ce68b62189ab808debe71c5ed43e0f12107c212fcd0341af4f5",
+        "memory_live_stage_train.py": "dd5fc0b869d216f29c6ccb7202a1d965086c3fedb060d3c4c3bc4e5620042ad6",
+        "owned_fcba_core.py": "fcba2e82defe2e3fdb9b02efe1eee37456f33defa172c7eb632ea07774b88158",
+        "owned_parent_driver.py": "cc1b8b2a2102050b071376bd26329bbb3ead8d5a540cff4e79a7e73cfaf5cccc",
+        "train_value_bridge_graph_stage3.py": "d35f3db87276356110577a37e780dda028a75ad81bff3dbdb9eb2cd35c8447f8"
+      },
+      "schema": "soft-value-bridge-graph-stage3-training-v1",
+      "sha256": "19fb4fc6c07326c494a44d7f573066515751a969efcc5e8776b6d96efb085772"
+    }
+  },
+  "name": "parameter-value-interface-two-owned-cpu-v1",
+  "no_alpha_or_temperature_tuning": true,
+  "no_fresh_model_or_training": true,
+  "only_two_actual_NNs": true,
+  "outside_seconds": 150,
+  "raw_evidence": "perNN NPZ includesall64logp, E, readoutW/b, Gram/norms, R(E), R\u00b2(E), fixedpoint/idempotenceresiduals; resultJSONalsoincludesall64logp",
+  "remote_launch_sha256": "bd5012e171ebdc8b82f225ecbc332eb65bf11a130a0ab6562d50924cc66298a7",
+  "runner_sha256": "c9f00f8e85f68d99e76aa4203efe77d08ac9a6ea25536631cf592b9b8c711335",
+  "scope": "publicinitialvalues0..7\u2192actualsavedindependentreadout; all64logp/argmax/lognormalization+prototypeGram/norms andhypotheticalR/R\u00b2 saved; learnedinterfaceproperty nottaskorfullcarryaccuracy",
+  "source_sha256": {
+    "audit_value_interface_owned_cpu.py": "69d1506c699cec0880dafbbb0bf3ee1105e16047d16dbc9603bd674dcf0465b6",
+    "owned_fcba_core.py": "fcba2e82defe2e3fdb9b02efe1eee37456f33defa172c7eb632ea07774b88158",
+    "value_bridge_core.py": "f1ccdc83fbae14754e4271da9cdfb949f4f656c9704e35df283f899806c95da3"
+  },
+  "status": "FROZEN_UNEXECUTED",
+  "task_data_labels_or_oracles": false
+}

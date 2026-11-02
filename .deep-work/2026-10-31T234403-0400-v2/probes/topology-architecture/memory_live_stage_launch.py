@@ -11,10 +11,12 @@ import base64
 import hashlib
 import json
 from pathlib import Path
+import pickletools
 import re
 import subprocess
 import sys
 import time
+import zipfile
 
 ROOT=Path(__file__).resolve().parent
 REMOTE="/workspace/prometheus-v2-m0-architecture"
@@ -51,6 +53,33 @@ def checked(path,expected=None):
     return digest
 
 
+def checkpoint_header(path):
+    """Read ONLY literal scalar prefix fields; never unpickle/import Torch.
+
+    Owned torch ZIP metadata places these fields before model_state. Parsing
+    opcodes has no object construction or REDUCE execution; tensor values are
+    neither parsed nor emitted. Unexpected/nonliteral encodings fail closed.
+    """
+    with zipfile.ZipFile(path) as archive:
+        entries=[entry for entry in archive.infolist() if entry.filename.endswith("/data.pkl")]
+        if len(entries)!=1 or entries[0].file_size>MAX_FILE:raise ValueError("bounded OWN checkpoint metadata ZIP required")
+        operations=pickletools.genops(archive.read(entries[0]))
+        found={};pending=None
+        for opcode,value,_ in operations:
+            if opcode.name in ("BINPUT","LONG_BINPUT","MEMOIZE"):continue
+            if pending is not None:
+                if opcode.name in ("BINUNICODE","SHORT_BINUNICODE","UNICODE","BININT","BININT1","BININT2","INT"):
+                    found[pending]=value
+                elif opcode.name in ("NEWTRUE","NEWFALSE"):found[pending]=opcode.name=="NEWTRUE"
+                else:raise ValueError("nonliteral OWN checkpoint prefix field: "+pending)
+                pending=None
+            elif value=="model_state":break
+            elif isinstance(value,str) and value in ("schema","stage","step","stage_complete"):
+                if value in found:raise ValueError("ambiguous OWN checkpoint header")
+                pending=value
+    return found
+
+
 def parent_manifest(arm):
     parent=PARENTS[arm];learn=ROOT/"runs"/parent/"learn";frozen=ROOT/"versions"/("code-"+parent)
     result=json.loads((learn/"result.json").read_text())
@@ -80,7 +109,43 @@ def parent_manifest(arm):
     checked(checkpoint,cp["sha256"])
     if checkpoint.stat().st_size!=cp["bytes"] or cp["file"]!=arm+"-stage2-step600.pt":raise ValueError("actual phase2 receipt differs")
     original=result["resume_lineage"]
-    phase0=original["parent_run"];phase0learn=ROOT/"runs"/phase0/"learn"
+    # Scientific resume records contain actual SHA/state facts, while the
+    # trusted original launch protocol carries the run identity. Cross-link
+    # both and the real phase0 checkpoint; never infer identity from a name.
+    parent_protocol_path=ROOT/(parent+"-protocol.json")
+    checked(parent_protocol_path)
+    parent_protocol=json.loads(parent_protocol_path.read_text())
+    if parent_protocol.get("name")!=parent:raise ValueError("actual replay-parent protocol identity differs")
+    launch_lineage=parent_protocol["resume_lineage"]
+    phase0=name(launch_lineage["parent_run"]);phase0learn=ROOT/"runs"/phase0/"learn"
+    phase0result=json.loads((phase0learn/"result.json").read_text())
+    phase0rows=[json.loads(line) for line in (phase0learn/"records.jsonl").read_text().splitlines()]
+    phase0configs=[row for row in phase0rows if row.get("kind")=="configuration"]
+    if len(phase0configs)!=1:raise ValueError("actual phase0 configuration missing/ambiguous")
+    phase0config=phase0configs[0];phase0policy=phase0config["args"]
+    if phase0result.get("status")!="DECLARED_DEVELOPMENT_COMPLETED" or any(phase0result.get(k)!=v for k,v in (("arm",arm),("states",8),("seed",0))):
+        raise ValueError("actual OWN phase0 result identity/status differs")
+    if phase0policy!=launch_lineage["parent_actual_configuration"] or any(phase0policy.get(k)!=v for k,v in (("arm",arm),("states",8),("seed",0),("stages",1),("steps",600))):
+        raise ValueError("actual phase0 launch/configuration/budget differs")
+    phase0reports=phase0result["training_reports"]
+    if len(phase0reports)!=1 or phase0reports[0].get("stage")!=0 or phase0reports[0]["costs"].get("SGD_updates")!=600:
+        raise ValueError("actual phase0 paid600-update report required")
+    if [row["step"] for row in phase0rows if row.get("kind")=="actual_update" and row.get("stage")==0]!=list(range(1,601)):
+        raise ValueError("actual phase0 committed update evidence differs")
+    phase0sources=phase0result["source_sha256"]
+    if not (phase0sources==phase0config["source_sha256"]==launch_lineage["parent_actual_source_sha256"]==original["historical_source_sha256"]):
+        raise ValueError("actual phase0 scientific/protocol/source lineage differs")
+    for leaf,expected in phase0sources.items():checked(ROOT/"versions"/("code-"+phase0)/leaf,expected)
+    phase0receipt=phase0reports[0]["checkpoint"];phase0checkpoint=phase0learn/launch_lineage["parent_checkpoint_leaf"]
+    phase0sha=checked(phase0checkpoint,original["checkpoint_sha256"])
+    if not (phase0sha==phase0receipt["sha256"]==launch_lineage["parent_checkpoint_sha256"]
+            and phase0receipt["file"]==phase0checkpoint.name
+            and phase0checkpoint.stat().st_size==phase0receipt["bytes"]==launch_lineage["parent_checkpoint_bytes"]
+            and original["saved_stage"]==0 and original["saved_step"]==600):
+        raise ValueError("actual phase0 checkpoint/scientific/protocol receipt differs")
+    header=checkpoint_header(phase0checkpoint)
+    if header!=dict(schema="contextual-primitives-training-v1",stage=0,step=600,stage_complete=True):
+        raise ValueError("actual phase0 checkpoint literal schema/stage/step differs")
     history={}
     for stage in range(3):
         origin=(phase0learn/"stage0-common-indices.npz") if stage==0 else learn/f"stage{stage}-common-indices.npz"
@@ -114,6 +179,8 @@ def parent_manifest(arm):
         data_run=DATA_NAME,data_metadata_sha256=sha(newdir/"metadata.json"),data_source_sha256=newmeta["source_sha256"],
         counterfactual_truth_sha256=newmeta["counterfactual_truth_sha256"],truth_excluded_from_training_inputs=True,
         historical_training_reports=result["training_reports"],historical_resume_lineage=original,
+        verified_phase0_run=phase0,verified_phase0_checkpoint_header=header,
+        verified_phase0_checkpoint_sha256=phase0sha,parent_protocol_sha256=sha(parent_protocol_path),
         parent_result_sha256=sha(learn/"result.json"),parent_records_sha256=sha(learn/"records.jsonl"),
         previous_actual_paid_updates=1800,new_actual_updates=600,old_training_repeated=False)
 

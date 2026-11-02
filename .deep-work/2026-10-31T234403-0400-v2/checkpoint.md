@@ -278,3 +278,106 @@ Supervisionpacket009submitted, actualnativeindependentsupervisorreadyreview. Nex
 ## Actual interruption recovery during control development
 
 Native children were interrupted; first two after020 processes already completed and preserved. At recovery there was no active experimental runner, no v2 code/raw, and no saved review022. Root resumed the same developer/supervisor native contexts; their actual prior inspection messages are retained but not promoted to a previously saved review. New control contract and frozen v2 mathematical proposal/audit survived. No old experiment was rerun or missing review reconstructed as if it had occurred. This paragraph records recovery, not an additional plan or research completion.
+
+
+## 2026-11-02 05:34 UTC · same V2 actual fourth-stage continuation
+
+New balanced two-live-value data passed CPU generation. All four OWN Replay128 parent NN/Adam/RNG/storage-growth CPU checks actually passed; exact old-token behavior and expanded save/reload checked. Dynamic fourth-stage600-step GPU continuation is now launched, not inferred completed. Other three protocols are frozen, not yet run. Dynamic frozen-weight CUDA Graph audit actually completed12cases with zero labels/updates; parse costs after sync. Official Mamba CPU restricted compiler policy passed; GPUv1 failed CUDA bootstrap before prologue. New runner restores already-authorized trusted bootstrap; no taskbaseline success claimed. Keep same scientific boundaries, joint P/complete-resource ledger, and current Method. No background continuation is promised.
+
+
+## 2026-11-02 05:50 UTC · four actual phases, causal memory diagnostic, next repair
+
+All four fourth-stage NN/Adam continuations actually completed600 updates from OWN phase2 Replay128 parents; rawdata,NNs and allcosts synchronized. Joint ledger: `probes/topology-architecture/memory-live-stage-parameter-complete-cost-evidence-v1.json`. GRU has better new/old accuracy and P/time than dynamic here; no broad architecture advantage. VALID memory audit v1 failed only its malformed fixture before measurements; v2 correctedthatfixtureonly and completed4 interventions,2048VALID evaluations,0SGD. Full58.20%,zero_read12.5%,value_mismatch38.09%,jointpermutesamepredictions; WRITEaddressentropy1.801,maxprob.304 supports targeted delta-write development, not a bottleneck theorem. New delta-write code/CPUcontract is under construction, not yet trained. Official Mamba2 staged smoke actually passed, all strict checks and groupcleanup, coldpriming83.70seconds charged; actual taskbaseline stillnotrun. All5 CUDAgraphaudits finishedwithunchangedNN and no labels; conventional architectures stillfaster. NoPrimaryfreeze/campaigncompletion/backgroundpromise.
+
+
+## 2026-11-02 06:10 UTC · actual matched repairs and official Mamba task
+
+Delta-write and CALL-credit controls each actually completed600 SAME-parent updates; both new-task performances are worse than original, no selective extension/tuning. Delta improves some old retention but not acquisition/cost; CREDITdoesnotrepair. ActualNNs/raw/costs retained. Official Mamba2 completed300samealltokenupdates, P41116/PPL64=7.17285, training3.5578s plus82.6664s coldcompile; no performance gate. Newconstructiveaction is8group statecarry update (notyettrained), preservingBlock/data/budget; fusioncostkernel also onlyunderconstruction. Review045 actualrawverification saved; no newPrimary/broadadvantage/campaigncompletion. Root present, no backgroundpromise.
+
+
+## 2026-11-02 06:42 UTC · actual growth check, new composition data, fused execution
+
+G8 v1 actual-NN check failed on provenance `.py.source` outside existing read glob, before updates. Frozen v2 changes only that transport filename to `.py`; actual OWN NN/Adam/RNG growth selftest passed (outer9.619s). Failed v1 and unexecuted trainv1 retained. Composition data actually generated (4.1265s,2048 rows) and synchronized; six fixed-weight eval packages next, no new learning labels or changes to old tests. Same frozen-weight fused GPU audit is actually launched after successful CPU contract; no numerical/speed result inferred. G8 600-step trainv2 frozen and waiting for GPU to avoid concurrent timing confound. Latest Primary remains unfrozen; strong Mamba/GRU evidence retained. No background execution promise.
+
+
+## 2026-11-02T06:53:44.141710+00:00 · actual composition bottleneck and value-interface training
+
+G8 matched600 completed and synced: newIID62.5%, old0IID75.39%, P28645/train103.53s. Original dynamic composition MIX59.77% but SET0STEP4.69%; GRU62.5% and1.56%; all six NN raw2048 rows each verified independently by ROOT grouping fields, no Torch/model rerun. Fused frozenNN6shape GPU check passed; no architecture victory inferred. New H32-value/c16-controller identity-write/group8 model CPU rule/gradient/reload check passed P13381/carry432; anchor1 fourphase2400 training actually running, anchor0 frozen. Local configuration-order rejection and invalid --readonly runner flag preserved as zero-model-update transport failures; v2 source/architecture/objective/data unchanged, original isolation unchanged. Native supervisor capacity errors retained; no missing review reconstructed. NoPrimaryfreeze/campaigncompletion/backgroundpromise.
+
+
+## 2026-11-02T07:34:09.058214+00:00 · actual continuation behavior and real-sequence transfer
+
+ROOT read actual independent review046 with raw NPZ/JSONL/cost checks, no invented consensus proof. Continuation-feedback three OWN parents each completed600, PBlock13397/GRU25616/TF26760; newIID .584/.631/.193, all low results retained. Seven3584row frozen closure runs completed, short-profile/NOP gains are not independent new architecture advantage: GRU has comparable gains, four-token composition stillweak. GRU firstattempt zeroSGD failed exact numeric gate; real frozen diagnosis proved samepackedbackend gives maxdiff0, no precision/accuracy budget relaxation. New factorized AR300 is actually running after actualCPU P20721/same538c batches/causality/reload check. Parametermatched GRU32 and ARcontrols + masked GraphFB are pending code only. All fees, old evidence, unique Method/NOW remain. NoPrimaryfreeze/campaigncompletion/offhostpromise.
+
+
+## 2026-11-02T08:17:57.552647+00:00 · real600 Graph training and fixed-parameter competitor
+
+Same original anchor0 stage2 NN/Adam/RNG/replay restored; graph600 actuallycompleted exit0, all27 checks and reloadpassed. Updated stage3NN7d8a75f9 saved; newIID62.30%, old87.70/91.60/85.35. Updatewall11.54947s versus eager111.35571, but paddingforward25.136G vs13.869G, wholeSSH37.3474s, no bitwise trajectoryclaim. FixedPGRU32 fourphase complete:14024P,newIID61.52%,train17.28147s. FrozenmemoryVALIDdiagnostics completed; querywritefreeze failed to improve, zerovalues/keys degraded. All raw synced; Method updated; noPrimaryfreeze/campaignsuccess/backgroundpromise. Next actual work is one matchedP operandinteractionpair and fixedP ARcontrols being prepared by existingworkers; no newpermission.
+
+
+## 2026-11-02T08:43:23.405521+00:00 · actual rawreview and one selected state-interface repair
+
+Review048 read byROOT; actualGraph600/AR300 performanceandcosts independentlyrecomputed. Parameter-matchedAR GRU34/TF24 completed300 each: P21180/19564, PPL64 9.4485/11.4140, training1.0907/3.1186s. ARGraph same20721P/PPL10.5930, training7.6233s/driver47.7217s. Matched576P operandpair completed600each: Product.5625newIID vsAdditive.62695; preserveboth,noProductadvantage/no extra variants. Nextselectedrepair isONEscalar softvaluebridge afterG8 beforewrite, samecontroller/context/memory; actualparent CPUcheck passed, discarded synthetic1update counted, GPU600NOT YET LAUNCHED. Childpreparingclosure fornewbridgeNN and currentGraphbaseline7d8a75 only, notrerunningoldeagerevals. Method updatedinplace; noPrimaryfreeze/no scientificcompletion/backgroundpromise.
+
+
+## 2026-11-02T09:44:43.098805+00:00 · real fresh four-stage posterior-state causal pair
+
+CPU pair admission actuallypassed andsynced. POSTERIOR andRAW modes eachcompleted2400 freshupdates, sameinitialtheta213c1c0cda65eefd4b06de958d56c349e047cd319681e26e25b5e8a5756f5aad, P13397, same27NN/sampler/labels/Replay128. Bothactual2capturesL16/L48,4phaseNN/Adam/RNG/replayreloadandfreeze-before-TESTpass. NewIID/long: POST.24609/.17383 vsRAW.62109/.625. POSTfirst3stageVALIDbeforestage3 .99219/1/.97656, so itdidlearnoldrules; finaloldlong .38867/.77344/.73633 vsRAW .21875/.52148/.54102, mixedstability/acquisitiontradeoff. Actualupdatewall29.7380/29.2537s;wholeSSH66.0436/66.8771. FinalNNs758b2cd...a06ef and1b865db...ec9d2, all60fileseachsynced. NoPrimaryfreeze/noadvantageclaim/noquantizedprogramclaim. Nextinprogress isONEfrozenVALIDoperand/memorydiagnosticusingOWNstage2+stage3forbothmodes, no newtraining yet; actualindependentrawreviewretryaftercapacityerror, no missingreviewinvented. No directionrestart or permissionexpansion.
+
+
+## 2026-11-02T10:09:11.896080+00:00 · actual operand-role binding evidence and one selected repair
+
+FourOWNfrozenNN VALID audit completed/synced,0SGD; truth loaded onlyafterrawcarrytraces saved. RAW-stage3 all512predictions in{3v0+v1,3v1+v0}mod8; 192querypairsneedchangedanswer butonly20predpairschange. Writeorderflipshouldnotchangeanswer yet58pairschange. LiteralPOSTstage2 contentalsodegradesbetweenwritesandreads; correctslotavailability399vsactualread177. Massnormalizationnotselected. Review049/050 ROOTactuallyread. NextselectedONErepair uses sharedread/writequery, trainablekeysstaticduringepisode, input-onlyhistorycontroller, RAWh; childimplementing, no newtrainingyet. Parameterexpectation10805 includesremovingunused1536controllercolumns+1056writeheads. Newmethodsection3.8 recordsexplicitrulesandNTMprecedent. NoPrimaryfreeze/advantageclaim/campaigncompletion/backgroundpromise.
+
+
+## 2026-11-02T10:20:38.471405+00:00 · actual shared-address four-stage training complete
+
+Jointinput-history/shared-query/static-episodekeyrepair actual2400freshupdates completedexit0, all23gradgates/2captures/4safety+replayreloadpass. P10805/NN43220/Adam86532, all79files9518296Bsyncedlocal, finalNNc485fe65828146c988f2bf0aaa91d801b268eefa67d2286ae90bbcac8a456883. Updates24.481718s/science50.282021/SSH55.896138; paddedforward39.2036352GMACnotfullFLOPs. NewVALID.623047/IID.619141/long.433594/unseen.542969; finaloldIID.839844/.839844/.779297. FewerP/updatesbutacquisitionceilingnotremovedandgeneralizationtradeoffs. Raw/POSThistorynotcovered. FrozenperexampleVALID+TEST outputs saved SAMEforwards, independentrawchecksongoing. Nextactualaction isnewtwoOWNNNVALIDeventauditonly, nooldNNrerun/noadditionaltrainingyet; explicitdiagnosiswillchooseonelearning-interfacechange. NoPrimaryfreeze/broadadvantageclaim/campaigncompletion/backgroundpromise.
+
+
+## 2026-11-02T10:27:28.552924+00:00 · actual address erasure diagnosis; persistentregister repair selected
+
+NewsharedaddressOWN2NN eventaudit actuallycompletedexit0/SSH7.466744s/inner1.897561s,0SGD,33792activepositions,9files4.4736MBsynced. ExactfirstWRITEonlyKEYflipTVmean.000625 decayswithincreasingSTEPcounts; samekeyWRITEtoREADTVmean.752/topslotchangesall. NewVALIDpred508/512inorderedset butonly11of192label-changingquerypairschangepred. Source/rootmath supportaddresssignal/roleerasure,notcapacityimpossibility/normonlycause. RootselectedONEnextrepair z16 learnedcopy/overwriteaddressregister (beta(rawx), proposal(rawx), z0=0, gatebias−2 prospective), queryzonly/noop-tokenbypass; retainc/CALL/G8/RAW/Vp/staticK. ExpectedP10566/25tensors/carry264. ParentimplementingCPU+fresh4stageGraphpackage; no newNNrunyet. Method§3.9updated; allnegativecostevidencepreserved. RootsoleSSH/trainingcoordinator. Activeparent+twochildcontexts, independentrawverificationongoing. NoPrimaryfreeze/no broadadvantage/no campaigncompletion/nohostbackgroundpromise.
+
+
+## 2026-11-02T10:54:06.438539+00:00 · persistent actual failure localized; integrated typed action development
+
+Persistentfresh2400actuallycompleteexit0/all25gates/4NNAdamRNGreplayreload;79files9507782Bsynced;NN6b88c33ce6483897467c461790d41872ebc4dcdcba143ecd4025936ba0069791. P10566/train26.383863/science54.880903/SSH61.032167/pad38.436864GMAC; newVALID.621094, newTEST.617188/.503906/.59375. Independentraw3cde... checksall12TEST/7VALID/28all25grad/2400/schedules. New2NN+tokengateauditactualexit0/11files4.4067MB/science2.261291/SSH7.970029: betaSTEP.944663,KEY.101166/.085774,READ.469075,MIX.781235; learnedholdselectionwrong, notjustKfactorization. RootselectedONEsubstantivetyped-actionrevision §3.10: samelearnedχ/caller, competingcompute+LOAD+STORE+ADDRESS, directLOADh, STOREoldh/V8x32, contextaddresslogits8/noK/independentgates. Parentimplementscore/helper/trainer, staticchildCPUchecker; expectedP10991/20tensors/carry320. NOTYETTRAINED. RootsoleSSHexecutor, no secondrunner. TwofigureCPUversionsactualrendered/synced;v2legendfixonly,noNN,andbothfees retained. Methodinplaceupdated; NRAMoriginalp2–6ROOTread/closestexplicitmemorysource,no noveltyclaim. NoPrimaryfreeze/broadadvantage/campaigncompletion/backgroundpromise.
+
+
+## 2026-11-02T11:06:21.470789+00:00 · typedGPU firstattempt failedbeforeSGD; bookkeepingfix pending
+
+ROOTlaunchedtypedv1actualat11:03:31; actualexited1afterSSH10.517747sec/runner9.407810. Stage0setup0updates0completedstages: Graphenginehashhelper accidentallybecamehashlib.sha206 (andraw_sha206) from25→20mechanicalreplacement. ThisisNOTlearningfailure/numericalgatefailure. All15files407652Bsyncedincludingfailure, initialconfiguration, admissionNPZ, partialinitialNN. No completedphasewasrerun. ParentwillfixENGINEONLYsha206→sha256/newGPUv2namespace; unchangedefabcore/3216helper/1637driver/commonCPUproof/data/2400budget. CPUalreadyactualPASSnotrepeated. Rootwillcheckexactengine2tokendiff/stdstdlibSHAcall andcomparev2initialtheta withv1. MainACTIVE,noPrimaryfreeze/noscientificcompletion.
+
+
+## 2026-11-02T11:23:59.998340+00:00 · typedactualfourstage finished; controlled minibatch learning test
+
+TypedGPUv2fixedhash-onlyactuallycompleted2400exit0/initθd10e...same0SGDv1/all20gates/4NNAdamRNGReplayreload.79files9486104Bsynced;NN0220d52fab2038cb7a71c44adf73b6ac86277ec7fc8192a70097e5638083f555. P10991/train24.806594/science51.202490/SSH56.994896; newVALID.396484/newTESTsoft.3828125/.347656/.400391, oldIID.8828125/.888672/.875; nativeNEW.310547/.300781/.251953. Independentraw37b13d... checksactualvectors/all20/source/samplers/failurefees. NoPrimaryfreeze/broadadvantage. Keepcandidateconstructively. NEXTONEcontrolledlearningtest: typed/GRU32/TF32 eachOWNstage2NN+Adam+RNG+Replay128→600tail, paired vs SAMEGLOBALPOOLshuffle; same28800currentIDs+Replaydraws, noextrateacher/auxloss/testchange.6predefinedtails, historicalfirst1800reusednotrerun. Actualbaselineparentancestry1800eachchecked; TFextrasibling/HPOhistoryseparate. PairCPUgeneratoractualROOTsession69887running11:23:21, notyetNNtails. ParentcompilerownsNNresumecode, staticchildownsgenerator, fusionownsinventory/baselinesource,ROOTsoleexecutor. Allcosts/raw/failurespreserved; noModel/permissionexpansion/backgroundpromise.
+
+
+## 2026-11-02T11:36:22.430131+00:00 — Actual paired-tail resume readiness
+
+TRAIN-only paired indices generated once and independently checked. Typed CPU resume PASS (6 F/B,0 optimizer steps; scientific4.196890916s,SSH9.283725417s); baseline OWN GRU32/TF32 CPUresume PASS (2 discarded synthetic Adam steps,0 research; scientific3.545192045s,SSH8.835945083s). All synchronized. Six GPU600 tails not yet executed. No inherited1800 rerun. Exact executable packages are next; no accuracy gate or new TEST tuning. Current full typed4stage result remains newIID.3828125 with10991P; no advantage.
+
+
+## 2026-11-02T11:43:04.756035+00:00 — Actual six-tail execution checkpoint
+
+All6 GPU600 tails completed and synchronized. [{"run": "parameter-paired-tail-gru32-paired-n8-seed0-600-v1", "P": 14024, "actual_new_updates": 600, "inherited1800_repeated": false, "new_TEST_IID": 0.62890625, "new_TEST_long": 0.6171875, "training_seconds": 4.843303867965005, "scientific_driver_seconds": 10.324086048989557}, {"run": "parameter-paired-tail-gru32-same-pool-shuffle-n8-seed0-600-v1", "P": 14024, "actual_new_updates": 600, "inherited1800_repeated": false, "new_TEST_IID": 0.625, "new_TEST_long": 0.623046875, "training_seconds": 5.176419733907096, "scientific_driver_seconds": 10.386510904994793}, {"run": "parameter-paired-tail-transformer32-paired-n8-seed0-600-v1", "P": 26760, "actual_new_updates": 600, "inherited1800_repeated": false, "new_TEST_IID": 0.25390625, "new_TEST_long": 0.224609375, "training_seconds": 6.014220434590243, "scientific_driver_seconds": 11.04925854690373}, {"run": "parameter-paired-tail-transformer32-same-pool-shuffle-n8-seed0-600-v1", "P": 26760, "actual_new_updates": 600, "inherited1800_repeated": false, "new_TEST_IID": 0.466796875, "new_TEST_long": 0.3359375, "training_seconds": 6.9512774186441675, "scientific_driver_seconds": 11.915709187975153}, {"run": "parameter-typed-paired-tail-paired-n8-seed0-600-v1", "P": 10991, "actual_new_updates": 600, "inherited1800_repeated": false, "new_TEST_IID": 0.279296875, "new_TEST_long": 0.271484375, "training_seconds": 11.740130072343163, "scientific_driver_seconds": 31.712574327015318}, {"run": "parameter-typed-paired-tail-same-pool-shuffle-n8-seed0-600-v1", "P": 10991, "actual_new_updates": 600, "inherited1800_repeated": false, "new_TEST_IID": 0.580078125, "new_TEST_long": 0.625, "training_seconds": 11.707740245386958, "scientific_driver_seconds": 32.33297616697382}]
+
+Same ownstage2 start within each pair, zero1800 rerun, all600 each. Independent raw verifier/supervisor checking complete costs and per-example outputs. Typed shuffleVALID.625 is exactlyqueryblind, paired doesnotrepair. Nextactualaction: frozen3NN512VALID eventtrace,0SGD, then evidence-based repair of action/address credit. No campaign completion, Primary freeze, direction change or background promise.
+
+
+## 2026-11-02T11:56:40.691753+00:00 — Actual3NN mechanism checkpoint
+
+FrozenOWNstage2+paired/control finalCPU auditcompleted,0SGD,50944transitions,science2.681532s/SSH7.758544s. Allrawscommittedbeforeprivilegedtruth, sourceorderingnotOSblindness. All11,776eventtransitionsindependentlyreconstructed(max5.8e-7). ControlADDRESSactiveatKEYbutWRITE/READargmaxslot4forall512; lowSTOREisnotabsenceofinformation. Samekeybindingnotacquired. Originalresultpayloadcountmiss40960B/NPZ; independentlycorrectedall3arraypayload41127936Bwithoutrewritingrawresult.
+
+Nextsingleexecution: sham/zero/donorV beforequery, fixed127groupoffset,2NN×3×512×4,0SGD; establishquery-timecontentdependencebeforechoosinglearningrepair. Sixlearningcurves+costfigureactuallyrendered/ROOTviewedandcopiedfire. NoPrimaryfreezeorcampaigncompletion.
+
+
+## 2026-11-02T12:20:47.963572+00:00 — Resume constructiveA/Bdevelopment; human causalacceptance
+
+SuffixinterventionalreadyactualCOMPLETE (12288transitions0SGDscience.467201/SSH5.335886), notrerun. Independentraw8082fd... PASS. Controlsham/zero/donorall.625, weakquerytimeVdependence; no globalmemoryirrelevanceclaim.
+
+ROOTselectedsameBlock2x2repairwith3newfresharmsA/B/AB, oldnoneefab2400controlpreserved. A rawx-onlyproposal/fullcontextADDRESScall,640Pprune. B per-cellcoverage z+=w(1-z), rawVwriteunchanged, readV/max(z,1e-4),8FP32extra/noP. Newcore/helper/trainerondiskUNEXECUTED; parentownsimplementation/transport, coverage_binding_checkerownsfocusedCPUchecker, ROOTsoleSSH. Budgetperarm4×600/B64/terminalNLL/Replay128/originaldata+samplers/Adam.003clip1/2Graphcaptures/noHPO/teacher; allcostsmandatory.
+
+Humanaddedcausalbindingacceptance: frozenmodelvalue/query/ordercounterfactuals, exactterminalcorrectnessandrelationalconsistencyandSoft/Nativegap. Keep3armsandbudget. Useexistingfactorialgridafterfrozenrawoutputs; logicaltemplatefixedbutvalueSTEPencodingchangesrawlength, so do notclaimtokenidentity. Newmetricswillnotreclassifyoldweakresults aspass. NoPrimaryfreeze/campaigncompletion/modelpermissionexpansion/backgroundexecutionpromise.

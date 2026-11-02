@@ -1,0 +1,100 @@
+{
+  "actual_disk_NN_Adam_reload_equal": true,
+  "extra_blend_subtractions_per_call": 64,
+  "extra_forward_MAC_proxy_per_call": 320,
+  "extra_parameters": 264,
+  "first4_CALL_rows_and_logits_exact": true,
+  "gate_activation_preserves_original_function": false,
+  "gradient_norms": {
+    "caller.2.bias": 0.24310575425624847,
+    "caller.2.weight": 0.41704198718070984,
+    "primitive_down": 7.728830337524414,
+    "primitive_up": 1.8824800252914429,
+    "read_query.weight": 6.6179172790725715e-06,
+    "token_embedding.weight": 0.21000006794929504,
+    "write_value.weight": 0.12883611023426056
+  },
+  "group_limits": [
+    {
+      "first4_CALL_outputs_exact": true,
+      "gate0_identity_exact": true,
+      "gate1_old_candidate_max_error": 2.9802322387695312e-08,
+      "mode": "soft",
+      "only_group3_eight_coordinates_changed": true
+    },
+    {
+      "first4_CALL_outputs_exact": true,
+      "gate0_identity_exact": true,
+      "gate1_old_candidate_max_error": 2.9802322387695312e-08,
+      "mode": "straight_through",
+      "only_group3_eight_coordinates_changed": true
+    },
+    {
+      "first4_CALL_outputs_exact": true,
+      "gate0_identity_exact": true,
+      "gate1_old_candidate_max_error": 3.725290298461914e-09,
+      "mode": "native",
+      "only_group3_eight_coordinates_changed": true
+    }
+  ],
+  "groups0_disabled_forward": [
+    {
+      "bitwise_legacy_exact": true,
+      "mode": "soft"
+    },
+    {
+      "bitwise_legacy_exact": true,
+      "mode": "straight_through"
+    },
+    {
+      "bitwise_legacy_exact": true,
+      "mode": "native"
+    }
+  ],
+  "migration": {
+    "carry_gate_growth_wall_seconds": 0.003257534932345152,
+    "carry_gate_optimizer_bytes_added": 2112,
+    "carry_gate_parameters_added": 264,
+    "constant_gate_append_RNG_exact": true,
+    "coordinates_per_group": 8,
+    "exact_gate_growth_FLOPs": null,
+    "extra_blend_MAC_proxy_per_call": 64,
+    "extra_blend_subtractions_per_call": 64,
+    "extra_control_sigmoid_evaluations_per_call": 8,
+    "extra_projection_MAC_proxy_per_call": 256,
+    "forward_function_preserved_across_gate_activation": false,
+    "gate_groups": 8,
+    "gate_numeric_order": "h+g_vec*(LN(h+delta)-h); no computational skip",
+    "initial_gate": 0.9820137619972229,
+    "new_caller_shape": [
+      12,
+      32
+    ],
+    "new_gate_row_moments_zero": true,
+    "new_row_bias": 4.0,
+    "new_row_weights": 0.0,
+    "no_extra_persistent_carry": true,
+    "old_four_rows_and_Adam_prefix_steps_exact": true,
+    "optimizer_tensor_bytes_after": 3176
+  },
+  "new_gate_bias_gradient_norm": 0.0069444687105715275,
+  "new_gate_weight_gradient_norm": 0.010198206640779972,
+  "no_extra_persistent_carry": true,
+  "numeric_order": "h+g_vec*(candidate-h); gate1 limit checked within2e-6 due difference-form rounding",
+  "old_loader_rejects_new_policy": true,
+  "optimizer_updates": 0,
+  "original_convex_write_AST_exact": true,
+  "original_dynamic_CALL_credit_nonzero": true,
+  "research_labels_read": 0,
+  "scope": "finite synthetic gate/gradient/storage/cost contracts, not acquisition or retention evidence",
+  "source_sha256": {
+    "checker": "88a0a48e451bcf5c5ebdc95165a27dc9f8589a886d5dd8622f2aec0d5c8fa5bb",
+    "group": "d45eed8304095752bbb8a04f69fb5b98b52167b685c81bf5522ef2ed31e3181d",
+    "migration_wrapper": "54996e7ebcb9941390da75c6c30d0174ec4074e5899b84bc79f1ed9076044df4",
+    "original": "b8a51a6ca9026b2ebff877493bf9031972a319d097cb3ae2605cc6ad3ea3083f"
+  },
+  "status": "ACTUAL_CPU_GROUP8_STATE_CARRY_CONTRACT_PASSED",
+  "synthetic_Adam_fixture": "only caller tensors step1800 with explicit random moments; no optimizer.step called",
+  "synthetic_checkpoint_bytes": 145721,
+  "wall_seconds": 3.3802343119168654
+}

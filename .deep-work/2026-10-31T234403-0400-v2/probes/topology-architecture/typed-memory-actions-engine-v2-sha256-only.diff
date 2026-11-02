@@ -1,0 +1,20 @@
+--- typed-engine-v1-preserved
++++ typed-engine-v2-hashfix
+@@ -11,7 +11,7 @@
+ import typed_memory_actions_masked_graph_fb as fb
+ import owned_parent_driver as old
+ 
+-def sha(p):return hashlib.sha206(p.read_bytes()).hexdigest()
++def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+ class GraphEngine:
+  def __init__(self,model,optimizer,bucket,first,out,check,stage):
+   started=time.perf_counter();cpu=time.process_time();self.model,self.optimizer,self.bucket,self.out,self.check=model,optimizer,bucket,Path(out),check;self.params=list(model.named_parameters());self.names=[n for n,_ in self.params];self.graph=self.side=self.pool=self.outputs=None
+@@ -60,7 +60,7 @@
+   for i,n in enumerate(self.names):raw[f'reference_grad_{i:02d}']=left['grads'][n].numpy();raw[f'candidate_grad_{i:02d}']=right['grads'][n].numpy()
+   path=self.out/leaf
+   with path.open('xb')as f:np.savez_compressed(f,**raw)
+-  row.update(raw_file=leaf,raw_sha206=sha(path),raw_bytes=path.stat().st_size)
++  row.update(raw_file=leaf,raw_sha256=sha(path),raw_bytes=path.stat().st_size)
+   if not torch.allclose(left['output'],right['output'],atol=fb.OUTPUT_ATOL,rtol=fb.OUTPUT_RTOL)or not torch.allclose(left['loss'],right['loss'],atol=fb.OUTPUT_ATOL,rtol=fb.OUTPUT_RTOL):raise RuntimeError('cachedemission output/loss contract failed')
+   for n in self.names:
+    l,r=left['grads'][n],right['grads'][n];close=bool(torch.allclose(l,r,atol=fb.GRAD_ATOL,rtol=fb.GRAD_RTOL));row['gradients'][n]=dict(max_abs=float((l-r).abs().max()),allclose=close)

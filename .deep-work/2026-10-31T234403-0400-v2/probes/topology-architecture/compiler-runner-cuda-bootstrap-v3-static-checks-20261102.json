@@ -1,0 +1,58 @@
+{
+  "bootstrap_boundary": "Only trusted torch import/thread/CUDA allocator initialization precedes full socket seccomp; Landlock TCP bind/connect denial and identity/filesystem/resource bounds apply throughout",
+  "changed_functions": [
+    "_child",
+    "_supervisor",
+    "main"
+  ],
+  "compiler_libcuda_fs_seccomp_identity_resource_gate_policy_unchanged": true,
+  "cpu_early_filter_path": [
+    "_limits",
+    "_drop_identity",
+    "_landlock",
+    "_seccomp:compiler",
+    "trusted_torch_import",
+    "fixed_prologue",
+    "_seccomp:strict",
+    "_deny_all_execute",
+    "research_script"
+  ],
+  "explicit_gpu_bootstrap_path": [
+    "_limits",
+    "_drop_identity",
+    "_landlock",
+    "trusted_torch_import",
+    "trusted_cuda_allocator_init",
+    "_seccomp:compiler",
+    "fixed_prologue",
+    "_seccomp:strict",
+    "_deny_all_execute",
+    "research_script"
+  ],
+  "gpu_early_filter_path": [
+    "_limits",
+    "_drop_identity",
+    "_landlock",
+    "_seccomp:compiler",
+    "trusted_torch_import",
+    "trusted_cuda_allocator_init",
+    "fixed_prologue",
+    "_seccomp:strict",
+    "_deny_all_execute",
+    "research_script"
+  ],
+  "limitations": [
+    "Actual CUDA failure syscall not identified or guessed",
+    "AST phase walk is not a kernel or GPU runtime test"
+  ],
+  "no_prologue_or_research_before_compiler_filter": true,
+  "original_gpu_runner_sha256": "85e8ae4ffb4ba9cd187fcc53f2cbb3dcbd00eb5be10f7bba079768096f4a13d0",
+  "policy_checks_sha256": "11b7d86c151ec8fd5f1a49b8b32996dcf8f89279b4b0e687c48ff16931bcb231",
+  "prologue_sha256": "584e4b1e6b8cb42e698178cb64fd491666baa68c06e714ff026d1796a83025c3",
+  "runner_sha256": "eb50f4a87cc9ec8774ae4c666f4b7f38c1bc8f7f7b952e384bc0909a99ea775a",
+  "runtime_executed": false,
+  "ssh_executed": false,
+  "status": "PASS_STATIC_ONLY",
+  "training_executed": false,
+  "v2_runner_sha256": "091de75adbbfe0c25bb5a6828fd5710c4f3a751114607cc7bce47ba7ccb9c123"
+}

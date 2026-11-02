@@ -1,0 +1,128 @@
+{
+  "AS_GiB": 512,
+  "GPU_fraction": 0.3,
+  "NN_bytes": 82884,
+  "NPROC": 128,
+  "P": 20721,
+  "TEST": "same frozenpairedlast64L64/128/256 after300/graphretirement; allsoft/native/eager; originalNN+outputreload; noafterTESTtraining",
+  "VALID_steps": [
+    0,
+    50,
+    100,
+    150,
+    200,
+    250,
+    300
+  ],
+  "actual_firstTRAIN_GPU_before_SGD_admission_required": true,
+  "all27_parameters": true,
+  "architecture_changed": false,
+  "batch": 32,
+  "batch_indices_file_sha256": "538c1157cacea82a51bf5be950d451768f013ee7178f5aabc100e339b966f615",
+  "batch_indices_payload_sha256": "da55630fb2576a5c174e4215082965f226d1a37ead1b50f1a616cd6fa1d1ac98",
+  "capture_GPU_FB": 0,
+  "capture_description_count": 1,
+  "checkpoint_steps": [
+    50,
+    100,
+    150,
+    200,
+    250,
+    300
+  ],
+  "compiler_exception": false,
+  "cost_scope": "fullP/NN/Adam/gradbuffers/static+diagnosticinput/output/cache/pool/checkpoint/source/raw/data; allsetupincludingclones/gradallocation, capture/warmup/diagnostics/extra22528labelpositions/eagerclip+Adam/batch+staticcopies/causality/VALID/test/reload pluswholeCPUwall; copy nestedintrain, combineprereset+postcaptureallocatorpeaks; fullFLOPs/provider-effective/energy/busytime unknown",
+  "data_files": {
+    "metadata.json": {
+      "bytes": 4749,
+      "sha256": "f157d58e9246f59f78dbd883b4ccc80284278b9eb270365cb13556dc8703e792"
+    },
+    "test128-endpoints.npy": {
+      "bytes": 4224,
+      "sha256": "481b330e8c499a6d511fe31385b065e790f6354ca3ebb7ab9f072f9ac2d38d55"
+    },
+    "test128.npz": {
+      "bytes": 89378,
+      "sha256": "9788232e5b1189768b8733b16c1ccbad0a0bd8fcfb1f5fd3bd054458dbc7e32e"
+    },
+    "test256-endpoints.npy": {
+      "bytes": 4224,
+      "sha256": "481b330e8c499a6d511fe31385b065e790f6354ca3ebb7ab9f072f9ac2d38d55"
+    },
+    "test256.npz": {
+      "bytes": 162818,
+      "sha256": "46292fded2c70606328a62a61cd7830e9aab1da661e37efb74a82f81b0eee6bf"
+    },
+    "test64-endpoints.npy": {
+      "bytes": 4224,
+      "sha256": "481b330e8c499a6d511fe31385b065e790f6354ca3ebb7ab9f072f9ac2d38d55"
+    },
+    "test64.npz": {
+      "bytes": 47985,
+      "sha256": "5e49c3dcc1f44d4583d6bc2738e25635f381d5bd72fd17eb6b931417d641025e"
+    },
+    "train-endpoints.npy": {
+      "bytes": 65664,
+      "sha256": "7044177d47e20e4a69ac19a5334701bc9802260529814acfc2d4232cbcc59fc2"
+    },
+    "train.npz": {
+      "bytes": 738810,
+      "sha256": "d8e35caee818c07934e3013977d08fd1a17bc88036996600a1bbc14da8ce9355"
+    },
+    "valid-endpoints.npy": {
+      "bytes": 4224,
+      "sha256": "63e321a30fb08fe32ceb351313618934e89326ecd0d0044094db0f162dfa8c20"
+    },
+    "valid.npz": {
+      "bytes": 47854,
+      "sha256": "5e6fad7522d25b0dea0b14d94acbc004710c1ed912e97587c8cf4e33138c96ab"
+    }
+  },
+  "data_run": "parameter-char-alltoken-data-v1",
+  "extra_label_positions": 22528,
+  "file_limit_MiB": 100,
+  "gradient_atol": 2e-05,
+  "gradient_gate": "same CURRENTNN/referenceoriginalwrapper vs puregraph fulloutput/loss/all27grads; exactall-present pattern with autograd.grad, copyexistinggradbuffers; fixedfirstTRAINbatch; extra0SGD checksRNG/NN/Adamneutral",
+  "gradient_gate_steps": [
+    0,
+    100,
+    200,
+    300
+  ],
+  "gradient_rtol": 0.0002,
+  "graph_count": 1,
+  "inside_seconds": 850,
+  "labels": 614400,
+  "length": 64,
+  "metadata_sha256": "f157d58e9246f59f78dbd883b4ccc80284278b9eb270365cb13556dc8703e792",
+  "model_class_AST_exact_parent": true,
+  "model_class_AST_sha256": "0edfb0fce1718a8b94e085a545ab190ac5be2e158efe8c491f2aacfaae36561b",
+  "name": "parameter-char-alltoken-factorized-graph-300-v1",
+  "new_graph_CPU_admission_claimed": false,
+  "no_BITWISE_training_trajectory_gate": true,
+  "no_accuracy_or_speed_gate": true,
+  "objective": "ONLYoriginal meanNLL over32x64 next-character labels, no binding/anchor/profile evenx0",
+  "optimizer": "same originalfreshAdam.003 eagerclip1; no parameter orgradstorage replacement aftercapture",
+  "original_class_CPU_admission": "parameter-char-alltoken-factorized-interface-cpu-v1",
+  "output_atol": 2e-05,
+  "output_rtol": 2e-05,
+  "outside_seconds": 900,
+  "parent_driver_sha256": "3e6447a2a102c65d216b82b297798429f80b4c9189d0a3f2cc45c4149f584960",
+  "pure_training_forward": "samebody.initial_carry/tokenembedding/64direct_transition soft/everyposttokenreadoutlogsoftmax/stack; fixedB32L64allactive; eval originalwrapper untouched",
+  "remote_launch_sha256": "6aa28d7efebcfa8fc746eeb24d915354db1445a259bafba73d8947ec54029de8",
+  "runner_sha256": "85e8ae4ffb4ba9cd187fcc53f2cbb3dcbd00eb5be10f7bba079768096f4a13d0",
+  "same_host_config_only": true,
+  "schema": "factorized-alltoken-Graph-cost-implementation-v1",
+  "seed": 0,
+  "source_sha256": {
+    "continuous_primitive_block.py": "fcba2e82defe2e3fdb9b02efe1eee37456f33defa172c7eb632ea07774b88158",
+    "factorized_alltoken_graph.py": "29ae330b720fcaab9825d1f3bdb264c44c23c94fcc5bda44c84ba92fe8e1d141",
+    "train_char_factorized_alltoken.py": "3e6447a2a102c65d216b82b297798429f80b4c9189d0a3f2cc45c4149f584960",
+    "train_char_factorized_graph_alltoken.py": "11b600dfc53e3e820c3ced396bb05768ecc5b9c56eda7e343e0f5091ef7f3842"
+  },
+  "stop": "nonfinite/source/numeric/resource failure, savepartialNN/raw, noautoretry; no newshapes/seeds/configs toforcepass",
+  "total_executed_FB": 311,
+  "updates": 300,
+  "warmup_FB": 3,
+  "warmup_SGD": 0
+}

@@ -1,0 +1,77 @@
+--- original-driver-567e/train_char_alltoken.py
++++ NEW/train_char_factorized_alltoken.py
+@@ -1,4 +1,7 @@
+-"""ROOT-RUN proper causal all-token char-LM development, fixed300x32x64.
++"""NEW factorized H32/c16 Block, exact original all-token protocol300x32x64.
++
++Explicit architecture-only development: no anchor/profile auxiliary loss.
++Original driver567e source remains frozen; changes documented in launch protocol.
+ 
+ New feedback protocol, never pooled with the old terminal-prefix experiment.
+ Continuous Block/GRU44/causal Transformer36 see identical windows and all labels.
+@@ -47,10 +50,10 @@
+     def __init__(self,arm,vocabulary):
+         super().__init__();self.arm=arm;self.vocabulary=vocabulary
+         if arm in ("dynamic","static","detached"):
+-            self.body=ContinuousPrimitiveBlock(n_states=vocabulary,n_tokens=vocabulary,internal_states=64,
+-                n_primitives=4,token_dim=16,state_dim=64,memory_dim=64,caller_hidden=32,n_slots=1,
+-                routing=arm,memory_slots=8,key_dim=16,primitive_rank=8)
+-            # Full Vx64 encoder remains allocated/counted despite publicinitial0.
++            self.body=ContinuousPrimitiveBlock(n_states=vocabulary,n_tokens=vocabulary,internal_states=32,
++                n_primitives=4,token_dim=16,state_dim=32,memory_dim=32,caller_hidden=32,n_slots=1,
++                routing=arm,memory_slots=8,key_dim=16,primitive_rank=8,controller_dim=16,carry_gate_groups=8)
++            # Full Vx32 encoder remains allocated/counted despite publicinitial0.
+         elif arm=="gru":
+             self.embedding=nn.Embedding(vocabulary,44);self.body=nn.GRU(44,44,num_layers=2,batch_first=True);self.readout=nn.Linear(44,vocabulary)
+         elif arm=="transformer":
+@@ -63,7 +66,7 @@
+         else:raise ValueError("unknown fixed architecture")
+ 
+     def configuration(self):
+-        if self.arm in ("dynamic","static","detached"):return dict(arm=self.arm,core=self.body.configuration(),readout="all post-token normalizedcontinuous outputs",public_initial=0)
++        if self.arm in ("dynamic","static","detached"):return dict(arm=self.arm,core=self.body.configuration(),core_checkpoint_version=self.body.checkpoint_version,organization_policy=self.body.organization_policy,readout="all post-token normalizedcontinuous outputs",public_initial=0,auxiliary_loss="none")
+         return dict(arm=self.arm,vocabulary=self.vocabulary,width=44 if self.arm=="gru" else 36,layers=2 if self.arm=="gru" else 3,
+             heads=None if self.arm=="gru" else 4,feedforward=None if self.arm=="gru" else 72,
+             position="none" if self.arm=="gru" else "fixedsinusoidal256",causal=True,initial_state="zero" if self.arm=="gru" else "noCLS")
+@@ -80,9 +83,22 @@
+             h=self.norm(h)
+         return F.log_softmax(self.readout(h),-1)
+ 
++    def sequence_resource_report(self,batch_size,sequence_length,*,active_steps=None,execution="soft"):
++        # Exact fcba core has terminal accounting only. Mirror the original
++        # 58feb69 all-token adapter, charging physically computed padded outputs.
++        report=self.body.resource_report(batch_size,sequence_length,active_steps=active_steps,execution=execution)
++        components=dict(report["proxy_forward_macs_by_component"])
++        components["readout"]=batch_size*sequence_length*self.body.internal_states*self.vocabulary
++        report.update(proxy_forward_macs_by_component=components,proxy_forward_macs=sum(components.values()),
++            output_readout_positions=batch_size*sequence_length,
++            output_sequence_payload_bytes=batch_size*sequence_length*self.vocabulary*self.body.encoder.weight.element_size(),
++            output_scope="one normalized full-batch readout per supplied token including padding; no trace",
++            streaming_boundary="same explicit carry API; no cached-generation latency claim")
++        return report
++
+     def proxy(self,count,length,mode="soft"):
+         if self.arm in ("dynamic","static","detached"):
+-            return self.body.sequence_resource_report(batch_size=count,sequence_length=length,
++            return self.sequence_resource_report(batch_size=count,sequence_length=length,
+                 active_steps=count*length,execution=mode)["proxy_forward_macs"]
+         if self.arm=="gru":return count*length*(2*6*44*44+44*self.vocabulary)
+         return count*(3*(4*length*36*36+2*length*length*36+2*length*36*72)+length*36*self.vocabulary)
+@@ -94,6 +110,7 @@
+     p.add_argument("--device",default="cuda:0");p.add_argument("--seed",type=int,default=0);p.add_argument("--max-seconds",type=float,default=850)
+     p.add_argument("--resource-overlap-note",default="coordinator records actual concurrency; no isolatedthroughput claim")
+     args=p.parse_args()
++    if args.arm!="dynamic" or args.seed!=0:p.error("one frozen dynamic H32 factorized seed0 development arm only")
+     if not 1<=args.max_seconds<=850:p.error("internal bounded run<=850seconds")
+     args.out.mkdir(parents=True,exist_ok=False);started=time.perf_counter();deadline=started+args.max_seconds
+     stream=(args.out/"records.jsonl").open("x",buffering=1);device=torch.device(args.device)
+@@ -130,7 +147,8 @@
+         report=dict(parameters=sum(p.numel() for p in model.parameters()),trainable_parameters=sum(p.numel() for p in model.parameters() if p.requires_grad),
+             parameter_bytes=tensor_bytes(dict(model.named_parameters())),buffer_bytes=tensor_bytes(dict(model.named_buffers())),optimizer_tensor_bytes=tensor_bytes(optimizer.state_dict()),
+             replay_bytes=0,cpu_peak_RSS_bytes=int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*(1 if sys.platform=="darwin" else 1024)),
+-            core_allocated_initial_encoder_parameters=vocabulary*64 if block else 0,
++            core_allocated_initial_encoder_parameters=model.body.encoder.weight.numel() if block else 0,
++            core_alltoken_resource_report=model.sequence_resource_report(1,64) if block else None,
+             data_cache_array_bytes=metadata["uncompressed_array_bytes"])
+         if device.type=="cuda":report.update(cuda_allocated_bytes=torch.cuda.memory_allocated(device),cuda_reserved_bytes=torch.cuda.memory_reserved(device),cuda_peak_allocated_bytes=torch.cuda.max_memory_allocated(device),cuda_peak_reserved_bytes=torch.cuda.max_memory_reserved(device))
+         return report

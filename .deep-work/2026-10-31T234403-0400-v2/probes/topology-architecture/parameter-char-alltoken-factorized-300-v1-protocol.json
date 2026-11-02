@@ -1,0 +1,98 @@
+{
+  "CPU_check_run": "parameter-char-alltoken-factorized-interface-cpu-v1",
+  "CPU_contract": "actual TRAIN-input-only shape/normalized probability/streamed-step/terminal-alignment/future-causality/NNreload/MAC/P/carry/commonbatch + synthetic scalar backward, zeroSGD",
+  "CPU_must_pass_before_GPU": true,
+  "TEST_contexts": [
+    64,
+    128,
+    256
+  ],
+  "TEST_windows": 512,
+  "TRAIN_context": 64,
+  "TRAIN_windows": 8192,
+  "VALID_windows": 512,
+  "address_space_GiB": 512,
+  "architecture": "explicitH32/state32/memory32/c16/K4/r8/token16/M8/key16/G8; learned control/value and identity value write; dynamic only",
+  "batch_size": 32,
+  "before_execution": true,
+  "checkpoint_version": "continuous-primitive-block-control-value-v1",
+  "common_batch_indices_sha256": "538c1157cacea82a51bf5be950d451768f013ee7178f5aabc100e339b966f615",
+  "cost_scope": "all P/buffers/Adam/data/checkpoints/causality/VALID/soft-native TEST/reload; alltoken readout each position; actual backward included in wall not forward MAC; cold imports/process/runner/SSH nested and separately reported; no fullFLOPs/energy/serving-cache claim",
+  "data_files": {
+    "metadata.json": {
+      "bytes": 4749,
+      "sha256": "f157d58e9246f59f78dbd883b4ccc80284278b9eb270365cb13556dc8703e792"
+    },
+    "test128-endpoints.npy": {
+      "bytes": 4224,
+      "sha256": "481b330e8c499a6d511fe31385b065e790f6354ca3ebb7ab9f072f9ac2d38d55"
+    },
+    "test128.npz": {
+      "bytes": 89378,
+      "sha256": "9788232e5b1189768b8733b16c1ccbad0a0bd8fcfb1f5fd3bd054458dbc7e32e"
+    },
+    "test256-endpoints.npy": {
+      "bytes": 4224,
+      "sha256": "481b330e8c499a6d511fe31385b065e790f6354ca3ebb7ab9f072f9ac2d38d55"
+    },
+    "test256.npz": {
+      "bytes": 162818,
+      "sha256": "46292fded2c70606328a62a61cd7830e9aab1da661e37efb74a82f81b0eee6bf"
+    },
+    "test64-endpoints.npy": {
+      "bytes": 4224,
+      "sha256": "481b330e8c499a6d511fe31385b065e790f6354ca3ebb7ab9f072f9ac2d38d55"
+    },
+    "test64.npz": {
+      "bytes": 47985,
+      "sha256": "5e49c3dcc1f44d4583d6bc2738e25635f381d5bd72fd17eb6b931417d641025e"
+    },
+    "train-endpoints.npy": {
+      "bytes": 65664,
+      "sha256": "7044177d47e20e4a69ac19a5334701bc9802260529814acfc2d4232cbcc59fc2"
+    },
+    "train.npz": {
+      "bytes": 738810,
+      "sha256": "d8e35caee818c07934e3013977d08fd1a17bc88036996600a1bbc14da8ce9355"
+    },
+    "valid-endpoints.npy": {
+      "bytes": 4224,
+      "sha256": "63e321a30fb08fe32ceb351313618934e89326ecd0d0044094db0f162dfa8c20"
+    },
+    "valid.npz": {
+      "bytes": 47854,
+      "sha256": "5e6fad7522d25b0dea0b14d94acbc004710c1ed912e97587c8cf4e33138c96ab"
+    }
+  },
+  "data_metadata_sha256": "f157d58e9246f59f78dbd883b4ccc80284278b9eb270365cb13556dc8703e792",
+  "data_run": "parameter-char-alltoken-data-v1",
+  "evaluation": "unchanged alltoken and same32768 paired last64 labels; soft/native VALID+postfreeze TEST; no TEST selection, no baseline changes",
+  "exact_core_sha256": "fcba2e82defe2e3fdb9b02efe1eee37456f33defa172c7eb632ea07774b88158",
+  "exact_diff": "constructor H64\u219232 and explicit c16/G8; wrapper alltoken report replaces terminal readout withB*L*H*V; encoderP/carry/version metadata corrected; reject other arms/seeds; training/evaluation/loss/batches unchanged",
+  "expected_all_P": 20721,
+  "expected_initial_encoder_P": 3200,
+  "expected_logical_carry_bytes_float32": 1728,
+  "expected_logical_carry_scalars": 432,
+  "feedback": "all nextcharacters, exact original target shift; no intermediate states/operation hints",
+  "formal_Primary": false,
+  "gpu_fraction": 0.3,
+  "inference_scope": "original fullwindow eval forwardwall/MAC for64/128/256 plus reload; no separate resident latency/throughput or cached sequential-generation benchmark",
+  "inside_seconds": 850,
+  "isolation": "unchanged original runners, same host/config, no network/install/framework/permission growth",
+  "mode": "train",
+  "name": "parameter-char-alltoken-factorized-300-v1",
+  "optimizer": "Adam.003/clipnorm1/seed0",
+  "organization_policy": "learned-control-history/value-identity-write/group8-carry-v1",
+  "original_baselines_untouched": true,
+  "original_driver_sha256": "567e372187e4cee3c8a5ca3d49f5f7d60a8664a07619c3d57dc1c799cbbd9f02",
+  "outside_seconds": 900,
+  "scope": "NEW single-seed DEVELOPMENT architecture transfer; no Primary, novelty or capability/resource advantage assumption",
+  "source_diff_sha256": "25d89c7f5f2a2ac4abe47150525d42ab1bde9b5742d9b1163546ee9dbf76528b",
+  "source_sha256": {
+    "continuous_primitive_block.py": "fcba2e82defe2e3fdb9b02efe1eee37456f33defa172c7eb632ea07774b88158",
+    "train_char_factorized_alltoken.py": "3e6447a2a102c65d216b82b297798429f80b4c9189d0a3f2cc45c4149f584960"
+  },
+  "training_label_observations": 614400,
+  "transfer": "new AR initialization from seed0, not a restore of task-trained NN; same OWN fcba architecture; no anchor/profile auxiliary loss",
+  "updates": 300
+}

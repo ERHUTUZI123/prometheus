@@ -1,0 +1,124 @@
+import ast, base64, hashlib, json, os, pathlib, resource, shutil, subprocess, sys, time
+c = CONFIG
+r = pathlib.Path('/workspace/prometheus-v2-m0-architecture')
+name = c['name']
+code = r / ('code-' + name)
+out = r / 'outputs' / name
+inputs = pathlib.Path('/opt/prometheus-' + name + '-inputs')
+receipt = out.parent / (name + '.coordinator-exit.json')
+status = out.parent / (name + '.runner-status.json')
+input_receipt = out.parent / (name + '.input-manifest.json')
+
+def sha(p):
+    return hashlib.sha256(p.read_bytes()).hexdigest()
+
+def load(p):
+    return json.loads(p.read_text()) if p.is_file() else None
+
+def regular(p, expected):
+    if p.is_symlink() or not p.is_file() or p.stat().st_size > 100 * 1024 * 1024 or (sha(p) != expected):
+        raise ValueError('fixed bounded OWN artifact changed: ' + str(p))
+if os.geteuid() != 0:
+    raise PermissionError('trusted ROOT coordinator required')
+if any((p.exists() or p.is_symlink() for p in (code, out, inputs, receipt, status, input_receipt))):
+    raise FileExistsError('newnamespaceonly; preserveeveryattempt')
+proof_path = r / 'outputs' / c['CPU_gate_run'] / 'check/result.json'
+if sha(proof_path) != c['CPU_proof_sha256']:
+    raise ValueError('fixed actualCPUproofSHA differs')
+proof = load(proof_path)
+proof_root = load(r / 'outputs' / (c['CPU_gate_run'] + '.runner-status.json'))
+if not proof or not proof_root or proof_root.get('status') != 'completed' or proof.get('status') != 'CPU_TYPED_NORMALIZED_MEMORY_GRAPH_ADMISSION_PASS' or proof.get('SGD_updates') != 0:
+    raise ValueError('actual fixed A/B CPU admission required')
+for key in c['CPU_required_true_fields']:
+    if proof.get(key) is not True:
+        raise ValueError('actual CPU gate false: ' + key)
+if proof.get('research_updates') != 0 or proof.get('synthetic_optimizer_updates') != 1 or proof.get('task_data_or_teacher_labels_used') is not False:
+    raise ValueError('CPU synthetic-only scope differs')
+for mode, expected in c['CPU_mode_P'].items():
+    row = proof['modes'][mode]
+    if row['actual_P15'] != expected[0] or row['actual_P16'] != expected[1] or row['parameter_tensor_count'] != 20 or row.get('all20_gradients_checked') is not True or row.get('exact_historical_common_initialization_and_RNG') is not True:
+        raise ValueError('actual CPU mode identity differs: ' + mode)
+    for key in ('numeric16', 'numeric48'):
+        if any(row[key].get(field) is not True for field in ('all20_gradients_present_finite', 'all20_gradients_allclose', 'all_carry_fields_masked', 'all_inactive_full_carry_bitwise_unchanged', 'masked_gradient_storage_stable')):
+            raise ValueError('actual all20 numeric gate differs: ' + mode)
+    if row['checkpoint'].get('strict_mode_flags_and_expected_flags_rejected') is not True or row['checkpoint'].get('actual_NN_Adam_replay_fullcarry_CPU_RNG_reload') is not True:
+        raise ValueError('actual strict checkpoint CPU gate differs')
+for leaf, digest in c['common_source_sha256'].items():
+    if proof['source_sha256'].get(leaf) != digest:
+        raise ValueError('CPU/GPU common source differs: ' + leaf)
+runner = r / 'remote_runner_gpu_authorized.py'
+regular(runner, c['runner_sha256'])
+code.mkdir()
+inputs.mkdir()
+for leaf, encoded in c['files'].items():
+    raw = base64.b64decode(encoded, validate=True)
+    if hashlib.sha256(raw).hexdigest() != c['source_sha256'][leaf]:
+        raise ValueError('source transport changed')
+    ast.parse(raw)
+    with (code / leaf).open('xb') as f:
+        f.write(raw)
+    (code / leaf).chmod(292)
+code.chmod(365)
+actual = {}
+for key, spec in c['manifest']['files'].items():
+    src = r / 'outputs' / spec['remote_relative']
+    regular(src, spec['sha256'])
+    dst = inputs / spec['leaf']
+    shutil.copyfile(src, dst)
+    regular(dst, spec['sha256'])
+    dst.chmod(292)
+    actual[key] = dict(spec, bytes=dst.stat().st_size)
+with (inputs / 'manifest.json').open('x') as f:
+    json.dump(c['manifest'], f, indent=2, sort_keys=True)
+    f.write('\n')
+(inputs / 'manifest.json').chmod(292)
+inputs.chmod(365)
+with input_receipt.open('x') as f:
+    json.dump(dict(source_sha256=c['source_sha256'], common_source_sha256=c['common_source_sha256'], files=actual, manifest_sha256=sha(inputs / 'manifest.json'), CPU_proof_sha256=sha(proof_path), readonly_input_disk_bytes=sum((v['bytes'] for v in actual.values()))), f, indent=2, sort_keys=True)
+    f.write('\n')
+input_receipt.chmod(292)
+command = [sys.executable, str(runner), '--script', str(code / 'train_typed_normalized_memory_fourstage_graph.py'), '--out', str(out), '--timeout', '900', '--address-space-gib', '512', '--file-limit-mib', '100', '--gpu-fraction', '.3', '--cuda-init-before-seccomp', '--', '--inputs', str(inputs), '--out', str(out / 'learn'), '--max-seconds', '850', '--arm', c['arm']]
+started = time.monotonic()
+cpu = time.process_time()
+before = resource.getrusage(resource.RUSAGE_CHILDREN)
+try:
+    x = subprocess.run(command, capture_output=True, text=True, timeout=930)
+    returncode = x.returncode
+    stdout = x.stdout
+    stderr = x.stderr
+    error = None
+except subprocess.TimeoutExpired as e:
+
+    def string(v):
+        return v.decode(errors='replace') if isinstance(v, bytes) else v or ''
+    returncode = None
+    stdout = string(e.stdout)
+    stderr = string(e.stderr)
+    error = 'coordinatorwaittimeout, inspectactualboundedrunner; noautorerun'
+for leaf, value in ((name + '.coordinator-stdout.log', stdout), (name + '.coordinator-stderr.log', stderr)):
+    with (out.parent / leaf).open('x') as f:
+        f.write(value)
+root = load(status)
+result = load(out / 'learn/result.json')
+freeze = load(out / 'learn/ALL_TRAINING_FROZEN_BEFORE_TEST.json')
+sandbox = []
+if (out / 'stdout.log').is_file():
+    for line in (out / 'stdout.log').read_text().splitlines():
+        try:
+            v = json.loads(line)
+        except ValueError:
+            continue
+        if v.get('event') == 'sandbox_ready':
+            sandbox.append(v)
+checks = dict(runner_exit0=returncode == 0, root_completed=bool(root and root.get('status') == 'completed'), strict_before_science=any((v.get('seccomp') == 'enforced_tsync' and v.get('uid') == 65534 for v in sandbox)), actualfresh2400=bool(result and result.get('actual_new_updates_this_process') == 2400 and result.get('fresh_initial_NN') and (result.get('parent_NN_loaded') is False) and (result.get('historical_updates_shared') == 0)), fixedarchitecture=bool(result and result.get('architecture_policy') == c['architecture_policy']), exact_sources=bool(result and result.get('source_sha256') == c['source_sha256']), exact_P=bool(result and result['resources']['parameters'] == c['expected_P16']), two_captures=bool(result and result.get('actual_graph_capture_count') == 2 and ([g['bucket'] for g in result['graphs']] == [16, 48]) and ([g['training_FB_calls'] for g in result['graphs']] == [1800, 600])), all20_stable=bool(result and result.get('all20_grad_storage_stable_within_capture')), four_safety_reload=bool(result and len(result['reports']) == 4 and all((r.get('premaintenance_safety_checkpoint') and r.get('reload', {}).get('exact_NN_Adam_RNG_replay_forward') for r in result['reports']))), frozen_TEST=bool(result and result.get('NN_unchanged_after_TEST') and freeze and (freeze.get('TEST_read') is False) and (freeze.get('actual_new_updates') == 2400)), no_score_gate=bool(result and result.get('accuracy_or_speed_gate') is False))
+checks['exact_arm_flags'] = bool(result and result.get('architecture_arm') == c['arm'] and result.get('architecture_flags') == c['architecture_flags'])
+passed = all(checks.values())
+after = resource.getrusage(resource.RUSAGE_CHILDREN)
+value = dict(name=name, architecture_policy=c['architecture_policy'], architecture_arm=c['arm'], architecture_flags=c['architecture_flags'], returncode=returncode, protocol_completed=passed, checks=checks, error=error, source_sha256=c['source_sha256'], runner_sha256=c['runner_sha256'], CPU_proof_sha256=sha(proof_path), input_manifest_sha256=sha(input_receipt), coordinator_wall_seconds=time.monotonic() - started, coordinator_CPU_seconds=time.process_time() - cpu, reaped_child_CPU_seconds=after.ru_utime + after.ru_stime - (before.ru_utime + before.ru_stime), command=command, summary_path=str(out / 'learn/result.json'), root_status_path=str(status), no_compiler_exception=True, formal_Primary=False, no_accuracy_or_speed_gate=True, full_training_FLOPs=None, provider_effective_compute=None, cost_scope='eachprospectivearm ownfresh2400 paidseparately/2captures/6warmups/all20reference+graphdiagnostics/copies/padding/cache/typedactioncompetition/oldhSTORE/OLDlquery/rawV/Ainputonlyaddress/B8floatcoverage+divisionsclamps/eagerclip+Adam/VALID/TEST/inference/safety+checkpoint/reload/maintenance/source/data/raw/wholeCPUwall; nestedtimesshouldnotbesummed')
+if result:
+    value.update(initial_theta_sha256=result['initial_theta_sha256'], P=result['resources']['parameters'], checkpoint=result['checkpoint'], stage_update_wall_seconds=[r['costs']['training_wall_seconds'] for r in result['reports']], total_update_wall_seconds=sum((r['costs']['training_wall_seconds'] for r in result['reports'])), total_padded_forward_MAC=sum((r['costs']['padded_forward_MAC_proxy'] for r in result['reports'])), driver_wall_seconds=result['driver_wall_seconds'], driver_CPU_seconds=result['driver_CPU_seconds'])
+with receipt.open('x') as f:
+    json.dump(value, f, indent=2, sort_keys=True)
+    f.write('\n')
+print(json.dumps(value, sort_keys=True), flush=True)
+raise SystemExit(0 if passed else returncode if returncode not in (None, 0) else 1)

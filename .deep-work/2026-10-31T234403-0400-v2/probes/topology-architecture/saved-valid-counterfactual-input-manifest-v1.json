@@ -1,0 +1,93 @@
+{
+  "forthcoming_unbound_models": [
+    "input_only_address=True,coverage_normalization=False",
+    "input_only_address=False,coverage_normalization=True",
+    "input_only_address=True,coverage_normalization=True"
+  ],
+  "models": [
+    {
+      "id": "typed-original-random-tail",
+      "lineage": "OWN fresh4x600 original random-tail typed NN; historical reference, not latest normalized-memory arm.",
+      "predictions": {
+        "path": "runs/parameter-typed-memory-actions-n8-seed0-fourstage-graph-v2/learn/stage3-valid-task3-predictions.npz",
+        "sha256": "332a2aec0098d1d44330f4eade769f2cd2530c68114f64502f642a4069252ac2"
+      },
+      "result": {
+        "path": "runs/parameter-typed-memory-actions-n8-seed0-fourstage-graph-v2/learn/result.json",
+        "sha256": "dc5d5f9aadc979bee232118c134583cf4273be6a7b5b9e98f8f10bed97bbb5ff"
+      },
+      "run": "parameter-typed-memory-actions-n8-seed0-fourstage-graph-v2"
+    },
+    {
+      "id": "gru32-paired",
+      "lineage": "OWN original stage2 NN/Adam/RNG/replay followed by one600 tail with paired schedule. Distinct sampler-conditioned diagnostic, not original random tail.",
+      "predictions": {
+        "path": "runs/parameter-paired-tail-gru32-paired-n8-seed0-600-v1/learn/step600-valid-task3-predictions.npz",
+        "sha256": "a2880eab29f1f704019700dd9150bc8681692a76be70719460dbaa4a54aa899f"
+      },
+      "result": {
+        "path": "runs/parameter-paired-tail-gru32-paired-n8-seed0-600-v1/learn/result.json",
+        "sha256": "d2b9ce9211d009836364a750880357974a9c95ec2e36ab1d6cbd6108ee61e88e"
+      },
+      "run": "parameter-paired-tail-gru32-paired-n8-seed0-600-v1"
+    },
+    {
+      "id": "gru32-same-pool-shuffle",
+      "lineage": "OWN original stage2 NN/Adam/RNG/replay followed by one600 tail with same-pool-shuffle schedule. Distinct sampler-conditioned diagnostic, not original random tail.",
+      "predictions": {
+        "path": "runs/parameter-paired-tail-gru32-same-pool-shuffle-n8-seed0-600-v1/learn/step600-valid-task3-predictions.npz",
+        "sha256": "c5849f378629cacbc8bb335a5272c4ddd5156ee1f3ab73d182de67eeb01e29ae"
+      },
+      "result": {
+        "path": "runs/parameter-paired-tail-gru32-same-pool-shuffle-n8-seed0-600-v1/learn/result.json",
+        "sha256": "76e7cbaf32365091dfc70ed1fcf28e4dcced6aa8f6d2a42c1768f64a8f447983"
+      },
+      "run": "parameter-paired-tail-gru32-same-pool-shuffle-n8-seed0-600-v1"
+    },
+    {
+      "id": "transformer32-paired",
+      "lineage": "OWN original stage2 NN/Adam/RNG/replay followed by one600 tail with paired schedule. Distinct sampler-conditioned diagnostic, not original random tail.",
+      "predictions": {
+        "path": "runs/parameter-paired-tail-transformer32-paired-n8-seed0-600-v1/learn/step600-valid-task3-predictions.npz",
+        "sha256": "2609659e7e052d8f8b53af192d854d2a95c3b9da29bb6781908c01a568a7dbbb"
+      },
+      "result": {
+        "path": "runs/parameter-paired-tail-transformer32-paired-n8-seed0-600-v1/learn/result.json",
+        "sha256": "836e7b0597068c34600a3393b288322c72b77589446587fdaec7aeaca99b356e"
+      },
+      "run": "parameter-paired-tail-transformer32-paired-n8-seed0-600-v1"
+    },
+    {
+      "id": "transformer32-same-pool-shuffle",
+      "lineage": "OWN original stage2 NN/Adam/RNG/replay followed by one600 tail with same-pool-shuffle schedule. Distinct sampler-conditioned diagnostic, not original random tail.",
+      "predictions": {
+        "path": "runs/parameter-paired-tail-transformer32-same-pool-shuffle-n8-seed0-600-v1/learn/step600-valid-task3-predictions.npz",
+        "sha256": "73e5ff738930e380e3f1117fa4d55ef1cf1435efffe4e2a10de84f89c9fae57b"
+      },
+      "result": {
+        "path": "runs/parameter-paired-tail-transformer32-same-pool-shuffle-n8-seed0-600-v1/learn/result.json",
+        "sha256": "2f8f92e3a33dddc4b0d73c7f10cd580eca6d7c377bfe1a9dadaadc70035a9e68"
+      },
+      "run": "parameter-paired-tail-transformer32-same-pool-shuffle-n8-seed0-600-v1"
+    }
+  ],
+  "original_VALID": {
+    "path": "runs/parameter-memory-live-stage-data-n8-seed0-v1/generated/data/stage3-valid.npz",
+    "sha256": "7d8c81c0e41bcea94785fc63593f781b6042b0d2b87844d841db2d0a1875a31b"
+  },
+  "posthoc_truth": {
+    "path": "runs/parameter-memory-live-stage-data-n8-seed0-v1/generated/counterfactual-truth.npz",
+    "sha256": "7f08f29f671a483dd6b979723dc81359408fade781cd72a7ee2d6ef6afb08418"
+  },
+  "schema": "saved-fullfactorial-VALID-counterfactual-inputs-v1",
+  "unavailable_historical_models": [
+    {
+      "reason": "Original full fourstage saved final VALID aggregates but no perexample VALID prediction vectors in learn. Pair metrics unmeasured; no NN rerun.",
+      "run": "parameter-gru32-n8-seed0-fourstage-v1"
+    },
+    {
+      "reason": "Original random tail saved final VALID aggregates but no perexample VALID prediction vectors in learn. Pair metrics unmeasured; no NN rerun.",
+      "run": "parameter-context-n8-seed0-transformer-stage3-v1-width32-resume-replay128x16"
+    }
+  ]
+}

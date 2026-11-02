@@ -1,0 +1,26 @@
+{
+  "before_execution": true,
+  "comparison": "Block and GRU receive same terminal-feedback/data/schedules/600updates/Replay128 and same4word selection+teacher algorithm; own teachers may have different errors",
+  "cost": "all P, own paid parent, teacher32+32comparison forwards,1024Bcache, auxiliary suffix forward/backward,600SGD,replay/restore/2checkpoints/eval/inference; complete FLOPs unknown notzero",
+  "decision": "if terminal+heldout closure improves inspect tradeoff; if no gain keep negative, do not expand budget to force score",
+  "family": "gru",
+  "fixed_budget": "600x64 sameindices,48current+16old,Adam.003/clip1/seed0; no earlyaccuracy stopping or testselection",
+  "formal_Primary": false,
+  "generalization": "cache words are now TRAINED continuations; do not call their closure unseen; other words and longer compositions require separate frozen evaluation",
+  "hypothesis": "finite old-program behavior may teach a reusable new-operation interface with more freedom than a pointwise latent anchor",
+  "inside_seconds": 850,
+  "name": "parameter-continuation-feedback-gru-n8-seed0-v1",
+  "numerical_gate": "beforeSGD: actual own prefix vs original and16rows\u00d74 incrementalcarry vs fullconcat atol2e-4/rtol2e-5; preserve any failure",
+  "objective": "terminal NLL plus coefficient1 KL to own frozen continuation cache, only48new rows; cycle4words bystep",
+  "outside_seconds": 900,
+  "permissions": "unchanged original offline GPU runner",
+  "scope": "new matched learning-rule diagnostic, not novel rule/Primary/broad advantage claim",
+  "source_sha256": {
+    "context_replay128.py": "cbe370360f0bf52efc82d614db54551f000c9f7e44230dc358dfdb76bcbad140",
+    "continuous_primitive_block.py": "fcba2e82defe2e3fdb9b02efe1eee37456f33defa172c7eb632ea07774b88158",
+    "memory_live_stage_train.py": "dd5fc0b869d216f29c6ccb7202a1d965086c3fedb060d3c4c3bc4e5620042ad6",
+    "owned_parent_driver.py": "cc1b8b2a2102050b071376bd26329bbb3ead8d5a540cff4e79a7e73cfaf5cccc",
+    "train_continuation_feedback.py": "63f8b2c5ede4124191f040cbf163f15d55a11ed93b60a0c12695870a90a95e93"
+  },
+  "teacher": "OWN trained pre-stage4 NN; first4 distinct phase0 TRAIN raw words length1or2,32query rows,256float cache; no true intermediate states or correct call sequence"
+}

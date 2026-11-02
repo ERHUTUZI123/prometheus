@@ -1,0 +1,109 @@
+{
+  "CPU_contract": "same3 cases output/loss/all27 parameter gradients; no graph/timing/SGD, <=90s inside explicit outer CPU bound",
+  "GPU_diagnostic": {
+    "Adam": "kept outside any future replay; its time/updates NOT measured here",
+    "Adam_steps": 0,
+    "SGD_updates": 0,
+    "backend_order": "sequential to prevent original zero_grad(None) from invalidating captured gradient addresses; report temporal drift limitation",
+    "backends": [
+      "original gather eager with zero_grad(None)",
+      "all-row masked eager with grad.zero_",
+      "same masked forward+backward CUDA Graph with captured grad.zero_"
+    ],
+    "capture": "Torch2.8 standard CUDAGraph keep_graph, side stream, own pool, explicit instantiate; graph replay gradient pointers stable",
+    "clip_calls": 0,
+    "draws": 12,
+    "graph_warmups": "3 side-stream F/B warmups, not extra replay warmups; one paid correctness replay then12draws",
+    "no_training": true,
+    "original_graph": "not captured because original nonzero/host branch is dynamic; no fake graph comparison",
+    "raw_closure": "save outputs+allgradients before and after timing, not only a producer boolean",
+    "warmups": 3
+  },
+  "cases": {
+    "B": 64,
+    "length_buckets": [
+      8,
+      16,
+      48
+    ],
+    "masked_tokens": "zero-padded exact bucket, charge every64*bucket transition",
+    "original_tokens": "trim/copy to actual batch max length outside timing, matching original batch helper; charge copy/storage",
+    "selection": "first64 length-eligible TRAIN rows from oldstage0/oldstage1/newstage3 respectively; no value/score selection; no replay mixture, so not a complete training-workload distribution",
+    "source_stage_selection": {
+      "8": 0,
+      "16": 1,
+      "48": 3
+    }
+  },
+  "checkpoint": {
+    "NN_bytes": 53588,
+    "P": 13397,
+    "anchor": 0,
+    "bytes": 332403,
+    "sha256": "4a9e3c88134d7028197459bfb76305ba282cf5328d3b519d0794cfb15e8fd35a",
+    "stage": 3,
+    "steps": 600
+  },
+  "costs": [
+    "all extra padded transition products and per-step432*B scalar mask selections",
+    "original NN53588B and grad53588B, saved Adam history107284B; live Adam0B in this F/B-only audit",
+    "input trimming/H2D/padding allocations/copies and all existing TRAIN target exposures",
+    "all numerical passes,3warmups/draws, graph construction/capture/instantiate/pool/cleanup and memory peaks",
+    "all setup/cold Torch/CUDA time in runner/driver records; no compiler process or custom kernel",
+    "no extrapolation from F/B ratio to full203s training or complete GRU/TF resource advantage"
+  ],
+  "current_core_sha256": "fcba2e82defe2e3fdb9b02efe1eee37456f33defa172c7eb632ea07774b88158",
+  "instructions": "ROOT may prepare fixed cases then run CPU contract before choosing a bounded GPU diagnostic. This artifact starts no process and schedules nothing.",
+  "maintenance": "capture is pointer/shape/version scoped; any future embedding/architecture growth must invalidate and pay recapture; in-place weight-update equivalence is outside this fixed-weight test",
+  "mathematical_basis": "Every _transition is row-separable: feature LN and within-example GRU/memory/CALL only. All-row masking equals gather/update in real arithmetic; batch-GEMM/reduction rounding must be tested.",
+  "mechanism": "Exact original _transition on all64 rows each token; tensor where selects new/old h/controller/keys/values. No bool/nonzero/input extraction inside pure helper, no new parameter.",
+  "not_verified": [
+    "CPU numerical contract",
+    "CUDA capture/backward feasibility",
+    "all parameter gradient equivalence",
+    "latency/storage/cold amortization"
+  ],
+  "numerical": {
+    "None_vs_zero_gradient_presence_must_match": true,
+    "all_gradients_finite": true,
+    "all_parameters_compared": true,
+    "every_parameter_gradient": {
+      "atol": 2e-05,
+      "rtol": 0.0002
+    },
+    "no_accumulation": "second masked F/B and graph pre/post timing gradients must match original; zero_ in capture",
+    "no_threshold_relaxation_or_score_gate": true,
+    "outputs_loss": {
+      "atol": 2e-05,
+      "rtol": 2e-05
+    },
+    "raw_pairs_saved_before_gates": true,
+    "unused_primary_parameter": "stop before graph; do not hide future eager-Adam skip semantics",
+    "weights_unchanged_exact": true
+  },
+  "objectives": "Exact NLL+anchor0*mean((hT-stopgrad(encode_state(y)))^2), including paid target lookup/MSE even when multiplied0; raw gradients before clipping.",
+  "permission_scope": "existing old verified GPU runner85e8ae... with explicit trustedCUDA bootstrap; no compiler exception, torch.compile, subprocess, new tool or permission",
+  "prospective_limits": {
+    "NPROC": 128,
+    "address_space_gib": 512,
+    "file_limit_mib": 100,
+    "gpu_allocator_fraction": 0.3,
+    "inside_CPU_seconds": 90,
+    "inside_GPU_seconds": 850,
+    "outer_CPU_seconds": 120,
+    "outer_GPU_seconds": 900
+  },
+  "question": "How much current eager forward/backward cost is removable host launch/index control, after charging extra masked padding and graph lifecycle?",
+  "schema": "NO-RUN-factorized-graph-FB-contract-v1",
+  "source_sha256": {
+    "audit_factorized_graph_fb.py": "112b881f8b49706381ed6cf370168345851ef03fe8305b9fac14de9cef902cd1",
+    "factorized_masked_graph_fb.py": "f2e3e16d75c02ce68b62189ab808debe71c5ed43e0f12107c212fcd0341af4f5",
+    "prepare_factorized_graph_fb_cases.py": "a322b77befaf54415272cf95aa27d0c2c651a008f9b56963f6b18cc230c957eb"
+  },
+  "source_static_checks": {
+    "Python_AST": true,
+    "no_optimizer_step_call": true,
+    "pure_helper_no_bool_nonzero_cpu_extract": true
+  },
+  "status": "SOURCE_PREPARED_ONLY; no CPU/GPU contract executed by this agent"
+}

@@ -1,0 +1,25 @@
+--- frozen_fcba._transition
++++ OperandInteractionBlock._transition
+@@ -4,16 +4,20 @@
+         x=raw_x+self.slot_embedding.weight[0];control=torch.cat((c,x),-1)
+         attention=F.softmax(torch.einsum("bq,bmq->bm",self.read_query(control),keys)/self.key_dim**.5,-1)
+         read=torch.einsum("bm,bmh->bh",attention,values)
++        operand_h=F.linear(h,self.interaction_A)
++        operand_read=F.linear(read,self.interaction_C)
++        operand=operand_h*operand_read if self.interaction_mode=="product" else F.gelu(operand_h+operand_read)
++        shared=F.linear(operand,self.interaction_B)
+         features=torch.cat((h,c,x,read),-1)
+         call_features=features if self.routing=="dynamic" else torch.cat((torch.zeros_like(h),torch.zeros_like(c),x,torch.zeros_like(read)),-1)
+         all_logits=self.caller(call_features);logits=all_logits[:,:self.n_primitives]
+         probabilities=F.softmax(logits,-1);chosen=logits.argmax(-1)
+         if execution=="native":
+-            low=F.gelu(torch.bmm(self.primitive_down[chosen],features[:,:,None]).squeeze(-1)+self.primitive_bias[chosen])
++            low=F.gelu(torch.bmm(self.primitive_down[chosen],features[:,:,None]).squeeze(-1)+self.primitive_bias[chosen]+shared)
+             delta=torch.bmm(self.primitive_up[chosen],low[:,:,None]).squeeze(-1)
+             weights=F.one_hot(chosen,self.n_primitives).to(h)
+         else:
+-            low=F.gelu(torch.einsum("bf,krf->bkr",features,self.primitive_down)+self.primitive_bias)
++            low=F.gelu(torch.einsum("bf,krf->bkr",features,self.primitive_down)+self.primitive_bias+shared[:,None,:])
+             candidates=torch.einsum("bkr,khr->bkh",low,self.primitive_up)
+             delta=torch.einsum("bk,bkh->bh",probabilities,candidates);weights=probabilities
+             if execution=="straight_through":

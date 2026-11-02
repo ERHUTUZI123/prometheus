@@ -1,0 +1,11 @@
+{
+  "actual_updates": 0,
+  "architecture_policy": "typed-memory-actions/compute-load-store-address/raw-value/group8/v1",
+  "completed_stages": [],
+  "completed_updates_current_stage": 0,
+  "error": "AttributeError(\"module 'hashlib' has no attribute 'sha206'\")",
+  "phase": "stage0_setup",
+  "stage": 0,
+  "status": "FAILED_OR_BOUNDED_TYPED_MEMORY_ACTIONS_FRESH_GRAPH",
+  "traceback": "Traceback (most recent call last):\n  File \"/workspace/prometheus-v2-m0-architecture/code-parameter-typed-memory-actions-n8-seed0-fourstage-graph-v1/train_typed_memory_actions_fourstage_graph.py\", line 99, in main\n    if stage in(0,3):engine=GraphEngine(model,opt,bucket,first,rec.out,rec.check,stage);rec.emit('actual_graph_capture',stage=stage,graph=engine.report())\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/prometheus-v2-m0-architecture/code-parameter-typed-memory-actions-n8-seed0-fourstage-graph-v1/typed_memory_actions_graph_engine.py\", line 32, in __init__\n    self.stable();self.graph.replay();self.sync();right=self.snapshot(self.outputs);self.costs['graph_diagnostic_FB_calls']+=1;self.costs['admission']=self.compare(left,right,f'stage{stage}-L{bucket}-admission.npz')\n                                                                                                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/prometheus-v2-m0-architecture/code-parameter-typed-memory-actions-n8-seed0-fourstage-graph-v1/typed_memory_actions_graph_engine.py\", line 63, in compare\n    row.update(raw_file=leaf,raw_sha206=sha(path),raw_bytes=path.stat().st_size)\n                                        ^^^^^^^^^\n  File \"/workspace/prometheus-v2-m0-architecture/code-parameter-typed-memory-actions-n8-seed0-fourstage-graph-v1/typed_memory_actions_graph_engine.py\", line 14, in sha\n    def sha(p):return hashlib.sha206(p.read_bytes()).hexdigest()\n                      ^^^^^^^^^^^^^^\nAttributeError: module 'hashlib' has no attribute 'sha206'. Did you mean: 'sha256'?\n"
+}

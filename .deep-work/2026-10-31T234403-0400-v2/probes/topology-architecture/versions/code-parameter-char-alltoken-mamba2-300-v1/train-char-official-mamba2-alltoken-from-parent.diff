@@ -1,0 +1,199 @@
+--- frozen/train_char_alltoken.py@567e3721
++++ train_char_official_mamba2_alltoken.py
+@@ -1,8 +1,9 @@
+-"""ROOT-RUN proper causal all-token char-LM development, fixed300x32x64.
+-
+-New feedback protocol, never pooled with the old terminal-prefix experiment.
+-Continuous Block/GRU44/causal Transformer36 see identical windows and all labels.
+-No import-time work/network/installation, score-targeted retry or Primary claim.
++"""Official Mamba2 all-token AR baseline; derivative of frozen 567e parent.
++
++Same fixed data/splits/batch sampler/300x32x64/Adam .003/clip1/seed0 protocol.
++Changes: single official Mamba2 model, source provenance, explicit unknown MAC
++and FLOP fields. Data/evaluation/causality/checkpoint/reload logic is inherited
++by direct copy, documented in the frozen diff. No score gate or automatic retry.
+ """
+ from __future__ import annotations
+ 
+@@ -10,6 +11,7 @@
+ import copy
+ import hashlib
+ import json
++import importlib
+ import math
+ from pathlib import Path
+ import random
+@@ -23,7 +25,17 @@
+ from torch import nn
+ from torch.nn import functional as F
+ 
+-from continuous_primitive_block import ContinuousPrimitiveBlock
++PACKAGE_ROOT = Path("/opt/prometheus-mamba231-r1")
++PARENT_DRIVER_SHA256 = "567e372187e4cee3c8a5ca3d49f5f7d60a8664a07619c3d57dc1c799cbbd9f02"
++MAMBA_CONFIG = dict(d_model=64, d_state=16, expand=2, headdim=16,
++                    chunk_size=32, use_mem_eff_path=False)
++OFFICIAL_FILES = {
++    "mamba_ssm/__init__.py": "6d3fee6ff8e8ec4dcab0f7af6c7890ff81f3d9319707865f5a651239aee9ae0a",
++    "mamba_ssm/modules/mamba2.py": "605e4439ff0baec8d8acaf4a191d9f0570eea9900065a065909124c472b08707",
++    "mamba_ssm/models/mixer_seq_simple.py": "13409d7044e930ea3271e4b8ddceaf8155ec49b8e5ac299fba7bb0df6d80cb21",
++    "mamba_ssm/models/config_mamba.py": "2a72c1686f775b56547e39ca4406ba10148d12fd7a791c57ce2ba85126010fcd",
++    "mamba_ssm/ops/triton/ssd_combined.py": "868540ba0c45e86ac3f610b17b62dc6ede5a80a91c2c8ef24f7e3314be69b626",
++}
+ 
+ 
+ def sha(path):
+@@ -33,7 +45,13 @@
+     return h.hexdigest()
+ 
+ 
+-def sources():return {name:sha(Path(__file__).with_name(name)) for name in (Path(__file__).name,"continuous_primitive_block.py")}
++def sources():
++    parent=Path(__file__).with_name("train_char_alltoken.py")
++    if sha(parent)!=PARENT_DRIVER_SHA256:raise ValueError("frozen parent driver provenance changed")
++    names=(Path(__file__).name,"train_char_alltoken.py","continuous_primitive_block.py",
++        "official_mamba2_alltoken_prologue.py","remote_runner_gpu_official_mamba_alltoken.py",
++        "compiler_policy_checks.py","validate_mamba2_alltoken.py")
++    return {name:sha(Path(__file__).with_name(name)) for name in names}
+ 
+ 
+ def tensor_bytes(value):
+@@ -45,52 +63,45 @@
+ 
+ class AllTokenLM(nn.Module):
+     def __init__(self,arm,vocabulary):
+-        super().__init__();self.arm=arm;self.vocabulary=vocabulary
+-        if arm in ("dynamic","static","detached"):
+-            self.body=ContinuousPrimitiveBlock(n_states=vocabulary,n_tokens=vocabulary,internal_states=64,
+-                n_primitives=4,token_dim=16,state_dim=64,memory_dim=64,caller_hidden=32,n_slots=1,
+-                routing=arm,memory_slots=8,key_dim=16,primitive_rank=8)
+-            # Full Vx64 encoder remains allocated/counted despite publicinitial0.
+-        elif arm=="gru":
+-            self.embedding=nn.Embedding(vocabulary,44);self.body=nn.GRU(44,44,num_layers=2,batch_first=True);self.readout=nn.Linear(44,vocabulary)
+-        elif arm=="transformer":
+-            self.embedding=nn.Embedding(vocabulary,36)
+-            self.body=nn.ModuleList([nn.TransformerEncoderLayer(36,4,dim_feedforward=72,dropout=0.,batch_first=True,norm_first=True) for _ in range(3)])
+-            self.norm=nn.LayerNorm(36);self.readout=nn.Linear(36,vocabulary)
+-            position=torch.arange(256,dtype=torch.float32)[:,None];frequency=torch.exp(torch.arange(0,36,2,dtype=torch.float32)*(-math.log(10000.)/36))
+-            encoding=torch.zeros(256,36);encoding[:,0::2]=torch.sin(position*frequency);encoding[:,1::2]=torch.cos(position*frequency)
+-            self.register_buffer("positions",encoding);self.register_buffer("causal_mask",torch.ones(256,256,dtype=torch.bool).triu(1))
+-        else:raise ValueError("unknown fixed architecture")
++        super().__init__()
++        if arm!="mamba2" or vocabulary!=100:raise ValueError("fixed official Mamba2/V100 arm required")
++        for relative,expected in OFFICIAL_FILES.items():
++            path=PACKAGE_ROOT/relative
++            if path.is_symlink() or not path.is_file() or sha(path)!=expected:
++                raise ValueError("official Mamba2 source differs: "+relative)
++        sys.path.insert(0,str(PACKAGE_ROOT));package=importlib.import_module("mamba_ssm")
++        if package.__version__!="2.3.1" or not Path(package.__file__).resolve().is_relative_to(PACKAGE_ROOT):
++            raise ValueError("unexpected installed official Mamba2 package")
++        self.arm=arm;self.vocabulary=vocabulary;self.official_version=package.__version__
++        self.embedding=nn.Embedding(vocabulary,64)
++        self.body=package.Mamba2(**MAMBA_CONFIG)
++        self.norm=nn.LayerNorm(64);self.readout=nn.Linear(64,vocabulary)
++        if any(value.dtype!=torch.float32 for value in self.parameters()):raise ValueError("fixed FP32 Mamba2 arm required")
+ 
+     def configuration(self):
+-        if self.arm in ("dynamic","static","detached"):return dict(arm=self.arm,core=self.body.configuration(),readout="all post-token normalizedcontinuous outputs",public_initial=0)
+-        return dict(arm=self.arm,vocabulary=self.vocabulary,width=44 if self.arm=="gru" else 36,layers=2 if self.arm=="gru" else 3,
+-            heads=None if self.arm=="gru" else 4,feedforward=None if self.arm=="gru" else 72,
+-            position="none" if self.arm=="gru" else "fixedsinusoidal256",causal=True,initial_state="zero" if self.arm=="gru" else "noCLS")
++        return dict(arm=self.arm,vocabulary=self.vocabulary,width=64,layers=1,
++            official_Mamba2_configuration=MAMBA_CONFIG,embedding="learned100x64",parameter_dtype="float32",
++            final_LayerNorm=True,readout="64to100+log_softmax",causal=True,
++            position="none",initial_state="official zero state per independent window",
++            package_root=str(PACKAGE_ROOT),official_version=self.official_version,
++            official_source_sha256=OFFICIAL_FILES,parent_driver_sha256=PARENT_DRIVER_SHA256,
++            MAC_FLOP_model="unmeasured; not zero and not a full-resource proxy")
+ 
+     def forward(self,initial,tokens,lengths,mode="soft"):
++        if mode!="soft":raise ValueError("official Mamba2 has one execution mode")
+         if tokens.ndim!=2 or tokens.shape[1]>256 or not bool((lengths==tokens.shape[1]).all()):raise ValueError("fixed full windows <=256 required")
+-        if self.arm in ("dynamic","static","detached"):
+-            return self.body.forward_all(initial,tokens,lengths,execution=mode,output="logits")
+-        h=self.embedding(tokens)
+-        if self.arm=="gru":h,_=self.body(h)
+-        else:
+-            h=h+self.positions[:tokens.shape[1]][None]
+-            for layer in self.body:h=layer(h,src_mask=self.causal_mask[:tokens.shape[1],:tokens.shape[1]],is_causal=True)
+-            h=self.norm(h)
++        h=self.embedding(tokens);h=self.body(h);h=self.norm(h)
+         return F.log_softmax(self.readout(h),-1)
+ 
+     def proxy(self,count,length,mode="soft"):
+-        if self.arm in ("dynamic","static","detached"):
+-            return self.body.sequence_resource_report(batch_size=count,sequence_length=length,
+-                active_steps=count*length,execution=mode)["proxy_forward_macs"]
+-        if self.arm=="gru":return count*length*(2*6*44*44+44*self.vocabulary)
+-        return count*(3*(4*length*36*36+2*length*length*36+2*length*36*72)+length*36*self.vocabulary)
++        # Official selective-SSD forward/backward/optimizer FLOPs are not measured.
++        # None propagates to every report; zero would falsely claim free compute.
++        return None
+ 
+ 
+ def main():
+     p=argparse.ArgumentParser();p.add_argument("--data",type=Path,required=True);p.add_argument("--out",type=Path,required=True)
+-    p.add_argument("--arm",choices=("dynamic","static","detached","gru","transformer"),required=True)
++    p.add_argument("--arm",choices=("mamba2",),required=True)
+     p.add_argument("--device",default="cuda:0");p.add_argument("--seed",type=int,default=0);p.add_argument("--max-seconds",type=float,default=850)
+     p.add_argument("--resource-overlap-note",default="coordinator records actual concurrency; no isolatedthroughput claim")
+     args=p.parse_args()
+@@ -99,9 +110,9 @@
+     stream=(args.out/"records.jsonl").open("x",buffering=1);device=torch.device(args.device)
+     model=optimizer=None;completed=0;curves=[];receipts=[];inputs=[]
+     costs=dict(optimizer_updates=0,training_windows=0,training_input_tokens=0,training_label_observations=0,
+-        training_forward_MAC_proxy=0,training_wall_seconds=0.,training_CPU_seconds=0.,batch_assembly_wall_seconds=0.,
+-        evaluation_forward_windows=0,evaluation_prediction_positions=0,evaluation_forward_MAC_proxy=0,evaluation_wall_seconds=0.,
+-        causality_audit_forward_windows=0,causality_audit_forward_MAC_proxy=0,checkpoint_wall_seconds=0.,reload_wall_seconds=0.,reload_forward_windows=0,reload_forward_MAC_proxy=0)
++        training_forward_MAC_proxy=None,training_wall_seconds=0.,training_CPU_seconds=0.,batch_assembly_wall_seconds=0.,
++        evaluation_forward_windows=0,evaluation_prediction_positions=0,evaluation_forward_MAC_proxy=None,evaluation_wall_seconds=0.,
++        causality_audit_forward_windows=0,causality_audit_forward_MAC_proxy=None,checkpoint_wall_seconds=0.,reload_wall_seconds=0.,reload_forward_windows=0,reload_forward_MAC_proxy=None)
+     def emit(kind,**value):stream.write(json.dumps(dict(kind=kind,wall=time.perf_counter()-started,**value),sort_keys=True,allow_nan=False)+"\n")
+     def check():
+         if time.perf_counter()>deadline:raise TimeoutError("all-token AR development bound")
+@@ -151,7 +162,7 @@
+                     normalizer=max(normalizer,float(torch.logsumexp(out,-1).abs().max()))
+                     losses=F.nll_loss(out.reshape(-1,vocabulary),b["targets"].reshape(-1),reduction="none").reshape(len(b["initial"]),length)
+                     all_nll.append(losses.cpu().numpy().astype(np.float64));predictions.append(out.argmax(-1).cpu().numpy())
+-                    costs["evaluation_forward_windows"]+=len(b["initial"]);costs["evaluation_prediction_positions"]+=len(b["initial"])*length;costs["evaluation_forward_MAC_proxy"]+=model.proxy(len(b["initial"]),length,mode)
++                    costs["evaluation_forward_windows"]+=len(b["initial"]);costs["evaluation_prediction_positions"]+=len(b["initial"])*length
+                 sync();elapsed=time.perf_counter()-tick;costs["evaluation_wall_seconds"]+=elapsed
+                 nll=np.concatenate(all_nll);prediction=np.concatenate(predictions);suffix=nll[:,-64:]
+                 if normalizer>1e-5:raise RuntimeError("logprobability normalization failed")
+@@ -206,7 +217,7 @@
+         with torch.no_grad():left=forward(probe);right=forward(changed)
+         causal_difference=float((left[:,:32]-right[:,:32]).abs().max())
+         if causal_difference>2e-6:raise RuntimeError("future-token leakage detected by actual causality contract")
+-        costs["causality_audit_forward_windows"]+=4;costs["causality_audit_forward_MAC_proxy"]+=model.proxy(4,64)
++        costs["causality_audit_forward_windows"]+=4
+         emit("actual_causality_contract",changed_input_suffix=[32,64],checked_output_prefix=[0,32],maximum_difference=causal_difference,TRAIN_inputs_only=True)
+         for step in range(301):
+             check()
+@@ -221,7 +232,7 @@
+             loss.backward();norm=torch.nn.utils.clip_grad_norm_(model.parameters(),1.,error_if_nonfinite=True);optimizer.step()
+             if any(not bool(torch.isfinite(value).all()) for value in model.parameters()):raise FloatingPointError("nonfinite actual parameter")
+             sync();completed=step+1;costs["optimizer_updates"]+=1;costs["training_windows"]+=32;costs["training_input_tokens"]+=2048;costs["training_label_observations"]+=2048
+-            costs["training_forward_MAC_proxy"]+=model.proxy(32,64);costs["training_wall_seconds"]+=time.perf_counter()-tick;costs["training_CPU_seconds"]+=time.process_time()-cpu
++            costs["training_wall_seconds"]+=time.perf_counter()-tick;costs["training_CPU_seconds"]+=time.process_time()-cpu
+             emit("actual_alltoken_update",step=completed,all_token_train_NLL=float(loss.detach()),preclip_gradient_norm=float(norm),
+                 batch_next_character_accuracy=float((out.argmax(-1)==b["targets"]).float().mean()),cumulative_costs=costs)
+         final_path=checkpoint(f"{args.arm}-frozen-final.pt");before_test=state_hash(model);emit("ALL_TRAINING_FROZEN_BEFORE_TEST",completed_updates=completed,checkpoint=final_path.name,model_state_sha256=before_test)
+@@ -239,7 +250,7 @@
+             for mode in (("soft","native") if block else ("soft",)):
+                 left=forward(b,mode);right=other(b["initial"],b["tokens"],b["lengths"],mode);same=bool(torch.equal(left,right));mode_equality[mode]=same
+                 if not same:raise RuntimeError("actual output reload mismatch")
+-                costs["reload_forward_windows"]+=64;costs["reload_forward_MAC_proxy"]+=model.proxy(64,64,mode)
++                costs["reload_forward_windows"]+=64
+         sync();costs["reload_wall_seconds"]+=time.perf_counter()-tick
+         if not equal or before_test!=state_hash(model):raise RuntimeError("inference/reload changed actual weights")
+         result=dict(status="completed300updates_alltoken_AR_development",arm=args.arm,completed_updates=completed,
+@@ -248,8 +259,8 @@
+             actual_causality_max_difference=causal_difference,reload_audit=dict(actual_tensor_values_equal=equal,actual_sameinput_alltoken_outputs_equal=mode_equality,exact_training_resume_tested=False),
+             unchanged_weights_after_test=True,paired_last64_TEST_labels=True,formal_Primary=False,old_prefix_results_not_pooled=True,
+             metric_scope="sampledalltokenAR windows, not fullcorpus/wordPPL; primarylengthcomparison same32768last64targets",
+-            cost_scope="nestedwalltimes do notsum; forwardMACproxies excludebackward/optimizer; allvalidation/native/testwork counted; no exclusivethroughput/energyclaim",
+-            resource_overlap_note=args.resource_overlap_note,driver_wall_seconds=time.perf_counter()-started)
++            cost_scope="officialMamba2 forward/backward/optimizer FLOPs and MACs unmeasured(null), not zero; allvalidation/test/reload and staged coldcompile/priming charged; nestedtimes do notsum; no exclusivethroughput/energyclaim",
++            training_FLOPs=None,training_FLOPs_status="unmeasured official selective-SSD/autograd/Adam",resource_overlap_note=args.resource_overlap_note,driver_wall_seconds=time.perf_counter()-started)
+         write_json("summary.json",result);emit("completed",actual_updates=completed,training_label_observations=costs["training_label_observations"])
+         print(json.dumps(dict(status=result["status"],out=str(args.out),completed_updates=completed)))
+     except BaseException as error:

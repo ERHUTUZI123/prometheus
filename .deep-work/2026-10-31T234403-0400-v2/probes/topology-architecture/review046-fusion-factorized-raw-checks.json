@@ -1,0 +1,97 @@
+{
+  "factorized": [
+    {
+      "Adam_bytes": 107284,
+      "NN_bytes": 53588,
+      "P": 13397,
+      "Replay_array_bytes": 55296,
+      "Replay_metadata_bytes": 1739,
+      "TEST_wall_seconds": 8.174867913126945,
+      "VALID_wall_seconds": 7.142070363857783,
+      "actual_paid_forward_MAC_proxy": 24830989568,
+      "actual_paid_training_wall_seconds": 204.2907822766574,
+      "actual_paid_updates": 2408,
+      "anchor": 0,
+      "checkpoint_disk_sum_bytes": 1326796,
+      "discarded_phase3_updates": 8,
+      "maintenance_wall_seconds": 0.26411850086878985,
+      "max_repeated_phase3_NLL_difference": 0.0,
+      "reload_wall_seconds": 0.43583750107791275,
+      "result_sha256": "2606cf09dd1112ff80d3c927365d6ce54cf0f903b0d610935b19f19ceb8e9587",
+      "soft_IID": {
+        "0": 0.841796875,
+        "1": 0.896484375,
+        "2": 0.85546875,
+        "3": 0.62109375
+      },
+      "soft_new_long": 0.607421875,
+      "soft_new_unseen": 0.5859375,
+      "useful_lineage_forward_MAC_proxy": 24650234496,
+      "useful_lineage_training_CPU_seconds": 203.69068581900024,
+      "useful_lineage_training_CUDA_stream_seconds": 202.72698215484635,
+      "useful_lineage_training_wall_seconds": 202.87144619168248,
+      "useful_lineage_updates": 2400
+    },
+    {
+      "Adam_bytes": 107284,
+      "NN_bytes": 53588,
+      "P": 13397,
+      "Replay_array_bytes": 55296,
+      "Replay_metadata_bytes": 1739,
+      "TEST_wall_seconds": 7.243834774009883,
+      "VALID_wall_seconds": 6.356091581634246,
+      "actual_paid_forward_MAC_proxy": 38519160384,
+      "actual_paid_training_wall_seconds": 287.6584912004182,
+      "actual_paid_updates": 3000,
+      "anchor": 1,
+      "checkpoint_disk_sum_bytes": 1326796,
+      "discarded_phase3_updates": 600,
+      "maintenance_wall_seconds": 0.23703653796110302,
+      "max_repeated_phase3_NLL_difference": 0.0,
+      "reload_wall_seconds": 0.3819149030605331,
+      "result_sha256": "b96c8a8a6a601367eb754cc6cf0ff7d885dbf9767a584288dc965a88ca62787f",
+      "soft_IID": {
+        "0": 0.94140625,
+        "1": 0.912109375,
+        "2": 0.841796875,
+        "3": 0.1796875
+      },
+      "soft_new_long": 0.1640625,
+      "soft_new_unseen": 0.16015625,
+      "useful_lineage_forward_MAC_proxy": 24650234496,
+      "useful_lineage_training_CPU_seconds": 189.88618161099987,
+      "useful_lineage_training_CUDA_stream_seconds": 188.89305996704098,
+      "useful_lineage_training_wall_seconds": 189.0359571177978,
+      "useful_lineage_updates": 2400
+    }
+  ],
+  "independent_fusion_raw_review": {
+    "agent": "/root/compiler_exception/fusion_raw_verify",
+    "argmax_mismatches": 0,
+    "carry_max_abs": {
+      "h": 1.40667e-05,
+      "keys": 6.52224e-05,
+      "values": 0.000107527
+    },
+    "fusion_raw_reference_equals_old_dynamic_all_three_backends": true,
+    "logprob_values": 1478400,
+    "max_abs": 9.250640869140625e-05,
+    "max_logsumexp_abs": 2.7792e-07,
+    "method": "stdlib ZIP/NPY payload decoding and float64 scalar arithmetic; no NumPy install/model execution",
+    "prediction_positions": 14784,
+    "raw_records_SHA": {
+      "fusion": "00d6ce4593455a5f056ae7494955a643b389e906e2959f7abaf19efd5d99fe54",
+      "gru": "346c5bca46dc74cd2544abce0de03b762d9c27c506050799126edf5606d5151e",
+      "transformer": "2c0e3c7ac071ae97476c0af93220d479a3df545991076a2fd30271f842444bd8"
+    },
+    "raw_timing_draws": 288,
+    "rotation_and_repeat_completeness": true
+  },
+  "limitations": [
+    "factorized TEST scores checked as recorded producer metrics, not independently recomputed per-example because no frozen TEST prediction vectors are saved by this driver",
+    "fusion saved raw arrays cover fused eager, while graph equality is runtime-checked before timing; no raw per-draw graph output vectors",
+    "provider-effective compute, complete FLOPs, raw driver/context/executable GPU memory and energy unknown"
+  ],
+  "local_review_scope": "read-only source/JSONL arithmetic/hash and saved output decoding only; no SSH/Torch model import/inference/training/compiler/install",
+  "schema": "review046-readonly-derived-evidence-v1"
+}

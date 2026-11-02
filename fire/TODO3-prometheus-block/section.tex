@@ -256,3 +256,308 @@ model tensors, raw curves, and the common prefix. The frozen run is
 \path{probes/topology-architecture/runs/parameter-hybrid-loop-learning-v2/}
 within the V2 campaign. This development component is not a frozen Primary
 Prometheus and supplies no primary five-layer benchmark numbers.
+
+
+\subsection{Fourth-phase two-address development (executed, not Primary)}
+The earlier held-out query skeleton can overwrite its first read. A new,
+prospectively frozen development phase therefore uses two independently
+written values, independently varying write and query orders, and terminal
+feedback in which each stored value causally changes the output. Correct
+operation semantics, routes, intermediate states and counterfactual truth
+are excluded from learner inputs. TRAIN/VALID contain 4096/512 examples;
+IID, long (64--112 tokens) and held-out distractor tests contain 512 each.
+The balanced $8\times8\times2\times2$ design puts TRAIN-majority and
+last-four-token lookup controls at 12.5\%.
+
+Each arm resumes its own actual three-phase NN, Adam, RNG and 128-row
+replay state. A single randomly initialized token embedding row is added:
+16 parameters for each continuous Block, 44 for GRU and 32 for Transformer.
+Old embedding rows, optimizer moments/steps and old-token forward values
+are checked exactly before learning. All four actual CPU growth/reload
+checks passed. The only new phase uses 600 updates of 48 current plus 16
+replayed examples; prior training is not rerun.
+
+The dynamic Block's actual completed phase has 28,381 parameters, VALID
+soft/hard-call accuracy of 58.20/33.20\%, and IID soft accuracy of 56.64\%.
+Its previous-task IID accuracies fall to 79.30/82.03/78.91\%. Actual training
+wall time is 91.42 seconds for 38,400 examples (28,800 current, 9,600 old);
+training-forward work is 29.446 billion MAC proxies, which excludes
+backward FLOPs. Recorded TRAIN/VALID curve evaluation takes another
+42.70 seconds; test, replay, restore, optimizer, checkpoints and inference
+are separately charged in the raw ledger. Total backward FLOPs and energy
+are not inferred from MAC proxies. Other arms are separately executed
+under the frozen protocol; this interim result is not a competitive
+advantage or a frozen Primary claim.
+
+\texttt{memory\_live\_stage\_train.py} and its frozen protocol,
+raw updates and actual checkpoints are retained in the same V2 campaign.
+
+\subsection{Control--value separation and executable continuations}
+The next executed development version separates a 32-dimensional value $h$
+from a 16-dimensional learned GRU controller $c$. Read addresses use the
+controller and input; four rank-eight primitives edit the value, with eight
+learned carry gates. A write stores the newly computed value itself instead
+of applying the earlier large value projection. Token semantics, addresses,
+routes and intermediate states remain unsupplied. The state update is
+\begin{align}
+c^+&=\operatorname{GRUCell}([x;h],c),\\
+f&=[h;c^+;x+s;r],\quad (\ell,z)=\operatorname{Call}(f),\\
+h^+&=h+\operatorname{repeat}_{4}(\sigma z)\odot
+ \left[\operatorname{LN}\left(h+\sum_k\operatorname{softmax}(\ell)_k
+ U_k\operatorname{GELU}(D_kf+b_k)\right)-h\right].
+\end{align}
+The eight-slot key/value memory retains the learned soft-write rule.
+The resulting N8 model has 13,381 parameters initially and 13,397 after
+one random token row is appended, with 432 floating-point carry scalars
+per example. These are joint architectural changes, not an isolated
+identity-write ablation or a topology guarantee.
+
+Two prospectively fixed objectives used the same terminal labels and
+four 600-update phases. A value-vector anchor with weight one failed
+new acquisition (17.97\% IID); without it, new IID was 62.11\%, with old
+IID 84.18/89.65/85.55\%. Effective training wall times were 189.04 and
+202.87 seconds. Including actual discarded work, the paid totals were
+287.66 seconds/3,000 updates and 204.29 seconds/2,408 updates.
+A replay-padding storage bug was repaired after training: only confirmed
+zero padding was cropped from 128 to 48 columns. Recovery used the saved
+stage-two NN, Adam, RNG and replay; the first three phases were never
+rerun. Repeated NLLs agreed exactly with the preserved original records.
+
+Terminal correctness did not establish an executable interface. On a fixed
+256-case MIX grid, the unanchored model scored 62.5\% at the base but
+2.34\% after an old SET0--STEP continuation. We therefore tested a
+behavioral objective instead of requiring a particular latent vector:
+\begin{equation}
+\mathcal L=-\log p_\theta(y\mid z_T)+
+ D_{\rm KL}\!\left(\bar p_w(\cdot\mid y)
+ \parallel p_\theta(\cdot\mid z_T,w)\right),\quad
+\bar p_w=p_{\theta_{\rm old}}(\cdot\mid\operatorname{initial}(y),w).
+\end{equation}
+Four raw short programs are selected deterministically from old TRAIN,
+not by teacher accuracy. The 32-query old-model cache occupies 1,024
+bytes and supplies no new external labels. This version explicitly
+reopens past raw inputs to choose the words; a strict streaming variant
+would have to retain that pool prospectively. Its extra suffix training,
+cache, comparison forwards and maintenance are charged.
+
+The same rule was actually trained on Block, GRU44 and Transformer32:
+\begin{center}\small
+\begin{tabular}{lrrrr}
+\toprule
+Model & P & New IID (\%) & Old IID (\%) & Four-phase train s\\
+\midrule
+Block & 13,397 & 58.40 & 92.38/91.99/82.62 & 209.76\\
+GRU44 & 25,616 & 63.09 & 87.11/83.59/81.25 & 14.87\\
+Transformer32 & 26,760 & 19.34 & 49.02/74.41/73.05 & 22.07\\
+\bottomrule
+\end{tabular}
+\end{center}
+These training sums exclude separately retained evaluation, restoration,
+failed diagnostics, storage and inference costs; they are not the complete
+campaign bill. GRU's first attempt made zero updates because a dense tail
+selected different cuDNN TF32 arithmetic. A frozen numerical diagnosis
+showed that the original packed path reproduced full execution exactly;
+the repaired run retained the original precision, tolerance and budget.
+Transformer's low score remains valid evidence under its frozen protocol.
+
+On 3,584 new frozen development rows, Block's NOP-inserted continuation
+improved from 1.95\% to 60.94\%, while the four-token composition remained
+19.53\%. GRU with the same learning rule reached 62.50\% and 25.00\%.
+The cached continuations are identified as trained, not unseen; NOP,
+composition and CLEAR are reported separately, together with the
+prospectively fixed length-at-most-48 stratum. Conditional base-correct
+subsets have explicit denominators and are not unmatched causal comparisons.
+Thus the evidence supports partial interface learning across architectures,
+not a unique or reliably closed Prometheus operation algebra.
+
+\subsection{Posterior-valued recurrence: an executed causal development pair}
+\label{app:posterior-value-development}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/development-posterior-value-pair-v2/posterior-value-pair-evidence-v2.pdf}
+\caption{Actual paired development learning, old-task behavior and measured
+cost scopes. One development seed; final old-long TEST is not an isolated
+forgetting contrast. Nested wall scopes must not be summed.}
+\label{fig:posterior-value-development}
+\end{figure}
+
+A subsequent frozen-weight audit found that both the ordinary Block and
+its one-scalar value-bridge version already decoded all eight learned
+initial-value embeddings to the matching public index. Initial encoder--decoder
+argmax misalignment therefore did not explain the observed continuation gap.
+The scalar bridge actually learned a negative coefficient, reduced new IID
+accuracy to 58.01\%, and increased its 600-update time by 26.6\%.
+Its mixed continuation results and failed coordinator preflight are retained.
+
+We then implemented a stronger state rule, not another output-only constraint.
+The original controller, calls and G8 experts compute candidate $\chi_t$.
+Let $E_y$ denote the existing normalized learned input-value embeddings:
+\begin{equation}
+\ell_{t+1}=\operatorname{logsoftmax}(R_\theta\chi_t+b_\theta),\quad
+p_{t+1}=\exp(\ell_{t+1}),\qquad h_{t+1}=p_{t+1}^{\top}E.
+\end{equation}
+Memory rows store eight-dimensional subprobability vectors, initialized to
+zero; learned read attention produces $r_t=(\sum_j a_{tj}V_{tj})E$ and learned
+write attention updates $V_{tj}$ toward $p_{t+1}$. The controller, keys and
+other rows are not reset. Each step emits its cached $\ell_{t+1}$;
+projected $h$ is never decoded a second time. No correct intermediate state,
+route or operator is supplied.
+
+In real arithmetic, for fixed parameters during execution,
+$h\in\operatorname{conv}\{E_y\}$ and
+\begin{equation}
+\|h-E_y\|\le 2\sqrt H\,(1-p_y).
+\end{equation}
+This couples confident endpoint prediction to an executable value coordinate;
+it is neither full-carry equivalence nor a continual-retention guarantee.
+The paired ablation keeps the same posterior memory, cached output and all
+27 parameter tensors, but carries $h=\chi_t$ and skips the unused projection.
+
+Both fixed configurations were actually trained from identical seed-zero
+initial weights for four phases of 600 updates, with the original data,
+48-new/16-replay schedule after phase zero, Adam and clipping. All four
+NN/Adam/RNG/replay checkpoints were saved and reloaded before frozen TEST.
+Each model has 13,397 final parameters and a defined carry of 248 floats;
+this payload is not a claim of lower allocator or backward memory.
+
+\begin{center}\small
+\begin{tabular}{lrr}
+\toprule
+Observed development outcome & Posterior value & Raw value ablation\\
+\midrule
+New IID / long (\%) &24.61 /17.38&62.11 /62.50\\
+Old long 0/1/2 (\%) &38.87/77.34/73.63&21.88/52.15/54.10\\
+All 2,400 update wall s &29.738&29.254\\
+Entire scientific driver s &59.890&60.764\\
+Padded forward MAC, billions &51.000&50.056\\
+\bottomrule
+\end{tabular}
+\end{center}
+The posterior model learned the first three tasks (end-phase-two VALID
+99.22/100/97.66\%), then failed new binary acquisition. Better long-program
+accuracy and worse acquisition coexist. This does not isolate retention:
+the arms already differ during earlier learning, and long TEST was not opened
+before the final learning phase. These are one paired development
+seed, not Primary results or evidence of broad superiority. Two captures,
+warmup, raw gradient diagnostics, padding, maintenance, checkpoint, replay,
+evaluation and inference costs are retained; complete training FLOPs remain
+unmeasured.
+
+The subsequent frozen-model diagnostic executed all four phase-two/three
+checkpoints on the same 512 VALID programs, with zero optimizer updates.
+All neural trajectories were saved before privileged prefix truth was loaded.
+Every raw-model final prediction was one of
+$\{3v_0+v_1,3v_1+v_0\}\bmod8$. Among 256 query-flip pairs, 192 required
+different answers but only 20 prediction pairs changed; changing write order
+should preserve every answer, yet changed 58 prediction pairs. A completely
+query-order-blind predictor has optimal accuracy $1/4+(3/4)/2=5/8$ on this
+balanced task. The observed model is close to that symmetry ceiling but is
+not exactly query-blind or one fixed operand-order formula.
+
+The posterior phase-two model wrote both literal values correctly, but the
+first value's availability as an argmax in any slot fell from 512 to 410
+rows after the second write. At READ, a correct literal value existed in
+some slot in 399 rows, while the actual read was correct in 177. These
+coordinates reveal interference and retrieval gaps, not the absence of all
+information in the full hidden state. Normalizing read mass cannot repair
+the conditional class ordering. A single prospective repair therefore
+shares read/write addressing, keeps trainable slot coordinates static within
+an episode, and derives the address controller from input history instead
+of the changing value. It supplies neither correct addresses nor token
+roles.
+
+This repair was subsequently trained for all four phases of 600 updates.
+Pruning the value-input GRU columns and two unused write heads reduced the
+parameter count from 13,397 to 10,805. Actual update time was 24.482\,s,
+scientific-driver time 50.282\,s, and padded forward arithmetic 39.204 billion
+MAC (not full training FLOPs). New VALID accuracy was 62.30\%; final TEST
+IID/long/unseen was 61.91/43.36/54.30\%. Old IID accuracy was
+83.98/83.98/77.93\%. Thus reduced parameters and measured execution time
+coexist with weaker generalization; this is not a broad competitive advantage.
+An independent verifier recomputed all 12 TEST files' soft/native predictions,
+the common sampling schedules, and 28 raw output/23-gradient comparisons.
+
+Two new frozen-checkpoint event passes then localized address erasure:
+changing only the initial key barely affected first-write attention, with mean
+TV 0.000625 and decreasing sensitivity as intermediate STEP count increased.
+For the same logical key, WRITE-to-READ attention TV was about 0.752 and
+the maximally attended slot always changed. A single next development rule
+therefore replaces the general query with a learned persistent register,
+\begin{equation}
+\beta_t=\sigma(w^\top x_t+b),\quad
+z_t=(1-\beta_t)z_{t-1}+\beta_t\tanh(W_zx_t+b_z),\quad
+a_t=\operatorname{softmax}(z_tK^\top/\sqrt{16}).
+\end{equation}
+The zero-initialized register shares read/write attention and supplies no
+correct key labels; the rest of the Block is retained. Actual four-stage
+training subsequently completed: 10,566 parameters, 26.384\,s of updates,
+54.881\,s scientific-driver time, and new VALID 62.11\%. Final new
+IID/long/unseen was 61.72/50.39/59.38\%. Despite fewer parameters and MACs
+than the preceding version, measured update time increased. The additional
+264-float carry and all admission, evaluation, storage and maintenance costs
+are retained separately.
+
+A frozen two-checkpoint diagnostic measured the learned phase-three gates:
+STEP .944663, KEY0/KEY1 .101166/.085774, READ .469075 and MIX .781235.
+Thus the proposed retention path was not actually learned in the required
+roles. Literal written values also degraded before retrieval; this failure
+does not follow from read-mass attenuation alone.
+
+The next implemented rule changes the joint executable
+transition rather than introducing another independent gate. A learned
+seven-way call allocates probability to four compute experts, LOAD, STORE
+and ADDRESS. With their probabilities $b_C,\alpha_L,\alpha_S,\alpha_A$,
+\begin{align}
+h^+&=h+b_C(\chi-h)+\alpha_L(a^\top V-h),\\
+V_j^+&=V_j+\alpha_Sa_j(h-V_j),\\
+\ell^+&=\ell+\alpha_A(A_\theta f+b_A-\ell),\qquad a=\operatorname{softmax}(\ell).
+\end{align}
+Here $\chi$ retains the learned low-rank computation, STORE uses the old
+continuous value, and ADDRESS affects subsequent access. No correct
+token-to-action relation is supplied. The design borrows explicit memory
+organization from neural program architectures. Actual four-stage training
+completed all 2,400 updates with 10,991 parameters and all 20 parameter
+tensors checked against eager gradients. New VALID was 39.65\%; final
+new IID/long/unseen was 38.28/34.77/40.04\%, and final old IID was
+88.28/88.87/87.50\%. Update time was 24.807\,s, scientific-driver time
+51.202\,s, and padded forward arithmetic 40.442 billion MAC, excluding
+backward, Adam and nonlinear work. The initial run stopped before any
+training because a hash-function identifier was misspelled; its 10.518\,s
+coordinator cost and partial artifacts are retained. Only that recording
+bug was corrected before the complete run. No advantage or Primary
+acceptance follows from this result.
+
+The current diagnostic holds each model's actual stage-two neural weights,
+Adam state, RNG and Replay128 parent fixed, then compares two 600-update
+tails: paired current examples versus the exact same global example pool
+shuffled. Pairing uses public TRAIN input prefixes, never answers, and is
+supplied equally to the typed Block, GRU32 and Transformer32. It changes
+batch grouping and temporal order; it is not an isolated proof about
+gradient noise or a new computational principle. All inherited updates,
+index formation, admission, training, replay, maintenance, evaluation,
+storage and inference costs remain in the evidence record. All six tails
+have now executed. Paired/same-pool-shuffled new IID TEST was
+27.93/58.01\% for the typed Block (10,991 parameters),
+62.89/62.50\% for GRU32 (14,024), and
+25.39/46.68\% for Transformer32 (26,760). Corresponding new update
+times were 11.740/11.708, 4.843/5.176 and 6.014/6.951\,s.
+Same-pool typed VALID argmax predictions did not change in any of 256
+query-flip pairs, despite small nonzero probability changes. Its exact
+62.5\% VALID score therefore does not establish learned query selection.
+Pairing did not repair that mechanism and impaired acquisition in two
+models. This is fixed-budget negative evidence, not grounds for additional
+baseline tuning. The next frozen-neural-state diagnostic inspects actual
+action and address trajectories before a targeted mechanism revision.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{figures/development-six-paired-tail-v1/six-paired-tails-v1.pdf}
+\caption{Six actual development continuations at fixed label/update budget.
+Each model restores its own common stage-two neural/Adam/RNG/Replay parent.
+Pairing and global shuffling expose exactly the same current-row multiset;
+grouping and temporal order both change. Curves show new learning and old
+mean VALID accuracy; the table reports parameters and measured nested cost
+scopes. This is one development seed, not formal Primary evidence.}
+\label{fig:six-paired-credit-development}
+\end{figure}

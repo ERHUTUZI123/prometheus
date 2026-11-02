@@ -1,0 +1,121 @@
+"""Prepare/freeze or ROOT-execute exactly CPU gate, PRODUCT, or ADDITIVE."""
+import argparse,ast,base64,hashlib,json,subprocess,time
+from pathlib import Path
+ROOT=Path(__file__).resolve().parent
+REMOTE='/workspace/prometheus-v2-m0-architecture'
+SSH=['ssh','-o','BatchMode=yes','-o','ConnectTimeout=10','-p','24343','-i','/Users/xiaoyangliu/.ssh/runpod_prometheus','root@195.26.232.180','python3','-']
+CPU='c9f00f8e85f68d99e76aa4203efe77d08ac9a6ea25536631cf592b9b8c711335'
+GPU='85e8ae4ffb4ba9cd187fcc53f2cbb3dcbd00eb5be10f7bba079768096f4a13d0'
+NAMES=dict(cpu='parameter-operand-interaction-cpu-v1',product='parameter-operand-interaction-product-n8-seed0-stage3-v1',additive='parameter-operand-interaction-additive-n8-seed0-stage3-v1')
+FIXED={'continuous_primitive_block.py':'fcba2e82defe2e3fdb9b02efe1eee37456f33defa172c7eb632ea07774b88158','owned_parent_driver.py':'cc1b8b2a2102050b071376bd26329bbb3ead8d5a540cff4e79a7e73cfaf5cccc','context_replay128.py':'cbe370360f0bf52efc82d614db54551f000c9f7e44230dc358dfdb76bcbad140','memory_live_stage_train.py':'dd5fc0b869d216f29c6ccb7202a1d965086c3fedb060d3c4c3bc4e5620042ad6'}
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def put(p,value):
+ with p.open('x')as f:json.dump(value,f,indent=2,sort_keys=True);f.write('\n')
+REMOTE_SCRIPT=r'''import base64,hashlib,json,pathlib,shutil,subprocess,sys,time
+c=CONFIG;r=pathlib.Path(c['remote']);code=r/('code-'+c['name']);out=r/'outputs'/c['name'];inputs=pathlib.Path('/opt/prometheus-'+c['name']+'-inputs')
+status=out.parent/(out.name+'.runner-status.json');receipt=out.parent/(out.name+'.coordinator-exit.json')
+if any(p.exists()or p.is_symlink()for p in(code,out,inputs,status,receipt)):raise FileExistsError('new namespaces only; never overwrite evidence')
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+if c['mode']!='cpu':
+ proofpath=r/'outputs'/c['cpu_name']/'check/result.json';rs_path=r/'outputs'/(c['cpu_name']+'.runner-status.json')
+ if not proofpath.is_file()or not rs_path.is_file():raise ValueError('actual same-source CPU migration gate required')
+ proof=json.loads(proofpath.read_text());rs=json.loads(rs_path.read_text())
+ if proof.get('status')!='CPU_OPERAND_INTERACTION_MIGRATION_PASS'or rs.get('status')!='completed'or proof.get('source_sha256')!=c['manifest']['source_sha256']or proof.get('shared_A_C_B_initial_exact')is not True:raise ValueError('CPU migration gate/source mismatch')
+code.mkdir()
+for leaf,encoded in c['files'].items():
+ raw=base64.b64decode(encoded,validate=True)
+ if hashlib.sha256(raw).hexdigest()!=c['source_sha256'][leaf]:raise ValueError('exact source transport mismatch')
+ p=code/leaf
+ with p.open('xb')as f:f.write(raw)
+ p.chmod(0o444)
+code.chmod(0o555);inputs.mkdir()
+for key,spec in c['manifest']['files'].items():
+ source=r/'outputs'/spec['remote_relative'];target=inputs/spec['leaf']
+ if source.is_symlink()or not source.is_file()or source.stat().st_size>100*1024*1024 or sha(source)!=spec['sha256']:raise ValueError('exact OWN input mismatch: '+key)
+ shutil.copyfile(source,target);target.chmod(0o444)
+p=inputs/'manifest.json'
+with p.open('x')as f:json.dump(c['manifest'],f,indent=2,sort_keys=True);f.write('\n')
+p.chmod(0o444);inputs.chmod(0o555)
+if c['mode']=='cpu':
+ runner=r/'remote_runner_cpu_v2.py'
+ if sha(runner)!=c['CPU']:raise ValueError('unchanged CPU runner differs')
+ cmd=[sys.executable,str(runner),'--script',str(code/'check_operand_interaction_cpu.py'),'--out',str(out),'--timeout','150','--address-space-gib','64','--file-limit-mib','100','--cpu-only','--','--inputs',str(inputs),'--out',str(out/'check')]
+else:
+ runner=r/'remote_runner_gpu_authorized.py'
+ if sha(runner)!=c['GPU']:raise ValueError('unchanged GPU runner differs')
+ cmd=[sys.executable,str(runner),'--script',str(code/'train_operand_interaction_stage3.py'),'--out',str(out),'--timeout','900','--address-space-gib','512','--file-limit-mib','100','--gpu-fraction','.3','--cuda-init-before-seccomp','--','--inputs',str(inputs),'--out',str(out/'learn'),'--mode',c['mode'],'--max-seconds','850']
+started=time.monotonic()
+try:
+ x=subprocess.run(cmd,text=True,capture_output=True,timeout=180 if c['mode']=='cpu'else 930);rc=x.returncode;stdout=x.stdout;stderr=x.stderr;error=None
+except subprocess.TimeoutExpired as e:rc=None;stdout=str(e.stdout or'');stderr=str(e.stderr or'');error='coordinator wait timeout; inspect existing bounded run, no retry'
+for suffix,value in(('coordinator-stdout.log',stdout),('coordinator-stderr.log',stderr)):
+ with(out.parent/(out.name+'.'+suffix)).open('x')as f:f.write(value)
+def load(p):return json.loads(p.read_text())if p.is_file()else None
+rs=load(status);result=load(out/('check/result.json'if c['mode']=='cpu'else'learn/result.json'))
+expected='CPU_OPERAND_INTERACTION_MIGRATION_PASS'if c['mode']=='cpu'else'ACTUAL_OPERAND_INTERACTION_STAGE3_600_COMPLETE'
+passed=bool(rc==0 and rs and rs.get('status')=='completed'and result and result.get('status')==expected)
+value=dict(name=c['name'],mode=c['mode'],returncode=rc,protocol_completed=passed,error=error,whole_runner_wall_seconds=time.monotonic()-started,source_sha256=c['source_sha256'],command=cmd,root_status_path=str(status),result_path=str(out/('check/result.json'if c['mode']=='cpu'else'learn/result.json')),sandbox_stderr_path=str(out/'stderr.log'),actual_parameters=(result or{}).get('parameters'),actual_new_updates=(result or{}).get('actual_new_updates'),no_accuracy_gate=True)
+with receipt.open('x')as f:json.dump(value,f,indent=2,sort_keys=True);f.write('\n')
+print(json.dumps(value,sort_keys=True));raise SystemExit(0 if passed else(rc if rc not in(None,0)else 1))
+'''
+def prepare(mode):
+ name=NAMES[mode];version=ROOT/'versions'/('code-'+name);protocol=ROOT/(name+'-protocol.json')
+ if version.exists()or protocol.exists()or(ROOT/(name+'-coordinator-receipt.json')).exists():raise FileExistsError('new frozen namespace only')
+ parent=ROOT/'versions/code-parameter-factorized-value-anchor0-n8-seed0-fourstage-v3';prior=json.loads((parent/'launch-config.json').read_text())
+ common={}
+ for leaf,digest in FIXED.items():
+  source=parent/leaf
+  if sha(source)!=digest:raise ValueError('unchanged original source required: '+leaf)
+  common[leaf]=source.read_bytes()
+ for leaf in('operand_interaction_block.py','train_operand_interaction_stage3.py'):common[leaf]=(ROOT/leaf).read_bytes()
+ common_hashes={leaf:hashlib.sha256(raw).hexdigest()for leaf,raw in common.items()};sources=dict(common)
+ if mode=='cpu':sources['check_operand_interaction_cpu.py']=(ROOT/'check_operand_interaction_cpu.py').read_bytes()
+ for raw in sources.values():ast.parse(raw)
+ hashes={leaf:hashlib.sha256(raw).hexdigest()for leaf,raw in sources.items()}
+ original=prior['manifest'];resume=original['resume'];manifest=dict(schema='operand-interaction-stage3-inputs-v1',interaction_mode=mode,source_sha256=common_hashes,parent_source_sha256=resume['source_sha256'],parent_checkpoint_sha256=resume['checkpoint_sha256'],files={'resume':copy_spec(original['files']['resume'])})
+ if mode!='cpu':
+  for s in range(4):
+   for split in('train','valid','test_iid','test_long','test_unseen'):
+    spec=copy_spec(original['files'][f'{s}:{split}']);manifest['files'][f'{s}:{split}']=spec
+    if split in('train','valid')and sha(ROOT/'runs'/spec['remote_relative'])!=spec['sha256']:raise ValueError('original TRAIN/VALID differs')
+  reports=[]
+  for s in range(3):
+   spec=original['files'][f'report{s}'];path=ROOT/'runs'/spec['remote_relative']
+   if sha(path)!=spec['sha256']:raise ValueError('old paid report differs')
+   d=json.loads(path.read_text())
+   if d['test_data_read']is not False or d['report']['stage']!=s:raise ValueError('old training-only report required')
+   reports.append(d['report'])
+  manifest['parent_paid_lineage']=dict(parent_run=resume['parent_run'],reports=reports,scope='same owned1800 updates retained once across modes; old failures/noaux stage3 trials separately paid in original ledger; each new600 stage3 arm separately paid, never pooled')
+ if sha(ROOT/'runs'/manifest['files']['resume']['remote_relative'])!=resume['checkpoint_sha256']:raise ValueError('exact owned checkpoint bytes changed')
+ for spec in manifest['files'].values():spec['bytes']=(ROOT/'runs'/spec['remote_relative']).stat().st_size
+ manifest['input_snapshot_file_bytes']=sum(spec['bytes']for spec in manifest['files'].values())
+ config=dict(name=name,mode=mode,cpu_name=NAMES['cpu'],remote=REMOTE,CPU=CPU,GPU=GPU,manifest=manifest,source_sha256=hashes,files={leaf:base64.b64encode(raw).decode()for leaf,raw in sources.items()})
+ remote=REMOTE_SCRIPT.replace('CONFIG',repr(config),1);ast.parse(remote);version.mkdir()
+ for leaf,raw in sources.items():
+  with(version/leaf).open('xb')as f:f.write(raw)
+  (version/leaf).chmod(0o444)
+ rp=version/'remote-launch.source';rp.write_text(remote);rp.chmod(0o444);put(version/'launch-config.json',config);(version/'launch-config.json').chmod(0o444)
+ doc=dict(name=name,before_execution=True,mode=mode,formal_Primary=False,status='FROZEN_UNEXECUTED',hypothesis='shared multiplicative operand interaction versus equally sized nonlinear additive capacity for two-operand MIX; ordinary bilinearNN precedent, no novelty/result claim',source_sha256=hashes,source_core=FIXED['continuous_primitive_block.py'],checkpoint_schema='operand-interaction-stage3-training-v1',class_checkpoint_version='factorized-operand-interaction-block-v1',parent_checkpoint_sha256=resume['checkpoint_sha256'],expected_parent_parameters=13381,extra_parameters=576,expected_after_token_growth_parameters=13973,near_GRU32_parameters=14024,parameters_selected_by_count_only=True,branch='shared A,C[8,32],B[8,8],biasfree; u=(A h)*(C read) PRODUCT or GELU(A h+C read) ADDITIVE; each oldexpert preactivation D_k f+b_k+B u',old_computation='exactfcba transition copied, only shared preactivation inserted; old27NN/Adam migrated BYNAME and all remain trainable; unchangedcontroller/caller/read/write/carry/G8',initialization='CPUfactory globally RNGneutral; A/C same fixedlocal generator seed0 uniform+-1/sqrt32 for bothmodes, Bzero; newAdam moments/steps0; unchangedgrow_storage draws originalsingleN(0,1) tokenrow from restoredparentCUDA RNG',training=dict(new_stage=3,steps=600,batch=64,current=48,replay=16,replay_capacity=128,seed=0,optimizer='sameAdam.003/clipnorm1',schedule='original SeedSequence([0,8,3,9027])600x64 current[:48], originalReplay sample600x16',objective='scalar terminal NLL only',teacher=False,anchor=False,profile=False,extra_curriculum=False,no_accuracy_gate=True,no_tuning_retry=True,old_stages_rerun=0),CPU_gate='sameOWN checkpoint, bothmodes exactoldB0forward+all27Adam migration, originalrowgrowth, initialBgradient, one syntheticAdamupdate per mode thenA/C gradient check, realNN/Adam/byname/RNG/replay serialization+reload; no researchupdates or reusedsyntheticNN',TEST='all600updateNN frozen+safecheckpoint/replaymaintenance/finalreload before any scientificTEST load; original12stage/split soft/nativeeval',maintenance='fsync exclusiveNN/Adam/RNG/replay/pendingindices beforemaintenance; only afterward allremovedzeros/length<=48 zero-copy storageview; original128trainingmatrix unchanged',data_manifest=manifest,costs='576linearMAC/activetoken plus8product or8add+8GELU and4x8softpreactivationadds separately; actualP/NN/Adam/branchactivations/CPU/GPUstream/wholewall/replay/maintenance/checkpoint/reload/eval allpaid, fullFLOPs/provider-effective unknown; P alone not efficiency',outside_seconds=150 if mode=='cpu'else 900,inside_seconds=None if mode=='cpu'else 850,runner_sha256=CPU if mode=='cpu'else GPU,no_new_permissions=True,no_compiler_subprocess=True,remote_launch_sha256=sha(rp),remote_launch_source=str(rp.relative_to(ROOT)))
+ put(protocol,doc);protocol.chmod(0o444);version.chmod(0o555)
+ print(json.dumps(dict(status='FROZEN_UNEXECUTED',name=name,source_sha256=hashes,remote_sha256=sha(rp),protocol_sha256=sha(protocol))))
+def copy_spec(d):return dict(d)
+def execute(mode):
+ name=NAMES[mode];version=ROOT/'versions'/('code-'+name);config=json.loads((version/'launch-config.json').read_text());protocol=json.loads((ROOT/(name+'-protocol.json')).read_text());source=(version/'remote-launch.source').read_text()
+ if sha(version/'remote-launch.source')!=protocol['remote_launch_sha256']:raise ValueError('frozen coordinator differs')
+ for leaf,digest in config['source_sha256'].items():
+  if sha(version/leaf)!=digest:raise ValueError('frozen source differs')
+  ast.parse((version/leaf).read_bytes())
+ literal=next(n for n in ast.parse(source).body if isinstance(n,ast.Assign)and any(isinstance(t,ast.Name)and t.id=='c'for t in n.targets))
+ frozen=ast.literal_eval(literal.value)
+ if frozen!=config or source!=REMOTE_SCRIPT.replace('CONFIG',repr(frozen),1):raise ValueError('frozen config/template differs')
+ receipt=ROOT/(name+'-coordinator-receipt.json')
+ if receipt.exists():raise FileExistsError('preserve actual receipt; no rerun')
+ began=time.monotonic()
+ try:
+  x=subprocess.run(SSH,input=source,text=True,capture_output=True,timeout=210 if mode=='cpu'else 980);value=dict(returncode=x.returncode,stdout=x.stdout,stderr=x.stderr,wall_seconds=time.monotonic()-began)
+ except subprocess.TimeoutExpired as e:value=dict(returncode=None,stdout=str(e.stdout),stderr=str(e.stderr),wall_seconds=time.monotonic()-began,error='SSHwaittimeout; inspectexistingboundedprocess, no retry')
+ value['remote_launch_sha256']=sha(version/'remote-launch.source');put(receipt,value);print(json.dumps(dict(name=name,returncode=value['returncode'],wall_seconds=value['wall_seconds'])));raise SystemExit(value['returncode']if value['returncode']is not None else 124)
+if __name__=='__main__':
+ parser=argparse.ArgumentParser();g=parser.add_mutually_exclusive_group(required=True);g.add_argument('--prepare',choices=('cpu','product','additive'));g.add_argument('--execute',choices=('cpu','product','additive'));a=parser.parse_args()
+ if a.prepare:prepare(a.prepare)
+ else:execute(a.execute)

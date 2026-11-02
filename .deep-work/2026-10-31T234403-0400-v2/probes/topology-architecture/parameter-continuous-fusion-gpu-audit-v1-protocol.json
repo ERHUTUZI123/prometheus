@@ -1,0 +1,87 @@
+{
+  "CPU_actual_pass_required": true,
+  "RLIMIT_NPROC": 128,
+  "VALID_TEST_inputs_loaded": 0,
+  "address_space_gib": 512,
+  "all_setup_capture_pack_costs_charged": true,
+  "backends": [
+    "pure_tensor_eager",
+    "pure_tensor_CUDAgraph",
+    "fused_eager",
+    "fused_CUDAgraph"
+  ],
+  "before_execution": true,
+  "candidate": {
+    "autotune": false,
+    "dot_TF32": false,
+    "enable_fp_fusion": false,
+    "num_stages": 1,
+    "num_warps": 4,
+    "one_CTA_per_example": true
+  },
+  "cases": {
+    "B": [
+      1,
+      32
+    ],
+    "L": [
+      64,
+      128,
+      256
+    ],
+    "mode": "soft"
+  },
+  "checkpoint_sha256": "1e0fc8ec0e063aa1c86f4c7b0d09d91d65c32338273323a4c6d10c2752993f80",
+  "data_manifest": {
+    "metadata.json": {
+      "bytes": 4749,
+      "sha256": "f157d58e9246f59f78dbd883b4ccc80284278b9eb270365cb13556dc8703e792"
+    },
+    "train.npz": {
+      "bytes": 738810,
+      "sha256": "d8e35caee818c07934e3013977d08fd1a17bc88036996600a1bbc14da8ce9355"
+    }
+  },
+  "extra_packed_weight_bytes": 166372,
+  "file_limit_mib": 100,
+  "final_carry_bytes_per_example": 2816,
+  "formal_Primary": false,
+  "gpu_allocator_fraction": 0.3,
+  "inputs": "same existing graph audit: first32TRAIN64windows tiledforL128/256, initial0/fullactive",
+  "labels_loaded": 0,
+  "name": "parameter-continuous-fusion-gpu-audit-v1",
+  "no_speed_gate": true,
+  "no_tuning_or_retry": true,
+  "numerical": {
+    "atol": 0.0002,
+    "failed_outputs_saved_before_gate": true,
+    "max_abs_limit": 0.0002,
+    "max_log_normalizer_error": 1e-05,
+    "never_relax": true,
+    "rtol": 2e-05,
+    "zero_argmax_mismatches": true
+  },
+  "order": "rotate4backends by roundmod4",
+  "original_P": 41593,
+  "original_parameter_bytes": 166372,
+  "outside_seconds": 900,
+  "paired_draws": 12,
+  "permissions": "exactexistingstagedruntime/whitelist; no new exec paths; full strict checks before real checkpoint/data",
+  "priming": "fixed SHA source/synthetic pack only; canonical module/JIT/compiled object IDs+PTX SHA retained; Bonlygrid/Lonlyvariable shape constexpr; no post-strict fallback",
+  "remote_launch_sha256": "fba9ae07febc7b62f95b9ad71f08b1a8b3d3af14c89b75d3a06ab977ae1696c9",
+  "remote_launch_source": "versions/code-parameter-continuous-fusion-gpu-audit-v1/remote-launch.source",
+  "science_seconds": 730,
+  "scope": "single bounded actual OWN FP32 inference-kernel attempt; no training/novelty/Primary claim",
+  "source_sha256": {
+    "audit_continuous_fusion_gpu.py": "3c6264c273b719c0a8b4c1dcb41e7820d2558bcb2afb8df2a72d4c1e6c0f069e",
+    "audit_cuda_graph_inference.py": "3e82598a157a5c41f47d7c3e0b7ddf417899526a4027146d1f2d1dac7dae29b1",
+    "compiler_policy_checks.py": "11b7d86c151ec8fd5f1a49b8b32996dcf8f89279b4b0e687c48ff16931bcb231",
+    "continuous_block_fusion_gpu_prologue.py": "e8076717774d15d1451b33650586834918d5bcab8ce486c73c8ed0e795be57a2",
+    "continuous_primitive_block.py": "58feb69e5d628745f64b6a4d546858aaba528169ae0d3cdae0530de61055d497",
+    "fused_continuous_block_fp32.py": "5cf6929bb0da78d8a7dc65cbdfe7d9dcaf0ba9d182845564f3f36c06e6f88d29",
+    "remote_runner_gpu_continuous_fusion_audit.py": "996eb63e7e7c555eddb12f82bdcf38da9a727f9ad13969d60f6f963ec77fdb75",
+    "train_char_alltoken.py": "567e372187e4cee3c8a5ca3d49f5f7d60a8664a07619c3d57dc1c799cbbd9f02",
+    "validate_continuous_fusion_gpu.py": "f4a8d009dc238b0f7d1950528120bf50ae4b07ab92a9dd7a21b4856844f0b93d"
+  },
+  "warmups": 3
+}

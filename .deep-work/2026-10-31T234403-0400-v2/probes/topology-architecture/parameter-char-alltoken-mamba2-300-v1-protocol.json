@@ -1,0 +1,194 @@
+{
+  "RLIMIT_NPROC": 128,
+  "TEST_contexts": [
+    64,
+    128,
+    256
+  ],
+  "TEST_windows": 512,
+  "TRAIN_context": 64,
+  "TRAIN_windows": 8192,
+  "VALID_windows": 512,
+  "address_space_gib": 512,
+  "batch_size": 32,
+  "before_execution": true,
+  "common_batch_sha256": "538c1157cacea82a51bf5be950d451768f013ee7178f5aabc100e339b966f615",
+  "common_metadata_sha256": "f157d58e9246f59f78dbd883b4ccc80284278b9eb270365cb13556dc8703e792",
+  "compiler_prologue": {
+    "B1_inference": false,
+    "all_costs_charged": true,
+    "copied_compile_cache": false,
+    "full_wrapper": "synthetic random tokens -> embedding100x64 -> official Mamba2 -> LN64 -> readout100/log_softmax",
+    "optimizer_updates": 0,
+    "random_seed": 20261102,
+    "reload": "2xB32L64, not B64; shape already covered",
+    "shapes": [
+      {
+        "backward": true,
+        "batch": 32,
+        "length": 64,
+        "width": 64
+      },
+      {
+        "backward": false,
+        "batch": 2,
+        "length": 64,
+        "width": 64
+      },
+      {
+        "backward": false,
+        "batch": 32,
+        "length": 64,
+        "width": 64
+      },
+      {
+        "backward": false,
+        "batch": 32,
+        "length": 128,
+        "width": 64
+      },
+      {
+        "backward": false,
+        "batch": 32,
+        "length": 256,
+        "width": 64
+      }
+    ],
+    "task_data_used": false
+  },
+  "coordinator_wait_seconds": 930,
+  "costs": "actual P/buffers/Adam/data/checkpoints, all TRAIN/causality/VALID/TEST/reload, CPU/GPU allocator/reservation wall, fresh compilation/priming/cache/failures; nested values not summed",
+  "data_manifest": {
+    "metadata.json": {
+      "bytes": 4749,
+      "sha256": "f157d58e9246f59f78dbd883b4ccc80284278b9eb270365cb13556dc8703e792"
+    },
+    "test128-endpoints.npy": {
+      "bytes": 4224,
+      "sha256": "481b330e8c499a6d511fe31385b065e790f6354ca3ebb7ab9f072f9ac2d38d55"
+    },
+    "test128.npz": {
+      "bytes": 89378,
+      "sha256": "9788232e5b1189768b8733b16c1ccbad0a0bd8fcfb1f5fd3bd054458dbc7e32e"
+    },
+    "test256-endpoints.npy": {
+      "bytes": 4224,
+      "sha256": "481b330e8c499a6d511fe31385b065e790f6354ca3ebb7ab9f072f9ac2d38d55"
+    },
+    "test256.npz": {
+      "bytes": 162818,
+      "sha256": "46292fded2c70606328a62a61cd7830e9aab1da661e37efb74a82f81b0eee6bf"
+    },
+    "test64-endpoints.npy": {
+      "bytes": 4224,
+      "sha256": "481b330e8c499a6d511fe31385b065e790f6354ca3ebb7ab9f072f9ac2d38d55"
+    },
+    "test64.npz": {
+      "bytes": 47985,
+      "sha256": "5e49c3dcc1f44d4583d6bc2738e25635f381d5bd72fd17eb6b931417d641025e"
+    },
+    "train-endpoints.npy": {
+      "bytes": 65664,
+      "sha256": "7044177d47e20e4a69ac19a5334701bc9802260529814acfc2d4232cbcc59fc2"
+    },
+    "train.npz": {
+      "bytes": 738810,
+      "sha256": "d8e35caee818c07934e3013977d08fd1a17bc88036996600a1bbc14da8ce9355"
+    },
+    "valid-endpoints.npy": {
+      "bytes": 4224,
+      "sha256": "63e321a30fb08fe32ceb351313618934e89326ecd0d0044094db0f162dfa8c20"
+    },
+    "valid.npz": {
+      "bytes": 47854,
+      "sha256": "5e6fad7522d25b0dea0b14d94acbc004710c1ed912e97587c8cf4e33138c96ab"
+    },
+    "vocab.json": {
+      "bytes": 1113,
+      "sha256": "228ba231f847bc35a7360a4f4a1a3ac50941f92ffd934217b0535046b3e32543"
+    }
+  },
+  "diff_artifact": "versions/code-parameter-char-alltoken-mamba2-300-v1/train-char-official-mamba2-alltoken-from-parent.diff",
+  "diff_sha256": "16d10c0aa65d8ebf0ba2f9aefed53a77cff7fc21aba3724838bcb596c123e0b8",
+  "file_limit_mib": 100,
+  "formal_Primary": false,
+  "gpu_allocator_fraction": 0.3,
+  "isolation": "existing explicit trusted Torch/CUDA bootstrap under UID/LLFS/TCPdeny/resources, full compiler socket filter before fixed prologue; strict exec/fork/socket filter+root descendant gate+16checks before research",
+  "local_ssh_wait_seconds": 960,
+  "model": {
+    "LayerNorm": 64,
+    "Mamba2": {
+      "chunk_size": 32,
+      "d_model": 64,
+      "d_state": 16,
+      "expand": 2,
+      "headdim": 16,
+      "use_mem_eff_path": false
+    },
+    "P": "actual runtime numel; no guessed count or size gate",
+    "blocks": 1,
+    "dtype": "float32",
+    "embedding": [
+      100,
+      64
+    ],
+    "readout": [
+      64,
+      100
+    ],
+    "vocabulary": 100
+  },
+  "name": "parameter-char-alltoken-mamba2-300-v1",
+  "no_P_size_gate": true,
+  "no_accuracy_gate": true,
+  "no_automatic_tuning_or_retry": true,
+  "official_package_root": "/opt/prometheus-mamba231-r1",
+  "official_version": "2.3.1",
+  "official_wheel_sha256": "f9e375b47cee1ef27463c9249073f9065f0f8f0f98b32fabfbb8df4bf75e2b66",
+  "old_prefix_results_not_pooled": true,
+  "optimizer": "Adam lr.003, clipnorm1",
+  "original_source": "same prepared PG100 contiguous90/5/5 before TRAIN vocabulary; no download/resampling",
+  "outside_seconds": 900,
+  "prepared_only": true,
+  "primary_length_comparison": "same512endpoints/same32768last64targetlabels; fullwindowNLL separate",
+  "remote_launch_sha256": "f120a53c7eac4308b9842a10b1ef3b364025159ac0f0110c62ebbaec6fc4f32a",
+  "remote_launch_source": "versions/code-parameter-char-alltoken-mamba2-300-v1/remote-launch.source",
+  "runner_derivation": "exact eb50f4... code with ONLY PROLOGUE_LEAF/SHA constants changed; same tools/filesystem/network/uid/limits/gates",
+  "science_inside_seconds": 730,
+  "scope": "actual official Mamba2 causal all-token AR DEVELOPMENT baseline; not smoke/formal Primary",
+  "seed": 0,
+  "source_only_independent_review": {
+    "checked_source_sha256": {
+      "official_mamba2_alltoken_prologue.py": "67b0567b81cf7e98c2b4a6c5873d062273e6713c2f92a71de15a5480ebf3605f",
+      "remote_runner_gpu_official_mamba_alltoken.py": "b6eb2af5ac9797d57c97645841945506e20e4b0f5e0d0877d9bb05db9fb5d864",
+      "train_char_official_mamba2_alltoken.py": "ebaa704c59a6491827c03a63052a84bf9e7cbda0af9932d2e52764f52ba66371"
+    },
+    "result": "no concrete static blocker",
+    "reviewer": "/root/live_memory_stage",
+    "runtime_verification": false
+  },
+  "source_parent_sha256": "567e372187e4cee3c8a5ca3d49f5f7d60a8664a07619c3d57dc1c799cbbd9f02",
+  "source_provenance": "same five installed official source SHA checks as smoke; transitive installation authenticity retains existing provenance boundary",
+  "source_sha256": {
+    "compiler_policy_checks.py": "11b7d86c151ec8fd5f1a49b8b32996dcf8f89279b4b0e687c48ff16931bcb231",
+    "continuous_primitive_block.py": "58feb69e5d628745f64b6a4d546858aaba528169ae0d3cdae0530de61055d497",
+    "official_mamba2_alltoken_prologue.py": "67b0567b81cf7e98c2b4a6c5873d062273e6713c2f92a71de15a5480ebf3605f",
+    "remote_runner_gpu_official_mamba_alltoken.py": "b6eb2af5ac9797d57c97645841945506e20e4b0f5e0d0877d9bb05db9fb5d864",
+    "train_char_alltoken.py": "567e372187e4cee3c8a5ca3d49f5f7d60a8664a07619c3d57dc1c799cbbd9f02",
+    "train_char_official_mamba2_alltoken.py": "ebaa704c59a6491827c03a63052a84bf9e7cbda0af9932d2e52764f52ba66371",
+    "validate_mamba2_alltoken.py": "0399687b26d2f1af02c4d2e5bc74bd0daa52c511f17838de51da171bd4ad7e83"
+  },
+  "test_policy": "ALL300 updates then final disk checkpoint/weight hash freeze BEFORE TEST loading; no TEST tuning",
+  "training_label_observations": 614400,
+  "unmeasured": "official forward/backward/optimizer MAC/FLOPs=null, raw driver/context GPU memory, GPU busy-time and energy; no exclusive throughput claim",
+  "updates": 300,
+  "validation_schedule": [
+    0,
+    50,
+    100,
+    150,
+    200,
+    250,
+    300
+  ]
+}

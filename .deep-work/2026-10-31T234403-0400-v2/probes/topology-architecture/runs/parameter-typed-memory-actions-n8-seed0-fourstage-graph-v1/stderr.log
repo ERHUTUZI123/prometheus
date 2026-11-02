@@ -1,0 +1,23 @@
+{"event": "runner_failure", "error_type": "AttributeError", "error": "module 'hashlib' has no attribute 'sha206'", "isolation_fallback": false}
+Traceback (most recent call last):
+  File "/workspace/prometheus-v2-m0-architecture/remote_runner_gpu_authorized.py", line 481, in main
+  File "/workspace/prometheus-v2-m0-architecture/remote_runner_gpu_authorized.py", line 363, in _child
+  File "<frozen runpy>", line 286, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-typed-memory-actions-n8-seed0-fourstage-graph-v1/train_typed_memory_actions_fourstage_graph.py", line 165, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-typed-memory-actions-n8-seed0-fourstage-graph-v1/train_typed_memory_actions_fourstage_graph.py", line 99, in main
+    if stage in(0,3):engine=GraphEngine(model,opt,bucket,first,rec.out,rec.check,stage);rec.emit('actual_graph_capture',stage=stage,graph=engine.report())
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-typed-memory-actions-n8-seed0-fourstage-graph-v1/typed_memory_actions_graph_engine.py", line 32, in __init__
+    self.stable();self.graph.replay();self.sync();right=self.snapshot(self.outputs);self.costs['graph_diagnostic_FB_calls']+=1;self.costs['admission']=self.compare(left,right,f'stage{stage}-L{bucket}-admission.npz')
+                                                                                                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-typed-memory-actions-n8-seed0-fourstage-graph-v1/typed_memory_actions_graph_engine.py", line 63, in compare
+    row.update(raw_file=leaf,raw_sha206=sha(path),raw_bytes=path.stat().st_size)
+                                        ^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-typed-memory-actions-n8-seed0-fourstage-graph-v1/typed_memory_actions_graph_engine.py", line 14, in sha
+    def sha(p):return hashlib.sha206(p.read_bytes()).hexdigest()
+                      ^^^^^^^^^^^^^^
+AttributeError: module 'hashlib' has no attribute 'sha206'. Did you mean: 'sha256'?

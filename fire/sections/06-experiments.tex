@@ -1,4 +1,14 @@
 \section{Experiments}
+
+The latest control--value development Block reduces the character model
+from 41,593 to 20,721 parameters under the same 300-update all-token
+protocol. Its paired 64/128/256-context perplexities are
+10.593/10.498/10.560, versus 10.358/10.251/10.253 for the earlier Block.
+Training-forward work decreases from 21.715 to 10.342 billion MAC proxies,
+but measured training wall time changes from 75.96 to 79.29 seconds.
+The GRU and official Mamba2 still obtain lower perplexity and lower
+recorded training time. These distinct model versions are development
+comparisons, not pooled Primary results or a complete-cost victory.
 \label{sec:experiments}
 
 Our evaluation asks whether contextual computational primitives improve
@@ -68,6 +78,11 @@ Static &41,593&10.306&75.24&118.74&21.715\\
 Detached &41,593&10.243&74.07&114.41&21.715\\
 Transformer36 &39,664&10.533&6.75&12.26&29.816\\
 GRU44 &32,660&8.664&2.49&7.96&16.977\\
+Official Mamba2 &41,116&7.173&3.56&4.58&---\\
+Control--value Block &20,721&10.593&79.29&117.67&10.342\\
+Same Block, training Graph &20,721&10.593&7.62&47.72&10.342\\
+GRU34 &21,180&9.449&1.09&5.48&10.612\\
+Transformer24 &19,564&11.414&3.12&7.78&15.630\\
 \bottomrule
 \end{tabular}
 \caption{Actual all-token language development. Driver time includes measured
@@ -76,6 +91,20 @@ training forwards only, not backward or total FLOPs; all raw costs are retained.
 \label{tab:development-ar-cost}
 \end{table}
 
+The two smaller conventional widths were fixed prospectively from parameter
+formulas, with no accuracy gate or TEST-based configuration selection.
+They use the original windows, feedback, Adam, clipping and 300-update budget.
+This parameter-matched comparison narrows the apparent weight advantage:
+the 20,721-parameter Block remains worse than GRU34 in paired perplexity and
+recorded training time. All widths remain separate development runs;
+they are not pooled as seeds or substituted for a frozen Primary.
+The later Graph run retains the exact core, data, labels and 300 batch indices.
+Actual forward/backward replay with eager Adam reduces update wall time by
+10.40 times, while preserving paired perplexity to the reported precision.
+Setup, diagnostic gradients, memory pools and evaluation are charged separately:
+32.16 seconds of evaluation still dominates its 47.72-second driver.
+This is an execution improvement, not a new learning rule or a baseline victory.
+
 With contexts of 64, 128, and 256 characters, dynamic common-suffix PPL is
 10.358, 10.251, and 10.253; Transformer yields 10.533, 15.185, and 14.736,
 and GRU yields 8.664, 8.552, and 8.552. Stability under longer
@@ -83,6 +112,14 @@ inputs alone does not prove useful distant-memory use. The earlier terminal-pref
 protocol and serial eager/hard-call inference audits remain separately reported
 in the appendix and are not pooled into this new protocol. They show no
 hard-call speedup. Cached streaming serving has not been established.
+The subsequently executed official Mamba2 baseline uses the same 300-update
+protocol and achieves common-suffix PPL 7.173/7.048/7.049 with 41,116 parameters.
+Its 3.56-second training and 4.58-second driver times exclude 82.67 seconds of
+measured cold compilation/priming; the entire coordinator launch takes 93.31
+seconds and creates 55.19 MB of kernel cache. Its exact selective-SSD and
+backward FLOPs remain unmeasured. Earlier arms have their own recorded
+concurrency, so this is not an isolated-throughput ratio. These results
+provide no broad competitive advantage for the current Block.
 
 \begin{table}[t]
 \centering\small

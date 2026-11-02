@@ -1,0 +1,49 @@
+{
+  "CPU_diagnostic": "one synthetic CPU Adam step for shape/growth/reload/padding only; never reused as baseline init",
+  "batch": 64,
+  "before_execution": true,
+  "checkpoint_schema": "terminal-gru32-fourstage-training-v1",
+  "costs": "actualP/Adam/RNG/replay/growth/checkpoints/reload/eval/storage plus trainingwall/CPU/CUDAstream; exacttrainingFLOPsunknown, forwardMACnotfullFLOPs",
+  "data_manifest": {
+    "files": {},
+    "schema": "terminal-gru32-fourstage-inputs-v1",
+    "source_sha256": {
+      "context_replay128.py": "cbe370360f0bf52efc82d614db54551f000c9f7e44230dc358dfdb76bcbad140",
+      "memory_live_stage_train.py": "dd5fc0b869d216f29c6ccb7202a1d965086c3fedb060d3c4c3bc4e5620042ad6",
+      "owned_parent_driver.py": "cc1b8b2a2102050b071376bd26329bbb3ead8d5a540cff4e79a7e73cfaf5cccc",
+      "train_gru32_fourstage.py": "99db08d57ad7471979ab6ae85555d5c9ed134914050412963c079e799f77e9e8"
+    }
+  },
+  "expected_P15": 13992,
+  "expected_P16": 14024,
+  "formal_Primary": false,
+  "fresh_initial_NN": true,
+  "inside_seconds": null,
+  "maintenance": "fsynced actual NN/Adam/RNG/replay/pending-indices checkpoint BEFORE boundary; only replay storage sees zero-copy128->48 view after allremovedzeros/length<=48; original training128 matrix remains unchanged",
+  "mode": "cpu",
+  "model": "unmodified cc1 TerminalGRU width32/layers2/dropout0",
+  "name": "parameter-gru32-fourstage-cpu-v1",
+  "no_accuracy_gate": true,
+  "no_extra_curriculum": true,
+  "no_tuning_or_retry": true,
+  "objective": "scalar final terminal NLL/crossentropy only; no auxiliary/teacher objective",
+  "optimizer": "Adam.003,clipnorm1",
+  "outside_seconds": 150,
+  "remote_launch_sha256": "db1de2be428c239de621cc17f88412c1c0ee446bcb901c7981302a4b8180e993",
+  "remote_launch_source": "versions/code-parameter-gru32-fourstage-cpu-v1/remote-launch.source",
+  "runner_sha256": "c9f00f8e85f68d99e76aa4203efe77d08ac9a6ea25536631cf592b9b8c711335",
+  "schedule": "SeedSequence([0,8,stage,9027]),600x64; stage0 all64current, later first48current+16Replay128",
+  "seed": 0,
+  "source_sha256": {
+    "check_gru32_fourstage.py": "02a661aea9a98b71116886140677e18ade0f68136fb603c4a05588171163f428",
+    "context_replay128.py": "cbe370360f0bf52efc82d614db54551f000c9f7e44230dc358dfdb76bcbad140",
+    "memory_live_stage_train.py": "dd5fc0b869d216f29c6ccb7202a1d965086c3fedb060d3c4c3bc4e5620042ad6",
+    "owned_parent_driver.py": "cc1b8b2a2102050b071376bd26329bbb3ead8d5a540cff4e79a7e73cfaf5cccc",
+    "train_gru32_fourstage.py": "99db08d57ad7471979ab6ae85555d5c9ed134914050412963c079e799f77e9e8"
+  },
+  "stages": 4,
+  "stages_rerun": 0,
+  "test_policy": "all2400 updates and all4stage checkpoint/reload freeze BEFORE any TEST load",
+  "updates_per_stage": 600,
+  "width_selection": "parameter count only, no score-based selection"
+}

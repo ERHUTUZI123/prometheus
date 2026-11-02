@@ -1,0 +1,133 @@
+{
+  "AS_GiB": 64,
+  "CPU_only": true,
+  "NN_logical_dataset_passes": 3,
+  "SGD_updates": 0,
+  "VALID_examples_per_NN": 512,
+  "checkpoint_unchanged_required": true,
+  "cost_scope": "all three CPU passes/setup/eventstores/source and checkpoint copies/raw I/O/RSS; saved historical Adam/replay sizes, no live optimizer; no new training or TEST",
+  "events": "eight public KEY/WRITE/READ/MIX positions; no teacher routes",
+  "file_limit_MiB": 100,
+  "full_FLOPs": null,
+  "input_files": {
+    "control-saved-GPU-valid.npz": {
+      "bytes": 17724,
+      "remote_relative": "parameter-typed-paired-tail-same-pool-shuffle-n8-seed0-600-v1/learn/stage3-valid-task3-predictions.npz",
+      "sha256": "24a9733d7a26fe3172d8b0a685cc882f6c4b46cae261c1ca8e4aa49974601493"
+    },
+    "control.pt": {
+      "bytes": 526515,
+      "remote_relative": "parameter-typed-paired-tail-same-pool-shuffle-n8-seed0-600-v1/learn/typed-paired-tail-stage3-step600.pt",
+      "sha256": "cbaf9828486a17458e45e561a7ff2e47c17da049cafd84e809f9563b27280abb"
+    },
+    "paired-saved-GPU-valid.npz": {
+      "bytes": 17146,
+      "remote_relative": "parameter-typed-paired-tail-paired-n8-seed0-600-v1/learn/stage3-valid-task3-predictions.npz",
+      "sha256": "9e38cbeb888733bcfc97799672f97ebc0bd853fc7e6543376e307807fe8761d1"
+    },
+    "paired.pt": {
+      "bytes": 526515,
+      "remote_relative": "parameter-typed-paired-tail-paired-n8-seed0-600-v1/learn/typed-paired-tail-stage3-step600.pt",
+      "sha256": "5bb678b87a688cb373b001b5054a1cacbc36b5cd2f3c49012bc97658345a6bc8"
+    },
+    "prefix-truth.npz": {
+      "bytes": 58569,
+      "remote_relative": "parameter-posterior-value-valid-prefix-truth-v1/truth/prefix-truth.npz",
+      "sha256": "bff1c36f7b7951f9dc2ad012e847a7b2300666283fde61b65af6eef27368d176"
+    },
+    "stage2.pt": {
+      "bytes": 525491,
+      "remote_relative": "parameter-typed-memory-actions-n8-seed0-fourstage-graph-v2/learn/typed-memory-actions-stage2-step600.pt",
+      "sha256": "c5a3cbe14ebc1e592a0f0e462f6bd07062870c8551f345a2b0c64bf92a3a908e"
+    },
+    "valid.npz": {
+      "bytes": 5885,
+      "remote_relative": "parameter-memory-live-stage-data-n8-seed0-v1/generated/data/stage3-valid.npz",
+      "sha256": "7d8c81c0e41bcea94785fc63593f781b6042b0d2b87844d841db2d0a1875a31b"
+    }
+  },
+  "models": [
+    {
+      "P": 10975,
+      "bytes": 525491,
+      "checkpoint_schema": "typed-memory-actions-fourstage-graph-training-v1",
+      "key": "stage2",
+      "leaf": "stage2.pt",
+      "parent_source_sha256": {
+        "context_replay128.py": "cbe370360f0bf52efc82d614db54551f000c9f7e44230dc358dfdb76bcbad140",
+        "continuous_primitive_block.py": "efabc8cbd2754a4a1d60f52b907cb5842f11fcf716c52646f8f935db5170d3f2",
+        "memory_live_stage_train.py": "dd5fc0b869d216f29c6ccb7202a1d965086c3fedb060d3c4c3bc4e5620042ad6",
+        "owned_fcba_core.py": "fcba2e82defe2e3fdb9b02efe1eee37456f33defa172c7eb632ea07774b88158",
+        "owned_parent_driver.py": "cc1b8b2a2102050b071376bd26329bbb3ead8d5a540cff4e79a7e73cfaf5cccc",
+        "train_typed_memory_actions_fourstage_graph.py": "16379dda778c0a97f194b238685ee80955d73bd44cfedf71dd36a7ed2b62adb3",
+        "typed_memory_actions_graph_engine.py": "99acb12d2661f9bf8a346353c62da2f701ea8599aacf88c8bfb868d9225bced6",
+        "typed_memory_actions_masked_graph_fb.py": "3216c90f3fddd324ae81072f01c9ab858ec09ba8d32c2594dd4869818864c321"
+      },
+      "sampling": null,
+      "sha256": "c5a3cbe14ebc1e592a0f0e462f6bd07062870c8551f345a2b0c64bf92a3a908e",
+      "stage": 2
+    },
+    {
+      "P": 10991,
+      "bytes": 526515,
+      "checkpoint_schema": "typed-paired-tail-stage3-training-v1",
+      "key": "paired",
+      "leaf": "paired.pt",
+      "parent_source_sha256": {
+        "context_replay128.py": "cbe370360f0bf52efc82d614db54551f000c9f7e44230dc358dfdb76bcbad140",
+        "continuous_primitive_block.py": "efabc8cbd2754a4a1d60f52b907cb5842f11fcf716c52646f8f935db5170d3f2",
+        "memory_live_stage_train.py": "dd5fc0b869d216f29c6ccb7202a1d965086c3fedb060d3c4c3bc4e5620042ad6",
+        "owned_fcba_core.py": "fcba2e82defe2e3fdb9b02efe1eee37456f33defa172c7eb632ea07774b88158",
+        "owned_full_driver.py": "16379dda778c0a97f194b238685ee80955d73bd44cfedf71dd36a7ed2b62adb3",
+        "owned_parent_driver.py": "cc1b8b2a2102050b071376bd26329bbb3ead8d5a540cff4e79a7e73cfaf5cccc",
+        "train_typed_paired_tail_stage3_graph.py": "350ff4f26884a88d6f7f2d2d5be459fc8799bf1f3f7ceeed7961d9b9812a671c",
+        "typed_memory_actions_graph_engine.py": "99acb12d2661f9bf8a346353c62da2f701ea8599aacf88c8bfb868d9225bced6",
+        "typed_memory_actions_masked_graph_fb.py": "3216c90f3fddd324ae81072f01c9ab858ec09ba8d32c2594dd4869818864c321"
+      },
+      "reference_valid_leaf": "paired-saved-GPU-valid.npz",
+      "reference_valid_sha256": "9e38cbeb888733bcfc97799672f97ebc0bd853fc7e6543376e307807fe8761d1",
+      "sampling": "paired",
+      "sha256": "5bb678b87a688cb373b001b5054a1cacbc36b5cd2f3c49012bc97658345a6bc8",
+      "stage": 3
+    },
+    {
+      "P": 10991,
+      "bytes": 526515,
+      "checkpoint_schema": "typed-paired-tail-stage3-training-v1",
+      "key": "control",
+      "leaf": "control.pt",
+      "parent_source_sha256": {
+        "context_replay128.py": "cbe370360f0bf52efc82d614db54551f000c9f7e44230dc358dfdb76bcbad140",
+        "continuous_primitive_block.py": "efabc8cbd2754a4a1d60f52b907cb5842f11fcf716c52646f8f935db5170d3f2",
+        "memory_live_stage_train.py": "dd5fc0b869d216f29c6ccb7202a1d965086c3fedb060d3c4c3bc4e5620042ad6",
+        "owned_fcba_core.py": "fcba2e82defe2e3fdb9b02efe1eee37456f33defa172c7eb632ea07774b88158",
+        "owned_full_driver.py": "16379dda778c0a97f194b238685ee80955d73bd44cfedf71dd36a7ed2b62adb3",
+        "owned_parent_driver.py": "cc1b8b2a2102050b071376bd26329bbb3ead8d5a540cff4e79a7e73cfaf5cccc",
+        "train_typed_paired_tail_stage3_graph.py": "350ff4f26884a88d6f7f2d2d5be459fc8799bf1f3f7ceeed7961d9b9812a671c",
+        "typed_memory_actions_graph_engine.py": "99acb12d2661f9bf8a346353c62da2f701ea8599aacf88c8bfb868d9225bced6",
+        "typed_memory_actions_masked_graph_fb.py": "3216c90f3fddd324ae81072f01c9ab858ec09ba8d32c2594dd4869818864c321"
+      },
+      "reference_valid_leaf": "control-saved-GPU-valid.npz",
+      "reference_valid_sha256": "24a9733d7a26fe3172d8b0a685cc882f6c4b46cae261c1ca8e4aa49974601493",
+      "sampling": "same_pool_shuffle",
+      "sha256": "cbaf9828486a17458e45e561a7ff2e47c17da049cafd84e809f9563b27280abb",
+      "stage": 3
+    }
+  ],
+  "name": "parameter-typed-three-nn-valid-actions-cpu-v1",
+  "old_NN_rerun": false,
+  "outside_seconds": 150,
+  "provider_effective_compute": null,
+  "raw_before_truth": true,
+  "remote_launch_sha256": "14616068804d12d9a6c921790f33806480c026b0df1442943202df773c7eff3c",
+  "runner_sha256": "c9f00f8e85f68d99e76aa4203efe77d08ac9a6ea25536631cf592b9b8c711335",
+  "science_seconds": 120,
+  "source_sha256": {
+    "audit_typed_three_nn_valid_actions_cpu.py": "8429b122dc611c46894d82b7ceddc95237ec870aac87c71cc484b88631627575",
+    "continuous_primitive_block.py": "efabc8cbd2754a4a1d60f52b907cb5842f11fcf716c52646f8f935db5170d3f2",
+    "owned_fcba_core.py": "fcba2e82defe2e3fdb9b02efe1eee37456f33defa172c7eb632ea07774b88158"
+  },
+  "stage2_scope": "trim only final new-token MIX and decrement runtime length; no new token executed",
+  "status": "FROZEN_UNEXECUTED",
+  "teacher_scope": "existing truth only after all three NN raw files saved; source ordering, not OS-blindness"
+}

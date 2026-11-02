@@ -1,0 +1,29 @@
+{"event": "runner_failure", "error_type": "PermissionError", "error": "[Errno 13] Permission denied: '/workspace/prometheus-v2-m0-architecture/code-parameter-memory-live-group-carry-stage-n8-seed0-dynamic-growth-selftest-v1/original_memory_live_stage_train.py.source'", "isolation_fallback": false}
+Traceback (most recent call last):
+  File "/workspace/prometheus-v2-m0-architecture/remote_runner_cpu_v2.py", line 437, in main
+  File "/workspace/prometheus-v2-m0-architecture/remote_runner_cpu_v2.py", line 328, in _child
+  File "<frozen runpy>", line 286, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-memory-live-group-carry-stage-n8-seed0-dynamic-growth-selftest-v1/memory_live_group_carry_train.py", line 540, in <module>
+    if __name__=="__main__":main()
+                            ^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-memory-live-group-carry-stage-n8-seed0-dynamic-growth-selftest-v1/memory_live_group_carry_train.py", line 367, in main
+    manifest=json.loads(args.manifest.read_text());source_hashes(manifest)
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-memory-live-group-carry-stage-n8-seed0-dynamic-growth-selftest-v1/memory_live_group_carry_train.py", line 91, in source_hashes
+    for leaf,expected in manifest["execution_sources"].items(): verify_file(folder/leaf,expected)
+                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-memory-live-group-carry-stage-n8-seed0-dynamic-growth-selftest-v1/memory_live_group_carry_train.py", line 37, in verify_file
+    if sha(path)!=expected: raise ValueError("actual owned file SHA differs: "+str(path))
+       ^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-memory-live-group-carry-stage-n8-seed0-dynamic-growth-selftest-v1/memory_live_group_carry_train.py", line 31, in sha
+    def sha(path): return old.sha256(path)
+                          ^^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-memory-live-group-carry-stage-n8-seed0-dynamic-growth-selftest-v1/owned_parent_driver.py", line 72, in sha256
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/workspace/prometheus-v2-m0-architecture/code-parameter-memory-live-group-carry-stage-n8-seed0-dynamic-growth-selftest-v1/original_memory_live_stage_train.py.source'

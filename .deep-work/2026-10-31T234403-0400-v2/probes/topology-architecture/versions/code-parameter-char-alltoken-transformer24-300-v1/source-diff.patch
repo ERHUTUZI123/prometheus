@@ -1,0 +1,69 @@
+--- original-driver-567e/train_char_alltoken.py
++++ NEW/train_char_parameter_matched_alltoken.py
+@@ -1,4 +1,7 @@
+-"""ROOT-RUN proper causal all-token char-LM development, fixed300x32x64.
++"""NEW one-width conventional controls GRU34/Transformer24, fixed300x32x64.
++
++Widths selected only by analytic P counts before model/label access.
++Original567e loss/training/data/evaluation remains unchanged; no score gate.
+ 
+ New feedback protocol, never pooled with the old terminal-prefix experiment.
+ Continuous Block/GRU44/causal Transformer36 see identical windows and all labels.
+@@ -52,20 +55,20 @@
+                 routing=arm,memory_slots=8,key_dim=16,primitive_rank=8)
+             # Full Vx64 encoder remains allocated/counted despite publicinitial0.
+         elif arm=="gru":
+-            self.embedding=nn.Embedding(vocabulary,44);self.body=nn.GRU(44,44,num_layers=2,batch_first=True);self.readout=nn.Linear(44,vocabulary)
++            self.embedding=nn.Embedding(vocabulary,34);self.body=nn.GRU(34,34,num_layers=2,batch_first=True);self.readout=nn.Linear(34,vocabulary)
+         elif arm=="transformer":
+-            self.embedding=nn.Embedding(vocabulary,36)
+-            self.body=nn.ModuleList([nn.TransformerEncoderLayer(36,4,dim_feedforward=72,dropout=0.,batch_first=True,norm_first=True) for _ in range(3)])
+-            self.norm=nn.LayerNorm(36);self.readout=nn.Linear(36,vocabulary)
+-            position=torch.arange(256,dtype=torch.float32)[:,None];frequency=torch.exp(torch.arange(0,36,2,dtype=torch.float32)*(-math.log(10000.)/36))
+-            encoding=torch.zeros(256,36);encoding[:,0::2]=torch.sin(position*frequency);encoding[:,1::2]=torch.cos(position*frequency)
++            self.embedding=nn.Embedding(vocabulary,24)
++            self.body=nn.ModuleList([nn.TransformerEncoderLayer(24,4,dim_feedforward=48,dropout=0.,batch_first=True,norm_first=True) for _ in range(3)])
++            self.norm=nn.LayerNorm(24);self.readout=nn.Linear(24,vocabulary)
++            position=torch.arange(256,dtype=torch.float32)[:,None];frequency=torch.exp(torch.arange(0,24,2,dtype=torch.float32)*(-math.log(10000.)/24))
++            encoding=torch.zeros(256,24);encoding[:,0::2]=torch.sin(position*frequency);encoding[:,1::2]=torch.cos(position*frequency)
+             self.register_buffer("positions",encoding);self.register_buffer("causal_mask",torch.ones(256,256,dtype=torch.bool).triu(1))
+         else:raise ValueError("unknown fixed architecture")
+ 
+     def configuration(self):
+         if self.arm in ("dynamic","static","detached"):return dict(arm=self.arm,core=self.body.configuration(),readout="all post-token normalizedcontinuous outputs",public_initial=0)
+-        return dict(arm=self.arm,vocabulary=self.vocabulary,width=44 if self.arm=="gru" else 36,layers=2 if self.arm=="gru" else 3,
+-            heads=None if self.arm=="gru" else 4,feedforward=None if self.arm=="gru" else 72,
++        return dict(arm=self.arm,vocabulary=self.vocabulary,width=34 if self.arm=="gru" else 24,layers=2 if self.arm=="gru" else 3,
++            heads=None if self.arm=="gru" else 4,feedforward=None if self.arm=="gru" else 48,
+             position="none" if self.arm=="gru" else "fixedsinusoidal256",causal=True,initial_state="zero" if self.arm=="gru" else "noCLS")
+ 
+     def forward(self,initial,tokens,lengths,mode="soft"):
+@@ -84,8 +87,8 @@
+         if self.arm in ("dynamic","static","detached"):
+             return self.body.sequence_resource_report(batch_size=count,sequence_length=length,
+                 active_steps=count*length,execution=mode)["proxy_forward_macs"]
+-        if self.arm=="gru":return count*length*(2*6*44*44+44*self.vocabulary)
+-        return count*(3*(4*length*36*36+2*length*length*36+2*length*36*72)+length*36*self.vocabulary)
++        if self.arm=="gru":return count*length*(2*6*34*34+34*self.vocabulary)
++        return count*(3*(4*length*24*24+2*length*length*24+2*length*24*48)+length*24*self.vocabulary)
+ 
+ 
+ def main():
+@@ -94,6 +97,7 @@
+     p.add_argument("--device",default="cuda:0");p.add_argument("--seed",type=int,default=0);p.add_argument("--max-seconds",type=float,default=850)
+     p.add_argument("--resource-overlap-note",default="coordinator records actual concurrency; no isolatedthroughput claim")
+     args=p.parse_args()
++    if args.arm not in ("gru","transformer") or args.seed!=0:p.error("one fixed GRU34/Transformer24 seed0 control per family only")
+     if not 1<=args.max_seconds<=850:p.error("internal bounded run<=850seconds")
+     args.out.mkdir(parents=True,exist_ok=False);started=time.perf_counter();deadline=started+args.max_seconds
+     stream=(args.out/"records.jsonl").open("x",buffering=1);device=torch.device(args.device)
+@@ -131,6 +135,9 @@
+             parameter_bytes=tensor_bytes(dict(model.named_parameters())),buffer_bytes=tensor_bytes(dict(model.named_buffers())),optimizer_tensor_bytes=tensor_bytes(optimizer.state_dict()),
+             replay_bytes=0,cpu_peak_RSS_bytes=int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*(1 if sys.platform=="darwin" else 1024)),
+             core_allocated_initial_encoder_parameters=vocabulary*64 if block else 0,
++            logical_recurrent_carry_scalars=68 if args.arm=="gru" else None,
++            logical_recurrent_carry_bytes_float32=272 if args.arm=="gru" else None,
++            carry_scope="GRU two34wide hidden states; Transformer exposes full-window forward without a reusable KV-cache API, workspace not zero",
+             data_cache_array_bytes=metadata["uncompressed_array_bytes"])
+         if device.type=="cuda":report.update(cuda_allocated_bytes=torch.cuda.memory_allocated(device),cuda_reserved_bytes=torch.cuda.memory_reserved(device),cuda_peak_allocated_bytes=torch.cuda.max_memory_allocated(device),cuda_peak_reserved_bytes=torch.cuda.max_memory_reserved(device))
+         return report

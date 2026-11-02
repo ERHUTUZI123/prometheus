@@ -1,0 +1,10 @@
+--- exactfcba._transition
++++ softvaluebridge._transition
+@@ -23,6 +23,7 @@
+                 weights=onehot+(probabilities-probabilities.detach())
+         gates=torch.sigmoid(all_logits[:,self.n_primitives:]).repeat_interleave(self.internal_states//8,-1)
+         h=h+gates*(self.residual_norm(h+delta)-h)
++        h=self.soft_value_bridge(h)
+         write_features=torch.cat((c,raw_x),-1)
+         address=F.softmax(torch.einsum("bq,bmq->bm",self.write_query(write_features),keys)/self.key_dim**.5,-1)
+         write_gate=torch.sigmoid(self.write_gate(write_features));amount=(write_gate*address)[:,:,None]

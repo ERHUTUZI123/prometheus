@@ -1,0 +1,125 @@
+{
+  "accuracy_selection": false,
+  "amortization": "primary ceil((graph sidewarmup+construction+capture+instantiation+firstvalidation+postdrawverification+poolcleanup)/(eagerP50-graphP50)); undefined if saving<=0; persistent-setup-only bound separately labeled; shared input/loading/audit costs separately charged",
+  "arm": "transformer",
+  "backends": [
+    "original_eager",
+    "tensor_eager",
+    "CUDA_graph_replay"
+  ],
+  "batches": [
+    1,
+    32
+  ],
+  "before_execution": true,
+  "block_transform": "original initial_carry checked outsidecapture; exact tensor initialization including encoder EVERY call; original _advance_embedded and alltokenreadout; all-active identity indexing removed",
+  "checkpoint": {
+    "bytes": 646703,
+    "completed_updates": 300,
+    "file": "transformer-frozen-final.pt",
+    "sha256": "7a8ee603b1244281d268ffcd5c56b9bd9abe63abac9cab24e98591d1d9c2b33a",
+    "wall_seconds": 0.011575339012779295
+  },
+  "contexts": [
+    64,
+    128,
+    256
+  ],
+  "control_transform": "original TF/GRU embedding/layers/attention/masks/position/norm/readout unchanged; remove outer CPU validation only",
+  "expected_input_files": {
+    "metadata.json": {
+      "bytes": 4749,
+      "sha256": "f157d58e9246f59f78dbd883b4ccc80284278b9eb270365cb13556dc8703e792"
+    },
+    "train.npz": {
+      "bytes": 738810,
+      "sha256": "d8e35caee818c07934e3013977d08fd1a17bc88036996600a1bbc14da8ce9355"
+    }
+  },
+  "external_seconds": 900,
+  "formal_Primary": false,
+  "frozen_at_UTC": "2026-11-02T05:32:11.152039+00:00",
+  "gpu_fraction": 0.3,
+  "graph": {
+    "error_mode": "global",
+    "explicit_instantiation": true,
+    "keep_graph": true,
+    "no_compile_fallback": true,
+    "private_pool_per_case": true,
+    "setup_capture_instantiation_sync_cleanup_all_charged": true
+  },
+  "graph_side_stream_warmups": 3,
+  "inference_scope": "resident fullwindow alltoken outputs, excludes H2D/serving/cached sequential generation; streamtime is not kernel-only sum; no arithmetic/FLOP improvement claim",
+  "inputs": "first32 originalTRAIN windows, B1/32, tile64tokens to L64/128/256; only metadata+TRAIN file copied; targets never decompressed/read",
+  "internal_seconds": 850,
+  "isolation": "unchanged authorized GPU runner; no permissions/install/framework/network expansion in scientific child",
+  "label_reads": 0,
+  "modes": [
+    "soft"
+  ],
+  "name": "parameter-char-alltoken-transformer-300-v1-cuda-graph-inference-v1",
+  "original_source_sha256": {
+    "continuous_primitive_block.py": "58feb69e5d628745f64b6a4d546858aaba528169ae0d3cdae0530de61055d497",
+    "train_char_alltoken.py": "567e372187e4cee3c8a5ca3d49f5f7d60a8664a07619c3d57dc1c799cbbd9f02"
+  },
+  "output_contract": {
+    "all_elements_atol": 2e-05,
+    "all_elements_rtol": 2e-06,
+    "graph_checked_after_draws": true,
+    "identical_argmax_required": true,
+    "lognormalizer_maximum": 1e-05,
+    "original_vs_tensor_vs_graph": true
+  },
+  "parent": "parameter-char-alltoken-transformer-300-v1",
+  "preparation_does_not_launch": true,
+  "question": "Does removing repeated Python/launch scheduling explain the measured resident inference cost gap while exact arithmetic and outputs are retained?",
+  "resident_latency_draws": 12,
+  "resources": "allP/weights/buffers/savedoptimizer/checkpoint/history; liveTorchallocator/globalfree/RSS; perphaseforwardcounts/MACproxy; rawwall+CUDAstreamdraws; graphpool/setup/cleanup; exactCUDAexecutablebytes unavailable",
+  "runner_sha256": "85e8ae4ffb4ba9cd187fcc53f2cbb3dcbd00eb5be10f7bba079768096f4a13d0",
+  "schema": "owned-alltoken-cuda-graph-cost-diagnostic-v1",
+  "serial_root_scheduling_required": true,
+  "source_input": "/opt/prometheus-parameter-char-alltoken-transformer-300-v1-inputs/data",
+  "source_parent_costs": {
+    "batch_assembly_wall_seconds": 0.36839106446132064,
+    "causality_audit_forward_MAC_proxy": 12423168,
+    "causality_audit_forward_windows": 4,
+    "checkpoint_wall_seconds": 0.0727824370842427,
+    "evaluation_forward_MAC_proxy": 28604104704,
+    "evaluation_forward_windows": 5120,
+    "evaluation_prediction_positions": 458752,
+    "evaluation_wall_seconds": 0.7123297210782766,
+    "optimizer_updates": 300,
+    "reload_forward_MAC_proxy": 198770688,
+    "reload_forward_windows": 64,
+    "reload_wall_seconds": 0.0449556449893862,
+    "training_CPU_seconds": 6.716997158000004,
+    "training_forward_MAC_proxy": 29815603200,
+    "training_input_tokens": 614400,
+    "training_label_observations": 614400,
+    "training_wall_seconds": 6.7474541096016765,
+    "training_windows": 9600
+  },
+  "source_parent_resources": {
+    "buffer_bytes": 102400,
+    "core_allocated_initial_encoder_parameters": 0,
+    "cpu_peak_RSS_bytes": 1435860992,
+    "cuda_allocated_bytes": 20605440,
+    "cuda_peak_allocated_bytes": 104680448,
+    "cuda_peak_reserved_bytes": 146800640,
+    "cuda_reserved_bytes": 146800640,
+    "data_cache_array_bytes": 12746752,
+    "optimizer_tensor_bytes": 317476,
+    "parameter_bytes": 158656,
+    "parameters": 39664,
+    "replay_bytes": 0,
+    "trainable_parameters": 39664
+  },
+  "source_sha256": {
+    "audit_cuda_graph_inference.py": "3e82598a157a5c41f47d7c3e0b7ddf417899526a4027146d1f2d1dac7dae29b1",
+    "continuous_primitive_block.py": "58feb69e5d628745f64b6a4d546858aaba528169ae0d3cdae0530de61055d497",
+    "launch_cuda_graph_owned.py": "aab7567f6b895aafddffd0a9f5a455813619f2b089943e27b08e65d96f0724c1",
+    "train_char_alltoken.py": "567e372187e4cee3c8a5ca3d49f5f7d60a8664a07619c3d57dc1c799cbbd9f02"
+  },
+  "training_updates": 0,
+  "warmups_per_eager": 3
+}

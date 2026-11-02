@@ -1,0 +1,185 @@
+{
+  "candidate": "OWN exact continuous-Block FP32 dynamic-soft forward fusion v1",
+  "candidate_launch": {
+    "autotune": false,
+    "dot_or_TF32": false,
+    "enable_fp_fusion": false,
+    "extra_final_carry_materialized_and_charged": true,
+    "fixed_batches": [
+      1,
+      32
+    ],
+    "fixed_contexts": [
+      64,
+      128,
+      256
+    ],
+    "grid": "one CTA per example",
+    "num_stages": 1,
+    "num_warps": 4,
+    "sequence_loop": "ordinary recurrent loop; no Python launch per token",
+    "streamed_weight_loads": "volatile fixed source policy; potential register/bandwidth cost must be measured"
+  },
+  "checkpoint": {
+    "arm": "dynamic",
+    "bytes": 549107,
+    "completed_updates": 300,
+    "sha256": "1e0fc8ec0e063aa1c86f4c7b0d09d91d65c32338273323a4c6d10c2752993f80",
+    "total_P": 41593
+  },
+  "compiler_staging": {
+    "cache_miss": "fail closed; no automatic recompilation permission or external prewarm/copy",
+    "existing_trusted_CUDA_bootstrap": "explicit flag under UID/LL filesystem/TCP/resources; full compiler socket seccomp BEFORE prologue",
+    "extra_OS_permissions_needed": "none identified by source review; any actual new denied requirement must be reported, not granted",
+    "kernel_sha256": "5cf6929bb0da78d8a7dc65cbdfe7d9dcaf0ba9d182845564f3f36c06e6f88d29",
+    "prologue": "continuous_block_fusion_prologue.py",
+    "prologue_inputs": "only fixed random synthetic packed weights/tokens, no real checkpoint/task data, six fixed shapes",
+    "runtime": "exact verified eb50 function bodies and permission policy; only prologue filename/SHA and descriptive header change",
+    "strict_negative_checks": "reuse unchanged 16-check source/fixture after GPU threads and before scientific audit",
+    "tool_whitelist": "unchanged seven SHA-pinned tools plus existing pinned loader only in trusted phase",
+    "transition": "strict TSYNC exec/fork/socket deny + zero-exec Landlock + root descendant cleanup gate BEFORE any real-model audit"
+  },
+  "costs": {
+    "amortization": "report measured extra setup and break-even calls only for positive per-call savings; do not sum nested wall/CPU/memory counters",
+    "charge": [
+      "checkpoint/optimizer-history load and original model restore",
+      "all validation/copy/packing work",
+      "cold compiler tool checks, C probe, own Triton compilation/priming",
+      "new cache and emitted PTX/code/source bytes",
+      "all warmups/correctness/capture/instantiate/replay/sync/cleanup",
+      "original weights plus packed duplicate plus carry/output and graph pools",
+      "every failed/censored attempt; no discarded cost",
+      "kernel code maintenance/source hash and emitted n_regs/n_spills when available"
+    ],
+    "extra_full_packed_weight_bytes": 166372,
+    "extra_weight_pack": "actual allocation/copy/sync wall and memory charged on each new frozen state; never count packed weights as replacement P",
+    "final_carry_bytes_per_example": 2816,
+    "limits": "FP32 arithmetic work is not a calibrated full FLOP claim; raw driver/context GPU memory, energy and total busy-time remain unmeasured",
+    "original_FP32_parameter_bytes": 166372,
+    "original_parameters_retained": 41593,
+    "output_bytes": "B*L*100*4"
+  },
+  "fundamental_question_connection": "Implementation-cost control for the current learned Block mechanism comparison; no new learning/organization rule, retention/capability result, or novelty claim",
+  "mechanism_order": [
+    "raw token embedding",
+    "slotted token=raw+slot0",
+    "READ(old h,slotted token,old keys/values)",
+    "CALL: caller tanh/softmax + lowrank exact-erf GELU expert mixture on (old h,slotted token,last read)",
+    "new h=LayerNorm(old h+mixture,eps1e-5)",
+    "WRITE features=(new h,RAW token,last read), address on old keys, sigmoid gate, tanh newkey and linear newvalue",
+    "keys=currentkeys+amount*(newkey-currentkeys); values=currentvalues+amount*(newvalue-currentvalues)",
+    "all-token logsoftmax of original readout(new h)"
+  ],
+  "numerical_contract": {
+    "atol": 0.0002,
+    "failure_policy": "stop v1 diagnostic on compile/numeric failure, retain raw outputs/failure/costs; no threshold relaxation",
+    "final_carry": "save max absolute/relative h/key/value errors as additional diagnostics; output gate never relaxed",
+    "finite_full_output_required": true,
+    "maximum_absolute_logprob_difference_limit": 0.0002,
+    "maximum_log_normalizer_error_limit": 1e-05,
+    "prediction_disagreements_required": 0,
+    "references": [
+      "original public model (correctness)",
+      "unchanged original pure tensor function",
+      "unchanged pure tensor CUDA Graph output"
+    ],
+    "rtol": 2e-05,
+    "torch_allclose_required": true
+  },
+  "original_core_sha256": "58feb69e5d628745f64b6a4d546858aaba528169ae0d3cdae0530de61055d497",
+  "original_driver_sha256": "567e372187e4cee3c8a5ca3d49f5f7d60a8664a07619c3d57dc1c799cbbd9f02",
+  "original_tensor_graph_reference": {
+    "functions": [
+      "restore",
+      "tensor_initial_carry",
+      "tensor_forward",
+      "state_hash"
+    ],
+    "reference_status": "prior executed public/pure/graph audit retained; this construction adds no new runtime evidence",
+    "sha256": "3e82598a157a5c41f47d7c3e0b7ddf417899526a4027146d1f2d1dac7dae29b1",
+    "source": "versions/code-parameter-char-alltoken-dynamic-300-v1-cuda-graph-inference-v1/audit_cuda_graph_inference.py"
+  },
+  "primary_API_sources": [
+    "https://raw.githubusercontent.com/triton-lang/triton/v3.4.0/python/triton/language/core.py",
+    "https://raw.githubusercontent.com/triton-lang/triton/v3.4.0/python/triton/language/semantic.py",
+    "https://raw.githubusercontent.com/triton-lang/triton/v3.4.0/third_party/nvidia/language/cuda/libdevice.py",
+    "https://raw.githubusercontent.com/triton-lang/triton/v3.4.0/third_party/nvidia/backend/compiler.py"
+  ],
+  "proposed_CPU_checks_not_executed": {
+    "checks": [
+      "literal layout accounts for all 41593 original parameters",
+      "exact source hashes and original checkpoint allowlist",
+      "packed view values exactly equal every original parameter; no omitted unused encoder rows",
+      "original initial_carry and manual packed formula h/keys/values on short synthetic/first-TRAIN input prefixes",
+      "B1 or B2, L1/2/8, fixed seed0, FP32; no optimizer, labels, VALID or TEST",
+      "static feature tracing: slot affects read/CALL only; write uses new h/raw x/last read",
+      "source inspection of every packed offset and no global atomic/interexample state"
+    ],
+    "scope": "ROOT may run bounded CPU/static formula checks before any GPU decision"
+  },
+  "proposed_GPU_diagnostic_not_authorized_by_this_artifact": {
+    "all_case_outputs_saved": true,
+    "backend_order": "rotate four-backend order by round index modulo4; keep every draw",
+    "captures": "separate setup/capture/instantiate costs; same mathematical callable between each backend eager and its graph",
+    "cases": {
+      "batch": [
+        1,
+        32
+      ],
+      "execution": "soft only",
+      "length": [
+        64,
+        128,
+        256
+      ]
+    },
+    "compared_backends": [
+      "original pure tensor eager",
+      "same pure tensor CUDA Graph replay",
+      "OWN fused eager launch",
+      "same OWN fused CUDA Graph replay"
+    ],
+    "data": "same original all-token metadata/TRAIN NPZ hashes; no VALID/TEST inputs/labels",
+    "envelope": "reuse existing authorized <=900s outer / <=850s scientific / .3 torch allocator /512GiB AS /100MiB per file/NPROC128; no expansion",
+    "inputs": "exact original audit: first32 TRAIN input windows; tile each original64-token window for L128/256; initial0/full lengths; never decompress targets",
+    "no_autotune_or_retry": true,
+    "no_model_or_score_selection": true,
+    "paired_latency_draws": 12,
+    "restore": "reuse original frozen reference restore including saved tensor strides and all-parameter state hash; before/after unchanged weights required",
+    "scope": "ROOT chooses the actual finite diagnostic after source/CPU review",
+    "timing": "same synchronized wall + CUDA stream events; median primary, linear p95 secondary; stream elapsed is not measured busy-time or energy",
+    "warmups": 3
+  },
+  "provenance": {
+    "kernel": "AGENT PROPOSAL: OWN exact-rule forward fusion candidate",
+    "mechanism": "SOURCE: frozen 58fe original rule",
+    "status": "OPEN: compilation, numerical equivalence and latency unverified"
+  },
+  "question": "With frozen original P/weights and identical TRAIN-only inputs, can one CTA per example reduce resident all-token forward cost after graph launch costs have already been removed?",
+  "representation": {
+    "H": 64,
+    "K": 4,
+    "M": 8,
+    "dtype": "FP32 throughout",
+    "initial": "learned encoder row0, learned initial keys, zero values freshly loaded/initialized each call",
+    "key_dim": 16,
+    "rank": 8,
+    "routing": "dynamic soft only",
+    "slots": 1,
+    "token_dim": 16,
+    "vocabulary": 100
+  },
+  "source_sha256": {
+    "continuous_block_fusion_prologue.py": "9ecae9233ed06aea315afde40aba91fd32d9a691ead3919553fb6243249c9c95",
+    "fused_continuous_block_fp32.py": "5cf6929bb0da78d8a7dc65cbdfe7d9dcaf0ba9d182845564f3f36c06e6f88d29",
+    "remote_runner_gpu_continuous_fusion.py": "03531ed8b11a4dfeb1f93ad1c3a8bb64d728a192ec1774dc9ae65cade250912d"
+  },
+  "status": "CONSTRUCTED_UNEXECUTED; ROOT review/finite diagnostic decision required",
+  "stopping": "construction objective ends at reviewable source/design; no agent execution/scheduling or automatic expansion",
+  "strongest_risks": [
+    "FP32 reduction/GELU/LN differences may accumulate and violate strict zero-argmax contract",
+    "one-CTA recurrent loop and streamed weights may be register/spill/bandwidth-bound despite removing launches",
+    "Triton 3.4 lowering may reject a shape/layout; this file has not been compiled",
+    "even a speed win applies only to frozen-weight all-active dynamic-soft inference, not training or new computational capability"
+  ]
+}

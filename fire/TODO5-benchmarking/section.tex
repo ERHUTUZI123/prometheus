@@ -379,3 +379,67 @@ credit ablation. Not full-class or continual real-data validation.}
 proxies for the same first real-data development runs. Full storage/cost records
 remain separate; smaller MAC counts did not imply faster execution.}
 \end{figure}
+
+
+\subsection{Fourth-phase and same-weight execution cost figures}
+These figures are descriptive single-seed development evidence. Parameters,
+training-forward MAC proxies, observed timings, optimizer/replay/buffer
+payloads, checkpoint storage and allocator peaks are shown jointly. Different
+scope timers are not additive. The character-LM execution audits keep weights
+fixed and use no labels; they are separate from the fourth-phase learning task.
+The data/source hashes and all failed attempts remain archived.
+
+\clearpage
+\begin{landscape}
+\begin{figure}[p]
+\centering
+\includegraphics[width=\linewidth,height=.85\textheight,keepaspectratio]{figures/development-stage4-20261102/stage4_acquisition.pdf}
+\caption{Fourth-task TRAIN/VALID acquisition: same 600 updates of 48 new plus 16 replay examples; no Primary claim.}
+\end{figure}
+\clearpage
+\end{landscape}
+\clearpage
+\begin{landscape}
+\begin{figure}[p]
+\centering
+\includegraphics[width=\linewidth,height=.85\textheight,keepaspectratio]{figures/development-stage4-20261102/stage4_old_valid_retention.pdf}
+\caption{Old-task VALID retention: single trajectories, distinct actual parent checkpoints; no independent-seed confidence bands.}
+\end{figure}
+\clearpage
+\end{landscape}
+\clearpage
+\begin{landscape}
+\begin{figure}[p]
+\centering
+\includegraphics[width=\linewidth,height=.85\textheight,keepaspectratio]{figures/development-stage4-20261102/stage4_raw_train_losses.pdf}
+\caption{All 600 actual mixed-batch losses. The descriptive EMA is displayed with raw observations and was not used for selection.}
+\end{figure}
+\clearpage
+\end{landscape}
+\clearpage
+\begin{landscape}
+\begin{figure}[p]
+\centering
+\includegraphics[width=\linewidth,height=.85\textheight,keepaspectratio]{figures/development-stage4-20261102/stage4_paid_resources.pdf}
+\caption{Joint parameter and scoped paid-resource comparison. Added vocabulary parameters do not establish parameters per retained new capability.}
+\end{figure}
+\clearpage
+\end{landscape}
+\clearpage
+\begin{landscape}
+\begin{figure}[p]
+\centering
+\includegraphics[width=\linewidth,height=.85\textheight,keepaspectratio]{figures/development-stage4-20261102/frozen_lm_graph_resident_latency.pdf}
+\caption{Same-weight character-LM execution costs, B1soft. Eager, tensor and CUDA Graph outputs were checked; conventional baselines remain faster.}
+\end{figure}
+\clearpage
+\end{landscape}
+\clearpage
+\begin{landscape}
+\begin{figure}[p]
+\centering
+\includegraphics[width=\linewidth,height=.85\textheight,keepaspectratio]{figures/development-stage4-20261102/frozen_lm_graph_paid_lifecycle.pdf}
+\caption{Graph capture, instantiation, verification and teardown costs, amortization and observed allocator changes. Exact driver executable bytes remain unavailable.}
+\end{figure}
+\clearpage
+\end{landscape}

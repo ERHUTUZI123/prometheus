@@ -1,0 +1,103 @@
+{
+  "CPU_only": true,
+  "NN_or_checkpoint_or_teacher_or_counterfactual_truth_loaded": false,
+  "NN_updates": 0,
+  "RNG_order": "default_rng SeedSequence(pair_seed): draw entire600x24 group matrix, then entire600x24 binary order matrix",
+  "Replay128": "each NN tail restores OWN stage2 replay/RNG; actual original600x16 buffer_indices remains separate and unchanged",
+  "SGD_updates": 0,
+  "VALID_or_TEST_read": false,
+  "address_space_GiB": 64,
+  "archive_hash_scope": "whole raw archive compressed bytes checked, targets.npy never opened/decoded/indexed",
+  "before_execution": true,
+  "costs": "all raw-input/hash/NumPy import/grouping/RNG/verification/serialization/reload/CPU/RSS/index storage plus outside runner/coordinator; later NN tails separately charged, no repeated historical optimizer updates",
+  "eligible_groups_scope": "all2048 eligible; random draw need not cover every group, no coverage-based redraw",
+  "equal_label_pairs_not_excluded": true,
+  "expected_groups": 2048,
+  "expected_rows": 4096,
+  "file_limit_MiB": 100,
+  "first48": "24 selected pairs, two raw current TRAIN rows each",
+  "formal_Primary": false,
+  "group_key": "(initial, tuple(active tokens[:-4]))",
+  "group_order": "first occurrence while scanning original rows0..4095",
+  "group_validation": "every group exactly2 rows, equal active length, different raw4token suffix; all4096 rows exactly once; no label filtering or excluded groups",
+  "input_files": {
+    "stage3-train.npz": {
+      "bytes": 39012,
+      "remote_relative": "parameter-memory-live-stage-data-n8-seed0-v1/generated/data/stage3-train.npz",
+      "sha256": "b950377e180c06fc1ae2137c47637f1327a1a9b0d3dfebd54260cec45b037609"
+    }
+  },
+  "last16": "exact original9027 indices[:,48:] reserved/unused provenance only; NOT Replay128 draws and NOT additional current TRAIN rows",
+  "launcher_sha256": "6f501f3efc1d2f2dce88d2065309b09a046bc7b8a5273121694df91eccb11646",
+  "member_order": "ascending original TRAIN row index",
+  "name": "parameter-paired-train-indices-n8-stage3-seed0-v1",
+  "no_accuracy_gate": true,
+  "no_new_permissions": true,
+  "only_input_members_opened": [
+    "initial.npy",
+    "tokens.npy",
+    "lengths.npy"
+  ],
+  "original_seed": [
+    0,
+    8,
+    3,
+    9027
+  ],
+  "output_arrays": {
+    "groups": [
+      2048,
+      2
+    ],
+    "indices": [
+      600,
+      64
+    ],
+    "indices_same_pool_shuffled": [
+      600,
+      64
+    ],
+    "pairdraws": [
+      600,
+      24
+    ],
+    "pairorders": [
+      600,
+      24
+    ]
+  },
+  "output_dtype": "int64",
+  "output_leaf": "paired-stage3-indices.npz",
+  "outside_seconds": 150,
+  "pair_seed": [
+    0,
+    8,
+    3,
+    9027,
+    4
+  ],
+  "prospective_study": "3models typed/GRU32/Transformer32 x2samplers paired/samepoolshuffled, each600fromsameOWNstage2;6tails, noHPsearch",
+  "remote_launch_sha256": "9caa2d9ec61d468256361133903a6f100009f0aec921fcce05ef9517543543ec",
+  "research_updates": 0,
+  "runner_sha256": "c9f00f8e85f68d99e76aa4203efe77d08ac9a6ea25536631cf592b9b8c711335",
+  "same_pool_causal_scope": "sameglobalrowmultiset/labelinformation/updatebudget; grouping+temporalordering jointly vary, notpurecovarianceonlyproof",
+  "same_pool_control": "globalpermutation of paired first48 pool with independent fixedshuffleSeedSequence; assert4096row exposure bincount EXACTsame; tail16 sameoriginal",
+  "same_pool_shuffle_seed": [
+    0,
+    8,
+    3,
+    9027,
+    4,
+    0
+  ],
+  "sampling": "24 uniform groups per step with replacement; both members appear adjacently in independently random order",
+  "schema": "paired-minibatch-TRAIN-credit-indices-v1",
+  "scope": "one prospective paired-minibatch plus same-pool shuffle causal diagnostic for same typed/GRU32/Transformer32 tails; no task/test/label changes or route oracle",
+  "source_sha256": {
+    "generate_paired_train_indices.py": "d78e55cedc1e2e4c333f5ee2ddc1af2b1d40b595bd8a9968ef1559de6ec0a7f6"
+  },
+  "status": "FROZEN_UNEXECUTED",
+  "suffix_width": 4,
+  "target_array_reads": 0,
+  "trusted_transport_sha256": "1bff46e15baaa095a901e3aa5e0d771f3f183f083438daa88c79a131f0692cfc"
+}

@@ -8,6 +8,7 @@
 \usepackage{xurl}
 \usepackage[hidelinks]{hyperref}
 \usepackage{graphicx}
+\usepackage{pdflscape}
 \setlength{\emergencystretch}{2em}
 \newtheorem{proposition}{Proposition}
 \newtheorem{definition}{Definition}
@@ -25,30 +26,30 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-How can a learning system form reusable computational operations and organize
-their execution from task feedback? We investigate Prometheus, a trainable
-Block combining continuous internal state, low-rank nonlinear residual
-primitives, contextual operation calls, and content-addressed key--value
-memory. Encoding, primitive functions, calling, memory writes and readout learn
-jointly from terminal labels. Symbolic embeddings and learned continuous-input
-adapters enter the same core. Soft execution combines primitive residuals;
-hard-call execution selects one primitive while retaining continuous state and
-memory. Their predictions and costs are evaluated separately. We give explicit
-parameter, recurrent-state and forward-work accounts, and preserve earlier
-topological protection constructions as optional mechanisms with distinct
-assumptions. Fixed-budget development includes context-dependent sequence
-tasks, sampled next-character prediction, and initial audio and image
-classification diagnostics. In a parameter-matched 300-update character study,
-the dynamic Block has perplexity 12.46 at context 32 and 12.50 at context 128,
-compared with 12.80 and 48.41 for the tested Transformer and approximately 10.09
-for the tested GRU. A same-size static-caller Block performs comparably to the
-dynamic model. These single-seed observations motivate further mechanism and
-resource comparisons; first real-input diagnostics favor the larger
-Transformer controls. They establish finite implementations and measurements,
-rather than broad competitive or continual-retention claims. A complete
-Primary architecture remains to be frozen before the formal evaluation.
-The central empirical question is whether this organization can improve the
-acquisition--retention--resource tradeoff across meaningful task families.
+How can a learning system acquire reusable computational operations while
+retaining earlier capabilities at acceptable resource cost? We investigate
+Prometheus, a trainable Block combining continuous state, low-rank nonlinear
+primitives, contextual calls and content-addressed memory. Encoders, operations,
+calling, writes and readout learn jointly from task feedback. Symbolic and
+continuous-input adapters enter the same core. Soft and hard-call execution
+are measured separately, and earlier topological constructions retain their
+own evidence boundaries. Fixed-budget development covers contextual programs,
+audio, vision and causal next-character prediction. In a fourth-stage
+two-address task, a 28,381-parameter dynamic Block reaches 56.64\% IID accuracy,
+compared with 62.89\% for a 25,616-parameter GRU, while older abilities decline.
+A frozen-state intervention reduces VALID accuracy from 58.20\% to 12.5\%
+when memory reads are removed; a joint key--value permutation preserves
+predictions. These results establish memory dependence, not a learning
+advantage. In a 614,400-label character experiment, dynamic-Block perplexity
+is 10.36, versus 10.53 for the tested Transformer, 8.66 for GRU and 7.17 for
+official Mamba2. Actual parameters, training and evaluation time, cold
+compilation, replay, optimizer state, inference and storage are recorded
+separately. Same-weight execution optimization reduces dispatch overhead,
+but the conventional architectures remain faster in the completed audit.
+These single-seed results identify acquisition, retention and computational
+bottlenecks rather than broad architectural superiority. A complete Primary
+architecture remains unfrozen. Ongoing controlled revisions target the
+learning and execution mechanisms exposed by these measurements.
 \end{abstract}
 \input{sections/01-introduction.tex}
 \input{sections/02-related-work.tex}

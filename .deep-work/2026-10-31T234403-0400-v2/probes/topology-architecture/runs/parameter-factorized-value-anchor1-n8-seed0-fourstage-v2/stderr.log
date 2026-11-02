@@ -1,0 +1,17 @@
+{"event": "runner_failure", "error_type": "ValueError", "error": "raw width exceeds replay extent", "isolation_fallback": false}
+Traceback (most recent call last):
+  File "/workspace/prometheus-v2-m0-architecture/remote_runner_gpu_authorized.py", line 481, in main
+  File "/workspace/prometheus-v2-m0-architecture/remote_runner_gpu_authorized.py", line 363, in _child
+  File "<frozen runpy>", line 286, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-factorized-value-anchor1-n8-seed0-fourstage-v2/train_factorized_value_block.py", line 132, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-factorized-value-anchor1-n8-seed0-fourstage-v2/train_factorized_value_block.py", line 98, in main
+    maintenance=replay.consume(data,used[stage],stage,emit=rec.emit)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-factorized-value-anchor1-n8-seed0-fourstage-v2/context_replay128.py", line 39, in consume
+    if data["tokens"].shape[1]>self.width:raise ValueError("raw width exceeds replay extent")
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: raw width exceeds replay extent

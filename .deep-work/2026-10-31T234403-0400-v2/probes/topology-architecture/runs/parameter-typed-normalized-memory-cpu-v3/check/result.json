@@ -1,0 +1,1574 @@
+{
+  "CPU_only_not_CUDA_result": true,
+  "CPU_seconds": 5.451874242,
+  "SGD_updates": 0,
+  "all20_gradients_checked": true,
+  "all_carry_fields_masked": true,
+  "evidence_artifact_bytes": 1932008,
+  "exact_historical_common_initialization_and_RNG": true,
+  "fresh_GPU_NN_must_not_load_synthetic_checkpoints": true,
+  "full_forward_FLOPs": null,
+  "full_training_FLOPs": null,
+  "modes": {
+    "A": {
+      "actual_P15": 10335,
+      "actual_P16": 10351,
+      "all20_gradients_checked": true,
+      "checkpoint": {
+        "actual_NN_Adam_replay_fullcarry_CPU_RNG_reload": true,
+        "bytes": 125653,
+        "file": "A-synthetic-checkpoint.pt",
+        "legacy_schema_wrong_policy_epsilon_extra_buffer_rejected": true,
+        "sha256": "4f2b385d78350936bf63f2cbcbcaaf158050b3bdc83fb07de1b781659de6b7fc",
+        "soft_native_ST_reloaded_execution_exact": true,
+        "strict_mode_flags_and_expected_flags_rejected": true
+      },
+      "costs": {
+        "buffer_bytes": 0,
+        "cache_or_allocator_peak_bytes": null,
+        "carry_bytes_per_example": 1280,
+        "checkpoint_save_load_validation": {
+          "CPU_seconds": 0.029386697000000517,
+          "wall_seconds": 0.033117426093667746
+        },
+        "compilation": {
+          "measured_FLOPs": null,
+          "performed": false,
+          "seconds": null
+        },
+        "coverage_diagnostics": {
+          "CPU_seconds": 0.0,
+          "wall_seconds": 3.7660356611013412e-06
+        },
+        "equations": {
+          "CPU_seconds": 0.008000408000000014,
+          "wall_seconds": 0.00792240898590535
+        },
+        "formation_search": {
+          "measured_FLOPs": null,
+          "performed": false
+        },
+        "full_forward_FLOPs": null,
+        "full_training_FLOPs": null,
+        "growth": {
+          "CPU_seconds": 0.0019998519999999687,
+          "wall_seconds": 0.001663639908656478
+        },
+        "initialization": {
+          "CPU_seconds": 0.007001499000000244,
+          "wall_seconds": 0.006482583004981279
+        },
+        "measurement_scope": "actual synthetic CPU operations only; component wall/CPU and tensor/file payloads; no CUDA/kernel peak or complete FLOPs measurements",
+        "optimizer_tensor_bytes": 0,
+        "parameter_bytes": 41404,
+        "parameters": 10351,
+        "protection": {
+          "measured_FLOPs": null,
+          "performed": false,
+          "seconds": null
+        },
+        "replay_bytes": 55296,
+        "resource_report": {
+          "active_steps": 1315,
+          "configuration": {
+            "action_policy": "typed-memory-actions/input-address+per-cell-coverage/raw-value/group8/v1",
+            "caller_hidden": 32,
+            "carry_gate_groups": 8,
+            "controller_dim": 16,
+            "coverage_epsilon": 0.0001,
+            "coverage_normalization": false,
+            "initialization_std": 0.02,
+            "input_only_address": true,
+            "internal_states": 32,
+            "key_dim": 16,
+            "memory_dim": 32,
+            "memory_slots": 8,
+            "n_primitives": 4,
+            "n_slots": 1,
+            "n_states": 8,
+            "n_tokens": 16,
+            "primitive_rank": 8,
+            "routing": "dynamic",
+            "state_dim": 32,
+            "token_dim": 16
+          },
+          "coverage_normalization": {
+            "enabled": false,
+            "epsilon": 0.0001,
+            "extra_clamps": 0,
+            "extra_divisions": 0,
+            "limitations": "singleweakwrite broadcasts samecontent to all coveredsoftslots; no keyseparation/lostinformationrecovery; bounded1/eps gain and piecewise clampgradient; noisy/stalecontent canbe amplified",
+            "rule": "z+=alphaSTORE*a*(1-z); readslots=V/max(z,eps); V unchanged OLDh weightedwrite",
+            "state_scalars": 0
+          },
+          "execution": "soft",
+          "full_forward_FLOPs": null,
+          "full_training_FLOPs": null,
+          "input_only_address": {
+            "enabled": true,
+            "initializer_subset_columns": [
+              48,
+              64
+            ],
+            "input": "raw learnedtoken embedding only; no slotoffset"
+          },
+          "learnable_parameters": 10351,
+          "parameter_counts": {
+            "address_proposal.bias": 8,
+            "address_proposal.weight": 128,
+            "caller.0.bias": 32,
+            "caller.0.weight": 3072,
+            "caller.2.bias": 15,
+            "caller.2.weight": 480,
+            "controller.bias_hh": 48,
+            "controller.bias_ih": 48,
+            "controller.weight_hh": 768,
+            "controller.weight_ih": 768,
+            "encoder.weight": 256,
+            "primitive_bias": 32,
+            "primitive_down": 3072,
+            "primitive_up": 1024,
+            "readout.bias": 8,
+            "readout.weight": 256,
+            "residual_norm.bias": 32,
+            "residual_norm.weight": 32,
+            "slot_embedding.weight": 16,
+            "token_embedding.weight": 256
+          },
+          "parameter_payload_bytes": 41404,
+          "persistent_example_state_payload_bytes": 81920,
+          "persistent_example_state_scalars": 20480,
+          "proxy_forward_macs": 13587184,
+          "proxy_forward_macs_by_component": {
+            "ADDRESS_logit_blend": 10520,
+            "LOAD_h_blend": 42080,
+            "STORE_amount": 10520,
+            "STORE_value_blend": 336640,
+            "address_proposal": 168320,
+            "caller": 4670880,
+            "compute_G8_blend": 42080,
+            "compute_h_blend": 42080,
+            "controller": 2019840,
+            "expert_mixing": 168320,
+            "experts": 5386240,
+            "read_values": 336640,
+            "readout": 353024
+          },
+          "proxy_scope": "explicitforward linear/dot/blend product counts fromsource; biases/nonlinear/LN/softmax/indexing/backward/Adam/workspace excluded; notfullFLOPs",
+          "total_parameters": 10351,
+          "trace_logical_payload_bytes": 5784576,
+          "typed_actions": {
+            "action_order": [
+              "compute0",
+              "compute1",
+              "compute2",
+              "compute3",
+              "LOAD",
+              "STORE",
+              "ADDRESS"
+            ],
+            "address": "Mdirectlogits initial0; softmax OLDlogits; ADDRESS updatesnexttoken only",
+            "carry_fields": {
+              "address": 8,
+              "controller": 16,
+              "h": 32,
+              "logp": 8,
+              "values": 256
+            },
+            "compute": "conditionalsoftmax4 EXACToldexperts/G8; jointalpha7computemass scaleschi",
+            "controller": "originalGRUtoken-columns/inputtokenonly",
+            "legacy_initializer_key_dim": 16,
+            "legacy_key_dim_scope": "originalfactorydrawcompatibility ONLY, no K parameters/state",
+            "memory": "raw OLDh stored intoMbyH; zeroinitialvalues; no keymatrix/probability/E reconstruction",
+            "native": "hard7action/expert withsoftmemoryattention; onecandidatephysicallycomputedperrow evenmemoryaction, charged",
+            "output": "cachedheadlogp ofupdatedh; no transition exp(logp)/posteriorwrite",
+            "parameter_tensors": 20,
+            "protection": "no guaranteed binding/closure/retention; all actionroutes learned from terminalNLL",
+            "straight_through": "hardforward; one-step softwholecarry/cache Jacobian atsameincomingcarry; notgradientofentireallsofttrajectory"
+          }
+        }
+      },
+      "coverage": {
+        "coverage_key_absent": true,
+        "enabled": false
+      },
+      "coverage_normalization": false,
+      "equations": {
+        "A_raw_x_only_no_slot_offset": true,
+        "B_per_cell_normalization_before_attention": false,
+        "OLDaddress_read_and_nexttoken_address_update": true,
+        "exact_OLDh_value_write": true,
+        "full_context_router_unchanged": true,
+        "independent_soft_equations": true,
+        "parameter_or_buffer_added_by_B": false,
+        "source_NN_and_RNG_unchanged": true
+      },
+      "exact_historical_common_initialization_and_RNG": true,
+      "growth": {
+        "Transformer_position_prefix_exact": null,
+        "additional_position_model_parameters": 0,
+        "embedding_parameter_bytes_added": 64,
+        "embedding_parameter_name": "token_embedding.weight",
+        "exact_growth_FLOPs": null,
+        "growth_wall_seconds": 0.0016315720276907086,
+        "new_row_moments_zero": true,
+        "old_Adam_moments_and_steps_exact": true,
+        "old_NN_tensors_and_embedding_rows_exact": true,
+        "optimizer_tensor_bytes_added": 0,
+        "optimizer_tensor_bytes_after": 0,
+        "optimizer_tensor_bytes_before": 0,
+        "parameters_added": 16,
+        "public_max_length": 128,
+        "public_n_tokens": 16,
+        "random_row_initialization": "ONE independent N(0,1) row; no supplied semantics",
+        "registered_position_buffer_bytes_added": 0
+      },
+      "initial_NN_sha256": "e2b63adc6fcd6e53b8a52f0f7aeeaee6f885b543f488599b21c5bcd4aa3f1753",
+      "input_only_address": true,
+      "logical_carry_scalars": 320,
+      "model_buffers": [],
+      "numeric16": {
+        "NLL_abs": 0.0,
+        "all20_gradients_allclose": true,
+        "all20_gradients_present_finite": true,
+        "all_carry_fields_masked": true,
+        "all_inactive_full_carry_bitwise_unchanged": true,
+        "coverage_history_checked": false,
+        "eager_forward_backward_cost": {
+          "CPU_seconds": 0.046215034999999904,
+          "wall_seconds": 0.04574985697399825
+        },
+        "gradient_zero_accumulation_repeat_checked": true,
+        "gradients": {
+          "address_proposal.bias": {
+            "allclose": true,
+            "eager_norm": 3.758980938073364e-06,
+            "max_abs": 2.2737367544323206e-13
+          },
+          "address_proposal.weight": {
+            "allclose": true,
+            "eager_norm": 1.0111096344189718e-05,
+            "max_abs": 0.0
+          },
+          "caller.0.bias": {
+            "allclose": true,
+            "eager_norm": 0.011515569873154163,
+            "max_abs": 4.656612873077393e-10
+          },
+          "caller.0.weight": {
+            "allclose": true,
+            "eager_norm": 0.16078099608421326,
+            "max_abs": 0.0
+          },
+          "caller.2.bias": {
+            "allclose": true,
+            "eager_norm": 0.02821209654211998,
+            "max_abs": 9.313225746154785e-10
+          },
+          "caller.2.weight": {
+            "allclose": true,
+            "eager_norm": 0.09674590080976486,
+            "max_abs": 0.0
+          },
+          "controller.bias_hh": {
+            "allclose": true,
+            "eager_norm": 0.00858832336962223,
+            "max_abs": 2.3283064365386963e-10
+          },
+          "controller.bias_ih": {
+            "allclose": true,
+            "eager_norm": 0.018287664279341698,
+            "max_abs": 1.3969838619232178e-09
+          },
+          "controller.weight_hh": {
+            "allclose": true,
+            "eager_norm": 0.0069189839996397495,
+            "max_abs": 0.0
+          },
+          "controller.weight_ih": {
+            "allclose": true,
+            "eager_norm": 0.034609925001859665,
+            "max_abs": 0.0
+          },
+          "encoder.weight": {
+            "allclose": true,
+            "eager_norm": 8.972185134887695,
+            "max_abs": 0.0
+          },
+          "primitive_bias": {
+            "allclose": true,
+            "eager_norm": 0.12797893583774567,
+            "max_abs": 3.725290298461914e-09
+          },
+          "primitive_down": {
+            "allclose": true,
+            "eager_norm": 1.3056738376617432,
+            "max_abs": 0.0
+          },
+          "primitive_up": {
+            "allclose": true,
+            "eager_norm": 0.3785892128944397,
+            "max_abs": 0.0
+          },
+          "readout.bias": {
+            "allclose": true,
+            "eager_norm": 0.101433165371418,
+            "max_abs": 3.725290298461914e-09
+          },
+          "readout.weight": {
+            "allclose": true,
+            "eager_norm": 1.6710484027862549,
+            "max_abs": 0.0
+          },
+          "residual_norm.bias": {
+            "allclose": true,
+            "eager_norm": 0.5669745802879333,
+            "max_abs": 0.0
+          },
+          "residual_norm.weight": {
+            "allclose": true,
+            "eager_norm": 0.794751763343811,
+            "max_abs": 0.0
+          },
+          "slot_embedding.weight": {
+            "allclose": true,
+            "eager_norm": 0.03085325099527836,
+            "max_abs": 1.862645149230957e-09
+          },
+          "token_embedding.weight": {
+            "allclose": true,
+            "eager_norm": 0.011739003472030163,
+            "max_abs": 0.0
+          }
+        },
+        "masked_forward_backward_cost": {
+          "CPU_seconds": 0.04099889600000006,
+          "wall_seconds": 0.04082612693309784
+        },
+        "masked_gradient_storage_stable": true,
+        "masked_repeat_cost": {
+          "CPU_seconds": 0.037000284999999966,
+          "wall_seconds": 0.036541369976475835
+        },
+        "one_eager_plus_one_masked_inference_cost": {
+          "CPU_seconds": 0.02400110400000033,
+          "wall_seconds": 0.02427956194151193
+        },
+        "output_max_abs": 0.0,
+        "raw_bytes": 233107,
+        "raw_file": "A-B64-L16-all20.npz",
+        "raw_sha256": "f6c54bd9909e4aaad4fe90d91525c33eccba0e1c1c0bc0bdefa7c792c07b1bf7"
+      },
+      "numeric48": {
+        "NLL_abs": 0.0,
+        "all20_gradients_allclose": true,
+        "all20_gradients_present_finite": true,
+        "all_carry_fields_masked": true,
+        "all_inactive_full_carry_bitwise_unchanged": true,
+        "coverage_history_checked": false,
+        "eager_forward_backward_cost": {
+          "CPU_seconds": 0.11600009699999969,
+          "wall_seconds": 0.11609587795101106
+        },
+        "gradient_zero_accumulation_repeat_checked": false,
+        "gradients": {
+          "address_proposal.bias": {
+            "allclose": true,
+            "eager_norm": 2.635231794556603e-05,
+            "max_abs": 1.6370904631912708e-11
+          },
+          "address_proposal.weight": {
+            "allclose": true,
+            "eager_norm": 3.3157648431370035e-05,
+            "max_abs": 1.000444171950221e-11
+          },
+          "caller.0.bias": {
+            "allclose": true,
+            "eager_norm": 0.028810927644371986,
+            "max_abs": 1.862645149230957e-09
+          },
+          "caller.0.weight": {
+            "allclose": true,
+            "eager_norm": 0.2992212176322937,
+            "max_abs": 5.587935447692871e-09
+          },
+          "caller.2.bias": {
+            "allclose": true,
+            "eager_norm": 0.05144083499908447,
+            "max_abs": 5.3551048040390015e-09
+          },
+          "caller.2.weight": {
+            "allclose": true,
+            "eager_norm": 0.15265478193759918,
+            "max_abs": 5.587935447692871e-09
+          },
+          "controller.bias_hh": {
+            "allclose": true,
+            "eager_norm": 0.015585573390126228,
+            "max_abs": 1.862645149230957e-09
+          },
+          "controller.bias_ih": {
+            "allclose": true,
+            "eager_norm": 0.03175078704953194,
+            "max_abs": 1.862645149230957e-09
+          },
+          "controller.weight_hh": {
+            "allclose": true,
+            "eager_norm": 0.01243672613054514,
+            "max_abs": 4.0745362639427185e-10
+          },
+          "controller.weight_ih": {
+            "allclose": true,
+            "eager_norm": 0.04680461436510086,
+            "max_abs": 1.862645149230957e-09
+          },
+          "encoder.weight": {
+            "allclose": true,
+            "eager_norm": 6.987974643707275,
+            "max_abs": 1.1920928955078125e-07
+          },
+          "primitive_bias": {
+            "allclose": true,
+            "eager_norm": 0.20513829588890076,
+            "max_abs": 7.450580596923828e-09
+          },
+          "primitive_down": {
+            "allclose": true,
+            "eager_norm": 2.0250439643859863,
+            "max_abs": 2.9802322387695312e-08
+          },
+          "primitive_up": {
+            "allclose": true,
+            "eager_norm": 0.595413327217102,
+            "max_abs": 7.450580596923828e-09
+          },
+          "readout.bias": {
+            "allclose": true,
+            "eager_norm": 0.11603976041078568,
+            "max_abs": 0.0
+          },
+          "readout.weight": {
+            "allclose": true,
+            "eager_norm": 1.3817723989486694,
+            "max_abs": 1.4901161193847656e-08
+          },
+          "residual_norm.bias": {
+            "allclose": true,
+            "eager_norm": 0.9264362454414368,
+            "max_abs": 2.9802322387695312e-08
+          },
+          "residual_norm.weight": {
+            "allclose": true,
+            "eager_norm": 1.2846490144729614,
+            "max_abs": 5.960464477539063e-08
+          },
+          "slot_embedding.weight": {
+            "allclose": true,
+            "eager_norm": 0.052234262228012085,
+            "max_abs": 2.7939677238464355e-09
+          },
+          "token_embedding.weight": {
+            "allclose": true,
+            "eager_norm": 0.01721280626952648,
+            "max_abs": 3.4924596548080444e-10
+          }
+        },
+        "masked_forward_backward_cost": {
+          "CPU_seconds": 0.1099897959999998,
+          "wall_seconds": 0.1095636609243229
+        },
+        "masked_gradient_storage_stable": true,
+        "masked_repeat_cost": null,
+        "one_eager_plus_one_masked_inference_cost": {
+          "CPU_seconds": 0.06200216000000047,
+          "wall_seconds": 0.0619963250355795
+        },
+        "output_max_abs": 2.384185791015625e-07,
+        "raw_bytes": 239178,
+        "raw_file": "A-B64-L48-all20.npz",
+        "raw_sha256": "6b1366946ec44138242a6207731aaf6e1547e889f76b1f11569de8d4a6578bba"
+      },
+      "only_address_weight_raw_x_subset_pruned": true,
+      "parameter_tensor_count": 20,
+      "research_updates": 0,
+      "synthetic_optimizer_updates": 0,
+      "synthetic_update": null,
+      "unchanged_router_conditional_experts_G8_common_input_exact": true,
+      "whole_mode_cost": {
+        "CPU_seconds": 4.095755671000001,
+        "wall_seconds": 4.100510399905033
+      }
+    },
+    "AB": {
+      "actual_P15": 10335,
+      "actual_P16": 10351,
+      "all20_gradients_checked": true,
+      "checkpoint": {
+        "actual_NN_Adam_replay_fullcarry_CPU_RNG_reload": true,
+        "bytes": 224606,
+        "file": "AB-synthetic-checkpoint.pt",
+        "legacy_schema_wrong_policy_epsilon_extra_buffer_rejected": true,
+        "sha256": "a543dc6135af82c819c35d0b2f3cb9b31889cfdd2822628d7f653ddcef8a0363",
+        "soft_native_ST_reloaded_execution_exact": true,
+        "strict_mode_flags_and_expected_flags_rejected": true
+      },
+      "costs": {
+        "buffer_bytes": 0,
+        "cache_or_allocator_peak_bytes": null,
+        "carry_bytes_per_example": 1312,
+        "checkpoint_save_load_validation": {
+          "CPU_seconds": 0.035620645000001616,
+          "wall_seconds": 0.03558508399873972
+        },
+        "compilation": {
+          "measured_FLOPs": null,
+          "performed": false,
+          "seconds": null
+        },
+        "coverage_diagnostics": {
+          "CPU_seconds": 0.011002152999999737,
+          "wall_seconds": 0.010577587061561644
+        },
+        "equations": {
+          "CPU_seconds": 0.0050001050000005876,
+          "wall_seconds": 0.005329284002073109
+        },
+        "formation_search": {
+          "measured_FLOPs": null,
+          "performed": false
+        },
+        "full_forward_FLOPs": null,
+        "full_training_FLOPs": null,
+        "growth": {
+          "CPU_seconds": 0.004000424000000891,
+          "wall_seconds": 0.0043556829914450645
+        },
+        "initialization": {
+          "CPU_seconds": 0.0010034660000002305,
+          "wall_seconds": 0.0010753029491752386
+        },
+        "measurement_scope": "actual synthetic CPU operations only; component wall/CPU and tensor/file payloads; no CUDA/kernel peak or complete FLOPs measurements",
+        "optimizer_tensor_bytes": 82888,
+        "parameter_bytes": 41404,
+        "parameters": 10351,
+        "protection": {
+          "measured_FLOPs": null,
+          "performed": false,
+          "seconds": null
+        },
+        "replay_bytes": 55296,
+        "resource_report": {
+          "active_steps": 1315,
+          "configuration": {
+            "action_policy": "typed-memory-actions/input-address+per-cell-coverage/raw-value/group8/v1",
+            "caller_hidden": 32,
+            "carry_gate_groups": 8,
+            "controller_dim": 16,
+            "coverage_epsilon": 0.0001,
+            "coverage_normalization": true,
+            "initialization_std": 0.02,
+            "input_only_address": true,
+            "internal_states": 32,
+            "key_dim": 16,
+            "memory_dim": 32,
+            "memory_slots": 8,
+            "n_primitives": 4,
+            "n_slots": 1,
+            "n_states": 8,
+            "n_tokens": 16,
+            "primitive_rank": 8,
+            "routing": "dynamic",
+            "state_dim": 32,
+            "token_dim": 16
+          },
+          "coverage_normalization": {
+            "enabled": true,
+            "epsilon": 0.0001,
+            "extra_clamps": 10520,
+            "extra_divisions": 336640,
+            "limitations": "singleweakwrite broadcasts samecontent to all coveredsoftslots; no keyseparation/lostinformationrecovery; bounded1/eps gain and piecewise clampgradient; noisy/stalecontent canbe amplified",
+            "rule": "z+=alphaSTORE*a*(1-z); readslots=V/max(z,eps); V unchanged OLDh weightedwrite",
+            "state_scalars": 8
+          },
+          "execution": "soft",
+          "full_forward_FLOPs": null,
+          "full_training_FLOPs": null,
+          "input_only_address": {
+            "enabled": true,
+            "initializer_subset_columns": [
+              48,
+              64
+            ],
+            "input": "raw learnedtoken embedding only; no slotoffset"
+          },
+          "learnable_parameters": 10351,
+          "parameter_counts": {
+            "address_proposal.bias": 8,
+            "address_proposal.weight": 128,
+            "caller.0.bias": 32,
+            "caller.0.weight": 3072,
+            "caller.2.bias": 15,
+            "caller.2.weight": 480,
+            "controller.bias_hh": 48,
+            "controller.bias_ih": 48,
+            "controller.weight_hh": 768,
+            "controller.weight_ih": 768,
+            "encoder.weight": 256,
+            "primitive_bias": 32,
+            "primitive_down": 3072,
+            "primitive_up": 1024,
+            "readout.bias": 8,
+            "readout.weight": 256,
+            "residual_norm.bias": 32,
+            "residual_norm.weight": 32,
+            "slot_embedding.weight": 16,
+            "token_embedding.weight": 256
+          },
+          "parameter_payload_bytes": 41404,
+          "persistent_example_state_payload_bytes": 83968,
+          "persistent_example_state_scalars": 20992,
+          "proxy_forward_macs": 13597704,
+          "proxy_forward_macs_by_component": {
+            "ADDRESS_logit_blend": 10520,
+            "LOAD_h_blend": 42080,
+            "STORE_amount": 10520,
+            "STORE_value_blend": 336640,
+            "address_proposal": 168320,
+            "caller": 4670880,
+            "compute_G8_blend": 42080,
+            "compute_h_blend": 42080,
+            "controller": 2019840,
+            "coverage_update": 10520,
+            "expert_mixing": 168320,
+            "experts": 5386240,
+            "read_values": 336640,
+            "readout": 353024
+          },
+          "proxy_scope": "explicitforward linear/dot/blend product counts fromsource; biases/nonlinear/LN/softmax/indexing/backward/Adam/workspace excluded; notfullFLOPs",
+          "total_parameters": 10351,
+          "trace_logical_payload_bytes": 6081536,
+          "typed_actions": {
+            "action_order": [
+              "compute0",
+              "compute1",
+              "compute2",
+              "compute3",
+              "LOAD",
+              "STORE",
+              "ADDRESS"
+            ],
+            "address": "Mdirectlogits initial0; softmax OLDlogits; ADDRESS updatesnexttoken only",
+            "carry_fields": {
+              "address": 8,
+              "controller": 16,
+              "coverage": 8,
+              "h": 32,
+              "logp": 8,
+              "values": 256
+            },
+            "compute": "conditionalsoftmax4 EXACToldexperts/G8; jointalpha7computemass scaleschi",
+            "controller": "originalGRUtoken-columns/inputtokenonly",
+            "legacy_initializer_key_dim": 16,
+            "legacy_key_dim_scope": "originalfactorydrawcompatibility ONLY, no K parameters/state",
+            "memory": "raw OLDh stored intoMbyH; zeroinitialvalues; no keymatrix/probability/E reconstruction",
+            "native": "hard7action/expert withsoftmemoryattention; onecandidatephysicallycomputedperrow evenmemoryaction, charged",
+            "output": "cachedheadlogp ofupdatedh; no transition exp(logp)/posteriorwrite",
+            "parameter_tensors": 20,
+            "protection": "no guaranteed binding/closure/retention; all actionroutes learned from terminalNLL",
+            "straight_through": "hardforward; one-step softwholecarry/cache Jacobian atsameincomingcarry; notgradientofentireallsofttrajectory"
+          }
+        }
+      },
+      "coverage": {
+        "enabled": true,
+        "epsilon": 0.0001,
+        "expected_unused_gradient_names": [
+          "encoder.weight",
+          "token_embedding.weight"
+        ],
+        "full_transition_exact_unused_pattern_and_connected_gradients_finite": true,
+        "full_transition_gradient_scope": "all graph-connected parameters/carry/raw_x finite; exactly encoder.weight/token_embedding.weight unused by detached-carry direct-raw_x fixture; fullsequence all20 checked separately",
+        "named_gradient_diagnostics_file": "AB-tiny-coverage-transition-gradients.json",
+        "named_gradient_diagnostics_sha256": "1ba40df0e311b9f7c08c3534b01ec69a381c209481e3cb988a11e1c7a6851604",
+        "observed_unused_gradient_names": [
+          "encoder.weight",
+          "token_embedding.weight"
+        ],
+        "read_derivative_independent_equation_max_abs": 9.5367431640625e-07,
+        "repeated_write_recency_weighted_average": true,
+        "single_weak_write_above_floor_recovers_value": true,
+        "single_weak_write_exact_V_z": true,
+        "source_NN_and_RNG_unchanged": true,
+        "subepsilon_coverage_attenuation_checked": true,
+        "weighting": "w_i*product_{j>i}(1-w_j), normalized by 1-product_i(1-w_i)",
+        "zero_V_zero_z_finite_zero": true,
+        "zero_tiny_threshold_and_positive_z_derivatives_finite": true
+      },
+      "coverage_normalization": true,
+      "equations": {
+        "A_raw_x_only_no_slot_offset": true,
+        "B_per_cell_normalization_before_attention": true,
+        "OLDaddress_read_and_nexttoken_address_update": true,
+        "exact_OLDh_value_write": true,
+        "full_context_router_unchanged": true,
+        "independent_soft_equations": true,
+        "parameter_or_buffer_added_by_B": false,
+        "source_NN_and_RNG_unchanged": true
+      },
+      "exact_historical_common_initialization_and_RNG": true,
+      "growth": {
+        "Transformer_position_prefix_exact": null,
+        "additional_position_model_parameters": 0,
+        "embedding_parameter_bytes_added": 64,
+        "embedding_parameter_name": "token_embedding.weight",
+        "exact_growth_FLOPs": null,
+        "growth_wall_seconds": 0.004284205962903798,
+        "new_row_moments_zero": true,
+        "old_Adam_moments_and_steps_exact": true,
+        "old_NN_tensors_and_embedding_rows_exact": true,
+        "optimizer_tensor_bytes_added": 128,
+        "optimizer_tensor_bytes_after": 82888,
+        "optimizer_tensor_bytes_before": 82760,
+        "parameters_added": 16,
+        "public_max_length": 128,
+        "public_n_tokens": 16,
+        "random_row_initialization": "ONE independent N(0,1) row; no supplied semantics",
+        "registered_position_buffer_bytes_added": 0
+      },
+      "initial_NN_sha256": "e2b63adc6fcd6e53b8a52f0f7aeeaee6f885b543f488599b21c5bcd4aa3f1753",
+      "input_only_address": true,
+      "logical_carry_scalars": 328,
+      "model_buffers": [],
+      "numeric16": {
+        "NLL_abs": 0.0,
+        "all20_gradients_allclose": true,
+        "all20_gradients_present_finite": true,
+        "all_carry_fields_masked": true,
+        "all_inactive_full_carry_bitwise_unchanged": true,
+        "coverage_history_checked": true,
+        "eager_forward_backward_cost": {
+          "CPU_seconds": 0.03599843099999944,
+          "wall_seconds": 0.035744601977057755
+        },
+        "gradient_zero_accumulation_repeat_checked": true,
+        "gradients": {
+          "address_proposal.bias": {
+            "allclose": true,
+            "eager_norm": 4.018676008854527e-06,
+            "max_abs": 1.1368683772161603e-13
+          },
+          "address_proposal.weight": {
+            "allclose": true,
+            "eager_norm": 7.786701644363347e-06,
+            "max_abs": 0.0
+          },
+          "caller.0.bias": {
+            "allclose": true,
+            "eager_norm": 0.014501096680760384,
+            "max_abs": 9.313225746154785e-10
+          },
+          "caller.0.weight": {
+            "allclose": true,
+            "eager_norm": 0.30654603242874146,
+            "max_abs": 0.0
+          },
+          "caller.2.bias": {
+            "allclose": true,
+            "eager_norm": 0.021235527470707893,
+            "max_abs": 1.862645149230957e-09
+          },
+          "caller.2.weight": {
+            "allclose": true,
+            "eager_norm": 0.1563541144132614,
+            "max_abs": 0.0
+          },
+          "controller.bias_hh": {
+            "allclose": true,
+            "eager_norm": 0.011945078149437904,
+            "max_abs": 4.656612873077393e-10
+          },
+          "controller.bias_ih": {
+            "allclose": true,
+            "eager_norm": 0.024763604626059532,
+            "max_abs": 9.313225746154785e-10
+          },
+          "controller.weight_hh": {
+            "allclose": true,
+            "eager_norm": 0.008803526870906353,
+            "max_abs": 0.0
+          },
+          "controller.weight_ih": {
+            "allclose": true,
+            "eager_norm": 0.043128617107868195,
+            "max_abs": 0.0
+          },
+          "encoder.weight": {
+            "allclose": true,
+            "eager_norm": 9.711443901062012,
+            "max_abs": 0.0
+          },
+          "primitive_bias": {
+            "allclose": true,
+            "eager_norm": 0.14554837346076965,
+            "max_abs": 7.450580596923828e-09
+          },
+          "primitive_down": {
+            "allclose": true,
+            "eager_norm": 1.6808208227157593,
+            "max_abs": 0.0
+          },
+          "primitive_up": {
+            "allclose": true,
+            "eager_norm": 0.4923698902130127,
+            "max_abs": 0.0
+          },
+          "readout.bias": {
+            "allclose": true,
+            "eager_norm": 0.12061017006635666,
+            "max_abs": 3.725290298461914e-09
+          },
+          "readout.weight": {
+            "allclose": true,
+            "eager_norm": 1.7948517799377441,
+            "max_abs": 0.0
+          },
+          "residual_norm.bias": {
+            "allclose": true,
+            "eager_norm": 0.6211490631103516,
+            "max_abs": 0.0
+          },
+          "residual_norm.weight": {
+            "allclose": true,
+            "eager_norm": 0.734126627445221,
+            "max_abs": 0.0
+          },
+          "slot_embedding.weight": {
+            "allclose": true,
+            "eager_norm": 0.04218677431344986,
+            "max_abs": 9.313225746154785e-10
+          },
+          "token_embedding.weight": {
+            "allclose": true,
+            "eager_norm": 0.014430399984121323,
+            "max_abs": 0.0
+          }
+        },
+        "masked_forward_backward_cost": {
+          "CPU_seconds": 0.037000445000000326,
+          "wall_seconds": 0.036957250093109906
+        },
+        "masked_gradient_storage_stable": true,
+        "masked_repeat_cost": {
+          "CPU_seconds": 0.04099373799999917,
+          "wall_seconds": 0.04081411997321993
+        },
+        "one_eager_plus_one_masked_inference_cost": {
+          "CPU_seconds": 0.022999961000000013,
+          "wall_seconds": 0.02349193801637739
+        },
+        "output_max_abs": 0.0,
+        "raw_bytes": 236427,
+        "raw_file": "AB-B64-L16-all20.npz",
+        "raw_sha256": "ec1c8851253f06fcfd78f128c469cccdf27080613eb869aab843c2a84df40f6e"
+      },
+      "numeric48": {
+        "NLL_abs": 0.0,
+        "all20_gradients_allclose": true,
+        "all20_gradients_present_finite": true,
+        "all_carry_fields_masked": true,
+        "all_inactive_full_carry_bitwise_unchanged": true,
+        "coverage_history_checked": true,
+        "eager_forward_backward_cost": {
+          "CPU_seconds": 0.1049982939999996,
+          "wall_seconds": 0.10437432501930743
+        },
+        "gradient_zero_accumulation_repeat_checked": false,
+        "gradients": {
+          "address_proposal.bias": {
+            "allclose": true,
+            "eager_norm": 3.8780861359555274e-05,
+            "max_abs": 6.195932655828074e-11
+          },
+          "address_proposal.weight": {
+            "allclose": true,
+            "eager_norm": 4.5991153456270695e-05,
+            "max_abs": 4.945377440890297e-11
+          },
+          "caller.0.bias": {
+            "allclose": true,
+            "eager_norm": 0.061809130012989044,
+            "max_abs": 1.862645149230957e-09
+          },
+          "caller.0.weight": {
+            "allclose": true,
+            "eager_norm": 0.49686920642852783,
+            "max_abs": 7.450580596923828e-09
+          },
+          "caller.2.bias": {
+            "allclose": true,
+            "eager_norm": 0.12438616156578064,
+            "max_abs": 7.450580596923828e-09
+          },
+          "caller.2.weight": {
+            "allclose": true,
+            "eager_norm": 0.2903648614883423,
+            "max_abs": 7.450580596923828e-09
+          },
+          "controller.bias_hh": {
+            "allclose": true,
+            "eager_norm": 0.014590115286409855,
+            "max_abs": 4.656612873077393e-10
+          },
+          "controller.bias_ih": {
+            "allclose": true,
+            "eager_norm": 0.029545648023486137,
+            "max_abs": 9.313225746154785e-10
+          },
+          "controller.weight_hh": {
+            "allclose": true,
+            "eager_norm": 0.012589302845299244,
+            "max_abs": 2.3283064365386963e-10
+          },
+          "controller.weight_ih": {
+            "allclose": true,
+            "eager_norm": 0.04497462883591652,
+            "max_abs": 1.3969838619232178e-09
+          },
+          "encoder.weight": {
+            "allclose": true,
+            "eager_norm": 6.446009635925293,
+            "max_abs": 5.960464477539063e-08
+          },
+          "primitive_bias": {
+            "allclose": true,
+            "eager_norm": 0.20353317260742188,
+            "max_abs": 3.725290298461914e-09
+          },
+          "primitive_down": {
+            "allclose": true,
+            "eager_norm": 1.9794093370437622,
+            "max_abs": 2.9802322387695312e-08
+          },
+          "primitive_up": {
+            "allclose": true,
+            "eager_norm": 0.5489854216575623,
+            "max_abs": 7.450580596923828e-09
+          },
+          "readout.bias": {
+            "allclose": true,
+            "eager_norm": 0.0659218579530716,
+            "max_abs": 1.862645149230957e-09
+          },
+          "readout.weight": {
+            "allclose": true,
+            "eager_norm": 1.2655097246170044,
+            "max_abs": 1.4901161193847656e-08
+          },
+          "residual_norm.bias": {
+            "allclose": true,
+            "eager_norm": 0.9650072455406189,
+            "max_abs": 4.470348358154297e-08
+          },
+          "residual_norm.weight": {
+            "allclose": true,
+            "eager_norm": 0.9471822381019592,
+            "max_abs": 1.4901161193847656e-08
+          },
+          "slot_embedding.weight": {
+            "allclose": true,
+            "eager_norm": 0.04661201313138008,
+            "max_abs": 1.862645149230957e-09
+          },
+          "token_embedding.weight": {
+            "allclose": true,
+            "eager_norm": 0.01555317360907793,
+            "max_abs": 4.656612873077393e-10
+          }
+        },
+        "masked_forward_backward_cost": {
+          "CPU_seconds": 0.1340016859999995,
+          "wall_seconds": 0.1342754070647061
+        },
+        "masked_gradient_storage_stable": true,
+        "masked_repeat_cost": null,
+        "one_eager_plus_one_masked_inference_cost": {
+          "CPU_seconds": 0.06999888300000023,
+          "wall_seconds": 0.06957214791327715
+        },
+        "output_max_abs": 2.384185791015625e-07,
+        "raw_bytes": 243028,
+        "raw_file": "AB-B64-L48-all20.npz",
+        "raw_sha256": "fa173209387d5eee3cbedb87115048043662ac4721c208537aa67bb1a0091c23"
+      },
+      "only_address_weight_raw_x_subset_pruned": true,
+      "parameter_tensor_count": 20,
+      "research_updates": 0,
+      "synthetic_optimizer_updates": 1,
+      "synthetic_update": {
+        "NLL": 2.346835136413574,
+        "cost": {
+          "CPU_seconds": 0.03800139799999869,
+          "wall_seconds": 0.0374797290423885
+        },
+        "preclip_gradient_norm": 10.083922386169434
+      },
+      "unchanged_router_conditional_experts_G8_common_input_exact": true,
+      "whole_mode_cost": {
+        "CPU_seconds": 0.7006275590000008,
+        "wall_seconds": 0.7012028959579766
+      }
+    },
+    "B": {
+      "actual_P15": 10975,
+      "actual_P16": 10991,
+      "all20_gradients_checked": true,
+      "checkpoint": {
+        "actual_NN_Adam_replay_fullcarry_CPU_RNG_reload": true,
+        "bytes": 128594,
+        "file": "B-synthetic-checkpoint.pt",
+        "legacy_schema_wrong_policy_epsilon_extra_buffer_rejected": true,
+        "sha256": "2c8737d604cbe3ae962c771d0f710526c6b1eb9cee19348f757255c89b9cf868",
+        "soft_native_ST_reloaded_execution_exact": true,
+        "strict_mode_flags_and_expected_flags_rejected": true
+      },
+      "costs": {
+        "buffer_bytes": 0,
+        "cache_or_allocator_peak_bytes": null,
+        "carry_bytes_per_example": 1312,
+        "checkpoint_save_load_validation": {
+          "CPU_seconds": 0.02562160599999963,
+          "wall_seconds": 0.02604245999827981
+        },
+        "compilation": {
+          "measured_FLOPs": null,
+          "performed": false,
+          "seconds": null
+        },
+        "coverage_diagnostics": {
+          "CPU_seconds": 0.011999009000000171,
+          "wall_seconds": 0.012025336036458611
+        },
+        "equations": {
+          "CPU_seconds": 0.0030031680000002225,
+          "wall_seconds": 0.0032586880261078477
+        },
+        "formation_search": {
+          "measured_FLOPs": null,
+          "performed": false
+        },
+        "full_forward_FLOPs": null,
+        "full_training_FLOPs": null,
+        "growth": {
+          "CPU_seconds": 0.0010011329999999319,
+          "wall_seconds": 0.001495908945798874
+        },
+        "initialization": {
+          "CPU_seconds": 0.0010000520000001956,
+          "wall_seconds": 0.0010560749797150493
+        },
+        "measurement_scope": "actual synthetic CPU operations only; component wall/CPU and tensor/file payloads; no CUDA/kernel peak or complete FLOPs measurements",
+        "optimizer_tensor_bytes": 0,
+        "parameter_bytes": 43964,
+        "parameters": 10991,
+        "protection": {
+          "measured_FLOPs": null,
+          "performed": false,
+          "seconds": null
+        },
+        "replay_bytes": 55296,
+        "resource_report": {
+          "active_steps": 1315,
+          "configuration": {
+            "action_policy": "typed-memory-actions/input-address+per-cell-coverage/raw-value/group8/v1",
+            "caller_hidden": 32,
+            "carry_gate_groups": 8,
+            "controller_dim": 16,
+            "coverage_epsilon": 0.0001,
+            "coverage_normalization": true,
+            "initialization_std": 0.02,
+            "input_only_address": false,
+            "internal_states": 32,
+            "key_dim": 16,
+            "memory_dim": 32,
+            "memory_slots": 8,
+            "n_primitives": 4,
+            "n_slots": 1,
+            "n_states": 8,
+            "n_tokens": 16,
+            "primitive_rank": 8,
+            "routing": "dynamic",
+            "state_dim": 32,
+            "token_dim": 16
+          },
+          "coverage_normalization": {
+            "enabled": true,
+            "epsilon": 0.0001,
+            "extra_clamps": 10520,
+            "extra_divisions": 336640,
+            "limitations": "singleweakwrite broadcasts samecontent to all coveredsoftslots; no keyseparation/lostinformationrecovery; bounded1/eps gain and piecewise clampgradient; noisy/stalecontent canbe amplified",
+            "rule": "z+=alphaSTORE*a*(1-z); readslots=V/max(z,eps); V unchanged OLDh weightedwrite",
+            "state_scalars": 8
+          },
+          "execution": "soft",
+          "full_forward_FLOPs": null,
+          "full_training_FLOPs": null,
+          "input_only_address": {
+            "enabled": false,
+            "initializer_subset_columns": [
+              48,
+              64
+            ],
+            "input": "unchanged fullh/c/x/read context"
+          },
+          "learnable_parameters": 10991,
+          "parameter_counts": {
+            "address_proposal.bias": 8,
+            "address_proposal.weight": 768,
+            "caller.0.bias": 32,
+            "caller.0.weight": 3072,
+            "caller.2.bias": 15,
+            "caller.2.weight": 480,
+            "controller.bias_hh": 48,
+            "controller.bias_ih": 48,
+            "controller.weight_hh": 768,
+            "controller.weight_ih": 768,
+            "encoder.weight": 256,
+            "primitive_bias": 32,
+            "primitive_down": 3072,
+            "primitive_up": 1024,
+            "readout.bias": 8,
+            "readout.weight": 256,
+            "residual_norm.bias": 32,
+            "residual_norm.weight": 32,
+            "slot_embedding.weight": 16,
+            "token_embedding.weight": 256
+          },
+          "parameter_payload_bytes": 43964,
+          "persistent_example_state_payload_bytes": 83968,
+          "persistent_example_state_scalars": 20992,
+          "proxy_forward_macs": 14439304,
+          "proxy_forward_macs_by_component": {
+            "ADDRESS_logit_blend": 10520,
+            "LOAD_h_blend": 42080,
+            "STORE_amount": 10520,
+            "STORE_value_blend": 336640,
+            "address_proposal": 1009920,
+            "caller": 4670880,
+            "compute_G8_blend": 42080,
+            "compute_h_blend": 42080,
+            "controller": 2019840,
+            "coverage_update": 10520,
+            "expert_mixing": 168320,
+            "experts": 5386240,
+            "read_values": 336640,
+            "readout": 353024
+          },
+          "proxy_scope": "explicitforward linear/dot/blend product counts fromsource; biases/nonlinear/LN/softmax/indexing/backward/Adam/workspace excluded; notfullFLOPs",
+          "total_parameters": 10991,
+          "trace_logical_payload_bytes": 6081536,
+          "typed_actions": {
+            "action_order": [
+              "compute0",
+              "compute1",
+              "compute2",
+              "compute3",
+              "LOAD",
+              "STORE",
+              "ADDRESS"
+            ],
+            "address": "Mdirectlogits initial0; softmax OLDlogits; ADDRESS updatesnexttoken only",
+            "carry_fields": {
+              "address": 8,
+              "controller": 16,
+              "coverage": 8,
+              "h": 32,
+              "logp": 8,
+              "values": 256
+            },
+            "compute": "conditionalsoftmax4 EXACToldexperts/G8; jointalpha7computemass scaleschi",
+            "controller": "originalGRUtoken-columns/inputtokenonly",
+            "legacy_initializer_key_dim": 16,
+            "legacy_key_dim_scope": "originalfactorydrawcompatibility ONLY, no K parameters/state",
+            "memory": "raw OLDh stored intoMbyH; zeroinitialvalues; no keymatrix/probability/E reconstruction",
+            "native": "hard7action/expert withsoftmemoryattention; onecandidatephysicallycomputedperrow evenmemoryaction, charged",
+            "output": "cachedheadlogp ofupdatedh; no transition exp(logp)/posteriorwrite",
+            "parameter_tensors": 20,
+            "protection": "no guaranteed binding/closure/retention; all actionroutes learned from terminalNLL",
+            "straight_through": "hardforward; one-step softwholecarry/cache Jacobian atsameincomingcarry; notgradientofentireallsofttrajectory"
+          }
+        }
+      },
+      "coverage": {
+        "enabled": true,
+        "epsilon": 0.0001,
+        "expected_unused_gradient_names": [
+          "encoder.weight",
+          "token_embedding.weight"
+        ],
+        "full_transition_exact_unused_pattern_and_connected_gradients_finite": true,
+        "full_transition_gradient_scope": "all graph-connected parameters/carry/raw_x finite; exactly encoder.weight/token_embedding.weight unused by detached-carry direct-raw_x fixture; fullsequence all20 checked separately",
+        "named_gradient_diagnostics_file": "B-tiny-coverage-transition-gradients.json",
+        "named_gradient_diagnostics_sha256": "a4269a141d9b0ef447b9f3c9e28947c58ac35c64aad36b0c17ab66469f4b3fc1",
+        "observed_unused_gradient_names": [
+          "encoder.weight",
+          "token_embedding.weight"
+        ],
+        "read_derivative_independent_equation_max_abs": 9.5367431640625e-07,
+        "repeated_write_recency_weighted_average": true,
+        "single_weak_write_above_floor_recovers_value": true,
+        "single_weak_write_exact_V_z": true,
+        "source_NN_and_RNG_unchanged": true,
+        "subepsilon_coverage_attenuation_checked": true,
+        "weighting": "w_i*product_{j>i}(1-w_j), normalized by 1-product_i(1-w_i)",
+        "zero_V_zero_z_finite_zero": true,
+        "zero_tiny_threshold_and_positive_z_derivatives_finite": true
+      },
+      "coverage_normalization": true,
+      "equations": {
+        "A_raw_x_only_no_slot_offset": false,
+        "B_per_cell_normalization_before_attention": true,
+        "OLDaddress_read_and_nexttoken_address_update": true,
+        "exact_OLDh_value_write": true,
+        "full_context_router_unchanged": true,
+        "independent_soft_equations": true,
+        "parameter_or_buffer_added_by_B": false,
+        "source_NN_and_RNG_unchanged": true
+      },
+      "exact_historical_common_initialization_and_RNG": true,
+      "growth": {
+        "Transformer_position_prefix_exact": null,
+        "additional_position_model_parameters": 0,
+        "embedding_parameter_bytes_added": 64,
+        "embedding_parameter_name": "token_embedding.weight",
+        "exact_growth_FLOPs": null,
+        "growth_wall_seconds": 0.0014607170596718788,
+        "new_row_moments_zero": true,
+        "old_Adam_moments_and_steps_exact": true,
+        "old_NN_tensors_and_embedding_rows_exact": true,
+        "optimizer_tensor_bytes_added": 0,
+        "optimizer_tensor_bytes_after": 0,
+        "optimizer_tensor_bytes_before": 0,
+        "parameters_added": 16,
+        "public_max_length": 128,
+        "public_n_tokens": 16,
+        "random_row_initialization": "ONE independent N(0,1) row; no supplied semantics",
+        "registered_position_buffer_bytes_added": 0
+      },
+      "initial_NN_sha256": "5e7f359c1cc7c3e54f7020916e3de22200b0dbdfa40d9a864ad9a688e6d705b2",
+      "input_only_address": false,
+      "logical_carry_scalars": 328,
+      "model_buffers": [],
+      "numeric16": {
+        "NLL_abs": 0.0,
+        "all20_gradients_allclose": true,
+        "all20_gradients_present_finite": true,
+        "all_carry_fields_masked": true,
+        "all_inactive_full_carry_bitwise_unchanged": true,
+        "coverage_history_checked": true,
+        "eager_forward_backward_cost": {
+          "CPU_seconds": 0.0389987439999997,
+          "wall_seconds": 0.03852412605192512
+        },
+        "gradient_zero_accumulation_repeat_checked": true,
+        "gradients": {
+          "address_proposal.bias": {
+            "allclose": true,
+            "eager_norm": 1.3414037312031724e-05,
+            "max_abs": 1.3642420526593924e-12
+          },
+          "address_proposal.weight": {
+            "allclose": true,
+            "eager_norm": 0.0001445102388970554,
+            "max_abs": 0.0
+          },
+          "caller.0.bias": {
+            "allclose": true,
+            "eager_norm": 0.0144970016553998,
+            "max_abs": 6.984919309616089e-10
+          },
+          "caller.0.weight": {
+            "allclose": true,
+            "eager_norm": 0.3065272569656372,
+            "max_abs": 0.0
+          },
+          "caller.2.bias": {
+            "allclose": true,
+            "eager_norm": 0.021228743717074394,
+            "max_abs": 2.7939677238464355e-09
+          },
+          "caller.2.weight": {
+            "allclose": true,
+            "eager_norm": 0.156349316239357,
+            "max_abs": 0.0
+          },
+          "controller.bias_hh": {
+            "allclose": true,
+            "eager_norm": 0.011945079080760479,
+            "max_abs": 9.313225746154785e-10
+          },
+          "controller.bias_ih": {
+            "allclose": true,
+            "eager_norm": 0.024763550609350204,
+            "max_abs": 9.313225746154785e-10
+          },
+          "controller.weight_hh": {
+            "allclose": true,
+            "eager_norm": 0.00880354829132557,
+            "max_abs": 0.0
+          },
+          "controller.weight_ih": {
+            "allclose": true,
+            "eager_norm": 0.043128710240125656,
+            "max_abs": 0.0
+          },
+          "encoder.weight": {
+            "allclose": true,
+            "eager_norm": 9.711350440979004,
+            "max_abs": 0.0
+          },
+          "primitive_bias": {
+            "allclose": true,
+            "eager_norm": 0.14555807411670685,
+            "max_abs": 3.725290298461914e-09
+          },
+          "primitive_down": {
+            "allclose": true,
+            "eager_norm": 1.680872917175293,
+            "max_abs": 0.0
+          },
+          "primitive_up": {
+            "allclose": true,
+            "eager_norm": 0.49238505959510803,
+            "max_abs": 0.0
+          },
+          "readout.bias": {
+            "allclose": true,
+            "eager_norm": 0.12060978263616562,
+            "max_abs": 3.725290298461914e-09
+          },
+          "readout.weight": {
+            "allclose": true,
+            "eager_norm": 1.794834017753601,
+            "max_abs": 0.0
+          },
+          "residual_norm.bias": {
+            "allclose": true,
+            "eager_norm": 0.621178388595581,
+            "max_abs": 0.0
+          },
+          "residual_norm.weight": {
+            "allclose": true,
+            "eager_norm": 0.7341712713241577,
+            "max_abs": 0.0
+          },
+          "slot_embedding.weight": {
+            "allclose": true,
+            "eager_norm": 0.04218950495123863,
+            "max_abs": 1.862645149230957e-09
+          },
+          "token_embedding.weight": {
+            "allclose": true,
+            "eager_norm": 0.014431247487664223,
+            "max_abs": 0.0
+          }
+        },
+        "masked_forward_backward_cost": {
+          "CPU_seconds": 0.05100321200000035,
+          "wall_seconds": 0.050796560011804104
+        },
+        "masked_gradient_storage_stable": true,
+        "masked_repeat_cost": {
+          "CPU_seconds": 0.03599992300000032,
+          "wall_seconds": 0.03628469700925052
+        },
+        "one_eager_plus_one_masked_inference_cost": {
+          "CPU_seconds": 0.02299639599999992,
+          "wall_seconds": 0.02332133403979242
+        },
+        "output_max_abs": 0.0,
+        "raw_bytes": 241153,
+        "raw_file": "B-B64-L16-all20.npz",
+        "raw_sha256": "7cd68aab59d4ab7f5964c42a7639acdcaf29dd3d5665e14cb71fb34dd8455ae3"
+      },
+      "numeric48": {
+        "NLL_abs": 0.0,
+        "all20_gradients_allclose": true,
+        "all20_gradients_present_finite": true,
+        "all_carry_fields_masked": true,
+        "all_inactive_full_carry_bitwise_unchanged": true,
+        "coverage_history_checked": true,
+        "eager_forward_backward_cost": {
+          "CPU_seconds": 0.10900026100000026,
+          "wall_seconds": 0.10861403495073318
+        },
+        "gradient_zero_accumulation_repeat_checked": false,
+        "gradients": {
+          "address_proposal.bias": {
+            "allclose": true,
+            "eager_norm": 0.00024113422841764987,
+            "max_abs": 8.731149137020111e-11
+          },
+          "address_proposal.weight": {
+            "allclose": true,
+            "eager_norm": 0.002340387087315321,
+            "max_abs": 2.1464074961841106e-10
+          },
+          "caller.0.bias": {
+            "allclose": true,
+            "eager_norm": 0.012540354393422604,
+            "max_abs": 6.984919309616089e-10
+          },
+          "caller.0.weight": {
+            "allclose": true,
+            "eager_norm": 0.37345606088638306,
+            "max_abs": 3.725290298461914e-09
+          },
+          "caller.2.bias": {
+            "allclose": true,
+            "eager_norm": 0.027080833911895752,
+            "max_abs": 1.862645149230957e-09
+          },
+          "caller.2.weight": {
+            "allclose": true,
+            "eager_norm": 0.20860645174980164,
+            "max_abs": 3.725290298461914e-09
+          },
+          "controller.bias_hh": {
+            "allclose": true,
+            "eager_norm": 0.020884456112980843,
+            "max_abs": 9.313225746154785e-10
+          },
+          "controller.bias_ih": {
+            "allclose": true,
+            "eager_norm": 0.04069218039512634,
+            "max_abs": 1.862645149230957e-09
+          },
+          "controller.weight_hh": {
+            "allclose": true,
+            "eager_norm": 0.016642939299345016,
+            "max_abs": 3.4924596548080444e-10
+          },
+          "controller.weight_ih": {
+            "allclose": true,
+            "eager_norm": 0.060090046375989914,
+            "max_abs": 1.862645149230957e-09
+          },
+          "encoder.weight": {
+            "allclose": true,
+            "eager_norm": 8.311936378479004,
+            "max_abs": 1.1920928955078125e-07
+          },
+          "primitive_bias": {
+            "allclose": true,
+            "eager_norm": 0.25487279891967773,
+            "max_abs": 7.450580596923828e-09
+          },
+          "primitive_down": {
+            "allclose": true,
+            "eager_norm": 2.62864089012146,
+            "max_abs": 1.4901161193847656e-08
+          },
+          "primitive_up": {
+            "allclose": true,
+            "eager_norm": 0.7440934777259827,
+            "max_abs": 7.450580596923828e-09
+          },
+          "readout.bias": {
+            "allclose": true,
+            "eager_norm": 0.1409655213356018,
+            "max_abs": 0.0
+          },
+          "readout.weight": {
+            "allclose": true,
+            "eager_norm": 1.6232250928878784,
+            "max_abs": 2.9802322387695312e-08
+          },
+          "residual_norm.bias": {
+            "allclose": true,
+            "eager_norm": 1.0791904926300049,
+            "max_abs": 2.9802322387695312e-08
+          },
+          "residual_norm.weight": {
+            "allclose": true,
+            "eager_norm": 1.262578010559082,
+            "max_abs": 5.960464477539063e-08
+          },
+          "slot_embedding.weight": {
+            "allclose": true,
+            "eager_norm": 0.07160189747810364,
+            "max_abs": 3.725290298461914e-09
+          },
+          "token_embedding.weight": {
+            "allclose": true,
+            "eager_norm": 0.02147010900080204,
+            "max_abs": 4.656612873077393e-10
+          }
+        },
+        "masked_forward_backward_cost": {
+          "CPU_seconds": 0.11798590800000053,
+          "wall_seconds": 0.11788682802580297
+        },
+        "masked_gradient_storage_stable": true,
+        "masked_repeat_cost": null,
+        "one_eager_plus_one_masked_inference_cost": {
+          "CPU_seconds": 0.06899979399999978,
+          "wall_seconds": 0.06901008996646851
+        },
+        "output_max_abs": 2.384185791015625e-07,
+        "raw_bytes": 248009,
+        "raw_file": "B-B64-L48-all20.npz",
+        "raw_sha256": "8cf454b06557d54ad3192a60cb5e15aa97b8af2b73621654bc806aa2016e0d39"
+      },
+      "only_address_weight_raw_x_subset_pruned": false,
+      "parameter_tensor_count": 20,
+      "research_updates": 0,
+      "synthetic_optimizer_updates": 0,
+      "synthetic_update": null,
+      "unchanged_router_conditional_experts_G8_common_input_exact": true,
+      "whole_mode_cost": {
+        "CPU_seconds": 0.6445715319999996,
+        "wall_seconds": 0.6450664959847927
+      }
+    }
+  },
+  "peak_RSS_bytes": 690921472,
+  "provider_effective_compute": null,
+  "research_updates": 0,
+  "scope": "fixed A/B/AB source/equation/gradient/initialization/growth/reload CPU admission; no task quality, novelty, retention, broad advantage or CUDA-Graph claim",
+  "source_rules": {
+    "masked_helper_without_host_or_detach_operations": true,
+    "unchanged_routing_and_value_write_AST_assignments": [
+      "c",
+      "x",
+      "attention",
+      "features",
+      "all_logits",
+      "action_logits",
+      "probabilities",
+      "qcomp",
+      "chosen",
+      "chosen_compute",
+      "hard_weights",
+      "gates",
+      "compute_total",
+      "h",
+      "amount",
+      "v",
+      "address"
+    ]
+  },
+  "source_sha256": {
+    "context_replay128.py": "cbe370360f0bf52efc82d614db54551f000c9f7e44230dc358dfdb76bcbad140",
+    "continuous_primitive_block.py": "93bdfea778c2f079ec04a6696ab8df77dc8bcc52b7f3fabdc57c05cbcad5250f",
+    "memory_live_stage_train.py": "dd5fc0b869d216f29c6ccb7202a1d965086c3fedb060d3c4c3bc4e5620042ad6",
+    "owned_fcba_core.py": "fcba2e82defe2e3fdb9b02efe1eee37456f33defa172c7eb632ea07774b88158",
+    "owned_parent_driver.py": "cc1b8b2a2102050b071376bd26329bbb3ead8d5a540cff4e79a7e73cfaf5cccc",
+    "owned_typed_memory_core.py": "efabc8cbd2754a4a1d60f52b907cb5842f11fcf716c52646f8f935db5170d3f2",
+    "typed_normalized_memory_masked_graph_fb.py": "c322fb82f1095ae63463c9c584cf9cba05345514bdf71cb0a9a25b32b0f29294"
+  },
+  "status": "CPU_TYPED_NORMALIZED_MEMORY_GRAPH_ADMISSION_PASS",
+  "strict_mode_flags_and_checkpoint_rejection_checked": true,
+  "synthetic_optimizer_updates": 1,
+  "task_data_or_teacher_labels_used": false,
+  "wall_seconds": 5.45640728296712
+}

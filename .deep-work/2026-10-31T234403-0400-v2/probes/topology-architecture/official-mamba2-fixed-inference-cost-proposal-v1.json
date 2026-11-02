@@ -1,0 +1,144 @@
+{
+  "NN_bytes": 164464,
+  "P": 41116,
+  "architecture": {
+    "MAC_FLOP_model": "unmeasured; not zero and not a full-resource proxy",
+    "arm": "mamba2",
+    "causal": true,
+    "embedding": "learned100x64",
+    "final_LayerNorm": true,
+    "initial_state": "official zero state per independent window",
+    "layers": 1,
+    "official_Mamba2_configuration": {
+      "chunk_size": 32,
+      "d_model": 64,
+      "d_state": 16,
+      "expand": 2,
+      "headdim": 16,
+      "use_mem_eff_path": false
+    },
+    "official_source_sha256": {
+      "mamba_ssm/__init__.py": "6d3fee6ff8e8ec4dcab0f7af6c7890ff81f3d9319707865f5a651239aee9ae0a",
+      "mamba_ssm/models/config_mamba.py": "2a72c1686f775b56547e39ca4406ba10148d12fd7a791c57ce2ba85126010fcd",
+      "mamba_ssm/models/mixer_seq_simple.py": "13409d7044e930ea3271e4b8ddceaf8155ec49b8e5ac299fba7bb0df6d80cb21",
+      "mamba_ssm/modules/mamba2.py": "605e4439ff0baec8d8acaf4a191d9f0570eea9900065a065909124c472b08707",
+      "mamba_ssm/ops/triton/ssd_combined.py": "868540ba0c45e86ac3f610b17b62dc6ede5a80a91c2c8ef24f7e3314be69b626"
+    },
+    "official_version": "2.3.1",
+    "package_root": "/opt/prometheus-mamba231-r1",
+    "parameter_dtype": "float32",
+    "parent_driver_sha256": "567e372187e4cee3c8a5ca3d49f5f7d60a8664a07619c3d57dc1c799cbbd9f02",
+    "position": "none",
+    "readout": "64to100+log_softmax",
+    "vocabulary": 100,
+    "width": 64
+  },
+  "bound": {
+    "AS_GiB": 512,
+    "GPU_allocator_fraction": 0.3,
+    "NPROC": 128,
+    "RLIMIT_CPU_seconds": 900,
+    "file_limit_MiB": 100,
+    "outer_seconds": 900,
+    "science_seconds": 730,
+    "stopping": "any isolation/source/cache/numeric/bound failure preserves raw; no auto repair/extra shapes"
+  },
+  "canonical_identity_contract": {
+    "boundary": "pinned package entryfiles plus existing installation provenance; no claim of whole-transitive package authenticity",
+    "prologue": "import canonical mamba_ssm package once; retain a dedicated fixed-name module in sys.modules with official class, wrapper class, pure forward, canonical official Triton JITFunction aliases and id/source-SHA map; no dynamic importlib alias for official package",
+    "reason": "re-importing installed source under a fresh alias or reconstructing JITFunction objects can invalidate in-memory cache and trigger forbidden poststrict compilation",
+    "science": "reuse exact wrapper class and official module objects from retained module; load only fixed checkpoint model_state; assert before/after strict/capture same id+path+SHA canonical modules/class/JIT aliases and unchanged compilation-cache file digests"
+  },
+  "checkpoint": {
+    "bytes": 530305,
+    "completed_training_updates_historical": 300,
+    "historical_Adam_bytes": 328980,
+    "historical_training_wall_seconds": 3.557807434001006,
+    "live_Adam_bytes": 0,
+    "new_SGD_updates": 0,
+    "remote_relative": "parameter-char-alltoken-mamba2-300-v1/learn/mamba2-frozen-final.pt",
+    "sha256": "545ff790191d003bc7f6ff4a58d9fcc8fb55282ac93187af00018b0da8746d4b"
+  },
+  "compiler_scope": {
+    "cold_cache": "fresh owned cache; no cache copy; charge all tools/prologue/CUDA/CPU/cache/failures",
+    "new_executables": false,
+    "no_outside_prewarm": true,
+    "poststrict_cachemiss": "hard failure, no compile/fallback/retry/permission expansion",
+    "prologue": "new pinned OWN fixed inference-only random token script; V100embedding64 officialMamba2 exactconfig LN64 readout100; model.eval(),requires_grad_(False),torch.inference_mode(); all six fixed shapes; no taskdata/checkpoint/targets/SGD/backward outside science",
+    "same_permissions": "UID65534/NO_NEW_PRIVS/rootimmutable inputs+owned output only/Landlock FS+TCP deny/resources from start; existing trusted Torch/CUDA init before full socketseccomp, then bounded fixed compiler prologue, then TSYNC exec+fork+socket denial plus zeroEXEC Landlock and rootgroup cleanup before science",
+    "same_runtime": "exact eb50 staged runner; only fixed prologue leaf/SHA constants may change"
+  },
+  "fixed_inputs": {
+    "TRAIN_sha256": "d8e35caee818c07934e3013977d08fd1a17bc88036996600a1bbc14da8ce9355",
+    "cases": [
+      [
+        1,
+        64
+      ],
+      [
+        1,
+        128
+      ],
+      [
+        1,
+        256
+      ],
+      [
+        32,
+        64
+      ],
+      [
+        32,
+        128
+      ],
+      [
+        32,
+        256
+      ]
+    ],
+    "data_selection": "fixed before timing; not selected by predictions/outcomes",
+    "metadata_sha256": "f157d58e9246f59f78dbd883b4ccc80284278b9eb270365cb13556dc8703e792",
+    "source": "original AR TRAIN first32 windows; B1firstrow/B32first32; tile original64tokens2or4times to128or256 as existing graph audits; no targets decompressed/used"
+  },
+  "fixed_source_inputs": {
+    "driver": "train_char_official_mamba2_alltoken.py",
+    "driver_sha256": "ebaa704c59a6491827c03a63052a84bf9e7cbda0af9932d2e52764f52ba66371",
+    "official_source_sha256": {
+      "mamba_ssm/__init__.py": "6d3fee6ff8e8ec4dcab0f7af6c7890ff81f3d9319707865f5a651239aee9ae0a",
+      "mamba_ssm/models/config_mamba.py": "2a72c1686f775b56547e39ca4406ba10148d12fd7a791c57ce2ba85126010fcd",
+      "mamba_ssm/models/mixer_seq_simple.py": "13409d7044e930ea3271e4b8ddceaf8155ec49b8e5ac299fba7bb0df6d80cb21",
+      "mamba_ssm/modules/mamba2.py": "605e4439ff0baec8d8acaf4a191d9f0570eea9900065a065909124c472b08707",
+      "mamba_ssm/ops/triton/ssd_combined.py": "868540ba0c45e86ac3f610b17b62dc6ede5a80a91c2c8ef24f7e3314be69b626"
+    },
+    "parent_driver_sha256": "567e372187e4cee3c8a5ca3d49f5f7d60a8664a07619c3d57dc1c799cbbd9f02"
+  },
+  "host_config": "same existing authorized195.26.232.180:24343 host/config; no model/provider/API switch",
+  "measurement": {
+    "backend_order": "same prospective rotated order as old graph audit; source/model same; note drift",
+    "backends": [
+      "full official wrapper eager including its ordinary wrapper validation",
+      "pure identical embedding -> official Mamba2 -> LayerNorm -> readout -> log_softmax eager",
+      "CUDA Graph of that identical pure forward"
+    ],
+    "costs": [
+      "P/NN bytes/fullhistoricalAdam and checkpoint on disk,0liveAdam",
+      "whole local/remote runner/prologue/science CPU+wall",
+      "Triton/cache/PTX/source/input/rawdisk bytes and allocator peaks",
+      "all prime/warmup/capture/timed actual forward calls and token positions",
+      "p50/p95 CUDAevent and synchronizedwall; cold/break-even separate",
+      "historical training paid once, no audit training charge",
+      "provider-effective compute,energy,busytime,fullFLOPs remain unknown"
+    ],
+    "dtype": "fixed FP32; no AMP/TF32/new kernels/autotuning overrides/torch.compile",
+    "grad_mode": "eval + inference_mode matches prologue and science",
+    "graph_lifecycle": "one independent private graph/pool per case; reset peaks before capture; record sidewarmup/capture/instantiate CPU+wall, allocated/reserved before/after; reset graph aftercase; driver allocations unknown",
+    "numerics": "store full raw original/pure/graph outputs before AND after timing; fixed allclose atol2e-4 rtol2e-5, maxabs<=2e-4 and0argmax mismatches; no relaxation; exact model_state unchanged; predictions/quality not a speed gate",
+    "timing_draws_per_backend": 12,
+    "warmups_per_backend": 3
+  },
+  "next_single_decision": "ROOT may implement/freeze/run this exact inference-only package after active learning work; this proposal itself does not launch a process or establish Mamba resident latency.",
+  "purpose": "same6case resident and complete-lifecycle official-Mamba2 inference cost boundary; no accuracy/speed acceptance gate",
+  "registered_buffer_bytes": 0,
+  "schema": "official-Mamba2-fixed-weight-inference-cost-proposal-v1",
+  "status": "PROPOSED_NOT_EXECUTED_NO_NEW_TRAINING"
+}

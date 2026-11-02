@@ -223,6 +223,8 @@ def main():
     checkpoint_sha = None
     before_hash = None
     phase = "preflight"
+    phase_tick = began
+    active_case = None
 
     def emit(kind, **fields):
         stream.write(json.dumps(dict(kind=kind, session_wall_seconds=time.perf_counter() - began, **fields),
@@ -356,7 +358,7 @@ def main():
                         check()
                         case_tick = time.perf_counter()
                         phase = "input_setup"
-                        setup_tick = time.perf_counter()
+                        phase_tick = setup_tick = time.perf_counter()
                         host_tokens = np.tile(train["tokens"][:batch], (1, length // 64))
                         host_initial = train["initial"][:batch].copy()
                         host_lengths = np.full(batch, length, dtype=np.int64)
@@ -387,10 +389,11 @@ def main():
                             host_case_input_array_bytes=host_tokens.nbytes + host_initial.nbytes + host_lengths.nbytes,
                             original_initial_carry_tensor_contract=initial_contract,
                             initialization_contract_wall_seconds=initialization_contract_wall_seconds)
+                        active_case = case
                         snapshots = {}
                         for backend, function in (("original_eager", original), ("tensor_eager", pure)):
                             phase = backend + "_warmup"
-                            tick = time.perf_counter()
+                            phase_tick = tick = time.perf_counter()
                             for _ in range(WARMUPS):
                                 check()
                                 value = function()
@@ -399,7 +402,7 @@ def main():
                                 charge(backend + "_warmup", batch, length, mode)
                             warm_seconds = time.perf_counter() - tick
                             phase = backend + "_output_validation"
-                            tick = time.perf_counter()
+                            phase_tick = tick = time.perf_counter()
                             value = function()
                             sync()
                             snapshots[backend] = value.detach().cpu().contiguous()
@@ -408,12 +411,16 @@ def main():
                             contract = compare(snapshots["original_eager"], snapshots[backend])
                             validation_seconds = time.perf_counter() - tick
                             phase = backend + "_timing"
+                            phase_tick = time.perf_counter()
                             case[backend] = timed(backend, function, batch, length, mode)
                             case[backend].update(warmup_wall_seconds=warm_seconds,
                                 output_validation_wall_seconds=validation_seconds, output_contract=contract)
+                            emit("actual_eager_backend_complete", arm=args.arm, batch=batch, context=length,
+                                 mode=mode, backend=backend, measurement=case[backend])
 
                         phase = "graph_side_stream_warmup"
-                        tick = time.perf_counter()
+                        phase_tick = tick = time.perf_counter()
+                        case["cuda_graph_progress"] = dict(phase=phase)
                         side = torch.cuda.Stream(device=device)
                         side.wait_stream(torch.cuda.current_stream(device))
                         with torch.cuda.stream(side):
@@ -425,35 +432,48 @@ def main():
                         torch.cuda.current_stream(device).wait_stream(side)
                         sync()
                         side_warmup_seconds = time.perf_counter() - tick
+                        case["cuda_graph_progress"]["side_stream_warmup_wall_seconds"] = side_warmup_seconds
                         phase = "graph_construction"
-                        tick = time.perf_counter()
+                        phase_tick = tick = time.perf_counter()
+                        case["cuda_graph_progress"]["phase"] = phase
                         pool = torch.cuda.graph_pool_handle()
                         graph = torch.cuda.CUDAGraph(keep_graph=True)
                         construction_seconds = time.perf_counter() - tick
+                        case["cuda_graph_progress"]["construction_wall_seconds"] = construction_seconds
                         sync()
                         torch.cuda.reset_peak_memory_stats(device)
                         memory_before_capture = memory()
+                        case["cuda_graph_progress"]["memory_before_capture"] = memory_before_capture
                         phase = "graph_capture"
-                        tick = time.perf_counter()
+                        phase_tick = tick = time.perf_counter()
+                        case["cuda_graph_progress"]["phase"] = phase
+                        emit("actual_graph_capture_begin", batch=batch, context=length, mode=mode,
+                             memory_before_capture=memory_before_capture)
                         with torch.cuda.graph(graph, pool=pool, stream=side, capture_error_mode="global"):
                             graph_output = pure()
                         sync()
                         capture_seconds = time.perf_counter() - tick
+                        case["cuda_graph_progress"]["capture_wall_seconds"] = capture_seconds
                         # Capturing describes arithmetic nodes; it is not a paid
                         # executed forward. Its CPU/setup/memory costs are paid.
                         phase = "graph_instantiation"
-                        tick = time.perf_counter()
+                        phase_tick = tick = time.perf_counter()
+                        case["cuda_graph_progress"]["phase"] = phase
                         graph.instantiate()
                         sync()
                         instantiate_seconds = time.perf_counter() - tick
                         memory_after_instantiation = memory()
+                        case["cuda_graph_progress"].update(instantiation_wall_seconds=instantiate_seconds,
+                            memory_after_instantiation=memory_after_instantiation, phase="instantiated")
+                        emit("actual_graph_instantiated", batch=batch, context=length, mode=mode,
+                             progress=case["cuda_graph_progress"])
 
                         def replay():
                             graph.replay()
                             return graph_output
 
                         phase = "graph_output_validation"
-                        tick = time.perf_counter()
+                        phase_tick = tick = time.perf_counter()
                         graph.replay()
                         sync()
                         snapshots["cuda_graph"] = graph_output.detach().cpu().contiguous()
@@ -461,11 +481,12 @@ def main():
                         contract = compare(snapshots["original_eager"], snapshots["cuda_graph"])
                         graph_validation_seconds = time.perf_counter() - tick
                         phase = "graph_timing"
+                        phase_tick = time.perf_counter()
                         case["cuda_graph"] = timed("cuda_graph", replay, batch, length, mode)
                         # The last timed replay is checked again, excluding this
                         # CPU copy/comparison from latency and preventing drift.
                         phase = "graph_postdraw_output_validation"
-                        tick = time.perf_counter()
+                        phase_tick = tick = time.perf_counter()
                         postdraw = graph_output.detach().cpu().contiguous()
                         postdraw_contract = compare(snapshots["original_eager"], postdraw)
                         postdraw_seconds = time.perf_counter() - tick
@@ -492,7 +513,7 @@ def main():
                         case.update(output_file=output_path.name, output_bytes=output_path.stat().st_size,
                                     output_sha256=sha(output_path), labels_read=0)
                         phase = "graph_pool_cleanup"
-                        tick = time.perf_counter()
+                        phase_tick = tick = time.perf_counter()
                         graph.reset()
                         del graph_output, graph, pool, replay, side, inputs, original, pure, snapshots
                         gc.collect()
@@ -511,8 +532,10 @@ def main():
                                     memory_after_pool_cleanup=memory(), case_total_wall_seconds=time.perf_counter() - case_tick)
                         results.append(case)
                         emit("actual_case_complete", **case)
+                        active_case = None
 
         phase = "final_invariance"
+        phase_tick = time.perf_counter()
         after_hash = state_hash(model.state_dict())
         if before_hash != after_hash or checkpoint_sha != sha(args.checkpoint):
             raise RuntimeError("actual parameters/buffers or source checkpoint changed")
@@ -535,13 +558,17 @@ def main():
         print(json.dumps(dict(status=result["status"], cases=len(results), out=str(args.out))))
     except BaseException as error:
         invariance = None
+        failure_memory = None
         try:
             invariance = dict(checkpoint_unchanged=checkpoint_sha == sha(args.checkpoint),
                               model_state_unchanged=before_hash == state_hash(model.state_dict()) if model is not None and before_hash else None)
+            failure_memory = memory() if torch.cuda.is_available() else None
         except BaseException as audit_error:
             invariance = dict(check_error=type(audit_error).__name__ + ": " + str(audit_error))
         failure = dict(status="FAILED_OR_BOUNDED_INCOMPLETE_NO_FALLBACK", phase=phase,
             error_type=type(error).__name__, error=str(error), completed_cases=results,
+            active_case_partial=active_case, active_phase_wall_seconds=time.perf_counter() - phase_tick,
+            failure_memory_if_checkable=failure_memory,
             successful_forward_costs_by_phase=costs, invariance_if_checkable=invariance,
             driver_wall_seconds=time.perf_counter() - began, training_updates=0, label_reads=0)
         emit("actual_failure_no_fallback", **{k: v for k, v in failure.items() if k != "completed_cases"})
