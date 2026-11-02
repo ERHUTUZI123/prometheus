@@ -1,0 +1,378 @@
+{
+  "GRU_extraction_stdlib_checks": {
+    "test_iid": {
+      "NLL_recomputed_exact": true,
+      "correct": 315,
+      "logits_logp_prediction_argmax_disagreements": 0,
+      "logsoftmax_saved_FP32_vs_stdlib_double_max_abs": 1.3530081730550592e-06,
+      "raw_sha256": "9dc7bd0794d371dd7afc1e3ecd768d1810ad4f54584c0fe8cb46775038379a9f",
+      "residual_scope": "descriptive FP32/double arithmetic residual, no newly imposed acceptance tolerance"
+    },
+    "test_long": {
+      "NLL_recomputed_exact": true,
+      "correct": 285,
+      "logits_logp_prediction_argmax_disagreements": 0,
+      "logsoftmax_saved_FP32_vs_stdlib_double_max_abs": 1.1020833063923874e-06,
+      "raw_sha256": "d57d5a8708376aaf055768120ada34b587aa4ffa34cd5c5dd472defc06048e2e",
+      "residual_scope": "descriptive FP32/double arithmetic residual, no newly imposed acceptance tolerance"
+    },
+    "test_unseen": {
+      "NLL_recomputed_exact": true,
+      "correct": 314,
+      "logits_logp_prediction_argmax_disagreements": 0,
+      "logsoftmax_saved_FP32_vs_stdlib_double_max_abs": 1.08056500458531e-06,
+      "raw_sha256": "2356f9543e7a4f8bb7cccbf4a5e7380d8a235c297c1184df27ad20eb7745470a",
+      "residual_scope": "descriptive FP32/double arithmetic residual, no newly imposed acceptance tolerance"
+    },
+    "valid": {
+      "NLL_recomputed_exact": true,
+      "correct": 316,
+      "logits_logp_prediction_argmax_disagreements": 0,
+      "logsoftmax_saved_FP32_vs_stdlib_double_max_abs": 1.7370440978936585e-06,
+      "raw_sha256": "ac52e7aed9f6177357c1e4efec6efd4ab720c0381d23d8e3ee56cb7552162a1b",
+      "residual_scope": "descriptive FP32/double arithmetic residual, no newly imposed acceptance tolerance"
+    }
+  },
+  "data": {
+    "test_iid": {
+      "path": "runs/parameter-memory-live-stage-data-n8-seed0-v1/generated/data/stage3-test_iid.npz",
+      "sha256": "b2b7fc38c4978da4f63c8c03f684181ed6f17fb5d24e3e59e0a1bcdbd69cf422"
+    },
+    "test_long": {
+      "path": "runs/parameter-memory-live-stage-data-n8-seed0-v1/generated/data/stage3-test_long.npz",
+      "sha256": "e4a05ee6816d41fdc24e83544b7cab6e7b7f867dd7771a41f0b480f5e79fad52"
+    },
+    "test_unseen": {
+      "path": "runs/parameter-memory-live-stage-data-n8-seed0-v1/generated/data/stage3-test_unseen.npz",
+      "sha256": "19cdcfb8f54349193c0c09f845db44a16b4e4cd7bbd726f15622e32a8177855d"
+    }
+  },
+  "forthcoming_unbound_models": [],
+  "models": [
+    {
+      "history": "See paired-tail-stage2-parent-inventory-v1.json for actual effective updates and separately paid sibling/config/failure history.",
+      "id": "typed-original-random-tail",
+      "lineage": "Original fresh4x600 typed NN. No copied sampler-tail weights.",
+      "predictions": {
+        "test_iid": {
+          "modes": {
+            "native": {
+              "format": "logp",
+              "key": "native_logp"
+            },
+            "soft": {
+              "format": "logp",
+              "key": "soft_logp"
+            }
+          },
+          "path": "runs/parameter-typed-memory-actions-n8-seed0-fourstage-graph-v2/learn/final-task3-test_iid-predictions.npz",
+          "sha256": "9723c77f746c64db25fbf2aed690d0e17f3754b8a32fd3bc5add9086d25cc2fd"
+        },
+        "test_long": {
+          "modes": {
+            "native": {
+              "format": "logp",
+              "key": "native_logp"
+            },
+            "soft": {
+              "format": "logp",
+              "key": "soft_logp"
+            }
+          },
+          "path": "runs/parameter-typed-memory-actions-n8-seed0-fourstage-graph-v2/learn/final-task3-test_long-predictions.npz",
+          "sha256": "7c2b43b4b1ee60a295ecf3f9f7c221c664143f04518e79d0ed0ba533c6698563"
+        },
+        "test_unseen": {
+          "modes": {
+            "native": {
+              "format": "logp",
+              "key": "native_logp"
+            },
+            "soft": {
+              "format": "logp",
+              "key": "soft_logp"
+            }
+          },
+          "path": "runs/parameter-typed-memory-actions-n8-seed0-fourstage-graph-v2/learn/final-task3-test_unseen-predictions.npz",
+          "sha256": "fcc3791ec5873678e4d6be4bdf95328c1c813a4a95e68b140491ee62965c4960"
+        }
+      },
+      "result": {
+        "path": "runs/parameter-typed-memory-actions-n8-seed0-fourstage-graph-v2/learn/result.json",
+        "sha256": "dc5d5f9aadc979bee232118c134583cf4273be6a7b5b9e98f8f10bed97bbb5ff"
+      },
+      "run": "parameter-typed-memory-actions-n8-seed0-fourstage-graph-v2",
+      "score_layout": "typed"
+    },
+    {
+      "history": "See paired-tail-stage2-parent-inventory-v1.json for actual effective updates and separately paid sibling/config/failure history.",
+      "id": "transformer32-original-random-tail",
+      "lineage": "Original stage4 random-tail TF32 from actual replay128 parent; inherited1800 updates +600 new. Separate earlier width64/noReplay/profile costs retained in priorinventory.",
+      "predictions": {
+        "test_iid": {
+          "modes": {
+            "soft": {
+              "format": "argmax",
+              "key": "test_iid_soft"
+            }
+          },
+          "path": "runs/parameter-memory-live-stage-n8-seed0-transformer-stage4-v1/learn/stage3-frozen-predictions.npz",
+          "sha256": "3461f37d3eee9275a96d62d34ed89e954ce1760750865c565c44fab93fcb9644"
+        },
+        "test_long": {
+          "modes": {
+            "soft": {
+              "format": "argmax",
+              "key": "test_long_soft"
+            }
+          },
+          "path": "runs/parameter-memory-live-stage-n8-seed0-transformer-stage4-v1/learn/stage3-frozen-predictions.npz",
+          "sha256": "3461f37d3eee9275a96d62d34ed89e954ce1760750865c565c44fab93fcb9644"
+        },
+        "test_unseen": {
+          "modes": {
+            "soft": {
+              "format": "argmax",
+              "key": "test_unseen_soft"
+            }
+          },
+          "path": "runs/parameter-memory-live-stage-n8-seed0-transformer-stage4-v1/learn/stage3-frozen-predictions.npz",
+          "sha256": "3461f37d3eee9275a96d62d34ed89e954ce1760750865c565c44fab93fcb9644"
+        }
+      },
+      "result": {
+        "path": "runs/parameter-memory-live-stage-n8-seed0-transformer-stage4-v1/learn/result.json",
+        "sha256": "1e3cfb023e7a37842a638c466646d3adaa5499b2f0a66fbee3a04c4be7f63e4d"
+      },
+      "run": "parameter-memory-live-stage-n8-seed0-transformer-stage4-v1",
+      "score_layout": "memory_live"
+    },
+    {
+      "history": "A actual2400; all source/schedule/gradient/fullcost verified separately by parent; posthocpair metrics here only.",
+      "id": "typed-A-input-only-address",
+      "lineage": "NEW fresh4x600 architectureA: input-only address proposal; no coverage normalization. Original typednone and current A are separate fresh NNs, not shared-initial-parameter inference arms.",
+      "predictions": {
+        "test_iid": {
+          "modes": {
+            "native": {
+              "format": "logp",
+              "key": "native_logp"
+            },
+            "soft": {
+              "format": "logp",
+              "key": "soft_logp"
+            }
+          },
+          "path": "runs/parameter-typed-normalized-memory-a-n8-seed0-fourstage-graph-v1/learn/final-task3-test_iid-predictions.npz",
+          "sha256": "f8d37bb93d05391d5009fbd2658c3806975a7aa94a2af0ce4023bdf2bbd622dc"
+        },
+        "test_long": {
+          "modes": {
+            "native": {
+              "format": "logp",
+              "key": "native_logp"
+            },
+            "soft": {
+              "format": "logp",
+              "key": "soft_logp"
+            }
+          },
+          "path": "runs/parameter-typed-normalized-memory-a-n8-seed0-fourstage-graph-v1/learn/final-task3-test_long-predictions.npz",
+          "sha256": "fac12490842fd10de1f8e2749f53062c2a314b74208eb8cc260be9ec26d11bb4"
+        },
+        "test_unseen": {
+          "modes": {
+            "native": {
+              "format": "logp",
+              "key": "native_logp"
+            },
+            "soft": {
+              "format": "logp",
+              "key": "soft_logp"
+            }
+          },
+          "path": "runs/parameter-typed-normalized-memory-a-n8-seed0-fourstage-graph-v1/learn/final-task3-test_unseen-predictions.npz",
+          "sha256": "6afb9047ce1dab05bc434cfc408e076334bab8145645f276e75f1e348c1c1ee0"
+        }
+      },
+      "result": {
+        "path": "runs/parameter-typed-normalized-memory-a-n8-seed0-fourstage-graph-v1/learn/result.json",
+        "sha256": "79f673926df1d4464e9d3a21d67654ec67b86f8d4abb3707de0fb95d2fbce270"
+      },
+      "run": "parameter-typed-normalized-memory-a-n8-seed0-fourstage-graph-v1",
+      "score_layout": "typed"
+    },
+    {
+      "history": "Actual2400 perarm; full source/schedule/gradient/cost verification separately by parent, not rerun here.",
+      "id": "typed-B",
+      "lineage": "NEW fresh4x600 architecture B: input_only_address=False,coverage_normalization=True; not a shared-final-NN inference intervention.",
+      "predictions": {
+        "test_iid": {
+          "modes": {
+            "native": {
+              "format": "logp",
+              "key": "native_logp"
+            },
+            "soft": {
+              "format": "logp",
+              "key": "soft_logp"
+            }
+          },
+          "path": "runs/parameter-typed-normalized-memory-b-n8-seed0-fourstage-graph-v1/learn/final-task3-test_iid-predictions.npz",
+          "sha256": "fdebad17751175edc7d3313f15d190f5a4a3cb509a66ae5e33af47e169db1aa4"
+        },
+        "test_long": {
+          "modes": {
+            "native": {
+              "format": "logp",
+              "key": "native_logp"
+            },
+            "soft": {
+              "format": "logp",
+              "key": "soft_logp"
+            }
+          },
+          "path": "runs/parameter-typed-normalized-memory-b-n8-seed0-fourstage-graph-v1/learn/final-task3-test_long-predictions.npz",
+          "sha256": "11456b6b28d41e6bd087de3c3b50cdb0f9df83160402cc7983a023d014ae0331"
+        },
+        "test_unseen": {
+          "modes": {
+            "native": {
+              "format": "logp",
+              "key": "native_logp"
+            },
+            "soft": {
+              "format": "logp",
+              "key": "soft_logp"
+            }
+          },
+          "path": "runs/parameter-typed-normalized-memory-b-n8-seed0-fourstage-graph-v1/learn/final-task3-test_unseen-predictions.npz",
+          "sha256": "ab38e22c7f9d408e7bd49868c09d273f86755ecf09da27e43bba291899e58111"
+        }
+      },
+      "result": {
+        "path": "runs/parameter-typed-normalized-memory-b-n8-seed0-fourstage-graph-v1/learn/result.json",
+        "sha256": "2d1e6f6641ccd9d6a39cac07f29975305e82bae6d19ef32f54e46fa836899187"
+      },
+      "run": "parameter-typed-normalized-memory-b-n8-seed0-fourstage-graph-v1",
+      "score_layout": "typed"
+    },
+    {
+      "history": "Actual2400 perarm; full source/schedule/gradient/cost verification separately by parent, not rerun here.",
+      "id": "typed-AB",
+      "lineage": "NEW fresh4x600 architecture AB: input_only_address=True,coverage_normalization=True; not a shared-final-NN inference intervention.",
+      "predictions": {
+        "test_iid": {
+          "modes": {
+            "native": {
+              "format": "logp",
+              "key": "native_logp"
+            },
+            "soft": {
+              "format": "logp",
+              "key": "soft_logp"
+            }
+          },
+          "path": "runs/parameter-typed-normalized-memory-ab-n8-seed0-fourstage-graph-v1/learn/final-task3-test_iid-predictions.npz",
+          "sha256": "04c42e26d06761bd4b016689aa326b1262f5d8b1275a109c114e61e9914e6cdf"
+        },
+        "test_long": {
+          "modes": {
+            "native": {
+              "format": "logp",
+              "key": "native_logp"
+            },
+            "soft": {
+              "format": "logp",
+              "key": "soft_logp"
+            }
+          },
+          "path": "runs/parameter-typed-normalized-memory-ab-n8-seed0-fourstage-graph-v1/learn/final-task3-test_long-predictions.npz",
+          "sha256": "7bf6ca739194c00f57b6a998a173ceff02cfb8f9d8bfa433a88df29f1a7e3850"
+        },
+        "test_unseen": {
+          "modes": {
+            "native": {
+              "format": "logp",
+              "key": "native_logp"
+            },
+            "soft": {
+              "format": "logp",
+              "key": "soft_logp"
+            }
+          },
+          "path": "runs/parameter-typed-normalized-memory-ab-n8-seed0-fourstage-graph-v1/learn/final-task3-test_unseen-predictions.npz",
+          "sha256": "2ed858bbd853d4e9722aded6fcf5442d9d6029d402ac93538d0fe39f336b3b94"
+        }
+      },
+      "result": {
+        "path": "runs/parameter-typed-normalized-memory-ab-n8-seed0-fourstage-graph-v1/learn/result.json",
+        "sha256": "ad8b0d6105f4848a68f63d79676075f2871397029010d0a168136b4228ba3421"
+      },
+      "run": "parameter-typed-normalized-memory-ab-n8-seed0-fourstage-graph-v1",
+      "score_layout": "typed"
+    },
+    {
+      "execution_scope": "Native aliases the SAME ordinary unmodified cc1 packedGRU output; one forward perexample, no additional native NN call.",
+      "history": "Original2400 learning run paid17.2814689185s training plus original29.339356375s localcold; this extraction adds.422079s science/6.166571s localcold. EarlierCPUadmission/config costs separate.",
+      "id": "gru32-original-random-tail",
+      "lineage": "Original GRU32 freshfourstage NN66b60a19... from original2400. Explicit ROOTauthorized0SGD extraction; no sampler-tail NN substitution.",
+      "original_training_history_result": {
+        "path": "runs/parameter-gru32-n8-seed0-fourstage-v1/learn/result.json",
+        "sha256": "1b4945f7ac93b243416f5d0f9e8b5162954985c9a305cfe3dc0368609fcdae05"
+      },
+      "predictions": {
+        "test_iid": {
+          "modes": {
+            "native": {
+              "format": "logp",
+              "key": "soft_logp"
+            },
+            "soft": {
+              "format": "logp",
+              "key": "soft_logp"
+            }
+          },
+          "path": "runs/parameter-original-gru32-4split-raw-eval-v1/audit/test_iid-original-gru32-raw-before-targets.npz",
+          "sha256": "9dc7bd0794d371dd7afc1e3ecd768d1810ad4f54584c0fe8cb46775038379a9f"
+        },
+        "test_long": {
+          "modes": {
+            "native": {
+              "format": "logp",
+              "key": "soft_logp"
+            },
+            "soft": {
+              "format": "logp",
+              "key": "soft_logp"
+            }
+          },
+          "path": "runs/parameter-original-gru32-4split-raw-eval-v1/audit/test_long-original-gru32-raw-before-targets.npz",
+          "sha256": "d57d5a8708376aaf055768120ada34b587aa4ffa34cd5c5dd472defc06048e2e"
+        },
+        "test_unseen": {
+          "modes": {
+            "native": {
+              "format": "logp",
+              "key": "soft_logp"
+            },
+            "soft": {
+              "format": "logp",
+              "key": "soft_logp"
+            }
+          },
+          "path": "runs/parameter-original-gru32-4split-raw-eval-v1/audit/test_unseen-original-gru32-raw-before-targets.npz",
+          "sha256": "2356f9543e7a4f8bb7cccbf4a5e7380d8a235c297c1184df27ad20eb7745470a"
+        }
+      },
+      "result": {
+        "path": "runs/parameter-original-gru32-4split-raw-eval-v1/audit/result.json",
+        "sha256": "ef1b0e164a46f84ca08cebeab7038ecc3b298f73b77032182fd35753b86b6821"
+      },
+      "run": "parameter-original-gru32-4split-raw-eval-v1",
+      "score_layout": "original_gru32_extract"
+    }
+  ],
+  "schema": "saved-fullfactorial-TEST-counterfactual-inputs-v1",
+  "unavailable_original_models": []
+}

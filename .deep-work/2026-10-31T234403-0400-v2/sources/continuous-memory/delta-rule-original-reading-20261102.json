@@ -1,0 +1,28 @@
+{
+  "recorded_UTC": "2026-11-02T12:47:08.345068+00:00",
+  "provenance": "SOURCE original passages read by ROOT; RECONSTRUCTION formulas below independently derived, not experimentally validated",
+  "sources": [
+    {
+      "title": "Parallelizing Linear Transformers with the Delta Rule over Sequence Length",
+      "url": "https://arxiv.org/html/2406.06484v3",
+      "actually_read": "section2.2 lines106–120; section3.1–3.3 lines139–178; selected4.2 table lines206–234; intro",
+      "source_mechanism": "Unit-normalized learned keys/queries, error-correcting fast-weight update S+=beta*(v-S*k)*k^T; matrix recurrence admits WY/UT chunk formulation. Read strength is continuous; authors do not require hard discrete STORE.",
+      "not_read": "complete proofs, whole appendix, source kernel implementation or full training recipe; no code executed",
+      "scope": "Published results are source results, never Prometheus measurements."
+    },
+    {
+      "title": "Gated Delta Networks: Improving Mamba2 with Delta Rule",
+      "url": "https://arxiv.org/html/2412.06464v2",
+      "actually_read": "sections2.1–2.2 selectedchunk equations1–9; section3.1 equation10 and online-regression explanation lines131–145; intro",
+      "source_mechanism": "S_t=alpha_t*S_(t-1)*(I-beta_t*k_t*k_t^T)+beta_t*v_t*k_t^T; alpha and beta continuous data-dependent controls.",
+      "not_read": "completecase studies/appendices, token-mixerimplementation and current repository; no new GDN baseline installed or trained"
+    }
+  ],
+  "reconstruction": {
+    "key_write_identity": "With norm(k)=1 and delta update Snew=S+beta*(v-Sk)k^T, Snew*k=(1-beta)Sk+beta*v. For q orthogonal to k, Snew*q=S*q. This is conditional state-space protection, not protection against changes of learned keys/weights.",
+    "two_key_counterexample": "StartS=0,beta1=beta2=1,k0^Tk1=c. After storingv0 at k0 thenv1 at k1: S2*k0=(1-c*c)*v0+c*v1. c=0 preserves both, c=1 overwritesfirst. Merely selecting delta rule doesnotlearnkey separation.",
+    "resource_boundary": "Prometheus h/CALL/proposal/value depend on current recurrent read. Input-known affine scan assumptions are not automatically met. Borrowing the published chunkkernel would require an explicitly changed dependency structure or separate argument, not just rename currentB.",
+    "learning_boundary": "Soft/native gap is evidence about discretized deployment. Valid continuous-memory computation is not falsified solely by hardening its gates; soft query counterfactual failure independently establishes the present binding gap."
+  },
+  "campaign_effect": "Targeted original reading informs future mechanism construction only. Current A/B/AB train budget remains7200, allcompleted. No new architecture adopted/experiment run from this reading."
+}

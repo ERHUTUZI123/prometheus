@@ -561,3 +561,177 @@ mean VALID accuracy; the table reports parameters and measured nested cost
 scopes. This is one development seed, not formal Primary evidence.}
 \label{fig:six-paired-credit-development}
 \end{figure}
+
+
+\paragraph{Fixed three-arm acquisition and binding diagnosis.}
+The same typed Block was trained in three new prospective four-stage arms,
+600 updates per stage, with the original data, sampling, Replay128 and
+terminal-only NLL. Arm A restricts address proposals to the learned current
+input embedding while retaining contextual ADDRESS selection. Arm B retains
+the original write and normalizes each slot by its own accumulated coverage:
+\begin{equation}
+w_{tj}=\alpha_{S,t}a_{tj},\quad
+V^+_j=(1-w_{tj})V_j+w_{tj}h_t,\quad
+z^+_j=(1-w_{tj})z_j+w_{tj},\quad
+r_t=\sum_j a_{tj}V_j/\max(z_j,10^{-4}).
+\end{equation}
+AB combines these interfaces. All 7,200 new updates completed, including
+20-tensor eager/Graph gradient comparisons and neural/Adam/RNG/replay
+reload checks. No intermediate action or correct memory address was supplied.
+\begin{center}
+\small
+\begin{tabular}{lrrrr}
+\hline
+Model & Parameters & New IID soft/native (\%) & Query both & Update wall (s)\\
+\hline
+Historical typed & 10,991 & 38.28/31.05 & 3/192 & 24.807\\
+A & 10,351 & 58.79/58.20 & 1/192 & 24.829\\
+B & 10,991 & 62.50/7.23 & 1/192 & 26.918\\
+AB & 10,351 & 62.70/18.16 & 5/192 & 26.916\\
+Original GRU32 & 14,024 & 61.52/same & 8/192 & 17.281\\
+Original Transformer32 & 26,760 & 31.05/not saved & 2/192 & 19.812\\
+\hline
+\end{tabular}
+\end{center}
+Query both requires both endpoints correct among 192 IID pairs whose target
+changes when query order changes. The Transformer clock includes its
+inherited 1,800 updates and actual 600-update tail; the GRU's ordinary
+execution has no distinct hard-call rule. This is one development seed,
+not a Primary result or a claim of broad comparative superiority.
+AB predicts an arithmetic candidate on every TEST row, yet its
+IID/long/unseen correct counts, 321/321/322 of 512, only slightly exceed
+the exact query-blind maximum of 320. The corresponding both-correct query
+counts are 5/6/4. Thus these repairs do not establish query-role binding.
+
+The three new arms consumed 78.663\,s update time, 160.217\,s scientific
+driver time and 178.239\,s cold coordinator time; once-only CPU admission
+and its retained failed fixture cost another 21.373\,s. A/AB parameter
+payload is 41,404\,B, Adam 82,888\,B and replay 55,296\,B. B/AB add eight
+FP32 coverage variables per example. Their normalization work is counted
+separately from forward MAC proxies; full training FLOPs and energy remain
+unknown. Reduced parameter count does not imply lower complete cost:
+AB's batch-64, maximum-length-39 soft median latency is 44.329\,ms.
+
+A subsequent zero-update frozen-AB VALID intervention reverses only the
+memory-value and coverage update when STORE is not the model's own winning
+action. Soft, native and this drop condition obtain 320, 105 and 153 correct
+of 512, respectively. Its 51,456 executed transitions cost 2.352\,s science
+and 7.583\,s cold coordinator time. This establishes dependence on fractional
+writes, but changes both content and numerical coverage and cannot additively
+explain the native gap. Content permutation and intensity-matched
+compensation are a separate, subsequently requested frozen-state diagnostic;
+no result is assumed here. All raw predictions precede privileged scoring.
+The independent saved-array review retains the failed binding claim,
+finite address differences, all costs and the distinction between valid
+continuous execution and reliable memory-role binding.
+
+
+\paragraph{Matched-strength frozen-memory intervention.}
+The subsequent human-requested diagnostic has executed on that same frozen
+AB checkpoint, without SGD. Four passes capture the endogenous reference,
+replay a sham, replace non-winning STORE content by a deterministic paired
+donor-group direction, and replace it by the most recent strictly past
+reference-selected STORE direction (fixed $e_0$ before the first such event).
+The latter two replacements preserve the original content norm. All replays
+use identical per-row/time/slot reference write weights and reference content
+at untreated writes; other state trajectories remain responsive to reads.
+This is a controlled memory-content pathway, not an endogenous learned arm.
+
+All 16,912 non-winning events were treated, with no excluded mass. Write
+weights, coverage and decay matched exactly; content norm discrepancies
+were below $2.4\times10^{-7}$. Sham reproduced final log probabilities
+exactly. Reference/sham, donor-direction and compensated-direction VALID
+accuracies were 320/512 (62.50\%), 215/512 (41.99\%) and 200/512
+(39.06\%); NLL was .531687, 3.504600 and 2.235468. Both-correct query
+counts were 7/192, 6/192 and 2/192, with modular-relation counts 11, 11 and
+3. Relative to the previously measured unchanged native accuracy of
+105/512, the soft accuracy gaps are 41.99, 21.48 and 18.55 percentage points.
+No new native evaluation or mixed reference-schedule native rule is implied.
+
+Non-winning events supply 28.06\% of final retained write strength;
+97.64\% of that portion occurs before the first selected STORE, and
+272/512 rows never select STORE. The result supports dependence on content
+direction beyond write strength and individual source norm, while failing
+to establish query binding. Vector interference, final memory norm and read
+norm are not matched. Reference schedule and norm scalars intentionally
+retain information; this is not a complete semantic-information ablation.
+Nor can these conditional replays and the earlier endogenous drop be
+subtracted to yield an additive information-versus-amplitude decomposition.
+
+This diagnostic executed 68,608 state transitions, with 10,351 unchanged
+parameters, 1.703\,s science time, 7.030\,s cold coordinator time and peak
+RSS 580,460,544\,B. Saved numerical payload is 40,102,912\,B; all twelve
+archived files total 20,131,196\,B. Training updates remain zero, complete
+FLOPs and energy remain unknown, and the three-arm learning budget is
+unchanged. Frozen protocol, sources, raw before-target arrays and checkpoint
+hashes are retained under the write-direction-controls namespace.
+
+
+\paragraph{Address lifetime and conditional read selectivity.}
+A separate zero-update diagnostic holds only the model's own post-KEY address
+through each public value-construction interval and WRITE. The public interval
+timing is privileged diagnostic information; no slot, value or correct route is
+supplied. Both 6,656-overrides-per-mode histories were checked exactly. The
+intended before-WRITE KEY contrast is restored to soft/native attention TV
+.311824/.319856, yet VALID is 314/512 and 103/512, versus the original 320
+and 105. Both-correct query counts are 4/192 and 2/192, versus 7 and 1.
+Thus repairing this address pathway alone does not repair the frozen computation.
+The reference trace localizes contrast attenuation to SET0, where ADDRESS wins
+in all 512 rows, rather than to CLEAR or progressive STEP decay. This does not
+identify the absence of a HOLD action as the learning cause.
+
+For a fixed recorded write history, the READ contribution of a literal WRITE
+vector $h_i$ has slot coefficient
+\begin{equation}
+p_{ij}=\frac{w_{ij}\prod_{i<k<\mathrm{READ}}(1-w_{kj})}
+ {\max(z_{\mathrm{READ},j},10^{-4})},\qquad
+\sum_j a_jp_{ij}\leq\max_j p_{ij},\quad a\in\Delta^7.
+\end{equation}
+Among 256 rows requesting the first WRITE, the mean per-row maximum is .188277
+in the original history and .482723 with held addresses; actual read coefficients
+are .172265 and .241018. Every slot favors the other literal WRITE in 212 and
+117 rows, respectively. Holding addresses creates more usable separation but
+does not teach the existing read to use it. The bound concerns only literal
+history coefficients conditional on saved writes: it is not a limit on a
+nonlinear decoder, other state information or the architecture's learnable tasks.
+Independent backward and forward coefficient reconstructions of all 1,536
+histories agree within $1.23\times10^{-15}$; FP32 denominator effects are separate.
+
+The two NN passes execute 34,304 transitions, zero SGD, with unchanged 10,351
+parameters: .690\,s science, 5.944\,s cold coordinator and peak RSS
+565,080,064\,B. The diagnostic holder/snapshot adds 16,384/32,768\,B per
+mode, outside the original 328-float model carry. Nine archived files total
+7,585,143\,B. Saved-only selectivity analysis and independent checking take
+approximately .171 and .105\,s with no NN execution. No new training configuration,
+Primary acceptance, broad advantage or full FLOP/energy measurement follows.
+
+
+\paragraph{Implemented next read rule, not a learned result.}
+The single ensuing development candidate preserves all AB parameters and the
+OLD-h value write. It replaces the eight coverage variables with a key-composition
+matrix $C\in\mathbb R^{8\times8}$, formed online:
+\begin{align}
+k&=\operatorname{softmax}(\ell),& w_j&=\alpha_S k_j,&
+C_j^+&=C_j+w_j(k-C_j),& V_j^+&=V_j+w_j(h-V_j),\\
+z&=C\mathbf1,&\bar C_j&=C_j/\max(z_j,10^{-4}),&
+\bar V_j&=V_j/\max(z_j,10^{-4}),\\
+(\bar C\bar C^\top+\lambda I)b&=\bar Ck,&r&=b^\top\bar V,&\lambda&=10^{-4}.
+\end{align}
+Signed retrieval can cancel overlapping mixtures; the mechanism is ordinary
+ridge associative retrieval, without a novelty claim. If a common historical
+linear association exists, matched writes preserve $V=CB$. Row-space recovery
+and ridge bias then follow from singular responses $\sigma^2/(\sigma^2+\lambda)$.
+Identical keys, inconsistent values and lost references are not repaired by
+this algebra; new key metadata cannot be inferred from an old V/z state.
+
+Actual bounded CPU admission restored all 20 original neural tensors, checked
+state transitions, independent SVD-ridge algebra, incompatible identical keys,
+eager/masked gradients and strict new-checkpoint reload. Parameter count is
+unchanged at 10,351; carry increases from 328 to 384 FP32 values, or 224\,B per
+example, plus a 256\,B constant buffer. Scientific time is .278\,s, cold coordinator
+5.866\,s and peak RSS 557,817,856\,B. No optimizer was instantiated, no task data
+were used and no learning updates occurred. An extreme partial-C gradient fixture
+is retained; finite admission checks do not establish stable training. The solver
+runs at every token, costs quadratic state and a naive cubic solve in slot count,
+and has unmeasured GPU/backward/workspace costs. This untrained implemented rule
+is not Primary and contributes no capability or competitive-performance claim.

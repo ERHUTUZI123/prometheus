@@ -1,0 +1,121 @@
+{
+  "AS_GiB": 64,
+  "CPU_only": true,
+  "NN_checkpoint_loads": 3,
+  "NNs": 1,
+  "P": 10351,
+  "SGD_updates": 0,
+  "all_raw_before_targets_and_truth": true,
+  "carry_scalars": 328,
+  "checkpoint_sha256": "912abc79925e9014146fafdec7f538282198bbddcc44034a8d7852021ebfbf85",
+  "conditions": [
+    "soft",
+    "native",
+    "soft_drop_nonchosen_STORE"
+  ],
+  "cost_scope": "all3CPUclosedlooppasses/factoryloads/eventstores/model+historicalcheckpoint/rawIO+RSS/source/data; no optimizer/training; comparefractionalwriteDROPvsnative without claimingidenticalothertrajectories",
+  "coverage_epsilon": 0.0001,
+  "drop_rule": "exact soft _transition then ONLYrevert updatedV+coverage forrowswhoseOWNargmax!=STORE; allotherupdatedfieldsunchanged/futurestepsclosedloop; no correcttokenroles",
+  "expected_active_transitions": 51456,
+  "file_limit_MiB": 100,
+  "full_FLOPs": null,
+  "input_files": {
+    "ab.pt": {
+      "bytes": 516787,
+      "remote_relative": "parameter-typed-normalized-memory-ab-n8-seed0-fourstage-graph-v1/learn/typed-normalized-memory-stage3-step600.pt",
+      "sha256": "912abc79925e9014146fafdec7f538282198bbddcc44034a8d7852021ebfbf85"
+    },
+    "prefix-truth.npz": {
+      "bytes": 58569,
+      "remote_relative": "parameter-posterior-value-valid-prefix-truth-v1/truth/prefix-truth.npz",
+      "sha256": "bff1c36f7b7951f9dc2ad012e847a7b2300666283fde61b65af6eef27368d176"
+    },
+    "soft-saved-GPU-valid.npz": {
+      "bytes": 17674,
+      "remote_relative": "parameter-typed-normalized-memory-ab-n8-seed0-fourstage-graph-v1/learn/stage3-valid-task3-predictions.npz",
+      "sha256": "1100a9d766eea32a34c83a693ba1e8a04f552f4383f1febeaf267dcde8654a84"
+    },
+    "valid.npz": {
+      "bytes": 5885,
+      "remote_relative": "parameter-memory-live-stage-data-n8-seed0-v1/generated/data/stage3-valid.npz",
+      "sha256": "7d8c81c0e41bcea94785fc63593f781b6042b0d2b87844d841db2d0a1875a31b"
+    }
+  },
+  "logical_dataset_passes": 3,
+  "models": [
+    {
+      "P": 10351,
+      "bytes": 516787,
+      "checkpoint_schema": "typed-normalized-memory-fourstage-graph-training-v1",
+      "key": "soft",
+      "leaf": "ab.pt",
+      "parent_source_sha256": {
+        "context_replay128.py": "cbe370360f0bf52efc82d614db54551f000c9f7e44230dc358dfdb76bcbad140",
+        "continuous_primitive_block.py": "93bdfea778c2f079ec04a6696ab8df77dc8bcc52b7f3fabdc57c05cbcad5250f",
+        "memory_live_stage_train.py": "dd5fc0b869d216f29c6ccb7202a1d965086c3fedb060d3c4c3bc4e5620042ad6",
+        "owned_fcba_core.py": "fcba2e82defe2e3fdb9b02efe1eee37456f33defa172c7eb632ea07774b88158",
+        "owned_parent_driver.py": "cc1b8b2a2102050b071376bd26329bbb3ead8d5a540cff4e79a7e73cfaf5cccc",
+        "train_typed_normalized_memory_fourstage_graph.py": "f391af3b0df93f978e9639c09d730fc94fe93b3570184d005164785e26605a07",
+        "typed_normalized_memory_graph_engine.py": "fe723ea3ae774d0c848769dc256d54924a333f1611516a527a38936c69843782",
+        "typed_normalized_memory_masked_graph_fb.py": "c322fb82f1095ae63463c9c584cf9cba05345514bdf71cb0a9a25b32b0f29294"
+      },
+      "reference_valid_leaf": "soft-saved-GPU-valid.npz",
+      "reference_valid_sha256": "1100a9d766eea32a34c83a693ba1e8a04f552f4383f1febeaf267dcde8654a84",
+      "sha256": "912abc79925e9014146fafdec7f538282198bbddcc44034a8d7852021ebfbf85",
+      "stage": 3
+    },
+    {
+      "P": 10351,
+      "bytes": 516787,
+      "checkpoint_schema": "typed-normalized-memory-fourstage-graph-training-v1",
+      "key": "native",
+      "leaf": "ab.pt",
+      "parent_source_sha256": {
+        "context_replay128.py": "cbe370360f0bf52efc82d614db54551f000c9f7e44230dc358dfdb76bcbad140",
+        "continuous_primitive_block.py": "93bdfea778c2f079ec04a6696ab8df77dc8bcc52b7f3fabdc57c05cbcad5250f",
+        "memory_live_stage_train.py": "dd5fc0b869d216f29c6ccb7202a1d965086c3fedb060d3c4c3bc4e5620042ad6",
+        "owned_fcba_core.py": "fcba2e82defe2e3fdb9b02efe1eee37456f33defa172c7eb632ea07774b88158",
+        "owned_parent_driver.py": "cc1b8b2a2102050b071376bd26329bbb3ead8d5a540cff4e79a7e73cfaf5cccc",
+        "train_typed_normalized_memory_fourstage_graph.py": "f391af3b0df93f978e9639c09d730fc94fe93b3570184d005164785e26605a07",
+        "typed_normalized_memory_graph_engine.py": "fe723ea3ae774d0c848769dc256d54924a333f1611516a527a38936c69843782",
+        "typed_normalized_memory_masked_graph_fb.py": "c322fb82f1095ae63463c9c584cf9cba05345514bdf71cb0a9a25b32b0f29294"
+      },
+      "sha256": "912abc79925e9014146fafdec7f538282198bbddcc44034a8d7852021ebfbf85",
+      "stage": 3
+    },
+    {
+      "P": 10351,
+      "bytes": 516787,
+      "checkpoint_schema": "typed-normalized-memory-fourstage-graph-training-v1",
+      "key": "soft_drop_nonchosen_STORE",
+      "leaf": "ab.pt",
+      "parent_source_sha256": {
+        "context_replay128.py": "cbe370360f0bf52efc82d614db54551f000c9f7e44230dc358dfdb76bcbad140",
+        "continuous_primitive_block.py": "93bdfea778c2f079ec04a6696ab8df77dc8bcc52b7f3fabdc57c05cbcad5250f",
+        "memory_live_stage_train.py": "dd5fc0b869d216f29c6ccb7202a1d965086c3fedb060d3c4c3bc4e5620042ad6",
+        "owned_fcba_core.py": "fcba2e82defe2e3fdb9b02efe1eee37456f33defa172c7eb632ea07774b88158",
+        "owned_parent_driver.py": "cc1b8b2a2102050b071376bd26329bbb3ead8d5a540cff4e79a7e73cfaf5cccc",
+        "train_typed_normalized_memory_fourstage_graph.py": "f391af3b0df93f978e9639c09d730fc94fe93b3570184d005164785e26605a07",
+        "typed_normalized_memory_graph_engine.py": "fe723ea3ae774d0c848769dc256d54924a333f1611516a527a38936c69843782",
+        "typed_normalized_memory_masked_graph_fb.py": "c322fb82f1095ae63463c9c584cf9cba05345514bdf71cb0a9a25b32b0f29294"
+      },
+      "sha256": "912abc79925e9014146fafdec7f538282198bbddcc44034a8d7852021ebfbf85",
+      "stage": 3
+    }
+  ],
+  "name": "parameter-ab-fractional-store-cpu-v1",
+  "no_new_permissions": true,
+  "outside_seconds": 150,
+  "provider_effective_compute": null,
+  "remote_launch_sha256": "518f53372237b1e6f30ea57c982082810bea47271cb4e7c3bc5668abc65859e2",
+  "runner_sha256": "c9f00f8e85f68d99e76aa4203efe77d08ac9a6ea25536631cf592b9b8c711335",
+  "science_seconds": 120,
+  "source_sha256": {
+    "audit_ab_fractional_store_cpu.py": "53e0affb8d938e924d425ce2e4c80ba78c70122b070c0e17bcb03d71fcb99b58",
+    "continuous_primitive_block.py": "93bdfea778c2f079ec04a6696ab8df77dc8bcc52b7f3fabdc57c05cbcad5250f",
+    "owned_fcba_core.py": "fcba2e82defe2e3fdb9b02efe1eee37456f33defa172c7eb632ea07774b88158"
+  },
+  "status": "FROZEN_UNEXECUTED",
+  "teacher_scope": "existingprefixtruthonlyAFTERall3rawsaved, sourceordering notOSblindness; no truthinNN",
+  "trace_scope": "eightpublicKEY/WRITE/READ/MIXevents pluswholeprogramargmaxcounts; trace.coverage isproposed, after_coverage actualapplied"
+}

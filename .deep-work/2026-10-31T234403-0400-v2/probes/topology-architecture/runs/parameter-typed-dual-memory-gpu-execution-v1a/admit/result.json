@@ -1,0 +1,361 @@
+{
+  "CPU_peak_RSS_bytes": 1240719360,
+  "CPU_proof_sha256": "ec6ac98cbf62480645f50e44f0d4dbc7a4c7897afcbed56263292c7ce95dc970",
+  "CPU_reference_reused_no_CPU_NN_FB": true,
+  "CPU_reference_sha256": "285ed48bb8ecbcb829356b55ae5fd732f6a54ee4dbd3dc8675942e0cd223e188",
+  "CPU_seconds": 1.7023546559999998,
+  "P": 10351,
+  "SGD_updates": 0,
+  "active_semantic_steps_per_FB": 486,
+  "actual_NN_eager_FB": 14,
+  "actual_graph_replay_FB": 0,
+  "capture": {
+    "attempts": 1,
+    "cleanup": "graphresetreturned",
+    "completed_GPU_FB_during_capture": null,
+    "exception_chain": [
+      {
+        "error": "CUDA error: operation failed due to a previous error during capture\nCUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1\nCompile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.\n",
+        "type": "AcceleratorError"
+      },
+      {
+        "error": "CUDA error: operation not permitted when stream is capturing\nCUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1\nCompile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.\n",
+        "type": "AcceleratorError"
+      }
+    ],
+    "phase": "capture",
+    "post_failure_NN_calls": 0,
+    "supported": false,
+    "traceback": "Traceback (most recent call last):\n  File \"/workspace/prometheus-v2-m0-architecture/code-parameter-typed-dual-memory-gpu-execution-v1a/check_typed_dual_memory_gpu.py\", line 86, in main\n    with torch.cuda.graph(graph,stream=side,capture_error_mode='global'):captured=fb.masked_step(model,**batch)\n                                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/prometheus-v2-m0-architecture/code-parameter-typed-dual-memory-gpu-execution-v1a/typed_dual_memory_masked_fb.py\", line 32, in masked_step\n    loss,output=objective(model,masked_forward_value,initial,tokens,lengths,targets);loss.backward()\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/prometheus-v2-m0-architecture/code-parameter-typed-dual-memory-gpu-execution-v1a/typed_dual_memory_masked_fb.py\", line 24, in objective\n    output,_=forward(model,initial,tokens,lengths)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/prometheus-v2-m0-architecture/code-parameter-typed-dual-memory-gpu-execution-v1a/typed_dual_memory_masked_fb.py\", line 18, in masked_forward_value\n    updated,_=model._transition(carry,embedded[:,step],'soft');active=step<lengths\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/prometheus-v2-m0-architecture/code-parameter-typed-dual-memory-gpu-execution-v1a/continuous_primitive_block.py\", line 57, in _transition\n    read,dual_weights,derived_coverage,normalized_keys,normalized_values=self.dual_read(values,carry['key_composition'],attention)\n                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/prometheus-v2-m0-architecture/code-parameter-typed-dual-memory-gpu-execution-v1a/continuous_primitive_block.py\", line 48, in dual_read\n    rhs=torch.bmm(Cbar,query[:,:,None]);b=torch.linalg.solve(gram,rhs).squeeze(-1)\n                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntorch.AcceleratorError: CUDA error: operation not permitted when stream is capturing\nCUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1\nCompile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.\n\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/workspace/prometheus-v2-m0-architecture/code-parameter-typed-dual-memory-gpu-execution-v1a/check_typed_dual_memory_gpu.py\", line 86, in main\n    with torch.cuda.graph(graph,stream=side,capture_error_mode='global'):captured=fb.masked_step(model,**batch)\n  File \"/usr/local/lib/python3.12/dist-packages/torch/cuda/graphs.py\", line 222, in __exit__\n    self.cuda_graph.capture_end()\n  File \"/usr/local/lib/python3.12/dist-packages/torch/cuda/graphs.py\", line 104, in capture_end\n    super().capture_end()\ntorch.AcceleratorError: CUDA error: operation failed due to a previous error during capture\nCUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1\nCompile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.\n\n",
+    "wall_seconds": 0.11923505703452975
+  },
+  "carry_scalars": 384,
+  "checkpoint_sha256": "912abc79925e9014146fafdec7f538282198bbddcc44034a8d7852021ebfbf85",
+  "driver_context_bytes": null,
+  "evidence": {
+    "CPU_GPU_eager": {
+      "all_finite": true,
+      "bytes": 91850,
+      "fields": {
+        "grad_00": {
+          "allclose": false,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 0.00019096583127975464,
+          "rtol": 0.0002
+        },
+        "grad_01": {
+          "allclose": false,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 5.46872615814209e-05,
+          "rtol": 0.0002
+        },
+        "grad_02": {
+          "allclose": false,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 0.00015631318092346191,
+          "rtol": 0.0002
+        },
+        "grad_03": {
+          "allclose": false,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 0.00042623281478881836,
+          "rtol": 0.0002
+        },
+        "grad_04": {
+          "allclose": false,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 0.00022646784782409668,
+          "rtol": 0.0002
+        },
+        "grad_05": {
+          "allclose": false,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 6.851553916931152e-05,
+          "rtol": 0.0002
+        },
+        "grad_06": {
+          "allclose": false,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 0.0001366734504699707,
+          "rtol": 0.0002
+        },
+        "grad_07": {
+          "allclose": false,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 6.381422281265259e-05,
+          "rtol": 0.0002
+        },
+        "grad_08": {
+          "allclose": false,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 6.365031003952026e-05,
+          "rtol": 0.0002
+        },
+        "grad_09": {
+          "allclose": false,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 5.8278441429138184e-05,
+          "rtol": 0.0002
+        },
+        "grad_10": {
+          "allclose": false,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 0.00034672021865844727,
+          "rtol": 0.0002
+        },
+        "grad_11": {
+          "allclose": false,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 7.949769496917725e-05,
+          "rtol": 0.0002
+        },
+        "grad_12": {
+          "allclose": false,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 0.00017820298671722412,
+          "rtol": 0.0002
+        },
+        "grad_13": {
+          "allclose": true,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 4.7534704208374023e-05,
+          "rtol": 0.0002
+        },
+        "grad_14": {
+          "allclose": false,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 6.487732753157616e-05,
+          "rtol": 0.0002
+        },
+        "grad_15": {
+          "allclose": false,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 8.532404899597168e-05,
+          "rtol": 0.0002
+        },
+        "grad_16": {
+          "allclose": true,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 1.333281397819519e-05,
+          "rtol": 0.0002
+        },
+        "grad_17": {
+          "allclose": true,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 1.735985279083252e-06,
+          "rtol": 0.0002
+        },
+        "grad_18": {
+          "allclose": false,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 0.00016546249389648438,
+          "rtol": 0.0002
+        },
+        "grad_19": {
+          "allclose": true,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 1.850724220275879e-05,
+          "rtol": 0.0002
+        },
+        "loss": {
+          "allclose": true,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 5.054473876953125e-05,
+          "rtol": 2e-05
+        },
+        "output": {
+          "allclose": false,
+          "atol": 2e-05,
+          "finite": true,
+          "max_abs": 0.00128936767578125,
+          "rtol": 2e-05
+        }
+      },
+      "file": "CPU-GPU-eager-all20.npz",
+      "fixed_tolerances_pass": false,
+      "sha256": "4c14c1ad8b6c50652ce31a52a34a51f9604ccf001073ed2c26048c0a286d96ea"
+    },
+    "GPU_reference_wall_seconds": 0.5524918989976868,
+    "NN_eager_timing": {
+      "CUDA_stream_elapsed_mean": 0.07138280258178711,
+      "iterations": 10,
+      "rows": [
+        {
+          "CUDA_stream_elapsed_seconds": 0.07172895812988281,
+          "wall_seconds": 0.07181490410584956
+        },
+        {
+          "CUDA_stream_elapsed_seconds": 0.08086640167236328,
+          "wall_seconds": 0.08096311194822192
+        },
+        {
+          "CUDA_stream_elapsed_seconds": 0.0670374755859375,
+          "wall_seconds": 0.06715817598160356
+        },
+        {
+          "CUDA_stream_elapsed_seconds": 0.0713338851928711,
+          "wall_seconds": 0.0714026860659942
+        },
+        {
+          "CUDA_stream_elapsed_seconds": 0.07102550506591797,
+          "wall_seconds": 0.07114544196520001
+        },
+        {
+          "CUDA_stream_elapsed_seconds": 0.06863900756835938,
+          "wall_seconds": 0.06870157492812723
+        },
+        {
+          "CUDA_stream_elapsed_seconds": 0.07065827178955078,
+          "wall_seconds": 0.07072122709359974
+        },
+        {
+          "CUDA_stream_elapsed_seconds": 0.07387059020996094,
+          "wall_seconds": 0.07398286706302315
+        },
+        {
+          "CUDA_stream_elapsed_seconds": 0.07181394958496094,
+          "wall_seconds": 0.07189235894475132
+        },
+        {
+          "CUDA_stream_elapsed_seconds": 0.0668539810180664,
+          "wall_seconds": 0.06695107603445649
+        }
+      ],
+      "scope": "CUDAevent streamelapsed includeshostgaps, notexclusiveGPUbusytime",
+      "wall_mean": 0.07147334241308272,
+      "wall_median": 0.0712740640155971
+    },
+    "NN_warmup": {
+      "SGD": 0,
+      "actual_FB": 3,
+      "wall_seconds": 0.21207242493983358
+    },
+    "backend": {
+      "CUDA_version": "12.8",
+      "allow_tf32": false,
+      "cudnn_allow_tf32": true,
+      "deterministic_algorithms": false,
+      "device": "NVIDIA L40S",
+      "matmul_precision": "highest",
+      "policies_changed": false,
+      "torch_version": "2.8.0+cu128",
+      "total_memory": 47667740672
+    },
+    "memory_after_NN_eager": {
+      "allocated": 34278912,
+      "peak_allocated": 43184640,
+      "peak_reserved": 62914560,
+      "reserved": 62914560
+    },
+    "memory_before_capture": {
+      "allocated": 34182656,
+      "peak_allocated": 43184640,
+      "peak_reserved": 62914560,
+      "reserved": 62914560
+    },
+    "solver_only": {
+      "formed_state": true,
+      "reference_FB": 1,
+      "reference_raw_sha256": "0b795041d9ffbc77cc6723887c327acb26e01a6a47dd1e93ae8f947061e468d5",
+      "scope": "64detachedformed8x8solves/FB; objectiveb\u00b2, noNNparameter/SGD; CPU_GPUfullNNreferenceabove, solverworkspaceunknown",
+      "timing": {
+        "CUDA_stream_elapsed_mean": 0.0005008735984563827,
+        "iterations": 10,
+        "rows": [
+          {
+            "CUDA_stream_elapsed_seconds": 0.00044387200474739073,
+            "wall_seconds": 0.0004979950608685613
+          },
+          {
+            "CUDA_stream_elapsed_seconds": 0.00045161598920822146,
+            "wall_seconds": 0.00047762494068592787
+          },
+          {
+            "CUDA_stream_elapsed_seconds": 0.00045609599351882933,
+            "wall_seconds": 0.00048158096615225077
+          },
+          {
+            "CUDA_stream_elapsed_seconds": 0.00045430400967597963,
+            "wall_seconds": 0.000478195957839489
+          },
+          {
+            "CUDA_stream_elapsed_seconds": 0.00046297600865364077,
+            "wall_seconds": 0.0004874500446021557
+          },
+          {
+            "CUDA_stream_elapsed_seconds": 0.000528544008731842,
+            "wall_seconds": 0.0005535579985007644
+          },
+          {
+            "CUDA_stream_elapsed_seconds": 0.0005527679920196533,
+            "wall_seconds": 0.0005775539902970195
+          },
+          {
+            "CUDA_stream_elapsed_seconds": 0.0005603839755058289,
+            "wall_seconds": 0.0005842550890520215
+          },
+          {
+            "CUDA_stream_elapsed_seconds": 0.000553600013256073,
+            "wall_seconds": 0.000576391932554543
+          },
+          {
+            "CUDA_stream_elapsed_seconds": 0.0005445759892463684,
+            "wall_seconds": 0.000568510964512825
+          }
+        ],
+        "scope": "CUDAevent streamelapsed includeshostgaps, notexclusiveGPUbusytime",
+        "wall_mean": 0.0005283116945065558,
+        "wall_median": 0.0005257765296846628
+      },
+      "warmup_FB": 3
+    },
+    "theta_unchanged_before_capture": true
+  },
+  "full_forward_FLOPs": null,
+  "full_training_FLOPs": null,
+  "gradient_bytes": 41404,
+  "new_training_budget": 0,
+  "numerical_GPU_admission": false,
+  "optimizer_instantiated": false,
+  "optimizer_updates": 0,
+  "parameter_bytes": 41404,
+  "parameter_tensors": 20,
+  "physical_forward_solves_per_NN_FB": 1024,
+  "private_graph_pool_bytes": null,
+  "provider_effective_compute": null,
+  "scope": "oneboundedexecution/costtest; capturefailurepreservedwithoutfallback, same\u03bb/\u03b8/core/tols; noVALID/TEST/optimizer/learning, GPUtrainingnotadmittedbytimingalone",
+  "shared_buffer_bytes": 256,
+  "solver_backward_FLOPs": null,
+  "solver_only_FB": 14,
+  "source_sha256": {
+    "check_typed_dual_memory_gpu.py": "bee54e5c4b703ab8a353d4216487d9fe80003d8b8a0ea162f9f1e328ffcdc91b",
+    "continuous_primitive_block.py": "1374fd3ca62f64faec0daf6982a632f1ff8cd447e3c11d43a39aaacf3e712c6c",
+    "owned_ab_core.py": "93bdfea778c2f079ec04a6696ab8df77dc8bcc52b7f3fabdc57c05cbcad5250f",
+    "owned_fcba_core.py": "fcba2e82defe2e3fdb9b02efe1eee37456f33defa172c7eb632ea07774b88158",
+    "typed_dual_memory_masked_fb.py": "0eca678f8b1c813a34a945b345bd12e95fd0779696ea91eb1efbc7e8df9216dc"
+  },
+  "static_input_bytes": 9728,
+  "status": "GPU_DUAL_MEMORY_EXECUTION_DIAGNOSTIC_COMPLETE",
+  "wall_seconds": 1.7032392220571637
+}
