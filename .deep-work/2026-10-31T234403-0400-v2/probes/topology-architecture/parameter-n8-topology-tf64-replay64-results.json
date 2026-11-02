@@ -1,0 +1,2402 @@
+{
+  "schema": "parameter-n8-sixstage-completed-baseline-and-failure-evidence-v1",
+  "scope": "Same NEW six-stage N8 stream; not old N16 studies",
+  "M0": "NOT_PASSED",
+  "N": 8,
+  "seed": 0,
+  "steps_per_stage": 600,
+  "total_steps_per_completed_arm": 3600,
+  "baseline_training_rule": "TF64 64 current samples per gradient; Replay stage>0 32 current plus32 old within the same64 gradient batch; same saved current-index matrix, but current-label exposures differ; both have same task sample access.",
+  "capability_threshold": "For every IID>=.95, OOD>=.90,L16>=.90 on BOTH neural and deployed",
+  "contrast_boundary": "Both current Transformer64 variants remain near chance under this exact 600-step schedule and acquire zero qualifying capabilities; this is not a strong successful-acquisition continual-retention control. Topology deployed success does not by itself establish topology-specific protection or M0 advantage.",
+  "summary_sources": {
+    "transformer64": {
+      "source": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-transformer64-full/learn/summary.json",
+      "source_sha256": "ccdb3a14bbc76733e5c82c7e63f974942c134d8f4c47b93537545f84bbc46d4f",
+      "completed_stages": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "receipt": {
+        "address_space_gib": 512,
+        "authorized_proc_write": {
+          "make_rights": false,
+          "rights": [
+            "WRITE_FILE",
+            "TRUNCATE"
+          ],
+          "scope": "child /proc/<PID>/task only"
+        },
+        "cpu_only": false,
+        "cuda_init_before_seccomp": true,
+        "elapsed_seconds": 50.36061933205929,
+        "environment_keys": [
+          "CUDA_CACHE_PATH",
+          "CUDA_MODULE_LOADING",
+          "CUDA_VISIBLE_DEVICES",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "MKL_NUM_THREADS",
+          "NUMEXPR_NUM_THREADS",
+          "OMP_DYNAMIC",
+          "OMP_NUM_THREADS",
+          "OPENBLAS_NUM_THREADS",
+          "PATH",
+          "PYTHONDONTWRITEBYTECODE",
+          "PYTHONNOUSERSITE",
+          "PYTHONPYCACHEPREFIX",
+          "PYTHONUNBUFFERED",
+          "PYTORCH_NVML_BASED_CUDA_CHECK",
+          "SANDBOX_OUT",
+          "TEMP",
+          "TMP",
+          "TMPDIR",
+          "TOKENIZERS_PARALLELISM",
+          "TORCH_HOME",
+          "TRITON_CACHE_DIR",
+          "VECLIB_MAXIMUM_THREADS",
+          "XDG_CACHE_HOME"
+        ],
+        "file_limit_mib": 100,
+        "gpu_allocator_fraction": 0.3,
+        "out": "/workspace/prometheus-v2-m0-architecture/outputs/parameter-n8-seed0-transformer64-full",
+        "returncode": 0,
+        "script_sha256": "99d3801093b912f9244ac0d67bc747ff08edf7193839001f5bf9a47a3373e28c",
+        "source_sha256": {
+          "continuous_monodromy.py": "ad1852bba88393b85db8aa44553d5c85183a0dce5ada4a62460f52b3a52c2936",
+          "continuous_native_model.py": "a0d44a3ca48a0f21162e4423e7a5c1c604a71ca3350a254ff32b5c0c8c5abc1a",
+          "diagnose_projection_numeric.py": "3a32833852520279d818ae3ac239c31d84a3e7b4e9779000c502b225b4e58f68",
+          "history_operation_formation.py": "239a934d265d490da4446d7b36854f71657cc857479152987c9551548b6c42f9",
+          "homotopy_lift_cache.py": "026c0453f2ac7369f680446f84b861d1133a6c2ebd248d9799627861b2f42c23",
+          "integrate_native_repair.py": "6a05dbf9aac262d55a913edc763b4a3fc35d009c9258f0580072b785c589762d",
+          "observed_operation_formation.py": "8303e5c138127cb4373fd4a8b106807d3d32ab113b5d24871864a1cefabb12e8",
+          "parameter_efficiency_study.py": "99d3801093b912f9244ac0d67bc747ff08edf7193839001f5bf9a47a3373e28c",
+          "parameter_native_models.py": "2d1349823ecae93cdd1facf1b37edb85666657a2021cdfc7e3faa284d10ac84e",
+          "parameter_transformer_baselines.py": "8c862e352dcdedb0dcdf60beb3e93e11ce8fde5630a8ee6938cd1018630334f9",
+          "path_moment_cache.py": "8e2b7ec24f14f117fb1991f5920be2c80910596df37026d013d1afa4c2277a36",
+          "program_baseline_v2.py": "d14645a0a5af10c4fb83b830511be1e96a983a64705ba1e4ff5434336ac5d756",
+          "semantic_promotion_model.py": "c1f3246cba181792e25ac03aa087deeee30684bf53cd5bacd91a9ee5ae69175a",
+          "tasks.py": "dbca2935925f713e2f5716d8ac5faf4892464918eed6b2e0a66b45680ec5d9bc",
+          "terminal_profile_formation.py": "a498773315fc391a1bd19abf2de4427468a914255d76347908d82c8e4b947bd2",
+          "topology_model.py": "48f8f7aa5efe96297bef04e29ca6c52b8bd8bc38a2af409ce772619679e77acd",
+          "torch_baselines.py": "c22f59c4dd68385910f7df7f5c8be5d0268a479e6d5820ef6a636ce8efbde176",
+          "train.py": "0a5489d0a7ceb24aff321755da3d218f55b1129319cf7bb23975c8b45e80db01",
+          "train_monodromy_extension.py": "8d0f3a3ce0e4bcd3added02bb69f1dc8aef060f1527011dcae5ebef88f090706",
+          "workspace_refinement.py": "af0f623ce72dc3834aedbc9904e74bbf22c2a332f8069670fdda745741f6b32a"
+        },
+        "status": "completed",
+        "timeout_seconds": 900.0
+      },
+      "totals_seconds": {
+        "train_seconds": 35.03209264471661,
+        "guard_seconds": 0.0,
+        "eval_seconds": 3.8888335824012756,
+        "phase_wall_seconds": 44.01262673083693,
+        "reload_seconds": 0.1915573327569291
+      }
+    },
+    "replay64": {
+      "source": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-replay64-full/learn/summary.json",
+      "source_sha256": "1a53991c5b4bf1e466f35bfa76ebb0edea3f20c961756d020060efdd4c8c7d2e",
+      "completed_stages": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "receipt": {
+        "address_space_gib": 512,
+        "authorized_proc_write": {
+          "make_rights": false,
+          "rights": [
+            "WRITE_FILE",
+            "TRUNCATE"
+          ],
+          "scope": "child /proc/<PID>/task only"
+        },
+        "cpu_only": false,
+        "cuda_init_before_seccomp": true,
+        "elapsed_seconds": 47.80628259293735,
+        "environment_keys": [
+          "CUDA_CACHE_PATH",
+          "CUDA_MODULE_LOADING",
+          "CUDA_VISIBLE_DEVICES",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "MKL_NUM_THREADS",
+          "NUMEXPR_NUM_THREADS",
+          "OMP_DYNAMIC",
+          "OMP_NUM_THREADS",
+          "OPENBLAS_NUM_THREADS",
+          "PATH",
+          "PYTHONDONTWRITEBYTECODE",
+          "PYTHONNOUSERSITE",
+          "PYTHONPYCACHEPREFIX",
+          "PYTHONUNBUFFERED",
+          "PYTORCH_NVML_BASED_CUDA_CHECK",
+          "SANDBOX_OUT",
+          "TEMP",
+          "TMP",
+          "TMPDIR",
+          "TOKENIZERS_PARALLELISM",
+          "TORCH_HOME",
+          "TRITON_CACHE_DIR",
+          "VECLIB_MAXIMUM_THREADS",
+          "XDG_CACHE_HOME"
+        ],
+        "file_limit_mib": 100,
+        "gpu_allocator_fraction": 0.3,
+        "out": "/workspace/prometheus-v2-m0-architecture/outputs/parameter-n8-seed0-replay64-full",
+        "returncode": 0,
+        "script_sha256": "99d3801093b912f9244ac0d67bc747ff08edf7193839001f5bf9a47a3373e28c",
+        "source_sha256": {
+          "continuous_monodromy.py": "ad1852bba88393b85db8aa44553d5c85183a0dce5ada4a62460f52b3a52c2936",
+          "continuous_native_model.py": "a0d44a3ca48a0f21162e4423e7a5c1c604a71ca3350a254ff32b5c0c8c5abc1a",
+          "diagnose_projection_numeric.py": "3a32833852520279d818ae3ac239c31d84a3e7b4e9779000c502b225b4e58f68",
+          "history_operation_formation.py": "239a934d265d490da4446d7b36854f71657cc857479152987c9551548b6c42f9",
+          "homotopy_lift_cache.py": "026c0453f2ac7369f680446f84b861d1133a6c2ebd248d9799627861b2f42c23",
+          "integrate_native_repair.py": "6a05dbf9aac262d55a913edc763b4a3fc35d009c9258f0580072b785c589762d",
+          "observed_operation_formation.py": "8303e5c138127cb4373fd4a8b106807d3d32ab113b5d24871864a1cefabb12e8",
+          "parameter_efficiency_study.py": "99d3801093b912f9244ac0d67bc747ff08edf7193839001f5bf9a47a3373e28c",
+          "parameter_native_models.py": "2d1349823ecae93cdd1facf1b37edb85666657a2021cdfc7e3faa284d10ac84e",
+          "parameter_transformer_baselines.py": "8c862e352dcdedb0dcdf60beb3e93e11ce8fde5630a8ee6938cd1018630334f9",
+          "path_moment_cache.py": "8e2b7ec24f14f117fb1991f5920be2c80910596df37026d013d1afa4c2277a36",
+          "program_baseline_v2.py": "d14645a0a5af10c4fb83b830511be1e96a983a64705ba1e4ff5434336ac5d756",
+          "semantic_promotion_model.py": "c1f3246cba181792e25ac03aa087deeee30684bf53cd5bacd91a9ee5ae69175a",
+          "tasks.py": "dbca2935925f713e2f5716d8ac5faf4892464918eed6b2e0a66b45680ec5d9bc",
+          "terminal_profile_formation.py": "a498773315fc391a1bd19abf2de4427468a914255d76347908d82c8e4b947bd2",
+          "topology_model.py": "48f8f7aa5efe96297bef04e29ca6c52b8bd8bc38a2af409ce772619679e77acd",
+          "torch_baselines.py": "c22f59c4dd68385910f7df7f5c8be5d0268a479e6d5820ef6a636ce8efbde176",
+          "train.py": "0a5489d0a7ceb24aff321755da3d218f55b1129319cf7bb23975c8b45e80db01",
+          "train_monodromy_extension.py": "8d0f3a3ce0e4bcd3added02bb69f1dc8aef060f1527011dcae5ebef88f090706",
+          "workspace_refinement.py": "af0f623ce72dc3834aedbc9904e74bbf22c2a332f8069670fdda745741f6b32a"
+        },
+        "status": "completed",
+        "timeout_seconds": 900.0
+      },
+      "totals_seconds": {
+        "train_seconds": 32.55079910065979,
+        "guard_seconds": 0.0,
+        "eval_seconds": 3.691727124270983,
+        "phase_wall_seconds": 41.717073014820926,
+        "reload_seconds": 0.182135711889714
+      }
+    }
+  },
+  "common_batch_indices": {
+    "0": {
+      "actual_NPY_content_sha256": {
+        "topology": "3915547f6923cfd98b181e98faeadeda3761b7c78d636d4073ace5e2b429858b",
+        "transformer64": "3915547f6923cfd98b181e98faeadeda3761b7c78d636d4073ace5e2b429858b",
+        "replay64": "3915547f6923cfd98b181e98faeadeda3761b7c78d636d4073ace5e2b429858b"
+      },
+      "identical": true
+    },
+    "1": {
+      "actual_NPY_content_sha256": {
+        "topology": "c02c69337a7620900d9b64b8703da7c61f19ac1a98b5f460898dfe3cce4a263e",
+        "transformer64": "c02c69337a7620900d9b64b8703da7c61f19ac1a98b5f460898dfe3cce4a263e",
+        "replay64": "c02c69337a7620900d9b64b8703da7c61f19ac1a98b5f460898dfe3cce4a263e"
+      },
+      "identical": true
+    },
+    "2": {
+      "actual_NPY_content_sha256": {
+        "topology": "8228d34dbfb1aa2d7ac8f9d4af88e7f1e581b5e5be82325450cd421e271a386f",
+        "transformer64": "8228d34dbfb1aa2d7ac8f9d4af88e7f1e581b5e5be82325450cd421e271a386f",
+        "replay64": "8228d34dbfb1aa2d7ac8f9d4af88e7f1e581b5e5be82325450cd421e271a386f"
+      },
+      "identical": true
+    },
+    "3": {
+      "actual_NPY_content_sha256": {
+        "topology": "9e7ef13f9f8653434d05c4ee154b2256f0933c68fef4d45a0dc04ac13cc2634f",
+        "transformer64": "9e7ef13f9f8653434d05c4ee154b2256f0933c68fef4d45a0dc04ac13cc2634f",
+        "replay64": "9e7ef13f9f8653434d05c4ee154b2256f0933c68fef4d45a0dc04ac13cc2634f"
+      },
+      "identical": true
+    },
+    "4": {
+      "actual_NPY_content_sha256": {
+        "topology": "6cce466d02cafc93a57eaf92b348f508ef19fd7eb39302b9afb7e77de556ec7e",
+        "transformer64": "6cce466d02cafc93a57eaf92b348f508ef19fd7eb39302b9afb7e77de556ec7e",
+        "replay64": "6cce466d02cafc93a57eaf92b348f508ef19fd7eb39302b9afb7e77de556ec7e"
+      },
+      "identical": true
+    },
+    "5": {
+      "actual_NPY_content_sha256": {
+        "topology": "758ea2a694d913fbfe8b42fd7640d0e6517cba8adb55f5812ef85c6d248e0f2a",
+        "transformer64": "758ea2a694d913fbfe8b42fd7640d0e6517cba8adb55f5812ef85c6d248e0f2a",
+        "replay64": "758ea2a694d913fbfe8b42fd7640d0e6517cba8adb55f5812ef85c6d248e0f2a"
+      },
+      "identical": true
+    }
+  },
+  "rows": [
+    {
+      "arm": "transformer64",
+      "stage": 0,
+      "P": 103752,
+      "deltaP": 103752,
+      "Qstable": 0,
+      "current_success_count": 0,
+      "capabilities": {
+        "admitted": [],
+        "currently_successful": [],
+        "deltaP_per_new_retained_capability": null,
+        "delta_parameters": 103752,
+        "lost_previously_stable_capabilities": [],
+        "net_delta_stable_capabilities": 0,
+        "new_successfully_retained": 0,
+        "stable": [],
+        "total_stable": 0
+      },
+      "new_metrics": {
+        "iid": {
+          "deployed": 0.18359375,
+          "n": 512,
+          "neural": 0.18359375,
+          "terminal_CE": 2.075445830821991
+        },
+        "length16": {
+          "deployed": 0.134765625,
+          "n": 512,
+          "neural": 0.134765625,
+          "terminal_CE": 2.101733148097992
+        },
+        "ood": {
+          "deployed": 0.123046875,
+          "n": 512,
+          "neural": 0.123046875,
+          "terminal_CE": 2.0934366583824158
+        },
+        "valid": {
+          "deployed": 0.173828125,
+          "n": 512,
+          "neural": 0.173828125,
+          "terminal_CE": 2.0526257157325745
+        }
+      },
+      "all_seen_metrics": {
+        "0": {
+          "iid": {
+            "deployed": 0.18359375,
+            "n": 512,
+            "neural": 0.18359375,
+            "terminal_CE": 2.075445830821991
+          },
+          "length16": {
+            "deployed": 0.134765625,
+            "n": 512,
+            "neural": 0.134765625,
+            "terminal_CE": 2.101733148097992
+          },
+          "ood": {
+            "deployed": 0.123046875,
+            "n": 512,
+            "neural": 0.123046875,
+            "terminal_CE": 2.0934366583824158
+          },
+          "valid": {
+            "deployed": 0.173828125,
+            "n": 512,
+            "neural": 0.173828125,
+            "terminal_CE": 2.0526257157325745
+          }
+        }
+      },
+      "resources": {
+        "complete_reference_json_bytes": 2,
+        "geometry": [],
+        "model_extra_json_bytes": 2,
+        "optimizer_tensor_bytes": 830196,
+        "parameter_claim_boundary": "frozen and preallocated parameters counted; operation scores reconstructed from trainable coordinates are activations, not stored parameters",
+        "parameters": {
+          "bytes": 415008,
+          "total": 103752,
+          "trainable": 103752
+        },
+        "reference_array_bytes": 0,
+        "registered_buffer_bytes": 16,
+        "replay_tensor_bytes": 0
+      },
+      "timing_seconds": {
+        "train_seconds": 6.013996779336594,
+        "guard_seconds": 0.0,
+        "eval_seconds": 0.4761010949732736,
+        "phase_wall_seconds": 10.063786221900955,
+        "reload_seconds": 0.026415899978019297
+      },
+      "checkpoint_bytes": 1319781,
+      "checkpoint": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-transformer64-full/learn/transformer64-stage0-step600.pt",
+      "actual_reload_verified": true
+    },
+    {
+      "arm": "transformer64",
+      "stage": 1,
+      "P": 103752,
+      "deltaP": 0,
+      "Qstable": 0,
+      "current_success_count": 0,
+      "capabilities": {
+        "admitted": [],
+        "currently_successful": [],
+        "deltaP_per_new_retained_capability": null,
+        "delta_parameters": 0,
+        "lost_previously_stable_capabilities": [],
+        "net_delta_stable_capabilities": 0,
+        "new_successfully_retained": 0,
+        "stable": [],
+        "total_stable": 0
+      },
+      "new_metrics": {
+        "iid": {
+          "deployed": 0.119140625,
+          "n": 512,
+          "neural": 0.119140625,
+          "terminal_CE": 2.088510423898697
+        },
+        "length16": {
+          "deployed": 0.115234375,
+          "n": 512,
+          "neural": 0.115234375,
+          "terminal_CE": 2.0899804532527924
+        },
+        "ood": {
+          "deployed": 0.125,
+          "n": 512,
+          "neural": 0.125,
+          "terminal_CE": 2.082228124141693
+        },
+        "valid": {
+          "deployed": 0.119140625,
+          "n": 512,
+          "neural": 0.119140625,
+          "terminal_CE": 2.0785798728466034
+        }
+      },
+      "all_seen_metrics": {
+        "0": {
+          "iid": {
+            "deployed": 0.13671875,
+            "n": 512,
+            "neural": 0.13671875,
+            "terminal_CE": 2.07856285572052
+          },
+          "length16": {
+            "deployed": 0.140625,
+            "n": 512,
+            "neural": 0.140625,
+            "terminal_CE": 2.088485211133957
+          },
+          "ood": {
+            "deployed": 0.1328125,
+            "n": 512,
+            "neural": 0.1328125,
+            "terminal_CE": 2.0960004925727844
+          },
+          "valid": {
+            "deployed": 0.13671875,
+            "n": 512,
+            "neural": 0.13671875,
+            "terminal_CE": 2.081530511379242
+          }
+        },
+        "1": {
+          "iid": {
+            "deployed": 0.119140625,
+            "n": 512,
+            "neural": 0.119140625,
+            "terminal_CE": 2.088510423898697
+          },
+          "length16": {
+            "deployed": 0.115234375,
+            "n": 512,
+            "neural": 0.115234375,
+            "terminal_CE": 2.0899804532527924
+          },
+          "ood": {
+            "deployed": 0.125,
+            "n": 512,
+            "neural": 0.125,
+            "terminal_CE": 2.082228124141693
+          },
+          "valid": {
+            "deployed": 0.119140625,
+            "n": 512,
+            "neural": 0.119140625,
+            "terminal_CE": 2.0785798728466034
+          }
+        }
+      },
+      "resources": {
+        "complete_reference_json_bytes": 2,
+        "geometry": [],
+        "model_extra_json_bytes": 2,
+        "optimizer_tensor_bytes": 830196,
+        "parameter_claim_boundary": "frozen and preallocated parameters counted; operation scores reconstructed from trainable coordinates are activations, not stored parameters",
+        "parameters": {
+          "bytes": 415008,
+          "total": 103752,
+          "trainable": 103752
+        },
+        "reference_array_bytes": 0,
+        "registered_buffer_bytes": 16,
+        "replay_tensor_bytes": 0
+      },
+      "timing_seconds": {
+        "train_seconds": 5.885170591529459,
+        "guard_seconds": 0.0,
+        "eval_seconds": 0.35586044390220195,
+        "phase_wall_seconds": 6.550032214960083,
+        "reload_seconds": 0.02721920993644744
+      },
+      "checkpoint_bytes": 1319781,
+      "checkpoint": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-transformer64-full/learn/transformer64-stage1-step600.pt",
+      "actual_reload_verified": true
+    },
+    {
+      "arm": "transformer64",
+      "stage": 2,
+      "P": 103752,
+      "deltaP": 0,
+      "Qstable": 0,
+      "current_success_count": 0,
+      "capabilities": {
+        "admitted": [],
+        "currently_successful": [],
+        "deltaP_per_new_retained_capability": null,
+        "delta_parameters": 0,
+        "lost_previously_stable_capabilities": [],
+        "net_delta_stable_capabilities": 0,
+        "new_successfully_retained": 0,
+        "stable": [],
+        "total_stable": 0
+      },
+      "new_metrics": {
+        "iid": {
+          "deployed": 0.16015625,
+          "n": 512,
+          "neural": 0.16015625,
+          "terminal_CE": 2.0310261100530624
+        },
+        "length16": {
+          "deployed": 0.138671875,
+          "n": 512,
+          "neural": 0.138671875,
+          "terminal_CE": 2.077874928712845
+        },
+        "ood": {
+          "deployed": 0.134765625,
+          "n": 512,
+          "neural": 0.134765625,
+          "terminal_CE": 2.0804102420806885
+        },
+        "valid": {
+          "deployed": 0.1328125,
+          "n": 512,
+          "neural": 0.1328125,
+          "terminal_CE": 2.0363923609256744
+        }
+      },
+      "all_seen_metrics": {
+        "0": {
+          "iid": {
+            "deployed": 0.10546875,
+            "n": 512,
+            "neural": 0.10546875,
+            "terminal_CE": 2.13001948595047
+          },
+          "length16": {
+            "deployed": 0.125,
+            "n": 512,
+            "neural": 0.125,
+            "terminal_CE": 2.1556878089904785
+          },
+          "ood": {
+            "deployed": 0.138671875,
+            "n": 512,
+            "neural": 0.138671875,
+            "terminal_CE": 2.1298478841781616
+          },
+          "valid": {
+            "deployed": 0.109375,
+            "n": 512,
+            "neural": 0.109375,
+            "terminal_CE": 2.142510861158371
+          }
+        },
+        "1": {
+          "iid": {
+            "deployed": 0.134765625,
+            "n": 512,
+            "neural": 0.134765625,
+            "terminal_CE": 2.102944403886795
+          },
+          "length16": {
+            "deployed": 0.134765625,
+            "n": 512,
+            "neural": 0.134765625,
+            "terminal_CE": 2.083823710680008
+          },
+          "ood": {
+            "deployed": 0.109375,
+            "n": 512,
+            "neural": 0.109375,
+            "terminal_CE": 2.0872373282909393
+          },
+          "valid": {
+            "deployed": 0.138671875,
+            "n": 512,
+            "neural": 0.138671875,
+            "terminal_CE": 2.1137769520282745
+          }
+        },
+        "2": {
+          "iid": {
+            "deployed": 0.16015625,
+            "n": 512,
+            "neural": 0.16015625,
+            "terminal_CE": 2.0310261100530624
+          },
+          "length16": {
+            "deployed": 0.138671875,
+            "n": 512,
+            "neural": 0.138671875,
+            "terminal_CE": 2.077874928712845
+          },
+          "ood": {
+            "deployed": 0.134765625,
+            "n": 512,
+            "neural": 0.134765625,
+            "terminal_CE": 2.0804102420806885
+          },
+          "valid": {
+            "deployed": 0.1328125,
+            "n": 512,
+            "neural": 0.1328125,
+            "terminal_CE": 2.0363923609256744
+          }
+        }
+      },
+      "resources": {
+        "complete_reference_json_bytes": 2,
+        "geometry": [],
+        "model_extra_json_bytes": 2,
+        "optimizer_tensor_bytes": 830196,
+        "parameter_claim_boundary": "frozen and preallocated parameters counted; operation scores reconstructed from trainable coordinates are activations, not stored parameters",
+        "parameters": {
+          "bytes": 415008,
+          "total": 103752,
+          "trainable": 103752
+        },
+        "reference_array_bytes": 0,
+        "registered_buffer_bytes": 16,
+        "replay_tensor_bytes": 0
+      },
+      "timing_seconds": {
+        "train_seconds": 6.239884913433343,
+        "guard_seconds": 0.0,
+        "eval_seconds": 0.5165920061990619,
+        "phase_wall_seconds": 7.071298799011856,
+        "reload_seconds": 0.0293648379156366
+      },
+      "checkpoint_bytes": 1319781,
+      "checkpoint": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-transformer64-full/learn/transformer64-stage2-step600.pt",
+      "actual_reload_verified": true
+    },
+    {
+      "arm": "transformer64",
+      "stage": 3,
+      "P": 103752,
+      "deltaP": 0,
+      "Qstable": 0,
+      "current_success_count": 0,
+      "capabilities": {
+        "admitted": [],
+        "currently_successful": [],
+        "deltaP_per_new_retained_capability": null,
+        "delta_parameters": 0,
+        "lost_previously_stable_capabilities": [],
+        "net_delta_stable_capabilities": 0,
+        "new_successfully_retained": 0,
+        "stable": [],
+        "total_stable": 0
+      },
+      "new_metrics": {
+        "iid": {
+          "deployed": 0.13671875,
+          "n": 512,
+          "neural": 0.13671875,
+          "terminal_CE": 2.0846159160137177
+        },
+        "length16": {
+          "deployed": 0.1328125,
+          "n": 512,
+          "neural": 0.1328125,
+          "terminal_CE": 2.0817406475543976
+        },
+        "ood": {
+          "deployed": 0.115234375,
+          "n": 512,
+          "neural": 0.115234375,
+          "terminal_CE": 2.083822786808014
+        },
+        "valid": {
+          "deployed": 0.09765625,
+          "n": 512,
+          "neural": 0.09765625,
+          "terminal_CE": 2.082897901535034
+        }
+      },
+      "all_seen_metrics": {
+        "0": {
+          "iid": {
+            "deployed": 0.15234375,
+            "n": 512,
+            "neural": 0.15234375,
+            "terminal_CE": 2.0798323154449463
+          },
+          "length16": {
+            "deployed": 0.12109375,
+            "n": 512,
+            "neural": 0.12109375,
+            "terminal_CE": 2.0921482741832733
+          },
+          "ood": {
+            "deployed": 0.1484375,
+            "n": 512,
+            "neural": 0.1484375,
+            "terminal_CE": 2.085393041372299
+          },
+          "valid": {
+            "deployed": 0.1171875,
+            "n": 512,
+            "neural": 0.1171875,
+            "terminal_CE": 2.0912091732025146
+          }
+        },
+        "1": {
+          "iid": {
+            "deployed": 0.11328125,
+            "n": 512,
+            "neural": 0.11328125,
+            "terminal_CE": 2.084811508655548
+          },
+          "length16": {
+            "deployed": 0.123046875,
+            "n": 512,
+            "neural": 0.123046875,
+            "terminal_CE": 2.085568606853485
+          },
+          "ood": {
+            "deployed": 0.1171875,
+            "n": 512,
+            "neural": 0.1171875,
+            "terminal_CE": 2.088626652956009
+          },
+          "valid": {
+            "deployed": 0.10546875,
+            "n": 512,
+            "neural": 0.10546875,
+            "terminal_CE": 2.090569853782654
+          }
+        },
+        "2": {
+          "iid": {
+            "deployed": 0.173828125,
+            "n": 512,
+            "neural": 0.173828125,
+            "terminal_CE": 2.063692569732666
+          },
+          "length16": {
+            "deployed": 0.107421875,
+            "n": 512,
+            "neural": 0.107421875,
+            "terminal_CE": 2.0872780978679657
+          },
+          "ood": {
+            "deployed": 0.0859375,
+            "n": 512,
+            "neural": 0.0859375,
+            "terminal_CE": 2.091461479663849
+          },
+          "valid": {
+            "deployed": 0.15625,
+            "n": 512,
+            "neural": 0.15625,
+            "terminal_CE": 2.0594600439071655
+          }
+        },
+        "3": {
+          "iid": {
+            "deployed": 0.13671875,
+            "n": 512,
+            "neural": 0.13671875,
+            "terminal_CE": 2.0846159160137177
+          },
+          "length16": {
+            "deployed": 0.1328125,
+            "n": 512,
+            "neural": 0.1328125,
+            "terminal_CE": 2.0817406475543976
+          },
+          "ood": {
+            "deployed": 0.115234375,
+            "n": 512,
+            "neural": 0.115234375,
+            "terminal_CE": 2.083822786808014
+          },
+          "valid": {
+            "deployed": 0.09765625,
+            "n": 512,
+            "neural": 0.09765625,
+            "terminal_CE": 2.082897901535034
+          }
+        }
+      },
+      "resources": {
+        "complete_reference_json_bytes": 2,
+        "geometry": [],
+        "model_extra_json_bytes": 2,
+        "optimizer_tensor_bytes": 830196,
+        "parameter_claim_boundary": "frozen and preallocated parameters counted; operation scores reconstructed from trainable coordinates are activations, not stored parameters",
+        "parameters": {
+          "bytes": 415008,
+          "total": 103752,
+          "trainable": 103752
+        },
+        "reference_array_bytes": 0,
+        "registered_buffer_bytes": 16,
+        "replay_tensor_bytes": 0
+      },
+      "timing_seconds": {
+        "train_seconds": 5.72915494593326,
+        "guard_seconds": 0.0,
+        "eval_seconds": 0.6797917980002239,
+        "phase_wall_seconds": 6.705085507943295,
+        "reload_seconds": 0.03368017892353237
+      },
+      "checkpoint_bytes": 1319781,
+      "checkpoint": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-transformer64-full/learn/transformer64-stage3-step600.pt",
+      "actual_reload_verified": true
+    },
+    {
+      "arm": "transformer64",
+      "stage": 4,
+      "P": 103752,
+      "deltaP": 0,
+      "Qstable": 0,
+      "current_success_count": 0,
+      "capabilities": {
+        "admitted": [],
+        "currently_successful": [],
+        "deltaP_per_new_retained_capability": null,
+        "delta_parameters": 0,
+        "lost_previously_stable_capabilities": [],
+        "net_delta_stable_capabilities": 0,
+        "new_successfully_retained": 0,
+        "stable": [],
+        "total_stable": 0
+      },
+      "new_metrics": {
+        "iid": {
+          "deployed": 0.119140625,
+          "n": 512,
+          "neural": 0.119140625,
+          "terminal_CE": 2.0753969252109528
+        },
+        "length16": {
+          "deployed": 0.11328125,
+          "n": 512,
+          "neural": 0.11328125,
+          "terminal_CE": 2.081850826740265
+        },
+        "ood": {
+          "deployed": 0.1171875,
+          "n": 512,
+          "neural": 0.1171875,
+          "terminal_CE": 2.085229992866516
+        },
+        "valid": {
+          "deployed": 0.107421875,
+          "n": 512,
+          "neural": 0.107421875,
+          "terminal_CE": 2.085593730211258
+        }
+      },
+      "all_seen_metrics": {
+        "0": {
+          "iid": {
+            "deployed": 0.12890625,
+            "n": 512,
+            "neural": 0.12890625,
+            "terminal_CE": 2.0902562141418457
+          },
+          "length16": {
+            "deployed": 0.115234375,
+            "n": 512,
+            "neural": 0.115234375,
+            "terminal_CE": 2.091973692178726
+          },
+          "ood": {
+            "deployed": 0.1171875,
+            "n": 512,
+            "neural": 0.1171875,
+            "terminal_CE": 2.088110864162445
+          },
+          "valid": {
+            "deployed": 0.138671875,
+            "n": 512,
+            "neural": 0.138671875,
+            "terminal_CE": 2.0840071737766266
+          }
+        },
+        "1": {
+          "iid": {
+            "deployed": 0.109375,
+            "n": 512,
+            "neural": 0.109375,
+            "terminal_CE": 2.08773335814476
+          },
+          "length16": {
+            "deployed": 0.119140625,
+            "n": 512,
+            "neural": 0.119140625,
+            "terminal_CE": 2.078805446624756
+          },
+          "ood": {
+            "deployed": 0.123046875,
+            "n": 512,
+            "neural": 0.123046875,
+            "terminal_CE": 2.0808299481868744
+          },
+          "valid": {
+            "deployed": 0.1171875,
+            "n": 512,
+            "neural": 0.1171875,
+            "terminal_CE": 2.0898868441581726
+          }
+        },
+        "2": {
+          "iid": {
+            "deployed": 0.1328125,
+            "n": 512,
+            "neural": 0.1328125,
+            "terminal_CE": 2.0864118933677673
+          },
+          "length16": {
+            "deployed": 0.119140625,
+            "n": 512,
+            "neural": 0.119140625,
+            "terminal_CE": 2.077223688364029
+          },
+          "ood": {
+            "deployed": 0.12890625,
+            "n": 512,
+            "neural": 0.12890625,
+            "terminal_CE": 2.079050451517105
+          },
+          "valid": {
+            "deployed": 0.138671875,
+            "n": 512,
+            "neural": 0.138671875,
+            "terminal_CE": 2.0891529321670532
+          }
+        },
+        "3": {
+          "iid": {
+            "deployed": 0.11328125,
+            "n": 512,
+            "neural": 0.11328125,
+            "terminal_CE": 2.0851987302303314
+          },
+          "length16": {
+            "deployed": 0.1328125,
+            "n": 512,
+            "neural": 0.1328125,
+            "terminal_CE": 2.095076709985733
+          },
+          "ood": {
+            "deployed": 0.126953125,
+            "n": 512,
+            "neural": 0.126953125,
+            "terminal_CE": 2.0936845242977142
+          },
+          "valid": {
+            "deployed": 0.125,
+            "n": 512,
+            "neural": 0.125,
+            "terminal_CE": 2.083923429250717
+          }
+        },
+        "4": {
+          "iid": {
+            "deployed": 0.119140625,
+            "n": 512,
+            "neural": 0.119140625,
+            "terminal_CE": 2.0753969252109528
+          },
+          "length16": {
+            "deployed": 0.11328125,
+            "n": 512,
+            "neural": 0.11328125,
+            "terminal_CE": 2.081850826740265
+          },
+          "ood": {
+            "deployed": 0.1171875,
+            "n": 512,
+            "neural": 0.1171875,
+            "terminal_CE": 2.085229992866516
+          },
+          "valid": {
+            "deployed": 0.107421875,
+            "n": 512,
+            "neural": 0.107421875,
+            "terminal_CE": 2.085593730211258
+          }
+        }
+      },
+      "resources": {
+        "complete_reference_json_bytes": 2,
+        "geometry": [],
+        "model_extra_json_bytes": 2,
+        "optimizer_tensor_bytes": 830196,
+        "parameter_claim_boundary": "frozen and preallocated parameters counted; operation scores reconstructed from trainable coordinates are activations, not stored parameters",
+        "parameters": {
+          "bytes": 415008,
+          "total": 103752,
+          "trainable": 103752
+        },
+        "reference_array_bytes": 0,
+        "registered_buffer_bytes": 16,
+        "replay_tensor_bytes": 0
+      },
+      "timing_seconds": {
+        "train_seconds": 5.57216990145389,
+        "guard_seconds": 0.0,
+        "eval_seconds": 0.8444445012137294,
+        "phase_wall_seconds": 6.713925341959111,
+        "reload_seconds": 0.03587253694422543
+      },
+      "checkpoint_bytes": 1319781,
+      "checkpoint": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-transformer64-full/learn/transformer64-stage4-step600.pt",
+      "actual_reload_verified": true
+    },
+    {
+      "arm": "transformer64",
+      "stage": 5,
+      "P": 103752,
+      "deltaP": 0,
+      "Qstable": 0,
+      "current_success_count": 0,
+      "capabilities": {
+        "admitted": [],
+        "currently_successful": [],
+        "deltaP_per_new_retained_capability": null,
+        "delta_parameters": 0,
+        "lost_previously_stable_capabilities": [],
+        "net_delta_stable_capabilities": 0,
+        "new_successfully_retained": 0,
+        "stable": [],
+        "total_stable": 0
+      },
+      "new_metrics": {
+        "iid": {
+          "deployed": 0.115234375,
+          "n": 512,
+          "neural": 0.115234375,
+          "terminal_CE": 2.079439401626587
+        },
+        "length16": {
+          "deployed": 0.1015625,
+          "n": 512,
+          "neural": 0.1015625,
+          "terminal_CE": 2.0838627219200134
+        },
+        "ood": {
+          "deployed": 0.109375,
+          "n": 512,
+          "neural": 0.109375,
+          "terminal_CE": 2.0810244381427765
+        },
+        "valid": {
+          "deployed": 0.1171875,
+          "n": 512,
+          "neural": 0.1171875,
+          "terminal_CE": 2.080456644296646
+        }
+      },
+      "all_seen_metrics": {
+        "0": {
+          "iid": {
+            "deployed": 0.142578125,
+            "n": 512,
+            "neural": 0.142578125,
+            "terminal_CE": 2.080385208129883
+          },
+          "length16": {
+            "deployed": 0.140625,
+            "n": 512,
+            "neural": 0.140625,
+            "terminal_CE": 2.0791464149951935
+          },
+          "ood": {
+            "deployed": 0.126953125,
+            "n": 512,
+            "neural": 0.126953125,
+            "terminal_CE": 2.0829635560512543
+          },
+          "valid": {
+            "deployed": 0.12890625,
+            "n": 512,
+            "neural": 0.12890625,
+            "terminal_CE": 2.078979402780533
+          }
+        },
+        "1": {
+          "iid": {
+            "deployed": 0.138671875,
+            "n": 512,
+            "neural": 0.138671875,
+            "terminal_CE": 2.0781840085983276
+          },
+          "length16": {
+            "deployed": 0.10546875,
+            "n": 512,
+            "neural": 0.10546875,
+            "terminal_CE": 2.0804112255573273
+          },
+          "ood": {
+            "deployed": 0.10546875,
+            "n": 512,
+            "neural": 0.10546875,
+            "terminal_CE": 2.081993490457535
+          },
+          "valid": {
+            "deployed": 0.1171875,
+            "n": 512,
+            "neural": 0.1171875,
+            "terminal_CE": 2.0866163671016693
+          }
+        },
+        "2": {
+          "iid": {
+            "deployed": 0.115234375,
+            "n": 512,
+            "neural": 0.115234375,
+            "terminal_CE": 2.0823738873004913
+          },
+          "length16": {
+            "deployed": 0.123046875,
+            "n": 512,
+            "neural": 0.123046875,
+            "terminal_CE": 2.07710537314415
+          },
+          "ood": {
+            "deployed": 0.111328125,
+            "n": 512,
+            "neural": 0.111328125,
+            "terminal_CE": 2.0806870460510254
+          },
+          "valid": {
+            "deployed": 0.138671875,
+            "n": 512,
+            "neural": 0.138671875,
+            "terminal_CE": 2.0773636996746063
+          }
+        },
+        "3": {
+          "iid": {
+            "deployed": 0.111328125,
+            "n": 512,
+            "neural": 0.111328125,
+            "terminal_CE": 2.082093298435211
+          },
+          "length16": {
+            "deployed": 0.119140625,
+            "n": 512,
+            "neural": 0.119140625,
+            "terminal_CE": 2.083622932434082
+          },
+          "ood": {
+            "deployed": 0.099609375,
+            "n": 512,
+            "neural": 0.099609375,
+            "terminal_CE": 2.0823086202144623
+          },
+          "valid": {
+            "deployed": 0.142578125,
+            "n": 512,
+            "neural": 0.142578125,
+            "terminal_CE": 2.0790762305259705
+          }
+        },
+        "4": {
+          "iid": {
+            "deployed": 0.115234375,
+            "n": 512,
+            "neural": 0.115234375,
+            "terminal_CE": 2.0811217427253723
+          },
+          "length16": {
+            "deployed": 0.1328125,
+            "n": 512,
+            "neural": 0.1328125,
+            "terminal_CE": 2.079822450876236
+          },
+          "ood": {
+            "deployed": 0.119140625,
+            "n": 512,
+            "neural": 0.119140625,
+            "terminal_CE": 2.0809987783432007
+          },
+          "valid": {
+            "deployed": 0.12109375,
+            "n": 512,
+            "neural": 0.12109375,
+            "terminal_CE": 2.0816962122917175
+          }
+        },
+        "5": {
+          "iid": {
+            "deployed": 0.115234375,
+            "n": 512,
+            "neural": 0.115234375,
+            "terminal_CE": 2.079439401626587
+          },
+          "length16": {
+            "deployed": 0.1015625,
+            "n": 512,
+            "neural": 0.1015625,
+            "terminal_CE": 2.0838627219200134
+          },
+          "ood": {
+            "deployed": 0.109375,
+            "n": 512,
+            "neural": 0.109375,
+            "terminal_CE": 2.0810244381427765
+          },
+          "valid": {
+            "deployed": 0.1171875,
+            "n": 512,
+            "neural": 0.1171875,
+            "terminal_CE": 2.080456644296646
+          }
+        }
+      },
+      "resources": {
+        "complete_reference_json_bytes": 2,
+        "geometry": [],
+        "model_extra_json_bytes": 2,
+        "optimizer_tensor_bytes": 830196,
+        "parameter_claim_boundary": "frozen and preallocated parameters counted; operation scores reconstructed from trainable coordinates are activations, not stored parameters",
+        "parameters": {
+          "bytes": 415008,
+          "total": 103752,
+          "trainable": 103752
+        },
+        "reference_array_bytes": 0,
+        "registered_buffer_bytes": 16,
+        "replay_tensor_bytes": 0
+      },
+      "timing_seconds": {
+        "train_seconds": 5.591715513030067,
+        "guard_seconds": 0.0,
+        "eval_seconds": 1.016043738112785,
+        "phase_wall_seconds": 6.908498645061627,
+        "reload_seconds": 0.039004669059067965
+      },
+      "checkpoint_bytes": 1319781,
+      "checkpoint": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-transformer64-full/learn/transformer64-stage5-step600.pt",
+      "actual_reload_verified": true
+    },
+    {
+      "arm": "replay64",
+      "stage": 0,
+      "P": 103752,
+      "deltaP": 103752,
+      "Qstable": 0,
+      "current_success_count": 0,
+      "capabilities": {
+        "admitted": [],
+        "currently_successful": [],
+        "deltaP_per_new_retained_capability": null,
+        "delta_parameters": 103752,
+        "lost_previously_stable_capabilities": [],
+        "net_delta_stable_capabilities": 0,
+        "new_successfully_retained": 0,
+        "stable": [],
+        "total_stable": 0
+      },
+      "new_metrics": {
+        "iid": {
+          "deployed": 0.18359375,
+          "n": 512,
+          "neural": 0.18359375,
+          "terminal_CE": 2.075445830821991
+        },
+        "length16": {
+          "deployed": 0.134765625,
+          "n": 512,
+          "neural": 0.134765625,
+          "terminal_CE": 2.101733148097992
+        },
+        "ood": {
+          "deployed": 0.123046875,
+          "n": 512,
+          "neural": 0.123046875,
+          "terminal_CE": 2.0934366583824158
+        },
+        "valid": {
+          "deployed": 0.173828125,
+          "n": 512,
+          "neural": 0.173828125,
+          "terminal_CE": 2.0526257157325745
+        }
+      },
+      "all_seen_metrics": {
+        "0": {
+          "iid": {
+            "deployed": 0.18359375,
+            "n": 512,
+            "neural": 0.18359375,
+            "terminal_CE": 2.075445830821991
+          },
+          "length16": {
+            "deployed": 0.134765625,
+            "n": 512,
+            "neural": 0.134765625,
+            "terminal_CE": 2.101733148097992
+          },
+          "ood": {
+            "deployed": 0.123046875,
+            "n": 512,
+            "neural": 0.123046875,
+            "terminal_CE": 2.0934366583824158
+          },
+          "valid": {
+            "deployed": 0.173828125,
+            "n": 512,
+            "neural": 0.173828125,
+            "terminal_CE": 2.0526257157325745
+          }
+        }
+      },
+      "resources": {
+        "complete_reference_json_bytes": 2,
+        "geometry": [],
+        "model_extra_json_bytes": 2,
+        "optimizer_tensor_bytes": 830196,
+        "parameter_claim_boundary": "frozen and preallocated parameters counted; operation scores reconstructed from trainable coordinates are activations, not stored parameters",
+        "parameters": {
+          "bytes": 415008,
+          "total": 103752,
+          "trainable": 103752
+        },
+        "reference_array_bytes": 0,
+        "registered_buffer_bytes": 16,
+        "replay_tensor_bytes": 0
+      },
+      "timing_seconds": {
+        "train_seconds": 5.6826672840397805,
+        "guard_seconds": 0.0,
+        "eval_seconds": 0.4566130330786109,
+        "phase_wall_seconds": 9.620318318950012,
+        "reload_seconds": 0.025536114000715315
+      },
+      "checkpoint_bytes": 1318831,
+      "checkpoint": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-replay64-full/learn/replay64-stage0-step600.pt",
+      "actual_reload_verified": true
+    },
+    {
+      "arm": "replay64",
+      "stage": 1,
+      "P": 103752,
+      "deltaP": 0,
+      "Qstable": 0,
+      "current_success_count": 0,
+      "capabilities": {
+        "admitted": [],
+        "currently_successful": [],
+        "deltaP_per_new_retained_capability": null,
+        "delta_parameters": 0,
+        "lost_previously_stable_capabilities": [],
+        "net_delta_stable_capabilities": 0,
+        "new_successfully_retained": 0,
+        "stable": [],
+        "total_stable": 0
+      },
+      "new_metrics": {
+        "iid": {
+          "deployed": 0.103515625,
+          "n": 512,
+          "neural": 0.103515625,
+          "terminal_CE": 2.089533656835556
+        },
+        "length16": {
+          "deployed": 0.119140625,
+          "n": 512,
+          "neural": 0.119140625,
+          "terminal_CE": 2.088041752576828
+        },
+        "ood": {
+          "deployed": 0.111328125,
+          "n": 512,
+          "neural": 0.111328125,
+          "terminal_CE": 2.0849892795085907
+        },
+        "valid": {
+          "deployed": 0.123046875,
+          "n": 512,
+          "neural": 0.123046875,
+          "terminal_CE": 2.076553374528885
+        }
+      },
+      "all_seen_metrics": {
+        "0": {
+          "iid": {
+            "deployed": 0.142578125,
+            "n": 512,
+            "neural": 0.142578125,
+            "terminal_CE": 2.074484348297119
+          },
+          "length16": {
+            "deployed": 0.126953125,
+            "n": 512,
+            "neural": 0.126953125,
+            "terminal_CE": 2.0881041288375854
+          },
+          "ood": {
+            "deployed": 0.11328125,
+            "n": 512,
+            "neural": 0.11328125,
+            "terminal_CE": 2.083753228187561
+          },
+          "valid": {
+            "deployed": 0.162109375,
+            "n": 512,
+            "neural": 0.162109375,
+            "terminal_CE": 2.0605168640613556
+          }
+        },
+        "1": {
+          "iid": {
+            "deployed": 0.103515625,
+            "n": 512,
+            "neural": 0.103515625,
+            "terminal_CE": 2.089533656835556
+          },
+          "length16": {
+            "deployed": 0.119140625,
+            "n": 512,
+            "neural": 0.119140625,
+            "terminal_CE": 2.088041752576828
+          },
+          "ood": {
+            "deployed": 0.111328125,
+            "n": 512,
+            "neural": 0.111328125,
+            "terminal_CE": 2.0849892795085907
+          },
+          "valid": {
+            "deployed": 0.123046875,
+            "n": 512,
+            "neural": 0.123046875,
+            "terminal_CE": 2.076553374528885
+          }
+        }
+      },
+      "resources": {
+        "complete_reference_json_bytes": 2,
+        "geometry": [],
+        "model_extra_json_bytes": 2,
+        "optimizer_tensor_bytes": 830196,
+        "parameter_claim_boundary": "frozen and preallocated parameters counted; operation scores reconstructed from trainable coordinates are activations, not stored parameters",
+        "parameters": {
+          "bytes": 415008,
+          "total": 103752,
+          "trainable": 103752
+        },
+        "reference_array_bytes": 0,
+        "registered_buffer_bytes": 16,
+        "replay_tensor_bytes": 1376256
+      },
+      "timing_seconds": {
+        "train_seconds": 5.163867100025527,
+        "guard_seconds": 0.0,
+        "eval_seconds": 0.33381792914588004,
+        "phase_wall_seconds": 5.893342128023505,
+        "reload_seconds": 0.02546549797989428
+      },
+      "checkpoint_bytes": 1318831,
+      "checkpoint": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-replay64-full/learn/replay64-stage1-step600.pt",
+      "actual_reload_verified": true
+    },
+    {
+      "arm": "replay64",
+      "stage": 2,
+      "P": 103752,
+      "deltaP": 0,
+      "Qstable": 0,
+      "current_success_count": 0,
+      "capabilities": {
+        "admitted": [],
+        "currently_successful": [],
+        "deltaP_per_new_retained_capability": null,
+        "delta_parameters": 0,
+        "lost_previously_stable_capabilities": [],
+        "net_delta_stable_capabilities": 0,
+        "new_successfully_retained": 0,
+        "stable": [],
+        "total_stable": 0
+      },
+      "new_metrics": {
+        "iid": {
+          "deployed": 0.12890625,
+          "n": 512,
+          "neural": 0.12890625,
+          "terminal_CE": 2.0758950114250183
+        },
+        "length16": {
+          "deployed": 0.1328125,
+          "n": 512,
+          "neural": 0.1328125,
+          "terminal_CE": 2.0789843797683716
+        },
+        "ood": {
+          "deployed": 0.140625,
+          "n": 512,
+          "neural": 0.140625,
+          "terminal_CE": 2.078726828098297
+        },
+        "valid": {
+          "deployed": 0.123046875,
+          "n": 512,
+          "neural": 0.123046875,
+          "terminal_CE": 2.0777724385261536
+        }
+      },
+      "all_seen_metrics": {
+        "0": {
+          "iid": {
+            "deployed": 0.12109375,
+            "n": 512,
+            "neural": 0.12109375,
+            "terminal_CE": 2.0717872381210327
+          },
+          "length16": {
+            "deployed": 0.12109375,
+            "n": 512,
+            "neural": 0.12109375,
+            "terminal_CE": 2.0834072530269623
+          },
+          "ood": {
+            "deployed": 0.12109375,
+            "n": 512,
+            "neural": 0.12109375,
+            "terminal_CE": 2.0812314450740814
+          },
+          "valid": {
+            "deployed": 0.1484375,
+            "n": 512,
+            "neural": 0.1484375,
+            "terminal_CE": 2.0641528367996216
+          }
+        },
+        "1": {
+          "iid": {
+            "deployed": 0.12890625,
+            "n": 512,
+            "neural": 0.12890625,
+            "terminal_CE": 2.0783121585845947
+          },
+          "length16": {
+            "deployed": 0.16015625,
+            "n": 512,
+            "neural": 0.16015625,
+            "terminal_CE": 2.077470898628235
+          },
+          "ood": {
+            "deployed": 0.146484375,
+            "n": 512,
+            "neural": 0.146484375,
+            "terminal_CE": 2.07598340511322
+          },
+          "valid": {
+            "deployed": 0.125,
+            "n": 512,
+            "neural": 0.125,
+            "terminal_CE": 2.079896092414856
+          }
+        },
+        "2": {
+          "iid": {
+            "deployed": 0.12890625,
+            "n": 512,
+            "neural": 0.12890625,
+            "terminal_CE": 2.0758950114250183
+          },
+          "length16": {
+            "deployed": 0.1328125,
+            "n": 512,
+            "neural": 0.1328125,
+            "terminal_CE": 2.0789843797683716
+          },
+          "ood": {
+            "deployed": 0.140625,
+            "n": 512,
+            "neural": 0.140625,
+            "terminal_CE": 2.078726828098297
+          },
+          "valid": {
+            "deployed": 0.123046875,
+            "n": 512,
+            "neural": 0.123046875,
+            "terminal_CE": 2.0777724385261536
+          }
+        }
+      },
+      "resources": {
+        "complete_reference_json_bytes": 2,
+        "geometry": [],
+        "model_extra_json_bytes": 2,
+        "optimizer_tensor_bytes": 830196,
+        "parameter_claim_boundary": "frozen and preallocated parameters counted; operation scores reconstructed from trainable coordinates are activations, not stored parameters",
+        "parameters": {
+          "bytes": 415008,
+          "total": 103752,
+          "trainable": 103752
+        },
+        "reference_array_bytes": 0,
+        "registered_buffer_bytes": 16,
+        "replay_tensor_bytes": 2752512
+      },
+      "timing_seconds": {
+        "train_seconds": 5.3266702994005755,
+        "guard_seconds": 0.0,
+        "eval_seconds": 0.4998750659869984,
+        "phase_wall_seconds": 6.218429546919651,
+        "reload_seconds": 0.028812080970965326
+      },
+      "checkpoint_bytes": 1318831,
+      "checkpoint": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-replay64-full/learn/replay64-stage2-step600.pt",
+      "actual_reload_verified": true
+    },
+    {
+      "arm": "replay64",
+      "stage": 3,
+      "P": 103752,
+      "deltaP": 0,
+      "Qstable": 0,
+      "current_success_count": 0,
+      "capabilities": {
+        "admitted": [],
+        "currently_successful": [],
+        "deltaP_per_new_retained_capability": null,
+        "delta_parameters": 0,
+        "lost_previously_stable_capabilities": [],
+        "net_delta_stable_capabilities": 0,
+        "new_successfully_retained": 0,
+        "stable": [],
+        "total_stable": 0
+      },
+      "new_metrics": {
+        "iid": {
+          "deployed": 0.140625,
+          "n": 512,
+          "neural": 0.140625,
+          "terminal_CE": 2.0854826867580414
+        },
+        "length16": {
+          "deployed": 0.1328125,
+          "n": 512,
+          "neural": 0.1328125,
+          "terminal_CE": 2.0848511457443237
+        },
+        "ood": {
+          "deployed": 0.115234375,
+          "n": 512,
+          "neural": 0.115234375,
+          "terminal_CE": 2.0848026871681213
+        },
+        "valid": {
+          "deployed": 0.095703125,
+          "n": 512,
+          "neural": 0.095703125,
+          "terminal_CE": 2.0858583450317383
+        }
+      },
+      "all_seen_metrics": {
+        "0": {
+          "iid": {
+            "deployed": 0.12890625,
+            "n": 512,
+            "neural": 0.12890625,
+            "terminal_CE": 2.0738755762577057
+          },
+          "length16": {
+            "deployed": 0.12890625,
+            "n": 512,
+            "neural": 0.12890625,
+            "terminal_CE": 2.0853323936462402
+          },
+          "ood": {
+            "deployed": 0.12109375,
+            "n": 512,
+            "neural": 0.12109375,
+            "terminal_CE": 2.081378608942032
+          },
+          "valid": {
+            "deployed": 0.146484375,
+            "n": 512,
+            "neural": 0.146484375,
+            "terminal_CE": 2.0692257285118103
+          }
+        },
+        "1": {
+          "iid": {
+            "deployed": 0.125,
+            "n": 512,
+            "neural": 0.125,
+            "terminal_CE": 2.0805453658103943
+          },
+          "length16": {
+            "deployed": 0.125,
+            "n": 512,
+            "neural": 0.125,
+            "terminal_CE": 2.084028959274292
+          },
+          "ood": {
+            "deployed": 0.126953125,
+            "n": 512,
+            "neural": 0.126953125,
+            "terminal_CE": 2.08452108502388
+          },
+          "valid": {
+            "deployed": 0.11328125,
+            "n": 512,
+            "neural": 0.11328125,
+            "terminal_CE": 2.0799540579319
+          }
+        },
+        "2": {
+          "iid": {
+            "deployed": 0.166015625,
+            "n": 512,
+            "neural": 0.166015625,
+            "terminal_CE": 2.077242285013199
+          },
+          "length16": {
+            "deployed": 0.111328125,
+            "n": 512,
+            "neural": 0.111328125,
+            "terminal_CE": 2.082918107509613
+          },
+          "ood": {
+            "deployed": 0.09375,
+            "n": 512,
+            "neural": 0.09375,
+            "terminal_CE": 2.089395433664322
+          },
+          "valid": {
+            "deployed": 0.107421875,
+            "n": 512,
+            "neural": 0.107421875,
+            "terminal_CE": 2.0882702469825745
+          }
+        },
+        "3": {
+          "iid": {
+            "deployed": 0.140625,
+            "n": 512,
+            "neural": 0.140625,
+            "terminal_CE": 2.0854826867580414
+          },
+          "length16": {
+            "deployed": 0.1328125,
+            "n": 512,
+            "neural": 0.1328125,
+            "terminal_CE": 2.0848511457443237
+          },
+          "ood": {
+            "deployed": 0.115234375,
+            "n": 512,
+            "neural": 0.115234375,
+            "terminal_CE": 2.0848026871681213
+          },
+          "valid": {
+            "deployed": 0.095703125,
+            "n": 512,
+            "neural": 0.095703125,
+            "terminal_CE": 2.0858583450317383
+          }
+        }
+      },
+      "resources": {
+        "complete_reference_json_bytes": 2,
+        "geometry": [],
+        "model_extra_json_bytes": 2,
+        "optimizer_tensor_bytes": 830196,
+        "parameter_claim_boundary": "frozen and preallocated parameters counted; operation scores reconstructed from trainable coordinates are activations, not stored parameters",
+        "parameters": {
+          "bytes": 415008,
+          "total": 103752,
+          "trainable": 103752
+        },
+        "reference_array_bytes": 0,
+        "registered_buffer_bytes": 16,
+        "replay_tensor_bytes": 4128768
+      },
+      "timing_seconds": {
+        "train_seconds": 5.8222215853165835,
+        "guard_seconds": 0.0,
+        "eval_seconds": 0.6544988481327891,
+        "phase_wall_seconds": 6.904059013933875,
+        "reload_seconds": 0.03145451995078474
+      },
+      "checkpoint_bytes": 1318831,
+      "checkpoint": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-replay64-full/learn/replay64-stage3-step600.pt",
+      "actual_reload_verified": true
+    },
+    {
+      "arm": "replay64",
+      "stage": 4,
+      "P": 103752,
+      "deltaP": 0,
+      "Qstable": 0,
+      "current_success_count": 0,
+      "capabilities": {
+        "admitted": [],
+        "currently_successful": [],
+        "deltaP_per_new_retained_capability": null,
+        "delta_parameters": 0,
+        "lost_previously_stable_capabilities": [],
+        "net_delta_stable_capabilities": 0,
+        "new_successfully_retained": 0,
+        "stable": [],
+        "total_stable": 0
+      },
+      "new_metrics": {
+        "iid": {
+          "deployed": 0.13671875,
+          "n": 512,
+          "neural": 0.13671875,
+          "terminal_CE": 2.075443983078003
+        },
+        "length16": {
+          "deployed": 0.103515625,
+          "n": 512,
+          "neural": 0.103515625,
+          "terminal_CE": 2.0819340348243713
+        },
+        "ood": {
+          "deployed": 0.123046875,
+          "n": 512,
+          "neural": 0.123046875,
+          "terminal_CE": 2.0826936960220337
+        },
+        "valid": {
+          "deployed": 0.12109375,
+          "n": 512,
+          "neural": 0.12109375,
+          "terminal_CE": 2.080754280090332
+        }
+      },
+      "all_seen_metrics": {
+        "0": {
+          "iid": {
+            "deployed": 0.142578125,
+            "n": 512,
+            "neural": 0.142578125,
+            "terminal_CE": 2.0819549560546875
+          },
+          "length16": {
+            "deployed": 0.115234375,
+            "n": 512,
+            "neural": 0.115234375,
+            "terminal_CE": 2.081672042608261
+          },
+          "ood": {
+            "deployed": 0.154296875,
+            "n": 512,
+            "neural": 0.154296875,
+            "terminal_CE": 2.0748067796230316
+          },
+          "valid": {
+            "deployed": 0.1328125,
+            "n": 512,
+            "neural": 0.1328125,
+            "terminal_CE": 2.078403025865555
+          }
+        },
+        "1": {
+          "iid": {
+            "deployed": 0.12890625,
+            "n": 512,
+            "neural": 0.12890625,
+            "terminal_CE": 2.081059068441391
+          },
+          "length16": {
+            "deployed": 0.16015625,
+            "n": 512,
+            "neural": 0.16015625,
+            "terminal_CE": 2.0771808326244354
+          },
+          "ood": {
+            "deployed": 0.146484375,
+            "n": 512,
+            "neural": 0.146484375,
+            "terminal_CE": 2.0797742009162903
+          },
+          "valid": {
+            "deployed": 0.125,
+            "n": 512,
+            "neural": 0.125,
+            "terminal_CE": 2.0815089344978333
+          }
+        },
+        "2": {
+          "iid": {
+            "deployed": 0.142578125,
+            "n": 512,
+            "neural": 0.142578125,
+            "terminal_CE": 2.074929177761078
+          },
+          "length16": {
+            "deployed": 0.12109375,
+            "n": 512,
+            "neural": 0.12109375,
+            "terminal_CE": 2.0832849740982056
+          },
+          "ood": {
+            "deployed": 0.140625,
+            "n": 512,
+            "neural": 0.140625,
+            "terminal_CE": 2.07922300696373
+          },
+          "valid": {
+            "deployed": 0.1328125,
+            "n": 512,
+            "neural": 0.1328125,
+            "terminal_CE": 2.079599678516388
+          }
+        },
+        "3": {
+          "iid": {
+            "deployed": 0.142578125,
+            "n": 512,
+            "neural": 0.142578125,
+            "terminal_CE": 2.0798400938510895
+          },
+          "length16": {
+            "deployed": 0.13671875,
+            "n": 512,
+            "neural": 0.13671875,
+            "terminal_CE": 2.0771719813346863
+          },
+          "ood": {
+            "deployed": 0.12890625,
+            "n": 512,
+            "neural": 0.12890625,
+            "terminal_CE": 2.079818159341812
+          },
+          "valid": {
+            "deployed": 0.10546875,
+            "n": 512,
+            "neural": 0.10546875,
+            "terminal_CE": 2.083995282649994
+          }
+        },
+        "4": {
+          "iid": {
+            "deployed": 0.13671875,
+            "n": 512,
+            "neural": 0.13671875,
+            "terminal_CE": 2.075443983078003
+          },
+          "length16": {
+            "deployed": 0.103515625,
+            "n": 512,
+            "neural": 0.103515625,
+            "terminal_CE": 2.0819340348243713
+          },
+          "ood": {
+            "deployed": 0.123046875,
+            "n": 512,
+            "neural": 0.123046875,
+            "terminal_CE": 2.0826936960220337
+          },
+          "valid": {
+            "deployed": 0.12109375,
+            "n": 512,
+            "neural": 0.12109375,
+            "terminal_CE": 2.080754280090332
+          }
+        }
+      },
+      "resources": {
+        "complete_reference_json_bytes": 2,
+        "geometry": [],
+        "model_extra_json_bytes": 2,
+        "optimizer_tensor_bytes": 830196,
+        "parameter_claim_boundary": "frozen and preallocated parameters counted; operation scores reconstructed from trainable coordinates are activations, not stored parameters",
+        "parameters": {
+          "bytes": 415008,
+          "total": 103752,
+          "trainable": 103752
+        },
+        "reference_array_bytes": 0,
+        "registered_buffer_bytes": 16,
+        "replay_tensor_bytes": 5505024
+      },
+      "timing_seconds": {
+        "train_seconds": 5.222907265648246,
+        "guard_seconds": 0.0,
+        "eval_seconds": 0.7959376551443711,
+        "phase_wall_seconds": 6.403587866923772,
+        "reload_seconds": 0.03389813401736319
+      },
+      "checkpoint_bytes": 1318831,
+      "checkpoint": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-replay64-full/learn/replay64-stage4-step600.pt",
+      "actual_reload_verified": true
+    },
+    {
+      "arm": "replay64",
+      "stage": 5,
+      "P": 103752,
+      "deltaP": 0,
+      "Qstable": 0,
+      "current_success_count": 0,
+      "capabilities": {
+        "admitted": [],
+        "currently_successful": [],
+        "deltaP_per_new_retained_capability": null,
+        "delta_parameters": 0,
+        "lost_previously_stable_capabilities": [],
+        "net_delta_stable_capabilities": 0,
+        "new_successfully_retained": 0,
+        "stable": [],
+        "total_stable": 0
+      },
+      "new_metrics": {
+        "iid": {
+          "deployed": 0.119140625,
+          "n": 512,
+          "neural": 0.119140625,
+          "terminal_CE": 2.0796807408332825
+        },
+        "length16": {
+          "deployed": 0.10546875,
+          "n": 512,
+          "neural": 0.10546875,
+          "terminal_CE": 2.082005202770233
+        },
+        "ood": {
+          "deployed": 0.1171875,
+          "n": 512,
+          "neural": 0.1171875,
+          "terminal_CE": 2.081069052219391
+        },
+        "valid": {
+          "deployed": 0.130859375,
+          "n": 512,
+          "neural": 0.130859375,
+          "terminal_CE": 2.0763658583164215
+        }
+      },
+      "all_seen_metrics": {
+        "0": {
+          "iid": {
+            "deployed": 0.1328125,
+            "n": 512,
+            "neural": 0.1328125,
+            "terminal_CE": 2.0766376852989197
+          },
+          "length16": {
+            "deployed": 0.115234375,
+            "n": 512,
+            "neural": 0.115234375,
+            "terminal_CE": 2.0805047750473022
+          },
+          "ood": {
+            "deployed": 0.13671875,
+            "n": 512,
+            "neural": 0.13671875,
+            "terminal_CE": 2.080547124147415
+          },
+          "valid": {
+            "deployed": 0.1328125,
+            "n": 512,
+            "neural": 0.1328125,
+            "terminal_CE": 2.075184017419815
+          }
+        },
+        "1": {
+          "iid": {
+            "deployed": 0.1328125,
+            "n": 512,
+            "neural": 0.1328125,
+            "terminal_CE": 2.078199952840805
+          },
+          "length16": {
+            "deployed": 0.1171875,
+            "n": 512,
+            "neural": 0.1171875,
+            "terminal_CE": 2.080438554286957
+          },
+          "ood": {
+            "deployed": 0.1015625,
+            "n": 512,
+            "neural": 0.1015625,
+            "terminal_CE": 2.0812495946884155
+          },
+          "valid": {
+            "deployed": 0.126953125,
+            "n": 512,
+            "neural": 0.126953125,
+            "terminal_CE": 2.0781269967556
+          }
+        },
+        "2": {
+          "iid": {
+            "deployed": 0.126953125,
+            "n": 512,
+            "neural": 0.126953125,
+            "terminal_CE": 2.0804360806941986
+          },
+          "length16": {
+            "deployed": 0.103515625,
+            "n": 512,
+            "neural": 0.103515625,
+            "terminal_CE": 2.080755263566971
+          },
+          "ood": {
+            "deployed": 0.125,
+            "n": 512,
+            "neural": 0.125,
+            "terminal_CE": 2.0795494616031647
+          },
+          "valid": {
+            "deployed": 0.14453125,
+            "n": 512,
+            "neural": 0.14453125,
+            "terminal_CE": 2.07695072889328
+          }
+        },
+        "3": {
+          "iid": {
+            "deployed": 0.109375,
+            "n": 512,
+            "neural": 0.109375,
+            "terminal_CE": 2.0810776352882385
+          },
+          "length16": {
+            "deployed": 0.154296875,
+            "n": 512,
+            "neural": 0.154296875,
+            "terminal_CE": 2.0772281885147095
+          },
+          "ood": {
+            "deployed": 0.123046875,
+            "n": 512,
+            "neural": 0.123046875,
+            "terminal_CE": 2.0805853605270386
+          },
+          "valid": {
+            "deployed": 0.12109375,
+            "n": 512,
+            "neural": 0.12109375,
+            "terminal_CE": 2.0802499055862427
+          }
+        },
+        "4": {
+          "iid": {
+            "deployed": 0.107421875,
+            "n": 512,
+            "neural": 0.107421875,
+            "terminal_CE": 2.0832153856754303
+          },
+          "length16": {
+            "deployed": 0.119140625,
+            "n": 512,
+            "neural": 0.119140625,
+            "terminal_CE": 2.0809060633182526
+          },
+          "ood": {
+            "deployed": 0.10546875,
+            "n": 512,
+            "neural": 0.10546875,
+            "terminal_CE": 2.0828067660331726
+          },
+          "valid": {
+            "deployed": 0.1484375,
+            "n": 512,
+            "neural": 0.1484375,
+            "terminal_CE": 2.080664873123169
+          }
+        },
+        "5": {
+          "iid": {
+            "deployed": 0.119140625,
+            "n": 512,
+            "neural": 0.119140625,
+            "terminal_CE": 2.0796807408332825
+          },
+          "length16": {
+            "deployed": 0.10546875,
+            "n": 512,
+            "neural": 0.10546875,
+            "terminal_CE": 2.082005202770233
+          },
+          "ood": {
+            "deployed": 0.1171875,
+            "n": 512,
+            "neural": 0.1171875,
+            "terminal_CE": 2.081069052219391
+          },
+          "valid": {
+            "deployed": 0.130859375,
+            "n": 512,
+            "neural": 0.130859375,
+            "terminal_CE": 2.0763658583164215
+          }
+        }
+      },
+      "resources": {
+        "complete_reference_json_bytes": 2,
+        "geometry": [],
+        "model_extra_json_bytes": 2,
+        "optimizer_tensor_bytes": 830196,
+        "parameter_claim_boundary": "frozen and preallocated parameters counted; operation scores reconstructed from trainable coordinates are activations, not stored parameters",
+        "parameters": {
+          "bytes": 415008,
+          "total": 103752,
+          "trainable": 103752
+        },
+        "reference_array_bytes": 0,
+        "registered_buffer_bytes": 16,
+        "replay_tensor_bytes": 6881280
+      },
+      "timing_seconds": {
+        "train_seconds": 5.332465566229075,
+        "guard_seconds": 0.0,
+        "eval_seconds": 0.9509845927823335,
+        "phase_wall_seconds": 6.677336140070111,
+        "reload_seconds": 0.03696936496999115
+      },
+      "checkpoint_bytes": 1318831,
+      "checkpoint": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-replay64-full/learn/replay64-stage5-step600.pt",
+      "actual_reload_verified": true
+    }
+  ],
+  "constraint_compact_partial_failure": {
+    "failure": {
+      "M0": "NOT_PASSED",
+      "error": "AttributeError",
+      "reason": "'CompactSemanticPromotionModel' object has no attribute '_invalidate_derived_caches'",
+      "reports": []
+    },
+    "recorded_actual_gradient_updates": 600,
+    "stage_complete_recorded": false,
+    "last_curve": {
+      "kind": "curve",
+      "metrics": {
+        "0": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.0024590395914856344
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.00809505011420697
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.005392986931838095
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.002432597568258643
+          }
+        }
+      },
+      "resources": {
+        "complete_reference_json_bytes": 2,
+        "geometry": [],
+        "model_extra_json_bytes": 8592,
+        "optimizer_tensor_bytes": 12764,
+        "parameter_claim_boundary": "frozen and preallocated parameters counted; operation scores reconstructed from trainable coordinates are activations, not stored parameters",
+        "parameters": {
+          "bytes": 6368,
+          "total": 1592,
+          "trainable": 1592
+        },
+        "reference_array_bytes": 0,
+        "registered_buffer_bytes": 0,
+        "replay_tensor_bytes": 0
+      },
+      "stage": 0,
+      "step": 600,
+      "wall": 15.471602931967936
+    },
+    "final_checkpoint": {
+      "bytes": 56113,
+      "file": "constraint_compact-stage0-step600.pt",
+      "kind": "checkpoint",
+      "sha256": "5cf799273c743a3cbd29c16661035f05958a123298265761c5736946d393fc1a",
+      "stage": 0,
+      "step": 600,
+      "wall": 15.479421900003217
+    },
+    "receipt": {
+      "address_space_gib": 512,
+      "authorized_proc_write": {
+        "make_rights": false,
+        "rights": [
+          "WRITE_FILE",
+          "TRUNCATE"
+        ],
+        "scope": "child /proc/<PID>/task only"
+      },
+      "cpu_only": false,
+      "cuda_init_before_seccomp": true,
+      "elapsed_seconds": 20.967433251906186,
+      "environment_keys": [
+        "CUDA_CACHE_PATH",
+        "CUDA_MODULE_LOADING",
+        "CUDA_VISIBLE_DEVICES",
+        "HOME",
+        "LANG",
+        "LC_ALL",
+        "MKL_NUM_THREADS",
+        "NUMEXPR_NUM_THREADS",
+        "OMP_DYNAMIC",
+        "OMP_NUM_THREADS",
+        "OPENBLAS_NUM_THREADS",
+        "PATH",
+        "PYTHONDONTWRITEBYTECODE",
+        "PYTHONNOUSERSITE",
+        "PYTHONPYCACHEPREFIX",
+        "PYTHONUNBUFFERED",
+        "PYTORCH_NVML_BASED_CUDA_CHECK",
+        "SANDBOX_OUT",
+        "TEMP",
+        "TMP",
+        "TMPDIR",
+        "TOKENIZERS_PARALLELISM",
+        "TORCH_HOME",
+        "TRITON_CACHE_DIR",
+        "VECLIB_MAXIMUM_THREADS",
+        "XDG_CACHE_HOME"
+      ],
+      "file_limit_mib": 100,
+      "gpu_allocator_fraction": 0.3,
+      "out": "/workspace/prometheus-v2-m0-architecture/outputs/parameter-n8-seed0-constraint_compact-full",
+      "returncode": 1,
+      "script_sha256": "99d3801093b912f9244ac0d67bc747ff08edf7193839001f5bf9a47a3373e28c",
+      "source_sha256": {
+        "continuous_monodromy.py": "ad1852bba88393b85db8aa44553d5c85183a0dce5ada4a62460f52b3a52c2936",
+        "continuous_native_model.py": "a0d44a3ca48a0f21162e4423e7a5c1c604a71ca3350a254ff32b5c0c8c5abc1a",
+        "diagnose_projection_numeric.py": "bd1d5ccbcdef230a2246561845b5973c9dcfbdc56115acaf7625d00172ac9ee5",
+        "history_operation_formation.py": "239a934d265d490da4446d7b36854f71657cc857479152987c9551548b6c42f9",
+        "homotopy_lift_cache.py": "026c0453f2ac7369f680446f84b861d1133a6c2ebd248d9799627861b2f42c23",
+        "integrate_native_repair.py": "6a05dbf9aac262d55a913edc763b4a3fc35d009c9258f0580072b785c589762d",
+        "observed_operation_formation.py": "8303e5c138127cb4373fd4a8b106807d3d32ab113b5d24871864a1cefabb12e8",
+        "parameter_efficiency_study.py": "99d3801093b912f9244ac0d67bc747ff08edf7193839001f5bf9a47a3373e28c",
+        "parameter_native_models.py": "2d1349823ecae93cdd1facf1b37edb85666657a2021cdfc7e3faa284d10ac84e",
+        "parameter_transformer_baselines.py": "8c862e352dcdedb0dcdf60beb3e93e11ce8fde5630a8ee6938cd1018630334f9",
+        "path_moment_cache.py": "8e2b7ec24f14f117fb1991f5920be2c80910596df37026d013d1afa4c2277a36",
+        "program_baseline_v2.py": "d14645a0a5af10c4fb83b830511be1e96a983a64705ba1e4ff5434336ac5d756",
+        "semantic_promotion_model.py": "c1f3246cba181792e25ac03aa087deeee30684bf53cd5bacd91a9ee5ae69175a",
+        "tasks.py": "dbca2935925f713e2f5716d8ac5faf4892464918eed6b2e0a66b45680ec5d9bc",
+        "terminal_profile_formation.py": "a498773315fc391a1bd19abf2de4427468a914255d76347908d82c8e4b947bd2",
+        "topology_model.py": "48f8f7aa5efe96297bef04e29ca6c52b8bd8bc38a2af409ce772619679e77acd",
+        "torch_baselines.py": "c22f59c4dd68385910f7df7f5c8be5d0268a479e6d5820ef6a636ce8efbde176",
+        "train.py": "0a5489d0a7ceb24aff321755da3d218f55b1129319cf7bb23975c8b45e80db01",
+        "train_monodromy_extension.py": "8d0f3a3ce0e4bcd3added02bb69f1dc8aef060f1527011dcae5ebef88f090706",
+        "workspace_refinement.py": "af0f623ce72dc3834aedbc9904e74bbf22c2a332f8069670fdda745741f6b32a"
+      },
+      "status": "failed",
+      "timeout_seconds": 900.0
+    },
+    "train_seconds": null,
+    "guard_seconds": null,
+    "eval_seconds": null,
+    "phase_wall_seconds": null,
+    "timing_boundary": "No stage_complete, so missing aggregate timings not reconstructed. run_failed wall is an outer progress timestamp, not a stage-complete measurement.",
+    "metadata": {
+      "checkpoint": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-constraint_compact-full/learn/constraint_compact-stage0-step600.pt",
+      "checkpoint_sha256": "5cf799273c743a3cbd29c16661035f05958a123298265761c5736946d393fc1a",
+      "checkpoint_bytes": 56113,
+      "stage": 0,
+      "step": 600,
+      "model_extra_compact_json_bytes": 9229,
+      "model_extra_compact_json_sha256": "41eb01532683fa842e98bb2000f0391b7168b23a6a776b1bb4fd69bef1731838",
+      "model_extra_top_level_keys": [
+        "compact_operations",
+        "compilation",
+        "credit",
+        "d",
+        "emb_dim",
+        "limitation",
+        "materialization_history",
+        "max_bank",
+        "n",
+        "n_ops",
+        "native_execution",
+        "optimizer_rebuild_after_promotion",
+        "promotion_settings",
+        "proposal_execution",
+        "protection",
+        "reference",
+        "slots",
+        "stage",
+        "temperature",
+        "workspace_history"
+      ],
+      "model_extra_field_json_bytes": {
+        "reference": 641,
+        "temperature": 3,
+        "stage": 1,
+        "compilation": 11,
+        "credit": 5,
+        "protection": 4,
+        "limitation": 81,
+        "n_ops": 1,
+        "d": 1,
+        "n": 1,
+        "workspace_history": 2,
+        "slots": 1,
+        "emb_dim": 2,
+        "native_execution": 11,
+        "proposal_execution": 7,
+        "max_bank": 2,
+        "materialization_history": 7594,
+        "promotion_settings": 110,
+        "optimizer_rebuild_after_promotion": 4,
+        "compact_operations": 434
+      },
+      "counting_scope": "standalone compact sorted UTF-8 JSON; shared references duplicated by value; excludes all learned tensors and optimizer; not Python RAM or Torch archive bytes",
+      "inspection": "restricted inert pickle descriptors; no Torch/NumPy/model imports; tensor storage not read"
+    }
+  },
+  "topology_comparison_evidence": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/parameter-n8-topology-sixstage-evidence.json"
+}

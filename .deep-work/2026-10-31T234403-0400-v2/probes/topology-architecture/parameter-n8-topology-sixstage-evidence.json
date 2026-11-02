@@ -1,0 +1,2447 @@
+{
+  "schema": "six-stage-actual-parameter-evidence-v1",
+  "primary": "TOPOLOGY human-locked; Transformer is the primary baseline; no control results inferred",
+  "M0": "NOT_PASSED",
+  "N": 8,
+  "seed": 0,
+  "stages": 6,
+  "gradient_updates_total": 3600,
+  "stage0_rerun": false,
+  "capability_threshold": "ALL neural AND deployed: IID>=.95, OOD>=.90, length16>=.90; stable set may lose admitted tasks; do not replace by deployed-only count",
+  "observed_boundary": "All deployed seen-task IID/OOD/L16 accuracy=1, but old neural accuracy falls. Strict frozen success accounting yields Qstable=1 throughout and undefined marginal successful retained capability ratios after stage0.",
+  "timing_scope": "Training is CUDA-synchronized parameter-update block; guard separate; evaluation separate; phase wall includes these plus formation/checkpoint/reload and logging. Geometry costs are cumulative on the evolving model, not extra additive phase costs.",
+  "serialization_scope": "model_extra JSON counts from inert restricted pickle data parsing; compact sorted UTF-8 duplicates shared references by value; not Python RAM or minimum encoding. Full checkpoint includes metadata, model, optimizer and RNG; caches report overlapping components.",
+  "aggregate_costs_seconds": {
+    "synced_training": 57.70615191932302,
+    "guard": 103.08934291661717,
+    "evaluation": 17.765904956846498,
+    "model_phase_wall": 192.92516948003322,
+    "checkpoint_reload": 4.627634918084368,
+    "materialization": 0.24783143599051982
+  },
+  "sources": [
+    {
+      "path": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-topology-through0/learn/summary.json",
+      "sha256": "243713a1b278fb0ac2b0e0bd30175e33e7f779c5c8a9695ad46753b93cc1d8c6"
+    },
+    {
+      "path": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-topology-resumed/learn/summary.json",
+      "sha256": "2fd45ec3481dc854b2d184fbc2ed8c60fbbb109b2468de3359d57084035949e8"
+    }
+  ],
+  "runner_receipts": [
+    {
+      "path": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-topology-through0.runner-status.json",
+      "sha256": "c738567dc07dd452d143b36a70790a2072db23ba21b81231d054dc3acabae263",
+      "receipt": {
+        "address_space_gib": 512,
+        "authorized_proc_write": {
+          "make_rights": false,
+          "rights": [
+            "WRITE_FILE",
+            "TRUNCATE"
+          ],
+          "scope": "child /proc/<PID>/task only"
+        },
+        "cpu_only": false,
+        "cuda_init_before_seccomp": true,
+        "elapsed_seconds": 21.781067530042492,
+        "environment_keys": [
+          "CUDA_CACHE_PATH",
+          "CUDA_MODULE_LOADING",
+          "CUDA_VISIBLE_DEVICES",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "MKL_NUM_THREADS",
+          "NUMEXPR_NUM_THREADS",
+          "OMP_DYNAMIC",
+          "OMP_NUM_THREADS",
+          "OPENBLAS_NUM_THREADS",
+          "PATH",
+          "PYTHONDONTWRITEBYTECODE",
+          "PYTHONNOUSERSITE",
+          "PYTHONPYCACHEPREFIX",
+          "PYTHONUNBUFFERED",
+          "PYTORCH_NVML_BASED_CUDA_CHECK",
+          "SANDBOX_OUT",
+          "TEMP",
+          "TMP",
+          "TMPDIR",
+          "TOKENIZERS_PARALLELISM",
+          "TORCH_HOME",
+          "TRITON_CACHE_DIR",
+          "VECLIB_MAXIMUM_THREADS",
+          "XDG_CACHE_HOME"
+        ],
+        "file_limit_mib": 100,
+        "gpu_allocator_fraction": 0.3,
+        "out": "/workspace/prometheus-v2-m0-architecture/outputs/parameter-n8-seed0-topology-through0",
+        "returncode": 0,
+        "script_sha256": "020d2f7f29ae5d334ceb937c6be406bab8ee09b545303324de6af4f24d46f0c1",
+        "source_sha256": {
+          "continuous_monodromy.py": "ad1852bba88393b85db8aa44553d5c85183a0dce5ada4a62460f52b3a52c2936",
+          "continuous_native_model.py": "a0d44a3ca48a0f21162e4423e7a5c1c604a71ca3350a254ff32b5c0c8c5abc1a",
+          "diagnose_projection_numeric.py": "bd1d5ccbcdef230a2246561845b5973c9dcfbdc56115acaf7625d00172ac9ee5",
+          "history_operation_formation.py": "239a934d265d490da4446d7b36854f71657cc857479152987c9551548b6c42f9",
+          "homotopy_lift_cache.py": "026c0453f2ac7369f680446f84b861d1133a6c2ebd248d9799627861b2f42c23",
+          "integrate_native_repair.py": "6a05dbf9aac262d55a913edc763b4a3fc35d009c9258f0580072b785c589762d",
+          "observed_operation_formation.py": "8303e5c138127cb4373fd4a8b106807d3d32ab113b5d24871864a1cefabb12e8",
+          "parameter_efficiency_study.py": "020d2f7f29ae5d334ceb937c6be406bab8ee09b545303324de6af4f24d46f0c1",
+          "parameter_native_models.py": "2d1349823ecae93cdd1facf1b37edb85666657a2021cdfc7e3faa284d10ac84e",
+          "parameter_transformer_baselines.py": "8c862e352dcdedb0dcdf60beb3e93e11ce8fde5630a8ee6938cd1018630334f9",
+          "path_moment_cache.py": "8e2b7ec24f14f117fb1991f5920be2c80910596df37026d013d1afa4c2277a36",
+          "program_baseline_v2.py": "d14645a0a5af10c4fb83b830511be1e96a983a64705ba1e4ff5434336ac5d756",
+          "semantic_promotion_model.py": "c1f3246cba181792e25ac03aa087deeee30684bf53cd5bacd91a9ee5ae69175a",
+          "tasks.py": "dbca2935925f713e2f5716d8ac5faf4892464918eed6b2e0a66b45680ec5d9bc",
+          "terminal_profile_formation.py": "a498773315fc391a1bd19abf2de4427468a914255d76347908d82c8e4b947bd2",
+          "topology_model.py": "48f8f7aa5efe96297bef04e29ca6c52b8bd8bc38a2af409ce772619679e77acd",
+          "torch_baselines.py": "c22f59c4dd68385910f7df7f5c8be5d0268a479e6d5820ef6a636ce8efbde176",
+          "train.py": "0a5489d0a7ceb24aff321755da3d218f55b1129319cf7bb23975c8b45e80db01",
+          "train_monodromy_extension.py": "8d0f3a3ce0e4bcd3added02bb69f1dc8aef060f1527011dcae5ebef88f090706",
+          "workspace_refinement.py": "af0f623ce72dc3834aedbc9904e74bbf22c2a332f8069670fdda745741f6b32a"
+        },
+        "status": "completed",
+        "timeout_seconds": 900.0
+      }
+    },
+    {
+      "path": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-topology-resumed.runner-status.json",
+      "sha256": "082cd0dfe506bc570d7f199d560c600c75001903f638a5cd2f27b382c9501232",
+      "receipt": {
+        "address_space_gib": 512,
+        "authorized_proc_write": {
+          "make_rights": false,
+          "rights": [
+            "WRITE_FILE",
+            "TRUNCATE"
+          ],
+          "scope": "child /proc/<PID>/task only"
+        },
+        "cpu_only": false,
+        "cuda_init_before_seccomp": true,
+        "elapsed_seconds": 184.06778347596992,
+        "environment_keys": [
+          "CUDA_CACHE_PATH",
+          "CUDA_MODULE_LOADING",
+          "CUDA_VISIBLE_DEVICES",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "MKL_NUM_THREADS",
+          "NUMEXPR_NUM_THREADS",
+          "OMP_DYNAMIC",
+          "OMP_NUM_THREADS",
+          "OPENBLAS_NUM_THREADS",
+          "PATH",
+          "PYTHONDONTWRITEBYTECODE",
+          "PYTHONNOUSERSITE",
+          "PYTHONPYCACHEPREFIX",
+          "PYTHONUNBUFFERED",
+          "PYTORCH_NVML_BASED_CUDA_CHECK",
+          "SANDBOX_OUT",
+          "TEMP",
+          "TMP",
+          "TMPDIR",
+          "TOKENIZERS_PARALLELISM",
+          "TORCH_HOME",
+          "TRITON_CACHE_DIR",
+          "VECLIB_MAXIMUM_THREADS",
+          "XDG_CACHE_HOME"
+        ],
+        "file_limit_mib": 100,
+        "gpu_allocator_fraction": 0.3,
+        "out": "/workspace/prometheus-v2-m0-architecture/outputs/parameter-n8-seed0-topology-resumed",
+        "returncode": 0,
+        "script_sha256": "1cc8e9c0561c1b262727d5639095084fd2f3135069ffd107501f9b2b039dfc80",
+        "source_sha256": {
+          "continuous_monodromy.py": "ad1852bba88393b85db8aa44553d5c85183a0dce5ada4a62460f52b3a52c2936",
+          "continuous_native_model.py": "a0d44a3ca48a0f21162e4423e7a5c1c604a71ca3350a254ff32b5c0c8c5abc1a",
+          "diagnose_projection_numeric.py": "bd1d5ccbcdef230a2246561845b5973c9dcfbdc56115acaf7625d00172ac9ee5",
+          "history_operation_formation.py": "239a934d265d490da4446d7b36854f71657cc857479152987c9551548b6c42f9",
+          "homotopy_lift_cache.py": "026c0453f2ac7369f680446f84b861d1133a6c2ebd248d9799627861b2f42c23",
+          "integrate_native_repair.py": "6a05dbf9aac262d55a913edc763b4a3fc35d009c9258f0580072b785c589762d",
+          "observed_operation_formation.py": "8303e5c138127cb4373fd4a8b106807d3d32ab113b5d24871864a1cefabb12e8",
+          "parameter_efficiency_study.py": "1cc8e9c0561c1b262727d5639095084fd2f3135069ffd107501f9b2b039dfc80",
+          "parameter_native_models.py": "2d1349823ecae93cdd1facf1b37edb85666657a2021cdfc7e3faa284d10ac84e",
+          "parameter_transformer_baselines.py": "8c862e352dcdedb0dcdf60beb3e93e11ce8fde5630a8ee6938cd1018630334f9",
+          "path_moment_cache.py": "8e2b7ec24f14f117fb1991f5920be2c80910596df37026d013d1afa4c2277a36",
+          "program_baseline_v2.py": "d14645a0a5af10c4fb83b830511be1e96a983a64705ba1e4ff5434336ac5d756",
+          "semantic_promotion_model.py": "c1f3246cba181792e25ac03aa087deeee30684bf53cd5bacd91a9ee5ae69175a",
+          "tasks.py": "dbca2935925f713e2f5716d8ac5faf4892464918eed6b2e0a66b45680ec5d9bc",
+          "terminal_profile_formation.py": "a498773315fc391a1bd19abf2de4427468a914255d76347908d82c8e4b947bd2",
+          "topology_model.py": "48f8f7aa5efe96297bef04e29ca6c52b8bd8bc38a2af409ce772619679e77acd",
+          "torch_baselines.py": "c22f59c4dd68385910f7df7f5c8be5d0268a479e6d5820ef6a636ce8efbde176",
+          "train.py": "0a5489d0a7ceb24aff321755da3d218f55b1129319cf7bb23975c8b45e80db01",
+          "train_monodromy_extension.py": "8d0f3a3ce0e4bcd3added02bb69f1dc8aef060f1527011dcae5ebef88f090706",
+          "workspace_refinement.py": "af0f623ce72dc3834aedbc9904e74bbf22c2a332f8069670fdda745741f6b32a"
+        },
+        "status": "completed",
+        "timeout_seconds": 900.0
+      }
+    }
+  ],
+  "rows": [
+    {
+      "stage": 0,
+      "source_run": "parameter-n8-seed0-topology-through0",
+      "gradient_updates": 600,
+      "parameters": 1596,
+      "delta_parameters": 1596,
+      "all_parameters_trainable": true,
+      "Qstable": 1,
+      "capability_record": {
+        "admitted": [
+          0
+        ],
+        "currently_successful": [
+          0
+        ],
+        "deltaP_per_new_retained_capability": 1596.0,
+        "delta_parameters": 1596,
+        "new_successfully_retained": 1,
+        "stable": [
+          0
+        ],
+        "total_stable": 1
+      },
+      "new_metrics": {
+        "iid": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.0024590395914856344
+        },
+        "length16": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.00809505011420697
+        },
+        "ood": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.005392986931838095
+        },
+        "valid": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.002432597568258643
+        }
+      },
+      "all_seen_metrics": {
+        "0": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.0024590395914856344
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.00809505011420697
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.005392986931838095
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.002432597568258643
+          }
+        }
+      },
+      "bank_K": 7,
+      "latent_D": 8,
+      "operation_coordinates": 56,
+      "head_parameters": 784,
+      "other_parameters": 756,
+      "resource_bytes": {
+        "parameters": 6384,
+        "optimizer": 12800,
+        "reference_arrays": 512,
+        "reference_json": 641,
+        "replay": 0,
+        "complete_model_extra_json": 30341,
+        "full_checkpoint": 86781,
+        "homotopy_packed_payload": 11076,
+        "homotopy_certificate_json": 9004,
+        "homotopy_map_arrays": 448
+      },
+      "costs_seconds": {
+        "synced_training": 10.923288349295035,
+        "guard": 0.010543497861362994,
+        "evaluation": 0.863108619931154,
+        "model_phase_wall": 15.989840365946293,
+        "checkpoint_reload": 0.1354405590100214,
+        "materialization": 0.07151339796837419
+      },
+      "geometry_resources": {
+        "bank_size": 7,
+        "costs": {
+          "cache_restore_invalidations": 0,
+          "cold_configuration_snapshots": 771,
+          "cold_distance_matrix_entries": 99136,
+          "cold_lift_attempts": 7,
+          "cold_lift_failures": 0,
+          "cold_realization_seconds": 0.03370979381725192,
+          "cold_realized_classes": 7,
+          "geometry_class_bank_assignments": 4200,
+          "geometry_class_check_seconds": 0.594047240098007,
+          "geometry_class_graph_extractions": 600,
+          "geometry_moment_rebuilds": 1,
+          "geometry_moment_seconds": 0.006019876105710864,
+          "geometry_quadrature_point_strands": 9984,
+          "geometry_quadrature_reference_point_strands": 9984,
+          "geometry_regularizer_calls": 600,
+          "geometry_torch_objective_seconds": 0.10593415761832148,
+          "hard_bank_assignment_batches": 4,
+          "hard_bank_assignment_seconds": 0.0015370770124718547,
+          "hard_bank_hungarian_assignments": 28,
+          "hard_cache_class_hits": 868,
+          "hard_cache_generations": 4,
+          "hard_cache_signature_checks": 128,
+          "hard_cache_signature_seconds": 0.011970273568294942,
+          "hard_eval_calls": 128,
+          "hard_eval_total_seconds": 0.23642707208637148,
+          "homotopy_family_errors": 0,
+          "homotopy_family_get_calls": 28,
+          "homotopy_family_get_seconds": 0.037109419936314225,
+          "homotopy_family_reuses": 21,
+          "map_cache_bytes_current": 448,
+          "map_cache_bytes_peak": 448,
+          "warm_native_execution_seconds": 0.08255368040408939,
+          "warm_native_primitive_calls": 146976
+        },
+        "current_latent_states": 8,
+        "current_omega": [
+          -1.7400827407836914,
+          -2.6854665279388428,
+          -1.8274723291397095,
+          -0.576420783996582
+        ],
+        "current_path_omega_gradient": [
+          3.158561412419658e-09,
+          1.5429918676090892e-08,
+          1.0347847023695067e-08,
+          1.8317223293706775e-09
+        ],
+        "execution": "cold unordered-configuration lifts; exact cached maps for warm learned calls",
+        "geometry_gradient_source": "normalized kinetic action; terminal likelihood is invariant to this shear",
+        "map_storage_alias_note": "current maps may reference the same immutable buffers as the family cache; do not add both numeric payloads",
+        "moment_cache": null,
+        "partial_failed_lift_snapshot_work_known": false,
+        "timings": "perf_counter; torch objective launch time may exclude asynchronous GPU completion",
+        "homotopy_lift_cache": {
+          "certificate_bytes": 9004,
+          "counts": {
+            "actual_distance_matrix_entries": 99136,
+            "actual_lift_attempts": 7,
+            "actual_lift_failures": 0,
+            "actual_lift_seconds": 0.03370979381725192,
+            "actual_lift_snapshots": 771,
+            "actual_lifts": 7,
+            "cache_management_seconds": 0.0013898679753765464,
+            "cross_omega_hits": 21,
+            "evictions": 0,
+            "get_calls": 28,
+            "get_seconds": 0.03689419524744153,
+            "hits": 21,
+            "maximum_entries": 7,
+            "maximum_payload_bytes": 11076,
+            "misses": 7,
+            "namespace_setup_seconds": 0.006560503970831633,
+            "oversize_uncached_results": 0,
+            "validation_and_key_seconds": 0.0016884346259757876,
+            "validation_failures": 0
+          },
+          "entries": 7,
+          "map_data_bytes": 448,
+          "maps_persisted": false,
+          "packed_payload_bytes": 11076,
+          "payload_accounting": "packed numeric keys/maps and certificate JSON; Python overhead bounded separately by entries<=capacity,D<=64",
+          "policy": {
+            "capacity": 128,
+            "family": {
+              "ConfigurationLoop_source_sha256": "ba66e89663122d0c8e6f341c69765088e20f0fe8fe7f407122e3ec0c2c2499fd",
+              "basepoint_rule": "spacing*(arange(D)-(D-1)/2)",
+              "biases": [
+                -0.3,
+                0.2,
+                0.1,
+                -0.2
+              ],
+              "cache_proof_source_sha256": "026c0453f2ac7369f680446f84b861d1133a6c2ebd248d9799627861b2f42c23",
+              "canonical_word_source_sha256": "b52f2347ff5e24a61e5a77e2bf556a7e2979afa53711f62b31d1b3cab591d941",
+              "compiler_source_sha256": "ad1852bba88393b85db8aa44553d5c85183a0dce5ada4a62460f52b3a52c2936",
+              "frequencies": [
+                0.03125,
+                -0.0625,
+                0.125,
+                -0.25
+              ],
+              "lift_sequence_source_sha256": "99ff6e14ab47023cda52592d47feb2b514cb9f2b5ae296f09111051209ff1612",
+              "module": "continuous_monodromy",
+              "omega_domain": {
+                "component_abs_max": 8.0,
+                "dimensions": 4,
+                "finite": true
+              },
+              "proof": "global vertical shear diffeomorphism, endpoint-fixed convex parameter homotopy",
+              "proof_scope": "ideal real-arithmetic monodromy; first lift also has original floating diagnostics",
+              "spacing": 4.0,
+              "version": "endpoint-fixed-global-vertical-shear-v1"
+            },
+            "family_fingerprint": "9654d6630aacd1866bf8ebbef401d89c2bcd4ba85eb3ba165aae0889d0316057",
+            "kind": "homotopy_certified_in_memory_lift_cache",
+            "maps_persisted": false,
+            "max_payload_bytes": 1048576
+          }
+        }
+      },
+      "actual_reload_verified": true,
+      "checkpoint_metadata_measurement": {
+        "checkpoint": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-topology-through0/learn/topology-stage0-step600.pt",
+        "checkpoint_sha256": "193f92c738d6efeec0cbb89db2e0619d845d66d54a68b8fc1c6837310e38b824",
+        "checkpoint_bytes": 86781,
+        "stage": 0,
+        "step": 600,
+        "model_extra_compact_json_bytes": 30341,
+        "model_extra_compact_json_sha256": "53606f6059613acce16eec6956ea164cbcd17f0b23e5f4d72c40de3b3fe7b023",
+        "model_extra_top_level_keys": [
+          "compact_operations",
+          "compilation",
+          "continuous_monodromy",
+          "credit",
+          "d",
+          "emb_dim",
+          "limitation",
+          "materialization_history",
+          "max_bank",
+          "n",
+          "n_ops",
+          "native_execution",
+          "optimizer_rebuild_after_promotion",
+          "promotion_settings",
+          "proposal_execution",
+          "protection",
+          "reference",
+          "slots",
+          "stage",
+          "temperature",
+          "workspace_history"
+        ],
+        "model_extra_field_json_bytes": {
+          "reference": 641,
+          "temperature": 3,
+          "stage": 1,
+          "compilation": 11,
+          "credit": 5,
+          "protection": 4,
+          "limitation": 81,
+          "n_ops": 1,
+          "d": 1,
+          "n": 1,
+          "workspace_history": 2,
+          "slots": 1,
+          "emb_dim": 2,
+          "native_execution": 11,
+          "proposal_execution": 7,
+          "max_bank": 2,
+          "materialization_history": 7595,
+          "promotion_settings": 110,
+          "optimizer_rebuild_after_promotion": 4,
+          "continuous_monodromy": 21096,
+          "compact_operations": 425
+        },
+        "counting_scope": "standalone compact sorted UTF-8 JSON; shared references duplicated by value; excludes all learned tensors and optimizer; not Python RAM or Torch archive bytes",
+        "inspection": "restricted inert pickle descriptors; no Torch/NumPy/model imports; tensor storage not read"
+      },
+      "curves_source": "Original source_run/learn/summary.json reports[stage-relative].curves; preserved raw, not duplicated here",
+      "formation_audit": {
+        "allocation_is_inferred_from_current_neural_encoding_readout": true,
+        "correct_call_used": false,
+        "fixed_task_id": 0,
+        "formation_seconds": 0.36473566305357963,
+        "hidden_mode_used": false,
+        "input_sha256": "c22134b426431e961d34b42b35903e218e054a57f99556298b62d921ebb969db",
+        "matching_calls": 7,
+        "observed_state_classes": 8,
+        "public_history_count": 56,
+        "rows": 8192,
+        "rule": "passive terminal-response partition plus executable continuation closure",
+        "seconds": 0.028471366968005896,
+        "teacher_transition_used": false,
+        "training_errors": 0,
+        "training_only": true,
+        "training_terminal_evaluations": 8192,
+        "training_transition_uses": 42431,
+        "unique_records": 8113
+      }
+    },
+    {
+      "stage": 1,
+      "source_run": "parameter-n8-seed0-topology-resumed",
+      "gradient_updates": 600,
+      "parameters": 2232,
+      "delta_parameters": 636,
+      "all_parameters_trainable": true,
+      "Qstable": 1,
+      "capability_record": {
+        "admitted": [
+          0,
+          1
+        ],
+        "currently_successful": [
+          1
+        ],
+        "deltaP_per_new_retained_capability": null,
+        "delta_parameters": 636,
+        "lost_previously_stable_capabilities": [
+          0
+        ],
+        "net_delta_stable_capabilities": 0,
+        "new_successfully_retained": 0,
+        "stable": [
+          1
+        ],
+        "total_stable": 1
+      },
+      "new_metrics": {
+        "iid": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.003514986456139013
+        },
+        "length16": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.01217715919483453
+        },
+        "ood": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.008043126203119755
+        },
+        "valid": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.0034365797182545066
+        }
+      },
+      "all_seen_metrics": {
+        "0": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.703125,
+            "terminal_CE": 1.0205996856093407
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.34765625,
+            "terminal_CE": 1.9948929399251938
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.423828125,
+            "terminal_CE": 1.7751163989305496
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.734375,
+            "terminal_CE": 0.9756755009293556
+          }
+        },
+        "1": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.003514986456139013
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.01217715919483453
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.008043126203119755
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.0034365797182545066
+          }
+        }
+      },
+      "bank_K": 13,
+      "latent_D": 8,
+      "operation_coordinates": 104,
+      "head_parameters": 1372,
+      "other_parameters": 756,
+      "resource_bytes": {
+        "parameters": 8928,
+        "optimizer": 17888,
+        "reference_arrays": 1024,
+        "reference_json": 1411,
+        "replay": 0,
+        "complete_model_extra_json": 55644,
+        "full_checkpoint": 124413,
+        "homotopy_packed_payload": 22752,
+        "homotopy_certificate_json": 18904,
+        "homotopy_map_arrays": 832
+      },
+      "costs_seconds": {
+        "synced_training": 9.060967906028964,
+        "guard": 5.2756279789609835,
+        "evaluation": 1.7989967970643193,
+        "model_phase_wall": 20.424427318037488,
+        "checkpoint_reload": 0.2335245560389012,
+        "materialization": 0.0806797540280968
+      },
+      "geometry_resources": {
+        "bank_size": 13,
+        "costs": {
+          "cache_restore_invalidations": 1,
+          "cold_configuration_snapshots": 5085,
+          "cold_distance_matrix_entries": 652160,
+          "cold_lift_attempts": 20,
+          "cold_lift_failures": 0,
+          "cold_realization_seconds": 0.22939409071113914,
+          "cold_realized_classes": 20,
+          "geometry_class_bank_assignments": 12000,
+          "geometry_class_check_seconds": 1.1408815154572949,
+          "geometry_class_graph_extractions": 1200,
+          "geometry_moment_rebuilds": 2,
+          "geometry_moment_seconds": 0.012328065116889775,
+          "geometry_quadrature_point_strands": 20480,
+          "geometry_quadrature_reference_point_strands": 20480,
+          "geometry_regularizer_calls": 1200,
+          "geometry_torch_objective_seconds": 0.19152223167475313,
+          "hard_bank_assignment_batches": 8,
+          "hard_bank_assignment_seconds": 0.003332620835863054,
+          "hard_bank_hungarian_assignments": 80,
+          "hard_cache_class_hits": 2634,
+          "hard_cache_generations": 6,
+          "hard_cache_signature_checks": 384,
+          "hard_cache_signature_seconds": 0.03694030409678817,
+          "hard_eval_calls": 384,
+          "hard_eval_total_seconds": 0.8110811059596017,
+          "homotopy_family_errors": 0,
+          "homotopy_family_get_calls": 54,
+          "homotopy_family_get_seconds": 0.23630105808842927,
+          "homotopy_family_reuses": 34,
+          "map_cache_bytes_current": 832,
+          "map_cache_bytes_peak": 832,
+          "warm_native_execution_seconds": 0.24496146035380661,
+          "warm_native_primitive_calls": 438904
+        },
+        "current_latent_states": 8,
+        "current_omega": [
+          -1.7020292282104492,
+          -2.7309656143188477,
+          -1.8084750175476074,
+          -0.5128222703933716
+        ],
+        "current_path_omega_gradient": [
+          4.863333629145927e-07,
+          1.2762427559209755e-07,
+          -3.879914629578707e-07,
+          -1.3560056686401367e-06
+        ],
+        "execution": "cold unordered-configuration lifts; exact cached maps for warm learned calls",
+        "geometry_gradient_source": "normalized kinetic action; terminal likelihood is invariant to this shear",
+        "map_storage_alias_note": "current maps may reference the same immutable buffers as the family cache; do not add both numeric payloads",
+        "moment_cache": null,
+        "partial_failed_lift_snapshot_work_known": false,
+        "timings": "perf_counter; torch objective launch time may exclude asynchronous GPU completion",
+        "homotopy_lift_cache": {
+          "certificate_bytes": 18904,
+          "counts": {
+            "actual_distance_matrix_entries": 553024,
+            "actual_lift_attempts": 13,
+            "actual_lift_failures": 0,
+            "actual_lift_seconds": 0.19568429689388722,
+            "actual_lift_snapshots": 4314,
+            "actual_lifts": 13,
+            "cache_management_seconds": 0.001658512162975967,
+            "cross_omega_hits": 13,
+            "evictions": 0,
+            "get_calls": 26,
+            "get_seconds": 0.19893582677468657,
+            "hits": 13,
+            "maximum_entries": 13,
+            "maximum_payload_bytes": 22752,
+            "misses": 13,
+            "namespace_setup_seconds": 0.005521583021618426,
+            "oversize_uncached_results": 0,
+            "validation_and_key_seconds": 0.0014462536200881004,
+            "validation_failures": 0
+          },
+          "entries": 13,
+          "map_data_bytes": 832,
+          "maps_persisted": false,
+          "packed_payload_bytes": 22752,
+          "payload_accounting": "packed numeric keys/maps and certificate JSON; Python overhead bounded separately by entries<=capacity,D<=64",
+          "policy": {
+            "capacity": 128,
+            "family": {
+              "ConfigurationLoop_source_sha256": "ba66e89663122d0c8e6f341c69765088e20f0fe8fe7f407122e3ec0c2c2499fd",
+              "basepoint_rule": "spacing*(arange(D)-(D-1)/2)",
+              "biases": [
+                -0.3,
+                0.2,
+                0.1,
+                -0.2
+              ],
+              "cache_proof_source_sha256": "026c0453f2ac7369f680446f84b861d1133a6c2ebd248d9799627861b2f42c23",
+              "canonical_word_source_sha256": "b52f2347ff5e24a61e5a77e2bf556a7e2979afa53711f62b31d1b3cab591d941",
+              "compiler_source_sha256": "ad1852bba88393b85db8aa44553d5c85183a0dce5ada4a62460f52b3a52c2936",
+              "frequencies": [
+                0.03125,
+                -0.0625,
+                0.125,
+                -0.25
+              ],
+              "lift_sequence_source_sha256": "99ff6e14ab47023cda52592d47feb2b514cb9f2b5ae296f09111051209ff1612",
+              "module": "continuous_monodromy",
+              "omega_domain": {
+                "component_abs_max": 8.0,
+                "dimensions": 4,
+                "finite": true
+              },
+              "proof": "global vertical shear diffeomorphism, endpoint-fixed convex parameter homotopy",
+              "proof_scope": "ideal real-arithmetic monodromy; first lift also has original floating diagnostics",
+              "spacing": 4.0,
+              "version": "endpoint-fixed-global-vertical-shear-v1"
+            },
+            "family_fingerprint": "9654d6630aacd1866bf8ebbef401d89c2bcd4ba85eb3ba165aae0889d0316057",
+            "kind": "homotopy_certified_in_memory_lift_cache",
+            "maps_persisted": false,
+            "max_payload_bytes": 1048576
+          }
+        }
+      },
+      "actual_reload_verified": true,
+      "checkpoint_metadata_measurement": {
+        "checkpoint": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-topology-resumed/learn/topology-stage1-step600.pt",
+        "checkpoint_sha256": "60f58b101eb92df22d736480c1956383ed54543392aaaf2ebefbfb4048b4b29d",
+        "checkpoint_bytes": 124413,
+        "stage": 1,
+        "step": 600,
+        "model_extra_compact_json_bytes": 55644,
+        "model_extra_compact_json_sha256": "c4ebc968dccd13d9a46413ae573ffd1d403b17a5b9540f21465ea830d68ed2ef",
+        "model_extra_top_level_keys": [
+          "compact_operations",
+          "compilation",
+          "continuous_monodromy",
+          "credit",
+          "d",
+          "emb_dim",
+          "limitation",
+          "materialization_history",
+          "max_bank",
+          "n",
+          "n_ops",
+          "native_execution",
+          "optimizer_rebuild_after_promotion",
+          "promotion_settings",
+          "proposal_execution",
+          "protection",
+          "reference",
+          "slots",
+          "stage",
+          "temperature",
+          "workspace_history"
+        ],
+        "model_extra_field_json_bytes": {
+          "reference": 1411,
+          "temperature": 3,
+          "stage": 1,
+          "compilation": 11,
+          "credit": 5,
+          "protection": 4,
+          "limitation": 81,
+          "n_ops": 2,
+          "d": 1,
+          "n": 1,
+          "workspace_history": 2,
+          "slots": 1,
+          "emb_dim": 2,
+          "native_execution": 11,
+          "proposal_execution": 7,
+          "max_bank": 2,
+          "materialization_history": 16623,
+          "promotion_settings": 110,
+          "optimizer_rebuild_after_promotion": 4,
+          "continuous_monodromy": 36600,
+          "compact_operations": 425
+        },
+        "counting_scope": "standalone compact sorted UTF-8 JSON; shared references duplicated by value; excludes all learned tensors and optimizer; not Python RAM or Torch archive bytes",
+        "inspection": "restricted inert pickle descriptors; no Torch/NumPy/model imports; tensor storage not read"
+      },
+      "curves_source": "Original source_run/learn/summary.json reports[stage-relative].curves; preserved raw, not duplicated here",
+      "formation_audit": {
+        "allocation_is_inferred_from_current_neural_encoding_readout": true,
+        "correct_call_used": false,
+        "fixed_task_id": 1,
+        "formation_seconds": 0.36913875106256455,
+        "hidden_mode_used": false,
+        "input_sha256": "e827df441b88e92a4de9b06f157824d0c3c70d0cdb4bd2ad32f21e3fbedaf278",
+        "matching_calls": 7,
+        "observed_state_classes": 8,
+        "public_history_count": 56,
+        "rows": 8192,
+        "rule": "passive terminal-response partition plus executable continuation closure",
+        "seconds": 0.029012646060436964,
+        "teacher_transition_used": false,
+        "training_errors": 0,
+        "training_only": true,
+        "training_terminal_evaluations": 8192,
+        "training_transition_uses": 42528,
+        "unique_records": 8120
+      }
+    },
+    {
+      "stage": 2,
+      "source_run": "parameter-n8-seed0-topology-resumed",
+      "gradient_updates": 600,
+      "parameters": 2868,
+      "delta_parameters": 636,
+      "all_parameters_trainable": true,
+      "Qstable": 1,
+      "capability_record": {
+        "admitted": [
+          0,
+          1,
+          2
+        ],
+        "currently_successful": [
+          0,
+          2
+        ],
+        "deltaP_per_new_retained_capability": null,
+        "delta_parameters": 636,
+        "lost_previously_stable_capabilities": [
+          1
+        ],
+        "net_delta_stable_capabilities": 0,
+        "new_successfully_retained": 0,
+        "stable": [
+          2
+        ],
+        "total_stable": 1
+      },
+      "new_metrics": {
+        "iid": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.00439604657003656
+        },
+        "length16": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.015286398585885763
+        },
+        "ood": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.010092889191582799
+        },
+        "valid": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.004411058616824448
+        }
+      },
+      "all_seen_metrics": {
+        "0": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.6021823287010193
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.953125,
+            "terminal_CE": 1.624578520655632
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.994140625,
+            "terminal_CE": 1.2415549159049988
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.588958203792572
+          }
+        },
+        "1": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.677734375,
+            "terminal_CE": 1.1298860609531403
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.30859375,
+            "terminal_CE": 2.042267769575119
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.396484375,
+            "terminal_CE": 1.900615394115448
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.732421875,
+            "terminal_CE": 1.1011886447668076
+          }
+        },
+        "2": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.00439604657003656
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.015286398585885763
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.010092889191582799
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.004411058616824448
+          }
+        }
+      },
+      "bank_K": 19,
+      "latent_D": 8,
+      "operation_coordinates": 152,
+      "head_parameters": 1960,
+      "other_parameters": 756,
+      "resource_bytes": {
+        "parameters": 11472,
+        "optimizer": 22976,
+        "reference_arrays": 1536,
+        "reference_json": 2308,
+        "replay": 0,
+        "complete_model_extra_json": 80892,
+        "full_checkpoint": 160957,
+        "homotopy_packed_payload": 33282,
+        "homotopy_certificate_json": 27658,
+        "homotopy_map_arrays": 1216
+      },
+      "costs_seconds": {
+        "synced_training": 8.838007793296129,
+        "guard": 10.858613355085254,
+        "evaluation": 2.4039692260557786,
+        "model_phase_wall": 22.750934296986088,
+        "checkpoint_reload": 0.32534825697075576,
+        "materialization": 0.011802581953816116
+      },
+      "geometry_resources": {
+        "bank_size": 19,
+        "costs": {
+          "cache_restore_invalidations": 1,
+          "cold_configuration_snapshots": 7323,
+          "cold_distance_matrix_entries": 939008,
+          "cold_lift_attempts": 26,
+          "cold_lift_failures": 0,
+          "cold_realization_seconds": 0.3297879318706691,
+          "cold_realized_classes": 26,
+          "geometry_class_bank_assignments": 23400,
+          "geometry_class_check_seconds": 1.7788042785832658,
+          "geometry_class_graph_extractions": 1800,
+          "geometry_moment_rebuilds": 3,
+          "geometry_moment_seconds": 0.01868676906451583,
+          "geometry_quadrature_point_strands": 31360,
+          "geometry_quadrature_reference_point_strands": 31360,
+          "geometry_regularizer_calls": 1800,
+          "geometry_torch_objective_seconds": 0.27904496144037694,
+          "hard_bank_assignment_batches": 12,
+          "hard_bank_assignment_seconds": 0.005505049950443208,
+          "hard_bank_hungarian_assignments": 156,
+          "hard_cache_class_hits": 5298,
+          "hard_cache_generations": 8,
+          "hard_cache_signature_checks": 770,
+          "hard_cache_signature_seconds": 0.07783502084203064,
+          "hard_eval_calls": 770,
+          "hard_eval_total_seconds": 1.436972450464964,
+          "homotopy_family_errors": 0,
+          "homotopy_family_get_calls": 92,
+          "homotopy_family_get_seconds": 0.3402836648747325,
+          "homotopy_family_reuses": 66,
+          "map_cache_bytes_current": 1216,
+          "map_cache_bytes_peak": 1216,
+          "warm_native_execution_seconds": 0.4866556387860328,
+          "warm_native_primitive_calls": 877862
+        },
+        "current_latent_states": 8,
+        "current_omega": [
+          -1.7602401971817017,
+          -2.7115776538848877,
+          -1.7744777202606201,
+          -0.5107306838035583
+        ],
+        "current_path_omega_gradient": [
+          -1.7156810372398468e-07,
+          3.600184754759539e-07,
+          -4.5124778580429847e-07,
+          -3.970319539803313e-08
+        ],
+        "execution": "cold unordered-configuration lifts; exact cached maps for warm learned calls",
+        "geometry_gradient_source": "normalized kinetic action; terminal likelihood is invariant to this shear",
+        "map_storage_alias_note": "current maps may reference the same immutable buffers as the family cache; do not add both numeric payloads",
+        "moment_cache": null,
+        "partial_failed_lift_snapshot_work_known": false,
+        "timings": "perf_counter; torch objective launch time may exclude asynchronous GPU completion",
+        "homotopy_lift_cache": {
+          "certificate_bytes": 27658,
+          "counts": {
+            "actual_distance_matrix_entries": 839872,
+            "actual_lift_attempts": 19,
+            "actual_lift_failures": 0,
+            "actual_lift_seconds": 0.2960781380534172,
+            "actual_lift_snapshots": 6552,
+            "actual_lifts": 19,
+            "cache_management_seconds": 0.0033739592181518674,
+            "cross_omega_hits": 45,
+            "evictions": 0,
+            "get_calls": 64,
+            "get_seconds": 0.302668294752948,
+            "hits": 45,
+            "maximum_entries": 19,
+            "maximum_payload_bytes": 33282,
+            "misses": 19,
+            "namespace_setup_seconds": 0.005521583021618426,
+            "oversize_uncached_results": 0,
+            "validation_and_key_seconds": 0.002957442426122725,
+            "validation_failures": 0
+          },
+          "entries": 19,
+          "map_data_bytes": 1216,
+          "maps_persisted": false,
+          "packed_payload_bytes": 33282,
+          "payload_accounting": "packed numeric keys/maps and certificate JSON; Python overhead bounded separately by entries<=capacity,D<=64",
+          "policy": {
+            "capacity": 128,
+            "family": {
+              "ConfigurationLoop_source_sha256": "ba66e89663122d0c8e6f341c69765088e20f0fe8fe7f407122e3ec0c2c2499fd",
+              "basepoint_rule": "spacing*(arange(D)-(D-1)/2)",
+              "biases": [
+                -0.3,
+                0.2,
+                0.1,
+                -0.2
+              ],
+              "cache_proof_source_sha256": "026c0453f2ac7369f680446f84b861d1133a6c2ebd248d9799627861b2f42c23",
+              "canonical_word_source_sha256": "b52f2347ff5e24a61e5a77e2bf556a7e2979afa53711f62b31d1b3cab591d941",
+              "compiler_source_sha256": "ad1852bba88393b85db8aa44553d5c85183a0dce5ada4a62460f52b3a52c2936",
+              "frequencies": [
+                0.03125,
+                -0.0625,
+                0.125,
+                -0.25
+              ],
+              "lift_sequence_source_sha256": "99ff6e14ab47023cda52592d47feb2b514cb9f2b5ae296f09111051209ff1612",
+              "module": "continuous_monodromy",
+              "omega_domain": {
+                "component_abs_max": 8.0,
+                "dimensions": 4,
+                "finite": true
+              },
+              "proof": "global vertical shear diffeomorphism, endpoint-fixed convex parameter homotopy",
+              "proof_scope": "ideal real-arithmetic monodromy; first lift also has original floating diagnostics",
+              "spacing": 4.0,
+              "version": "endpoint-fixed-global-vertical-shear-v1"
+            },
+            "family_fingerprint": "9654d6630aacd1866bf8ebbef401d89c2bcd4ba85eb3ba165aae0889d0316057",
+            "kind": "homotopy_certified_in_memory_lift_cache",
+            "maps_persisted": false,
+            "max_payload_bytes": 1048576
+          }
+        }
+      },
+      "actual_reload_verified": true,
+      "checkpoint_metadata_measurement": {
+        "checkpoint": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-topology-resumed/learn/topology-stage2-step600.pt",
+        "checkpoint_sha256": "183626cce927dc859c06c681ca2528c5c7c30a9af03200ade9e77abdb224b27a",
+        "checkpoint_bytes": 160957,
+        "stage": 2,
+        "step": 600,
+        "model_extra_compact_json_bytes": 80892,
+        "model_extra_compact_json_sha256": "4ab95147c609ae9d7cc62b8468d7dea01187d4032e5035e9c66634c2baa773f1",
+        "model_extra_top_level_keys": [
+          "compact_operations",
+          "compilation",
+          "continuous_monodromy",
+          "credit",
+          "d",
+          "emb_dim",
+          "limitation",
+          "materialization_history",
+          "max_bank",
+          "n",
+          "n_ops",
+          "native_execution",
+          "optimizer_rebuild_after_promotion",
+          "promotion_settings",
+          "proposal_execution",
+          "protection",
+          "reference",
+          "slots",
+          "stage",
+          "temperature",
+          "workspace_history"
+        ],
+        "model_extra_field_json_bytes": {
+          "reference": 2308,
+          "temperature": 3,
+          "stage": 1,
+          "compilation": 11,
+          "credit": 5,
+          "protection": 4,
+          "limitation": 81,
+          "n_ops": 2,
+          "d": 1,
+          "n": 1,
+          "workspace_history": 2,
+          "slots": 1,
+          "emb_dim": 2,
+          "native_execution": 11,
+          "proposal_execution": 7,
+          "max_bank": 2,
+          "materialization_history": 27087,
+          "promotion_settings": 110,
+          "optimizer_rebuild_after_promotion": 4,
+          "continuous_monodromy": 50487,
+          "compact_operations": 425
+        },
+        "counting_scope": "standalone compact sorted UTF-8 JSON; shared references duplicated by value; excludes all learned tensors and optimizer; not Python RAM or Torch archive bytes",
+        "inspection": "restricted inert pickle descriptors; no Torch/NumPy/model imports; tensor storage not read"
+      },
+      "curves_source": "Original source_run/learn/summary.json reports[stage-relative].curves; preserved raw, not duplicated here",
+      "formation_audit": {
+        "allocation_is_inferred_from_current_neural_encoding_readout": true,
+        "correct_call_used": false,
+        "fixed_task_id": 2,
+        "formation_seconds": 0.010949617018923163,
+        "hidden_mode_used": false,
+        "input_sha256": "ad3709a8cb5f2bd7b401797d9c9adbe2f5836daf0467452d91c1e59f742f325d",
+        "matching_calls": 7,
+        "observed_state_classes": 8,
+        "public_history_count": 56,
+        "rows": 8192,
+        "rule": "passive terminal-response partition plus executable continuation closure",
+        "seconds": 0.030019049998372793,
+        "teacher_transition_used": false,
+        "training_errors": 0,
+        "training_only": true,
+        "training_terminal_evaluations": 8192,
+        "training_transition_uses": 42407,
+        "unique_records": 8093
+      }
+    },
+    {
+      "stage": 3,
+      "source_run": "parameter-n8-seed0-topology-resumed",
+      "gradient_updates": 600,
+      "parameters": 3946,
+      "delta_parameters": 1078,
+      "all_parameters_trainable": true,
+      "Qstable": 1,
+      "capability_record": {
+        "admitted": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "currently_successful": [
+          3
+        ],
+        "deltaP_per_new_retained_capability": null,
+        "delta_parameters": 1078,
+        "lost_previously_stable_capabilities": [
+          2
+        ],
+        "net_delta_stable_capabilities": 0,
+        "new_successfully_retained": 0,
+        "stable": [
+          3
+        ],
+        "total_stable": 1
+      },
+      "new_metrics": {
+        "iid": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.0042112710361834615
+        },
+        "length16": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.014611754915677011
+        },
+        "ood": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.009710200713016093
+        },
+        "valid": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.004174424801021814
+        }
+      },
+      "all_seen_metrics": {
+        "0": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.876953125,
+            "terminal_CE": 0.9005820602178574
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.408203125,
+            "terminal_CE": 1.9292093515396118
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.609375,
+            "terminal_CE": 1.6500137597322464
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.87109375,
+            "terminal_CE": 0.8604477345943451
+          }
+        },
+        "1": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.697265625,
+            "terminal_CE": 1.1880715638399124
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.251953125,
+            "terminal_CE": 2.062254786491394
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.384765625,
+            "terminal_CE": 1.9444423466920853
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.734375,
+            "terminal_CE": 1.1704381555318832
+          }
+        },
+        "2": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.9921875,
+            "terminal_CE": 0.6590116620063782
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.83984375,
+            "terminal_CE": 1.7549452632665634
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.955078125,
+            "terminal_CE": 1.354545310139656
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.98828125,
+            "terminal_CE": 0.6780550628900528
+          }
+        },
+        "3": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.0042112710361834615
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.014611754915677011
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.009710200713016093
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.004174424801021814
+          }
+        }
+      },
+      "bank_K": 26,
+      "latent_D": 16,
+      "operation_coordinates": 416,
+      "head_parameters": 2646,
+      "other_parameters": 884,
+      "resource_bytes": {
+        "parameters": 15784,
+        "optimizer": 31600,
+        "reference_arrays": 2496,
+        "reference_json": 4121,
+        "replay": 0,
+        "complete_model_extra_json": 128311,
+        "full_checkpoint": 232573,
+        "homotopy_packed_payload": 84214,
+        "homotopy_certificate_json": 66390,
+        "homotopy_map_arrays": 4416
+      },
+      "costs_seconds": {
+        "synced_training": 7.802884341450408,
+        "guard": 14.508089575916529,
+        "evaluation": 3.838495287927799,
+        "model_phase_wall": 27.476156007964164,
+        "checkpoint_reload": 0.918620475102216,
+        "materialization": 0.019781848997808993
+      },
+      "geometry_resources": {
+        "bank_size": 26,
+        "costs": {
+          "cache_restore_invalidations": 1,
+          "cold_configuration_snapshots": 25205,
+          "cold_distance_matrix_entries": 10100992,
+          "cold_lift_attempts": 51,
+          "cold_lift_failures": 0,
+          "cold_realization_seconds": 1.173526541213505,
+          "cold_realized_classes": 51,
+          "geometry_class_bank_assignments": 39000,
+          "geometry_class_check_seconds": 2.6142616329016164,
+          "geometry_class_graph_extractions": 2400,
+          "geometry_moment_rebuilds": 4,
+          "geometry_moment_seconds": 0.03639951499644667,
+          "geometry_quadrature_point_strands": 87168,
+          "geometry_quadrature_reference_point_strands": 87168,
+          "geometry_regularizer_calls": 2400,
+          "geometry_torch_objective_seconds": 0.3678746751975268,
+          "hard_bank_assignment_batches": 16,
+          "hard_bank_assignment_seconds": 0.00844517385121435,
+          "hard_bank_hungarian_assignments": 260,
+          "hard_cache_class_hits": 8853,
+          "hard_cache_generations": 10,
+          "hard_cache_signature_checks": 1285,
+          "hard_cache_signature_seconds": 0.1487531749298796,
+          "hard_eval_calls": 1285,
+          "hard_eval_total_seconds": 2.988677269546315,
+          "homotopy_family_errors": 0,
+          "homotopy_family_get_calls": 142,
+          "homotopy_family_get_seconds": 1.1905587430810556,
+          "homotopy_family_reuses": 91,
+          "map_cache_bytes_current": 3200,
+          "map_cache_bytes_peak": 3200,
+          "warm_native_execution_seconds": 0.8009348441846669,
+          "warm_native_primitive_calls": 1462894
+        },
+        "current_latent_states": 16,
+        "current_omega": [
+          -1.714171051979065,
+          -2.6812939643859863,
+          -1.8079909086227417,
+          -0.4943913221359253
+        ],
+        "current_path_omega_gradient": [
+          -5.610191919913632e-07,
+          -1.3995226026963792e-06,
+          1.5848924022066058e-06,
+          -9.583600331097841e-07
+        ],
+        "execution": "cold unordered-configuration lifts; exact cached maps for warm learned calls",
+        "geometry_gradient_source": "normalized kinetic action; terminal likelihood is invariant to this shear",
+        "map_storage_alias_note": "current maps may reference the same immutable buffers as the family cache; do not add both numeric payloads",
+        "moment_cache": null,
+        "partial_failed_lift_snapshot_work_known": false,
+        "timings": "perf_counter; torch objective launch time may exclude asynchronous GPU completion",
+        "homotopy_lift_cache": {
+          "certificate_bytes": 66390,
+          "counts": {
+            "actual_distance_matrix_entries": 10001856,
+            "actual_lift_attempts": 44,
+            "actual_lift_failures": 0,
+            "actual_lift_seconds": 1.139816747396253,
+            "actual_lift_snapshots": 24434,
+            "actual_lifts": 44,
+            "cache_management_seconds": 0.006815456319600344,
+            "cross_omega_hits": 70,
+            "evictions": 0,
+            "get_calls": 114,
+            "get_seconds": 1.152466835337691,
+            "hits": 70,
+            "maximum_entries": 44,
+            "maximum_payload_bytes": 84214,
+            "misses": 44,
+            "namespace_setup_seconds": 0.005521583021618426,
+            "oversize_uncached_results": 0,
+            "validation_and_key_seconds": 0.005352608975954354,
+            "validation_failures": 0
+          },
+          "entries": 44,
+          "map_data_bytes": 4416,
+          "maps_persisted": false,
+          "packed_payload_bytes": 84214,
+          "payload_accounting": "packed numeric keys/maps and certificate JSON; Python overhead bounded separately by entries<=capacity,D<=64",
+          "policy": {
+            "capacity": 128,
+            "family": {
+              "ConfigurationLoop_source_sha256": "ba66e89663122d0c8e6f341c69765088e20f0fe8fe7f407122e3ec0c2c2499fd",
+              "basepoint_rule": "spacing*(arange(D)-(D-1)/2)",
+              "biases": [
+                -0.3,
+                0.2,
+                0.1,
+                -0.2
+              ],
+              "cache_proof_source_sha256": "026c0453f2ac7369f680446f84b861d1133a6c2ebd248d9799627861b2f42c23",
+              "canonical_word_source_sha256": "b52f2347ff5e24a61e5a77e2bf556a7e2979afa53711f62b31d1b3cab591d941",
+              "compiler_source_sha256": "ad1852bba88393b85db8aa44553d5c85183a0dce5ada4a62460f52b3a52c2936",
+              "frequencies": [
+                0.03125,
+                -0.0625,
+                0.125,
+                -0.25
+              ],
+              "lift_sequence_source_sha256": "99ff6e14ab47023cda52592d47feb2b514cb9f2b5ae296f09111051209ff1612",
+              "module": "continuous_monodromy",
+              "omega_domain": {
+                "component_abs_max": 8.0,
+                "dimensions": 4,
+                "finite": true
+              },
+              "proof": "global vertical shear diffeomorphism, endpoint-fixed convex parameter homotopy",
+              "proof_scope": "ideal real-arithmetic monodromy; first lift also has original floating diagnostics",
+              "spacing": 4.0,
+              "version": "endpoint-fixed-global-vertical-shear-v1"
+            },
+            "family_fingerprint": "9654d6630aacd1866bf8ebbef401d89c2bcd4ba85eb3ba165aae0889d0316057",
+            "kind": "homotopy_certified_in_memory_lift_cache",
+            "maps_persisted": false,
+            "max_payload_bytes": 1048576
+          }
+        }
+      },
+      "actual_reload_verified": true,
+      "checkpoint_metadata_measurement": {
+        "checkpoint": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-topology-resumed/learn/topology-stage3-step600.pt",
+        "checkpoint_sha256": "99633d39ed153da6cdbb81a94c617ac07e84b97462b7d24ac3e206f5ded5a1ed",
+        "checkpoint_bytes": 232573,
+        "stage": 3,
+        "step": 600,
+        "model_extra_compact_json_bytes": 128311,
+        "model_extra_compact_json_sha256": "9a9400ca3bc51c2842517e590ad2546dad1e2e1678d40b01fb41f2e86925b446",
+        "model_extra_top_level_keys": [
+          "compact_operations",
+          "compilation",
+          "continuous_monodromy",
+          "credit",
+          "d",
+          "emb_dim",
+          "limitation",
+          "materialization_history",
+          "max_bank",
+          "n",
+          "n_ops",
+          "native_execution",
+          "optimizer_rebuild_after_promotion",
+          "promotion_settings",
+          "proposal_execution",
+          "protection",
+          "reference",
+          "slots",
+          "stage",
+          "temperature",
+          "workspace_history"
+        ],
+        "model_extra_field_json_bytes": {
+          "reference": 4121,
+          "temperature": 3,
+          "stage": 1,
+          "compilation": 11,
+          "credit": 5,
+          "protection": 4,
+          "limitation": 81,
+          "n_ops": 2,
+          "d": 2,
+          "n": 1,
+          "workspace_history": 2,
+          "slots": 1,
+          "emb_dim": 2,
+          "native_execution": 11,
+          "proposal_execution": 7,
+          "max_bank": 2,
+          "materialization_history": 48035,
+          "promotion_settings": 110,
+          "optimizer_rebuild_after_promotion": 4,
+          "continuous_monodromy": 75144,
+          "compact_operations": 425
+        },
+        "counting_scope": "standalone compact sorted UTF-8 JSON; shared references duplicated by value; excludes all learned tensors and optimizer; not Python RAM or Torch archive bytes",
+        "inspection": "restricted inert pickle descriptors; no Torch/NumPy/model imports; tensor storage not read"
+      },
+      "curves_source": "Original source_run/learn/summary.json reports[stage-relative].curves; preserved raw, not duplicated here",
+      "formation_audit": {
+        "allocation_is_inferred_from_current_neural_encoding_readout": true,
+        "correct_call_used": false,
+        "fixed_task_id": 3,
+        "formation_seconds": 0.015891653951257467,
+        "hidden_mode_used": false,
+        "input_sha256": "d1f3b2d345a6aca65dbb6268f09a3ef75228d7170da96e44efabcddd21eef533",
+        "matching_calls": 7,
+        "observed_state_classes": 16,
+        "public_history_count": 56,
+        "rows": 8192,
+        "rule": "passive terminal-response partition plus executable continuation closure",
+        "seconds": 0.028016577009111643,
+        "teacher_transition_used": false,
+        "training_errors": 0,
+        "training_only": true,
+        "training_terminal_evaluations": 8192,
+        "training_transition_uses": 42565,
+        "unique_records": 8113
+      }
+    },
+    {
+      "stage": 4,
+      "source_run": "parameter-n8-seed0-topology-resumed",
+      "gradient_updates": 600,
+      "parameters": 4630,
+      "delta_parameters": 684,
+      "all_parameters_trainable": true,
+      "Qstable": 1,
+      "capability_record": {
+        "admitted": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "currently_successful": [
+          0,
+          1,
+          2,
+          4
+        ],
+        "deltaP_per_new_retained_capability": null,
+        "delta_parameters": 684,
+        "lost_previously_stable_capabilities": [
+          3
+        ],
+        "net_delta_stable_capabilities": 0,
+        "new_successfully_retained": 0,
+        "stable": [
+          4
+        ],
+        "total_stable": 1
+      },
+      "new_metrics": {
+        "iid": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.00982691568788141
+        },
+        "length16": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.035608587320894
+        },
+        "ood": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.02305103768594563
+        },
+        "valid": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.010339568252675235
+        }
+      },
+      "all_seen_metrics": {
+        "0": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.5448504239320755
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.986328125,
+            "terminal_CE": 1.5397400707006454
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.998046875,
+            "terminal_CE": 1.1297284662723541
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.5423577055335045
+          }
+        },
+        "1": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.23708634451031685
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.7857766449451447
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.5374176427721977
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.23228940926492214
+          }
+        },
+        "2": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.5329565554857254
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.974609375,
+            "terminal_CE": 1.55614772439003
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 1.1708108633756638
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.5625513568520546
+          }
+        },
+        "3": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.67578125,
+            "terminal_CE": 1.2398489862680435
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.2421875,
+            "terminal_CE": 2.0694127678871155
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.361328125,
+            "terminal_CE": 1.9747131764888763
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.658203125,
+            "terminal_CE": 1.2514775097370148
+          }
+        },
+        "4": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.00982691568788141
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.035608587320894
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.02305103768594563
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.010339568252675235
+          }
+        }
+      },
+      "bank_K": 32,
+      "latent_D": 16,
+      "operation_coordinates": 512,
+      "head_parameters": 3234,
+      "other_parameters": 884,
+      "resource_bytes": {
+        "parameters": 18520,
+        "optimizer": 37072,
+        "reference_arrays": 3456,
+        "reference_json": 6192,
+        "replay": 0,
+        "complete_model_extra_json": 167868,
+        "full_checkpoint": 286205,
+        "homotopy_packed_payload": 96421,
+        "homotopy_certificate_json": 75669,
+        "homotopy_map_arrays": 5184
+      },
+      "costs_seconds": {
+        "synced_training": 10.660780556150712,
+        "guard": 30.265386107261293,
+        "evaluation": 4.037522149039432,
+        "model_phase_wall": 46.613005841034465,
+        "checkpoint_reload": 1.2259104199474677,
+        "materialization": 0.02838105196133256
+      },
+      "geometry_resources": {
+        "bank_size": 32,
+        "costs": {
+          "cache_restore_invalidations": 1,
+          "cold_configuration_snapshots": 30971,
+          "cold_distance_matrix_entries": 13054720,
+          "cold_lift_attempts": 57,
+          "cold_lift_failures": 0,
+          "cold_realization_seconds": 1.4514573912601918,
+          "cold_realized_classes": 57,
+          "geometry_class_bank_assignments": 58200,
+          "geometry_class_check_seconds": 3.572814662824385,
+          "geometry_class_graph_extractions": 3000,
+          "geometry_moment_rebuilds": 5,
+          "geometry_moment_seconds": 0.05549139191862196,
+          "geometry_quadrature_point_strands": 147328,
+          "geometry_quadrature_reference_point_strands": 147328,
+          "geometry_regularizer_calls": 3000,
+          "geometry_torch_objective_seconds": 0.4703302828129381,
+          "hard_bank_assignment_batches": 20,
+          "hard_bank_assignment_seconds": 0.012005846947431564,
+          "hard_bank_hungarian_assignments": 388,
+          "hard_cache_class_hits": 13299,
+          "hard_cache_generations": 12,
+          "hard_cache_signature_checks": 1929,
+          "hard_cache_signature_seconds": 0.24757153820246458,
+          "hard_eval_calls": 1929,
+          "hard_eval_total_seconds": 4.162874886882491,
+          "homotopy_family_errors": 0,
+          "homotopy_family_get_calls": 204,
+          "homotopy_family_get_seconds": 1.4751863619312644,
+          "homotopy_family_reuses": 147,
+          "map_cache_bytes_current": 3968,
+          "map_cache_bytes_peak": 3968,
+          "warm_native_execution_seconds": 1.1950976630905643,
+          "warm_native_primitive_calls": 2194078
+        },
+        "current_latent_states": 16,
+        "current_omega": [
+          -1.6593818664550781,
+          -2.6282761096954346,
+          -1.8541291952133179,
+          -0.5480411052703857
+        ],
+        "current_path_omega_gradient": [
+          -8.239176167990081e-07,
+          -4.872475187767122e-07,
+          1.4963484318286646e-07,
+          2.6431189326103777e-07
+        ],
+        "execution": "cold unordered-configuration lifts; exact cached maps for warm learned calls",
+        "geometry_gradient_source": "normalized kinetic action; terminal likelihood is invariant to this shear",
+        "map_storage_alias_note": "current maps may reference the same immutable buffers as the family cache; do not add both numeric payloads",
+        "moment_cache": null,
+        "partial_failed_lift_snapshot_work_known": false,
+        "timings": "perf_counter; torch objective launch time may exclude asynchronous GPU completion",
+        "homotopy_lift_cache": {
+          "certificate_bytes": 75669,
+          "counts": {
+            "actual_distance_matrix_entries": 12955584,
+            "actual_lift_attempts": 50,
+            "actual_lift_failures": 0,
+            "actual_lift_seconds": 1.4177475974429399,
+            "actual_lift_snapshots": 30200,
+            "actual_lifts": 50,
+            "cache_management_seconds": 0.00993891921825707,
+            "cross_omega_hits": 126,
+            "evictions": 0,
+            "get_calls": 176,
+            "get_seconds": 1.436601733439602,
+            "hits": 126,
+            "maximum_entries": 50,
+            "maximum_payload_bytes": 96421,
+            "misses": 50,
+            "namespace_setup_seconds": 0.005521583021618426,
+            "oversize_uncached_results": 0,
+            "validation_and_key_seconds": 0.008217653958126903,
+            "validation_failures": 0
+          },
+          "entries": 50,
+          "map_data_bytes": 5184,
+          "maps_persisted": false,
+          "packed_payload_bytes": 96421,
+          "payload_accounting": "packed numeric keys/maps and certificate JSON; Python overhead bounded separately by entries<=capacity,D<=64",
+          "policy": {
+            "capacity": 128,
+            "family": {
+              "ConfigurationLoop_source_sha256": "ba66e89663122d0c8e6f341c69765088e20f0fe8fe7f407122e3ec0c2c2499fd",
+              "basepoint_rule": "spacing*(arange(D)-(D-1)/2)",
+              "biases": [
+                -0.3,
+                0.2,
+                0.1,
+                -0.2
+              ],
+              "cache_proof_source_sha256": "026c0453f2ac7369f680446f84b861d1133a6c2ebd248d9799627861b2f42c23",
+              "canonical_word_source_sha256": "b52f2347ff5e24a61e5a77e2bf556a7e2979afa53711f62b31d1b3cab591d941",
+              "compiler_source_sha256": "ad1852bba88393b85db8aa44553d5c85183a0dce5ada4a62460f52b3a52c2936",
+              "frequencies": [
+                0.03125,
+                -0.0625,
+                0.125,
+                -0.25
+              ],
+              "lift_sequence_source_sha256": "99ff6e14ab47023cda52592d47feb2b514cb9f2b5ae296f09111051209ff1612",
+              "module": "continuous_monodromy",
+              "omega_domain": {
+                "component_abs_max": 8.0,
+                "dimensions": 4,
+                "finite": true
+              },
+              "proof": "global vertical shear diffeomorphism, endpoint-fixed convex parameter homotopy",
+              "proof_scope": "ideal real-arithmetic monodromy; first lift also has original floating diagnostics",
+              "spacing": 4.0,
+              "version": "endpoint-fixed-global-vertical-shear-v1"
+            },
+            "family_fingerprint": "9654d6630aacd1866bf8ebbef401d89c2bcd4ba85eb3ba165aae0889d0316057",
+            "kind": "homotopy_certified_in_memory_lift_cache",
+            "maps_persisted": false,
+            "max_payload_bytes": 1048576
+          }
+        }
+      },
+      "actual_reload_verified": true,
+      "checkpoint_metadata_measurement": {
+        "checkpoint": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-topology-resumed/learn/topology-stage4-step600.pt",
+        "checkpoint_sha256": "94bfb337f5db9ae4de3ecff8bd67e6f570473e048f89d6bf764da3945be0f583",
+        "checkpoint_bytes": 286205,
+        "stage": 4,
+        "step": 600,
+        "model_extra_compact_json_bytes": 167868,
+        "model_extra_compact_json_sha256": "6ea1ce0e9e808c491588aded2898e7117ed911ea8b62377b51b51012f201a0cd",
+        "model_extra_top_level_keys": [
+          "compact_operations",
+          "compilation",
+          "continuous_monodromy",
+          "credit",
+          "d",
+          "emb_dim",
+          "limitation",
+          "materialization_history",
+          "max_bank",
+          "n",
+          "n_ops",
+          "native_execution",
+          "optimizer_rebuild_after_promotion",
+          "promotion_settings",
+          "proposal_execution",
+          "protection",
+          "reference",
+          "slots",
+          "stage",
+          "temperature",
+          "workspace_history"
+        ],
+        "model_extra_field_json_bytes": {
+          "reference": 6192,
+          "temperature": 3,
+          "stage": 1,
+          "compilation": 11,
+          "credit": 5,
+          "protection": 4,
+          "limitation": 81,
+          "n_ops": 2,
+          "d": 2,
+          "n": 1,
+          "workspace_history": 2,
+          "slots": 1,
+          "emb_dim": 2,
+          "native_execution": 11,
+          "proposal_execution": 7,
+          "max_bank": 2,
+          "materialization_history": 70544,
+          "promotion_settings": 110,
+          "optimizer_rebuild_after_promotion": 4,
+          "continuous_monodromy": 90121,
+          "compact_operations": 425
+        },
+        "counting_scope": "standalone compact sorted UTF-8 JSON; shared references duplicated by value; excludes all learned tensors and optimizer; not Python RAM or Torch archive bytes",
+        "inspection": "restricted inert pickle descriptors; no Torch/NumPy/model imports; tensor storage not read"
+      },
+      "curves_source": "Original source_run/learn/summary.json reports[stage-relative].curves; preserved raw, not duplicated here",
+      "formation_audit": {
+        "allocation_is_inferred_from_current_neural_encoding_readout": true,
+        "correct_call_used": false,
+        "fixed_task_id": 4,
+        "formation_seconds": 0.011251859017647803,
+        "hidden_mode_used": false,
+        "input_sha256": "e0bbca1edd2ec50525eb18a5e8caeb0f8e3344298d24d10736e84e883387e7c5",
+        "matching_calls": 7,
+        "observed_state_classes": 16,
+        "public_history_count": 56,
+        "rows": 8192,
+        "rule": "passive terminal-response partition plus executable continuation closure",
+        "seconds": 0.028466680087149143,
+        "teacher_transition_used": false,
+        "training_errors": 0,
+        "training_only": true,
+        "training_terminal_evaluations": 8192,
+        "training_transition_uses": 42508,
+        "unique_records": 8110
+      }
+    },
+    {
+      "stage": 5,
+      "source_run": "parameter-n8-seed0-topology-resumed",
+      "gradient_updates": 600,
+      "parameters": 5314,
+      "delta_parameters": 684,
+      "all_parameters_trainable": true,
+      "Qstable": 1,
+      "capability_record": {
+        "admitted": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "currently_successful": [
+          1,
+          3,
+          5
+        ],
+        "deltaP_per_new_retained_capability": null,
+        "delta_parameters": 684,
+        "lost_previously_stable_capabilities": [
+          4
+        ],
+        "net_delta_stable_capabilities": 0,
+        "new_successfully_retained": 0,
+        "stable": [
+          5
+        ],
+        "total_stable": 1
+      },
+      "new_metrics": {
+        "iid": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.01764344295952469
+        },
+        "length16": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.06419115699827671
+        },
+        "ood": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.041659231297671795
+        },
+        "valid": {
+          "deployed": 1.0,
+          "n": 512,
+          "neural": 1.0,
+          "terminal_CE": 0.017151140607893467
+        }
+      },
+      "all_seen_metrics": {
+        "0": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.9765625,
+            "terminal_CE": 0.6604468673467636
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.771484375,
+            "terminal_CE": 1.650932639837265
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.892578125,
+            "terminal_CE": 1.3089686185121536
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.984375,
+            "terminal_CE": 0.6442945525050163
+          }
+        },
+        "1": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.501677967607975
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 1.48485866189003
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 1.0922205299139023
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.5025313310325146
+          }
+        },
+        "2": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.99609375,
+            "terminal_CE": 0.639416940510273
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.896484375,
+            "terminal_CE": 1.7277577966451645
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.962890625,
+            "terminal_CE": 1.3135319650173187
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.998046875,
+            "terminal_CE": 0.6576492562890053
+          }
+        },
+        "3": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.28515007346868515
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.9522312954068184
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.6456173360347748
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.287124902009964
+          }
+        },
+        "4": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.578125,
+            "terminal_CE": 1.3557617217302322
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.177734375,
+            "terminal_CE": 2.0751940310001373
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.275390625,
+            "terminal_CE": 2.021417737007141
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 0.541015625,
+            "terminal_CE": 1.4210405945777893
+          }
+        },
+        "5": {
+          "iid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.01764344295952469
+          },
+          "length16": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.06419115699827671
+          },
+          "ood": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.041659231297671795
+          },
+          "valid": {
+            "deployed": 1.0,
+            "n": 512,
+            "neural": 1.0,
+            "terminal_CE": 0.017151140607893467
+          }
+        }
+      },
+      "bank_K": 38,
+      "latent_D": 16,
+      "operation_coordinates": 608,
+      "head_parameters": 3822,
+      "other_parameters": 884,
+      "resource_bytes": {
+        "parameters": 21256,
+        "optimizer": 42544,
+        "reference_arrays": 4416,
+        "reference_json": 8521,
+        "replay": 0,
+        "complete_model_extra_json": 209131,
+        "full_checkpoint": 342461,
+        "homotopy_packed_payload": 108638,
+        "homotopy_certificate_json": 84958,
+        "homotopy_map_arrays": 5952
+      },
+      "costs_seconds": {
+        "synced_training": 10.420222973101772,
+        "guard": 42.17108240153175,
+        "evaluation": 4.823812876828015,
+        "model_phase_wall": 59.67080565006472,
+        "checkpoint_reload": 1.788790651015006,
+        "materialization": 0.035672801081091166
+      },
+      "geometry_resources": {
+        "bank_size": 38,
+        "costs": {
+          "cache_restore_invalidations": 1,
+          "cold_configuration_snapshots": 36536,
+          "cold_distance_matrix_entries": 15905536,
+          "cold_lift_attempts": 63,
+          "cold_lift_failures": 0,
+          "cold_realization_seconds": 1.7190382302505895,
+          "cold_realized_classes": 63,
+          "geometry_class_bank_assignments": 81000,
+          "geometry_class_check_seconds": 4.642892829608172,
+          "geometry_class_graph_extractions": 3600,
+          "geometry_moment_rebuilds": 6,
+          "geometry_moment_seconds": 0.07344341499265283,
+          "geometry_quadrature_point_strands": 204160,
+          "geometry_quadrature_reference_point_strands": 204160,
+          "geometry_regularizer_calls": 3600,
+          "geometry_torch_objective_seconds": 0.5788538658525795,
+          "hard_bank_assignment_batches": 24,
+          "hard_bank_assignment_seconds": 0.016148259863257408,
+          "hard_bank_hungarian_assignments": 540,
+          "hard_cache_class_hits": 18636,
+          "hard_cache_generations": 14,
+          "hard_cache_signature_checks": 2702,
+          "hard_cache_signature_seconds": 0.3798789120046422,
+          "hard_eval_calls": 2702,
+          "hard_eval_total_seconds": 5.524901688797399,
+          "homotopy_family_errors": 0,
+          "homotopy_family_get_calls": 278,
+          "homotopy_family_get_seconds": 1.750021846499294,
+          "homotopy_family_reuses": 215,
+          "map_cache_bytes_current": 4736,
+          "map_cache_bytes_peak": 4736,
+          "warm_native_execution_seconds": 1.6695812535472214,
+          "warm_native_primitive_calls": 3069692
+        },
+        "current_latent_states": 16,
+        "current_omega": [
+          -1.6197279691696167,
+          -2.58832049369812,
+          -1.8816677331924438,
+          -0.5855113863945007
+        ],
+        "current_path_omega_gradient": [
+          -6.52403173262428e-07,
+          -7.2711736720521e-07,
+          1.0767780622700229e-07,
+          2.961830318781722e-07
+        ],
+        "execution": "cold unordered-configuration lifts; exact cached maps for warm learned calls",
+        "geometry_gradient_source": "normalized kinetic action; terminal likelihood is invariant to this shear",
+        "map_storage_alias_note": "current maps may reference the same immutable buffers as the family cache; do not add both numeric payloads",
+        "moment_cache": null,
+        "partial_failed_lift_snapshot_work_known": false,
+        "timings": "perf_counter; torch objective launch time may exclude asynchronous GPU completion",
+        "homotopy_lift_cache": {
+          "certificate_bytes": 84958,
+          "counts": {
+            "actual_distance_matrix_entries": 15806400,
+            "actual_lift_attempts": 56,
+            "actual_lift_failures": 0,
+            "actual_lift_seconds": 1.6853284364333376,
+            "actual_lift_snapshots": 35765,
+            "actual_lifts": 56,
+            "cache_management_seconds": 0.013289548689499497,
+            "cross_omega_hits": 194,
+            "evictions": 0,
+            "get_calls": 250,
+            "get_seconds": 1.7108786943135783,
+            "hits": 194,
+            "maximum_entries": 56,
+            "maximum_payload_bytes": 108638,
+            "misses": 56,
+            "namespace_setup_seconds": 0.005521583021618426,
+            "oversize_uncached_results": 0,
+            "validation_and_key_seconds": 0.01135020435322076,
+            "validation_failures": 0
+          },
+          "entries": 56,
+          "map_data_bytes": 5952,
+          "maps_persisted": false,
+          "packed_payload_bytes": 108638,
+          "payload_accounting": "packed numeric keys/maps and certificate JSON; Python overhead bounded separately by entries<=capacity,D<=64",
+          "policy": {
+            "capacity": 128,
+            "family": {
+              "ConfigurationLoop_source_sha256": "ba66e89663122d0c8e6f341c69765088e20f0fe8fe7f407122e3ec0c2c2499fd",
+              "basepoint_rule": "spacing*(arange(D)-(D-1)/2)",
+              "biases": [
+                -0.3,
+                0.2,
+                0.1,
+                -0.2
+              ],
+              "cache_proof_source_sha256": "026c0453f2ac7369f680446f84b861d1133a6c2ebd248d9799627861b2f42c23",
+              "canonical_word_source_sha256": "b52f2347ff5e24a61e5a77e2bf556a7e2979afa53711f62b31d1b3cab591d941",
+              "compiler_source_sha256": "ad1852bba88393b85db8aa44553d5c85183a0dce5ada4a62460f52b3a52c2936",
+              "frequencies": [
+                0.03125,
+                -0.0625,
+                0.125,
+                -0.25
+              ],
+              "lift_sequence_source_sha256": "99ff6e14ab47023cda52592d47feb2b514cb9f2b5ae296f09111051209ff1612",
+              "module": "continuous_monodromy",
+              "omega_domain": {
+                "component_abs_max": 8.0,
+                "dimensions": 4,
+                "finite": true
+              },
+              "proof": "global vertical shear diffeomorphism, endpoint-fixed convex parameter homotopy",
+              "proof_scope": "ideal real-arithmetic monodromy; first lift also has original floating diagnostics",
+              "spacing": 4.0,
+              "version": "endpoint-fixed-global-vertical-shear-v1"
+            },
+            "family_fingerprint": "9654d6630aacd1866bf8ebbef401d89c2bcd4ba85eb3ba165aae0889d0316057",
+            "kind": "homotopy_certified_in_memory_lift_cache",
+            "maps_persisted": false,
+            "max_payload_bytes": 1048576
+          }
+        }
+      },
+      "actual_reload_verified": true,
+      "checkpoint_metadata_measurement": {
+        "checkpoint": ".deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/runs/parameter-n8-seed0-topology-resumed/learn/topology-stage5-step600.pt",
+        "checkpoint_sha256": "12952a75ca926b51abba2f8f55e9bff636e1309c3a7a0ef1b9d5b44dfea7444c",
+        "checkpoint_bytes": 342461,
+        "stage": 5,
+        "step": 600,
+        "model_extra_compact_json_bytes": 209131,
+        "model_extra_compact_json_sha256": "985d6fdcf818eb0e002d93eb9ffd289e3178387588a752538e5567156fae439f",
+        "model_extra_top_level_keys": [
+          "compact_operations",
+          "compilation",
+          "continuous_monodromy",
+          "credit",
+          "d",
+          "emb_dim",
+          "limitation",
+          "materialization_history",
+          "max_bank",
+          "n",
+          "n_ops",
+          "native_execution",
+          "optimizer_rebuild_after_promotion",
+          "promotion_settings",
+          "proposal_execution",
+          "protection",
+          "reference",
+          "slots",
+          "stage",
+          "temperature",
+          "workspace_history"
+        ],
+        "model_extra_field_json_bytes": {
+          "reference": 8521,
+          "temperature": 3,
+          "stage": 1,
+          "compilation": 11,
+          "credit": 5,
+          "protection": 4,
+          "limitation": 81,
+          "n_ops": 2,
+          "d": 2,
+          "n": 1,
+          "workspace_history": 2,
+          "slots": 1,
+          "emb_dim": 2,
+          "native_execution": 11,
+          "proposal_execution": 7,
+          "max_bank": 2,
+          "materialization_history": 94593,
+          "promotion_settings": 110,
+          "optimizer_rebuild_after_promotion": 4,
+          "continuous_monodromy": 105006,
+          "compact_operations": 425
+        },
+        "counting_scope": "standalone compact sorted UTF-8 JSON; shared references duplicated by value; excludes all learned tensors and optimizer; not Python RAM or Torch archive bytes",
+        "inspection": "restricted inert pickle descriptors; no Torch/NumPy/model imports; tensor storage not read"
+      },
+      "curves_source": "Original source_run/learn/summary.json reports[stage-relative].curves; preserved raw, not duplicated here",
+      "formation_audit": {
+        "allocation_is_inferred_from_current_neural_encoding_readout": true,
+        "correct_call_used": false,
+        "fixed_task_id": 5,
+        "formation_seconds": 0.012039575958624482,
+        "hidden_mode_used": false,
+        "input_sha256": "a93a453eebddc767ce15cfcdd654313a22db9672fbe198365de14a146663b520",
+        "matching_calls": 7,
+        "observed_state_classes": 16,
+        "public_history_count": 56,
+        "rows": 8192,
+        "rule": "passive terminal-response partition plus executable continuation closure",
+        "seconds": 0.028060232987627387,
+        "teacher_transition_used": false,
+        "training_errors": 0,
+        "training_only": true,
+        "training_terminal_evaluations": 8192,
+        "training_transition_uses": 42537,
+        "unique_records": 8101
+      }
+    }
+  ]
+}

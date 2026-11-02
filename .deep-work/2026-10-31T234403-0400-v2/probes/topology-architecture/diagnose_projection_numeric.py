@@ -79,7 +79,9 @@ def restore_parameter_layouts(model, state):
             restored_stride=list(p.stride()),restored_storage_offset=int(p.storage_offset()),
             source_device=str(source.device),restored_device=str(p.device),layout_replaced=changed,
             exact_tensor_bits=True,same_Parameter_object=True))
-    model._invalidate_derived_caches()
+    invalidate = getattr(model, '_invalidate_derived_caches', None)
+    if callable(invalidate):
+        invalidate()
     return records
 
 

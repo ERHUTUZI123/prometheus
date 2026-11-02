@@ -1,0 +1,30 @@
+/workspace/prometheus-v2-m0-architecture/code-parameter-n8-seed0-constraint_compact-full/parameter_efficiency_study.py:286: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:835.)
+  rec.emit('actual_update',stage=stage,step=step+1,terminal_CE=float(ce),geometry=float(geo),objective=float(loss),preclip_gradient=float(grad),guard=guard)
+{"event": "runner_failure", "error_type": "AttributeError", "error": "'CompactSemanticPromotionModel' object has no attribute '_invalidate_derived_caches'", "isolation_fallback": false}
+Traceback (most recent call last):
+  File "/workspace/prometheus-v2-m0-architecture/remote_runner_gpu_authorized.py", line 481, in main
+  File "/workspace/prometheus-v2-m0-architecture/remote_runner_gpu_authorized.py", line 363, in _child
+  File "<frozen runpy>", line 286, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-n8-seed0-constraint_compact-full/parameter_efficiency_study.py", line 346, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-n8-seed0-constraint_compact-full/parameter_efficiency_study.py", line 309, in main
+    restored=restore_actual(loaded,args,device)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-n8-seed0-constraint_compact-full/parameter_efficiency_study.py", line 81, in restore_actual
+    restore_parameter_layouts(model,payload['model'])
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-n8-seed0-constraint_compact-full/diagnose_projection_numeric.py", line 82, in restore_parameter_layouts
+    model._invalidate_derived_caches()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-n8-seed0-constraint_compact-full/parameter_native_models.py", line 38, in __getattr__
+    return super().__getattr__(name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1962, in __getattr__
+    raise AttributeError(
+AttributeError: 'CompactSemanticPromotionModel' object has no attribute '_invalidate_derived_caches'
