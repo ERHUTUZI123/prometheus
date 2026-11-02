@@ -381,9 +381,10 @@ class TypedHistoryArena:
             raise NumericalFailure("output copy register is not a fresh blank")
         # Supplied classical reversible add on(core, blank), charged. This is
         # not cloning an unknown quantum state and not a learned reset oracle.
+        self.ledger.check()
         self.output_copy = (0 + self.core) % 3
-        self.ledger.add("fresh_output_register_preparations")
-        self.ledger.add("reversible_classical_copy_calls")
+        for key in ("fresh_output_register_preparations", "reversible_classical_copy_calls"):
+            self.ledger.counts[key] = self.ledger.counts.get(key, 0) + 1
         return self.output_copy
 
     def cleanup(self, core_maps: Mapping[int, Sequence[int]], pair_map: Sequence[int],
@@ -476,7 +477,8 @@ class FactorizedResetBlock(nn.Module):
         super().__init__()
         self.core_session = HybridLearningSession.restore(core_payload, ledger)
         self.core = self.core_session.model
-        if self.core.slots != 1 or not {0, 1}.issubset(self.core_session.protected.admitted):
+        if (self.core.slots != 1 or not {0, 1}.issubset(self.core_session.protected.admitted)
+                or not {0, 1}.issubset(self.core_session.old_tokens)):
             raise ValueError("this increment requires the acquired one-slot two-operation V2 core")
         for parameter in self.core.parameters():
             parameter.requires_grad_(False)
@@ -500,9 +502,20 @@ class FactorizedResetBlock(nn.Module):
         encoder, readout = self.reference["encoder"], self.reference["readout"]
         if sorted(encoder) != list(range(3)) or any(readout[encoder[x]] != x for x in range(3)):
             raise ValueError("requires a bijective old physical register frame")
+        token_images = []
+        for token in (0, 1):
+            image = []
+            for state in range(3):
+                current = state
+                for route in self.reference["routes"][token]:
+                    if route:
+                        current = initial_maps[route - 1][current]
+                    ledger.add("old_transitive_frame_checks")
+                image.append(current)
+            token_images.append(image)
         reached = {0}
         for _ in range(3):
-            reached |= {image[state] for image in initial_maps.values() for state in tuple(reached)}
+            reached |= {image[state] for image in token_images for state in tuple(reached)}
         if len(reached) != 3:
             raise ValueError("this diagnostic specifies a transitive acquired old algebra")
 
@@ -578,8 +591,9 @@ class FactorizedResetBlock(nn.Module):
         self.assert_frame()
         if not 0 <= example.initial_sheet < 3 or any(token not in (0, 1, 2) for token in example.word):
             raise ValueError("example outside the declared typed core alphabet")
-        if len(example.word) > self.ledger.limits.max_word_length:
-            raise BudgetStop("native logical word too long")
+        if (len(example.word) > self.ledger.limits.max_word_length
+                or example.word.count(2) > self.history_capacity):
+            raise BudgetStop("native logical word/history capacity outside fixed diagnostic")
         maps = self.core_maps()
         signature = self.core.native_signature(maps, self.ledger)
         arena = TypedHistoryArena(signature["encoder"][example.initial_sheet],
@@ -740,7 +754,7 @@ class ResetInterfaceSession:
 
     @classmethod
     def from_core_checkpoint(cls, path: Path, ledger: CostLedger) -> "ResetInterfaceSession":
-        payload = torch.load(path, map_location="cpu", weights_only=False)
+        payload = torch.load(path, map_location="cpu", weights_only=True)
         ledger.add("inherited_checkpoint_loads")
         session = cls(payload, ledger)
         session.source_checkpoint_bytes = path.stat().st_size
