@@ -1,6 +1,6 @@
 # Prometheus · NOW
 
-**V2 同一 campaign · 核心 M 主轴：M0 → M1 → M2 → M3 · 当前攻克 M0（未通过）· MAIN=TOPOLOGY · USER_LOCKED / human-only change · human budget 4–6 h/week · no catch-up debt**
+**V2 同一 campaign · 六项固定论文路线 · 当前推进 TODO 1 / 2 / 5 · MAIN=TOPOLOGY · USER_LOCKED / human-only change · human budget 4–6 h/week · no catch-up debt**
 
 **唯一活跃研究文档。** 本文记录当前科学问题和行动；`AGENTS.md` 是常驻研究宪法；`food/` 与原始代码/证明是资料和研究产物。不要恢复多层计划或独立 Deep Work 台账。
 
@@ -42,7 +42,60 @@
 
 **当前承重动作（人类锁定的参数重点）：** 以 $\Delta P/\Delta Capability$ 为第一指标，连续获得并保持更多能力；比较Monodromy、同样允许共享/压缩的普通约束、冻结骨干加私有操作/头、动态完整模块及64/96宽Transformer（含Replay）。参数采用真实 $D$ 坐标操作表示，替代每原语 $D^2$ 稠密分数；该表示同样提供给普通约束，不能把通用压缩效果称作拓扑优势。首项能力计全部初始P，冻结和预分配参数全部计入；无净新增或丢失已保持能力不记有限成本比，外部表/回放/程序存储另计。
 
-**实际执行：** 新六阶段raw-terminal流已生成N8/seed0，首阶段600次真实训练获得能力且全部已测接口100%，实际参数1596及NN重载通过；从它直接续训后五阶段已完成，正核对逐阶段参数和稳定能力数。普通约束及其余增长策略按相同8192条TRAIN、600批次/阶段执行，形成搜索另计。三检查点同伦缓存维护诊断已完成并保留，虽减少重复lift但未减参数/梯度/绑定guard，停止追加该辅助分支预算。M0未通过，M3最终目标、Topology MAIN人类锁定及唯一算法正文 [method.md](method.md) 不变。活动执行期间每10分钟汇报，不承诺宿主停止后的后台运行。
+**实际执行：** 新六阶段raw-terminal流已生成N8/seed0，首阶段600次真实训练获得能力且全部已测接口100%，实际参数1596及NN重载通过；从它直接续训后五阶段已完成，正核对逐阶段参数和稳定能力数。普通约束及其余增长策略按相同8192条TRAIN、600批次/阶段执行，形成搜索另计。三检查点同伦缓存维护诊断已完成并保留，虽减少重复lift但未减参数/梯度/绑定guard，停止追加该辅助分支预算。按下列六项论文标准继续验收；Topology MAIN人类锁定及唯一算法正文 [method.md](method.md) 不变。活动执行期间每10分钟汇报，不承诺宿主停止后的后台运行。
+
+## 固定论文路线 · 六项即完整范围
+
+**人类明确决定，覆盖旧 M0–M3／百分比调度：** 以下六项是全部研究验收范围，不再自行增加第七道关卡。各项按实际证据判定，不预设成功；六项全部通过后，直接撰写论文、整理可复现代码与实验材料、推进投稿发表，不再自动延长研究。旧结果、反例、原始记录及历史 M 轴保留。
+
+**Ultimate Goal:** Develop and publish an original, general-purpose computational learning architecture with technical significance and experimental evidence comparable to *Attention Is All You Need* at its initial submission.
+
+**Research Direction: Self-Organizing Computation · MAIN: TOPOLOGY。** 只有人类可修改长期目标或主攻方向。现有资源、隔离和权限不扩大。
+
+### TODO 1 — 完成可靠的计算能力增长机制
+
+修复六阶段 Soft / Native 双接口遗忘；稳定形成、调用、复用、修订原语并根据经验增长内部状态；新能力获得后旧能力仍可执行。检验 N8、N16、N32 及每规模三个随机种子的稳定性与扩展。
+
+**完成标准：** 已学计算机制持续积累，完整执行链可训练、可复现。
+
+### TODO 2 — 建立真正由 Monodromy 驱动的核心学习原理
+
+将原语形成、状态增长、共享更新与同伦保护统一成数学和算法机制。Monodromy 必须直接改变学习自由度、参数增长或保护成本；构造可复用计算算子，给出公式、更新规则及关键性质。与普通约束、冻结和直接编译做机制对照。
+
+**完成标准：** 明确、可实现、有实测优势的原创核心计算机制；不将普通程序学习、压缩或一致性修复直接称为拓扑创新。
+
+### TODO 3 — 构建通用 Prometheus Block
+
+统一操作形成、调用、状态更新与保护为可训练模块；支持任意长度组合、多层堆叠、复用与动态状态增长。扩展至非置换、非可逆或连续状态计算，计入可逆提升等代价；不为每个任务重设核心。
+
+**完成标准：** 同一 Block 可作为不同任务的基础计算单元。
+
+### TODO 4 — 证明现实任务迁移
+
+使用同一核心架构完成算法与组合推理（多步程序、记忆、未见组合）及真实数据持续学习，例如 Speech Commands v2 连续类别。允许输入输出适配，不另造核心学习机制。
+
+**完成标准：** 合成任务之外可重复的真实价值与跨任务适用性。
+
+### TODO 5 — 正面挑战有竞争力的现有架构
+
+主要 baseline 固定为 **Transformer**；包括 Replay / Adapter，以及 DEN、HOPE / Nested Learning、PackNet，任务适用时包括 Mamba-2、Titans。先确认对手能够学会任务，给予合理训练、调参与扩容；不把未获取能力的随机水平对手视为保持优势证据。
+
+比较获取、保持、迁移；总参数及每新增且成功保持能力的边际参数；训练、推理、存储、优化器、维护；模块、保护、形成、Monodromy 消融；多规模、多种子与统计稳定性。冻结和预分配参数全部计入，外部程序/回放/快权重等存储单列。
+
+**完成标准：** 至少一个重要且广泛适用的能力或资源维度上，显著、可复现的强基线优势，其余代价完整透明。
+
+### TODO 6 — 建立可投稿的理论与实验证据
+
+提炼数学定义、算子、算法与原创贡献，区分已有编织计算、程序学习、持续学习及动态架构；完成证明、消融、扩展和完整成本。独立复核代码、结果、划分、科学主张；形成完整论文、可复现材料，公开前解决知识产权归属。
+
+**完成标准：** 能经受顶级研究者独立审查的新架构论文及证据。
+
+**Success = Original Principle + General Architecture + Important Competitive Advantage + Reproducible Evidence.**
+
+允许理论、架构、实验并行；唯一当前方法仍为 [method.md](method.md)。不为单项准确率牺牲通用性与参数效率，不因局部失败换 MAIN，也不因一份小实验／报告结束研究。活动执行期间每10分钟汇报实际进展；不承诺宿主停止后的后台运行。
+
+<details>
+<summary>历史 M0–M3 主轴（原文保留；不再驱动当前调度或百分比）</summary>
 
 ## Core M Axis · Prometheus — Paradigm-Level Research Milestones
 
@@ -123,6 +176,9 @@
 6. 只有人类研究负责人有权修改研究长期目标和主攻方向。
 
 **Historical recognition:** 通过 M3 可以形成有充分证据的范式级候选；其最终历史地位还取决于科学共同体后续的验证、应用和发展。
+
+
+</details>
 
 ## Current stage · V2 在封存阶段007之后继续
 

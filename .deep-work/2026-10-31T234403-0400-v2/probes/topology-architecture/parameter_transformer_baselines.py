@@ -44,8 +44,8 @@ class GrowingTaskTransformer(TinyTransformer):
     """
 
     def __init__(self, n_states, vocab=6, n_tasks=6, max_len=18, d_model=64):
-        if n_states not in (8,16) or vocab not in range(1,7) or max_len != 18:
-            raise ValueError("benchmark supports N8/16,1..6 non-PAD symbols,max_len18")
+        if n_states not in (8,16,32) or vocab not in range(1,7) or max_len != 18:
+            raise ValueError("benchmark supports N8/16/32,1..6 non-PAD symbols,max_len18")
         if d_model not in (64,96) or isinstance(n_tasks,bool) or not isinstance(n_tasks,Integral) or not 1<=n_tasks<=MAX_TASKS:
             raise ValueError("choose width64/96 and1..64 initial task codes")
         self.max_nonpad_symbol = int(vocab)

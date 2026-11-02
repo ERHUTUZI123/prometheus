@@ -1,0 +1,23 @@
+/workspace/prometheus-v2-m0-architecture/code-parameter-n8-seed0-freeze-full-consistent/parameter_efficiency_study.py:327: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:835.)
+  rec.emit('actual_update',stage=stage,step=step+1,terminal_CE=float(ce),geometry=float(geo),objective=float(loss),preclip_gradient=float(grad),guard=guard)
+{"event": "runner_failure", "error_type": "ValueError", "error": "current learned readout cannot realize separated histories", "isolation_fallback": false}
+Traceback (most recent call last):
+  File "/workspace/prometheus-v2-m0-architecture/remote_runner_gpu_authorized.py", line 481, in main
+  File "/workspace/prometheus-v2-m0-architecture/remote_runner_gpu_authorized.py", line 363, in _child
+  File "<frozen runpy>", line 286, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-n8-seed0-freeze-full-consistent/parameter_efficiency_study.py", line 390, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-n8-seed0-freeze-full-consistent/parameter_efficiency_study.py", line 249, in main
+    graph,audit=candidate(current,table,local);rec.json(f'stage{stage}-formation.json',audit)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-n8-seed0-freeze-full-consistent/terminal_profile_formation.py", line 95, in candidate
+    if len(row)!=m or not np.all(allowed[row,column]):raise ValueError('current learned readout cannot realize separated histories')
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: current learned readout cannot realize separated histories

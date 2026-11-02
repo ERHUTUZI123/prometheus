@@ -69,9 +69,14 @@ def restore_actual(payload,args,device):
             restore_parameter_layouts(m,state)
             if args.arm=='freeze' and i:
                 first=model.models[0]
-                for a,b in ((m.encoder,first.encoder),(m.decoder,first.decoder),(m.token.weight,first.token.weight)):
+                owner=spec.get('decoder_shared_with',0)
+                shared_decoder=model.models[owner].decoder if owner is not None else None
+                shared=((m.encoder,first.encoder),(m.token.weight,first.token.weight))
+                if shared_decoder is not None:shared=shared+((m.decoder,shared_decoder),)
+                for a,b in shared:
                     if not torch.equal(a,b):raise RuntimeError('frozen shared-body checkpoint values disagree')
-                m.encoder,m.decoder,m.token=first.encoder,first.decoder,first.token
+                m.encoder,m.token=first.encoder,first.token
+                if shared_decoder is not None:m.decoder=shared_decoder
             model.models.append(m)
         model.freeze_old()
     elif native_arm(args.arm):
@@ -105,7 +110,40 @@ class PrivateModels(nn.Module):
             for p in m.parameters():p.requires_grad_(i==len(self.models)-1)
         if self.arm=='freeze' and len(self.models)>1:
             m=self.models[-1]
-            for p in (m.encoder,m.decoder,*m.token.parameters()):p.requires_grad_(False)
+            for p in (m.encoder,*m.token.parameters()):p.requires_grad_(False)
+            if any(m.decoder is old.decoder for old in self.models[:-1]):m.decoder.requires_grad_(False)
+
+    @torch.no_grad()
+    def ensure_frozen_readout(self,table):
+        """Reuse a compatible learned frozen decoder, or add a priced adapter.
+
+        Labels come from the same terminal response table. No hidden state or
+        teacher transition is supplied. All old decoders stay untouched.
+        """
+        m=self.models[-1];enc=m.encoder.argmax(-1).cpu().numpy()
+        need=np.bincount([p[0] for p in table['groups']],minlength=self.n)
+        before=parameters(self)['total'];seen=set()
+        for index,old in enumerate(self.models):
+            if id(old.decoder) in seen:continue
+            seen.add(id(old.decoder));labels=old.decoder.argmax(-1).cpu().numpy()
+            if (np.all(labels[enc]==np.arange(self.n))
+                    and np.all(np.bincount(labels,minlength=self.n)>=need)):
+                m.decoder=old.decoder;self.freeze_old()
+                return dict(action='reused_compatible_learned_readout',owner=index,
+                    observed_required_label_counts=need.tolist(),deltaP=parameters(self)['total']-before)
+        if len(set(enc.tolist()))!=self.n:raise ValueError('frozen input representation aliases distinct empty-word outputs')
+        labels=m.decoder.argmax(-1).cpu().numpy().copy();labels[enc]=np.arange(self.n)
+        remaining=need-np.ones(self.n,dtype=int);free=[q for q in range(m.d) if q not in set(enc.tolist())]
+        requested=[y for y,n in enumerate(remaining) for _ in range(max(0,int(n)))]
+        if len(requested)>len(free):raise ValueError('frozen workspace insufficient for observed readout adapter')
+        for q,y in zip(free,requested):labels[q]=y
+        value=torch.full_like(m.decoder,-8.)
+        value[torch.arange(m.d,device=value.device),torch.as_tensor(labels,device=value.device)]=8.
+        m.decoder=nn.Parameter(value);self.freeze_old()
+        return dict(action='new_task_readout_adapter_from_terminal_profiles',
+            observed_required_label_counts=need.tolist(),
+            old_decoder_parameters_untouched=True,input_encoding_unchanged=True,
+            new_adapter_scalars=m.decoder.numel(),deltaP=parameters(self)['total']-before)
 
     def forward(self,tokens,starts,task_ids):
         out=self.models[-1].encoder.new_empty((len(starts),self.n))
@@ -170,7 +208,9 @@ def scored(metrics):
 def save_model(model,optimizer,args,stage,step,rec,resources,capabilities,complete):
     path=rec.out/f'{args.arm}-stage{stage}-step{step}.pt'
     if isinstance(model,PrivateModels):
-        specs=[dict(n=m.n,d=m.d,n_ops=m.n_ops,n_tasks=m.n_tasks) for m in model.models]
+        specs=[dict(n=m.n,d=m.d,n_ops=m.n_ops,n_tasks=m.n_tasks,
+                    decoder_shared_with=next((j for j,old in enumerate(model.models[:i]) if old.decoder is m.decoder),None))
+               for i,m in enumerate(model.models)]
     elif native_arm(args.arm):specs=dict(n=model.n,d=model.d,n_ops=model.n_ops,n_tasks=model.n_tasks)
     else:specs=dict(n=args.scale,width=96 if '96' in args.arm else 64)
     extras=([m.extra_state_dict() for m in model.models] if isinstance(model,PrivateModels)
@@ -239,6 +279,8 @@ def main():
                 table=observe(local,ALPHABET);rec.json(f'stage{stage}-observations.json',table['audit'])
                 if private:
                     current=model.add(table['required_states'],device);current.set_stage(0)
+                    if args.arm=='freeze':
+                        rec.emit('frozen_readout_capacity_adaptation',stage=stage,report=model.ensure_frozen_readout(table))
                 else:
                     current=model;current.set_stage(stage)
                     if table['required_states']>current.d:

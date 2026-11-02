@@ -130,7 +130,7 @@ def _overlap(train, evaluation):
     return dict(rows_on_exact_train_inputs=int(count), rows_not_on_exact_train_inputs=len(evaluation["starts"])-int(count))
 
 
-def generate_stream(n_states, seed=0, train_count=8192, eval_count=512,
+def generate_stream(n_states, seed=0, train_count=None, eval_count=512,
                     max_len=18, coverage_depth=3, max_seconds=110.):
     """Return six split dictionaries + PUBLIC manifest; no teacher state escapes.
 
@@ -140,10 +140,15 @@ def generate_stream(n_states, seed=0, train_count=8192, eval_count=512,
     reported. OOD and length16 have strictly longer programs than ANY training
     word and hence cannot be exact training-input memorization tests.
     """
-    if (n_states not in (8, 16) or not isinstance(seed, int) or not 0 <= seed < 2**31
-            or train_count != 8192 or eval_count != 512 or max_len != 18
+    # The N8/N16 draw schedule is unchanged. N32 requires 259*N=8288
+    # public coverage rows, so its explicitly accounted training pool is16384.
+    required_train_count = 16384 if n_states == 32 else 8192
+    if train_count is None:
+        train_count = required_train_count
+    if (n_states not in (8, 16, 32) or not isinstance(seed, int) or not 0 <= seed < 2**31
+            or train_count != required_train_count or eval_count != 512 or max_len != 18
             or coverage_depth != 3 or not 0 < max_seconds <= 120):
-        raise ValueError("frozen first version requires N8/N16,8192/512 rows,L18,coverage0..3 and finite time")
+        raise ValueError("requires N8/N16 with8192train or N32 with16384train,512eval,L18,coverage0..3 and finite time")
     deadline = time.monotonic()+max_seconds
     stream, tasks = [], []
     for task in range(6):
@@ -221,7 +226,7 @@ def save_stream(out, n_states, seed=0, coverage_depth=3, max_seconds=110.):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, required=True)
-    parser.add_argument("--scale", type=int, choices=(8, 16), required=True)
+    parser.add_argument("--scale", type=int, choices=(8, 16, 32), required=True)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--coverage-depth", type=int, choices=(3,), default=3)
     parser.add_argument("--max-seconds", type=float, default=110.)
