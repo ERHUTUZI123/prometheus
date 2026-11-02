@@ -1,0 +1,964 @@
+{
+  "arm": "selfmod_cms",
+  "baseline_not_official_replication": true,
+  "label": "Self-modifying linear memory + CMS reconstruction (not full/official HOPE)",
+  "reports": [
+    {
+      "actual_reload": {
+        "all_model_state_equal": true,
+        "all_optimizer_state_equal": true,
+        "checked_valid_rows_per_seen_task": 64,
+        "cpu_process_seconds": 0.0750757429999993,
+        "max_logit_absolute_difference": 0.0,
+        "original_training_rng_restored_after_neutral_factory_audit": true,
+        "restored_resources": {
+          "byte_boundary": "logical tensor bytes; full serialized checkpoint bytes reported separately; no claim of hardware energy",
+          "cuda_allocated_bytes": 19777024,
+          "cuda_peak_allocated_bytes": 153997824,
+          "cuda_peak_reserved_bytes": 165675008,
+          "cuda_reserved_bytes": 165675008,
+          "model_extra_metadata_skeleton_json_bytes": 702,
+          "model_extra_tensor_bytes": 0,
+          "model_specific": {
+            "active_after_row_masks": 81224,
+            "allocated_task_codes": 6,
+            "cms_parameter_scalars": 50112,
+            "cms_period_unit": "feedback minibatch",
+            "cms_periods": [
+              1,
+              4,
+              16
+            ],
+            "created_fast_matrix_values_upper_per_forward": 27525120,
+            "cumulative_dense_dot_product_MAC_proxy": 114661785600,
+            "dot_product_proxy_boundary": "forward dense products only, including padded work; excludes rank updates, scalar/gate/norm/activation work, backward and optimizer",
+            "expected_parameter_count": 81224,
+            "fast_state_accounting_boundary": "logical matrices only; autograd saved tensors/allocator peak require external measurement",
+            "fast_state_current_logical_bytes_at_max_batch": 5242880,
+            "fast_state_current_logical_bytes_per_example": 81920,
+            "independent_episode_reset": true,
+            "input_labels_used_in_forward": 0,
+            "last_growth_report": {
+              "grew": false,
+              "optimizer_rebuild_required": false
+            },
+            "learned_fast_initial_state_scalars": 20480,
+            "learning_rule_fidelity": {
+              "cms_context_unit": "terminal-feedback minibatch, explicit benchmark adaptation",
+              "complete_HOPE_replication": false,
+              "constructor": {
+                "cms_periods": [
+                  1,
+                  4,
+                  16
+                ],
+                "d_model": 64,
+                "decay_max": 0.01,
+                "eta_max": 0.1,
+                "max_len": 18,
+                "n_layers": 1,
+                "n_states": 8,
+                "vocab": 6
+              },
+              "gradient_convention": "half squared L2, Eq93",
+              "inner_chunk_size": 1,
+              "official_implementation": false,
+              "query_policy": "slow fixed-within-context projection, explicit Eq83 text",
+              "schema": "selfmod-cms-linear-reconstruction-v1",
+              "source": "https://arxiv.org/html/2512.24695v1",
+              "source_equations": [
+                70,
+                71,
+                83,
+                84,
+                93,
+                97
+              ],
+              "telemetry": {
+                "forward_calls": 729,
+                "logical_block_positions": 933120,
+                "max_batch": 64,
+                "max_padded": 18
+              }
+            },
+            "model_parameter_tensor_bytes": 324896,
+            "optimizer_tensor_bytes": 850368,
+            "persistent_inference_fast_weight_bytes": 0,
+            "registered_buffer_tensor_bytes": 16,
+            "replay_bytes": 0,
+            "requires_grad": 81224,
+            "stage": 0,
+            "total": 81224
+          },
+          "nested_optimizer": {
+            "cms_periods": [
+              1,
+              4,
+              16
+            ],
+            "cms_update_events": [
+              600,
+              150,
+              37
+            ],
+            "feedback": "same caller-provided terminal minibatch labels; no extra labels",
+            "global_feedback_steps": 600,
+            "pending_gradient_tensor_bytes": 200448,
+            "pending_gradients": [
+              0,
+              0,
+              8
+            ],
+            "state_reset_policy": "retain optimizer across all stages; checkpoints include pending buffers",
+            "total_optimizer_tensor_bytes": 850368
+          },
+          "optimizer_tensor_bytes": 850368,
+          "parameters": {
+            "bytes": 324896,
+            "total": 81224,
+            "trainable": 81224
+          },
+          "registered_buffer_bytes": 16,
+          "replay_bytes": 0,
+          "storage_fields_overlap": "model_specific echoes top-level optimizer/buffer counts; extra tensor bytes price serialization payload including snapshots/masks already itemized; do not add duplicate views of the same cost",
+          "training_replay_episodes": 0
+        },
+        "verified": true,
+        "wall_seconds": 0.07445259601809084
+      },
+      "capabilities": {
+        "Qstable": 0,
+        "admitted": [],
+        "currently_successful": [],
+        "deltaP_per_new_retained_capability": null,
+        "delta_parameters": 81224,
+        "lost_previously_stable_capabilities": [],
+        "net_delta_stable_capabilities": 0,
+        "new_successfully_retained": 0,
+        "stable": []
+      },
+      "checkpoint": "selfmod_cms-stage0-step600.pt",
+      "checkpoint_bytes": 1259003,
+      "checkpoint_save": {
+        "cpu_process_seconds": 0.013001184000003718,
+        "wall_seconds": 0.012335548992268741
+      },
+      "costs": {
+        "actual_current_training_episodes": 38400,
+        "actual_old_training_episodes": 0,
+        "batch_assembly_wall_seconds": 0.409249507705681,
+        "cuda_stream_elapsed_seconds": 43.99949269866947,
+        "evaluation_cpu_process_seconds": 2.739074867999994,
+        "evaluation_episodes": 8192,
+        "evaluation_wall_seconds": 2.7351951808668673,
+        "maintenance_cpu_process_seconds": 0.0,
+        "maintenance_wall_seconds": 0.00020074995700269938,
+        "training_cpu_process_seconds": 44.04310406700004,
+        "training_wall_seconds": 44.05118825775571
+      },
+      "curves": [
+        {
+          "cumulative_stage_cost": {
+            "actual_current_training_episodes": 0,
+            "actual_old_training_episodes": 0,
+            "batch_assembly_wall_seconds": 0.0,
+            "cuda_stream_elapsed_seconds": 0.0,
+            "evaluation_cpu_process_seconds": 0.917114346,
+            "evaluation_episodes": 2048,
+            "evaluation_wall_seconds": 0.9151055589318275,
+            "maintenance_cpu_process_seconds": 0.0,
+            "maintenance_wall_seconds": 0.00020074995700269938,
+            "training_cpu_process_seconds": 0.0,
+            "training_wall_seconds": 0.0
+          },
+          "metrics": {
+            "0": {
+              "iid": {
+                "deployed": 0.134765625,
+                "interface": "same neural execution; no separate compiled/native interface",
+                "n": 512,
+                "neural": 0.134765625,
+                "terminal_CE": 2.136690139770508
+              },
+              "length16": {
+                "deployed": 0.1328125,
+                "interface": "same neural execution; no separate compiled/native interface",
+                "n": 512,
+                "neural": 0.1328125,
+                "terminal_CE": 2.129271537065506
+              },
+              "ood": {
+                "deployed": 0.12109375,
+                "interface": "same neural execution; no separate compiled/native interface",
+                "n": 512,
+                "neural": 0.12109375,
+                "terminal_CE": 2.1245620250701904
+              },
+              "valid": {
+                "deployed": 0.125,
+                "interface": "same neural execution; no separate compiled/native interface",
+                "n": 512,
+                "neural": 0.125,
+                "terminal_CE": 2.141625612974167
+              }
+            }
+          },
+          "resources": {
+            "byte_boundary": "logical tensor bytes; full serialized checkpoint bytes reported separately; no claim of hardware energy",
+            "cuda_allocated_bytes": 9052672,
+            "cuda_peak_allocated_bytes": 36396544,
+            "cuda_peak_reserved_bytes": 46137344,
+            "cuda_reserved_bytes": 46137344,
+            "model_extra_metadata_skeleton_json_bytes": 700,
+            "model_extra_tensor_bytes": 0,
+            "model_specific": {
+              "active_after_row_masks": 81224,
+              "allocated_task_codes": 6,
+              "cms_parameter_scalars": 50112,
+              "cms_period_unit": "feedback minibatch",
+              "cms_periods": [
+                1,
+                4,
+                16
+              ],
+              "created_fast_matrix_values_upper_per_forward": 27525120,
+              "cumulative_dense_dot_product_MAC_proxy": 5033164800,
+              "dot_product_proxy_boundary": "forward dense products only, including padded work; excludes rank updates, scalar/gate/norm/activation work, backward and optimizer",
+              "expected_parameter_count": 81224,
+              "fast_state_accounting_boundary": "logical matrices only; autograd saved tensors/allocator peak require external measurement",
+              "fast_state_current_logical_bytes_at_max_batch": 5242880,
+              "fast_state_current_logical_bytes_per_example": 81920,
+              "independent_episode_reset": true,
+              "input_labels_used_in_forward": 0,
+              "last_growth_report": {
+                "delta_parameter_scalars": 0,
+                "grew": false,
+                "optimizer_rebuild_required": false
+              },
+              "learned_fast_initial_state_scalars": 20480,
+              "learning_rule_fidelity": {
+                "cms_context_unit": "terminal-feedback minibatch, explicit benchmark adaptation",
+                "complete_HOPE_replication": false,
+                "constructor": {
+                  "cms_periods": [
+                    1,
+                    4,
+                    16
+                  ],
+                  "d_model": 64,
+                  "decay_max": 0.01,
+                  "eta_max": 0.1,
+                  "max_len": 18,
+                  "n_layers": 1,
+                  "n_states": 8,
+                  "vocab": 6
+                },
+                "gradient_convention": "half squared L2, Eq93",
+                "inner_chunk_size": 1,
+                "official_implementation": false,
+                "query_policy": "slow fixed-within-context projection, explicit Eq83 text",
+                "schema": "selfmod-cms-linear-reconstruction-v1",
+                "source": "https://arxiv.org/html/2512.24695v1",
+                "source_equations": [
+                  70,
+                  71,
+                  83,
+                  84,
+                  93,
+                  97
+                ],
+                "telemetry": {
+                  "forward_calls": 32,
+                  "logical_block_positions": 40960,
+                  "max_batch": 64,
+                  "max_padded": 18
+                }
+              },
+              "model_parameter_tensor_bytes": 324896,
+              "optimizer_tensor_bytes": 200448,
+              "persistent_inference_fast_weight_bytes": 0,
+              "registered_buffer_tensor_bytes": 16,
+              "replay_bytes": 0,
+              "requires_grad": 81224,
+              "stage": 0,
+              "total": 81224
+            },
+            "nested_optimizer": {
+              "cms_periods": [
+                1,
+                4,
+                16
+              ],
+              "cms_update_events": [
+                0,
+                0,
+                0
+              ],
+              "feedback": "same caller-provided terminal minibatch labels; no extra labels",
+              "global_feedback_steps": 0,
+              "pending_gradient_tensor_bytes": 200448,
+              "pending_gradients": [
+                0,
+                0,
+                0
+              ],
+              "state_reset_policy": "retain optimizer across all stages; checkpoints include pending buffers",
+              "total_optimizer_tensor_bytes": 200448
+            },
+            "optimizer_tensor_bytes": 200448,
+            "parameters": {
+              "bytes": 324896,
+              "total": 81224,
+              "trainable": 81224
+            },
+            "registered_buffer_bytes": 16,
+            "replay_bytes": 0,
+            "storage_fields_overlap": "model_specific echoes top-level optimizer/buffer counts; extra tensor bytes price serialization payload including snapshots/masks already itemized; do not add duplicate views of the same cost",
+            "training_replay_episodes": 0
+          },
+          "stage": 0,
+          "step": 0
+        },
+        {
+          "cumulative_stage_cost": {
+            "actual_current_training_episodes": 6400,
+            "actual_old_training_episodes": 0,
+            "batch_assembly_wall_seconds": 0.052774212788790464,
+            "cuda_stream_elapsed_seconds": 7.469786033630373,
+            "evaluation_cpu_process_seconds": 1.511811579999998,
+            "evaluation_episodes": 4096,
+            "evaluation_wall_seconds": 1.5084605908486992,
+            "maintenance_cpu_process_seconds": 0.0,
+            "maintenance_wall_seconds": 0.00020074995700269938,
+            "training_cpu_process_seconds": 7.4774903860000155,
+            "training_wall_seconds": 7.476382316672243
+          },
+          "metrics": {
+            "0": {
+              "iid": {
+                "deployed": 0.134765625,
+                "interface": "same neural execution; no separate compiled/native interface",
+                "n": 512,
+                "neural": 0.134765625,
+                "terminal_CE": 2.0801121592521667
+              },
+              "length16": {
+                "deployed": 0.123046875,
+                "interface": "same neural execution; no separate compiled/native interface",
+                "n": 512,
+                "neural": 0.123046875,
+                "terminal_CE": 2.079601615667343
+              },
+              "ood": {
+                "deployed": 0.134765625,
+                "interface": "same neural execution; no separate compiled/native interface",
+                "n": 512,
+                "neural": 0.134765625,
+                "terminal_CE": 2.0824153423309326
+              },
+              "valid": {
+                "deployed": 0.125,
+                "interface": "same neural execution; no separate compiled/native interface",
+                "n": 512,
+                "neural": 0.125,
+                "terminal_CE": 2.0821688175201416
+              }
+            }
+          },
+          "resources": {
+            "byte_boundary": "logical tensor bytes; full serialized checkpoint bytes reported separately; no claim of hardware energy",
+            "cuda_allocated_bytes": 18570752,
+            "cuda_peak_allocated_bytes": 153997824,
+            "cuda_peak_reserved_bytes": 165675008,
+            "cuda_reserved_bytes": 165675008,
+            "model_extra_metadata_skeleton_json_bytes": 702,
+            "model_extra_tensor_bytes": 0,
+            "model_specific": {
+              "active_after_row_masks": 81224,
+              "allocated_task_codes": 6,
+              "cms_parameter_scalars": 50112,
+              "cms_period_unit": "feedback minibatch",
+              "cms_periods": [
+                1,
+                4,
+                16
+              ],
+              "created_fast_matrix_values_upper_per_forward": 27525120,
+              "cumulative_dense_dot_product_MAC_proxy": 25794969600,
+              "dot_product_proxy_boundary": "forward dense products only, including padded work; excludes rank updates, scalar/gate/norm/activation work, backward and optimizer",
+              "expected_parameter_count": 81224,
+              "fast_state_accounting_boundary": "logical matrices only; autograd saved tensors/allocator peak require external measurement",
+              "fast_state_current_logical_bytes_at_max_batch": 5242880,
+              "fast_state_current_logical_bytes_per_example": 81920,
+              "independent_episode_reset": true,
+              "input_labels_used_in_forward": 0,
+              "last_growth_report": {
+                "delta_parameter_scalars": 0,
+                "grew": false,
+                "optimizer_rebuild_required": false
+              },
+              "learned_fast_initial_state_scalars": 20480,
+              "learning_rule_fidelity": {
+                "cms_context_unit": "terminal-feedback minibatch, explicit benchmark adaptation",
+                "complete_HOPE_replication": false,
+                "constructor": {
+                  "cms_periods": [
+                    1,
+                    4,
+                    16
+                  ],
+                  "d_model": 64,
+                  "decay_max": 0.01,
+                  "eta_max": 0.1,
+                  "max_len": 18,
+                  "n_layers": 1,
+                  "n_states": 8,
+                  "vocab": 6
+                },
+                "gradient_convention": "half squared L2, Eq93",
+                "inner_chunk_size": 1,
+                "official_implementation": false,
+                "query_policy": "slow fixed-within-context projection, explicit Eq83 text",
+                "schema": "selfmod-cms-linear-reconstruction-v1",
+                "source": "https://arxiv.org/html/2512.24695v1",
+                "source_equations": [
+                  70,
+                  71,
+                  83,
+                  84,
+                  93,
+                  97
+                ],
+                "telemetry": {
+                  "forward_calls": 164,
+                  "logical_block_positions": 209920,
+                  "max_batch": 64,
+                  "max_padded": 18
+                }
+              },
+              "model_parameter_tensor_bytes": 324896,
+              "optimizer_tensor_bytes": 850368,
+              "persistent_inference_fast_weight_bytes": 0,
+              "registered_buffer_tensor_bytes": 16,
+              "replay_bytes": 0,
+              "requires_grad": 81224,
+              "stage": 0,
+              "total": 81224
+            },
+            "nested_optimizer": {
+              "cms_periods": [
+                1,
+                4,
+                16
+              ],
+              "cms_update_events": [
+                100,
+                25,
+                6
+              ],
+              "feedback": "same caller-provided terminal minibatch labels; no extra labels",
+              "global_feedback_steps": 100,
+              "pending_gradient_tensor_bytes": 200448,
+              "pending_gradients": [
+                0,
+                0,
+                4
+              ],
+              "state_reset_policy": "retain optimizer across all stages; checkpoints include pending buffers",
+              "total_optimizer_tensor_bytes": 850368
+            },
+            "optimizer_tensor_bytes": 850368,
+            "parameters": {
+              "bytes": 324896,
+              "total": 81224,
+              "trainable": 81224
+            },
+            "registered_buffer_bytes": 16,
+            "replay_bytes": 0,
+            "storage_fields_overlap": "model_specific echoes top-level optimizer/buffer counts; extra tensor bytes price serialization payload including snapshots/masks already itemized; do not add duplicate views of the same cost",
+            "training_replay_episodes": 0
+          },
+          "stage": 0,
+          "step": 100
+        },
+        {
+          "cumulative_stage_cost": {
+            "actual_current_training_episodes": 19200,
+            "actual_old_training_episodes": 0,
+            "batch_assembly_wall_seconds": 0.18024381645955145,
+            "cuda_stream_elapsed_seconds": 21.904197830200218,
+            "evaluation_cpu_process_seconds": 2.1245225609999974,
+            "evaluation_episodes": 6144,
+            "evaluation_wall_seconds": 2.120719812810421,
+            "maintenance_cpu_process_seconds": 0.0,
+            "maintenance_wall_seconds": 0.00020074995700269938,
+            "training_cpu_process_seconds": 21.93125834400003,
+            "training_wall_seconds": 21.926848385017365
+          },
+          "metrics": {
+            "0": {
+              "iid": {
+                "deployed": 0.134765625,
+                "interface": "same neural execution; no separate compiled/native interface",
+                "n": 512,
+                "neural": 0.134765625,
+                "terminal_CE": 2.080957770347595
+              },
+              "length16": {
+                "deployed": 0.1171875,
+                "interface": "same neural execution; no separate compiled/native interface",
+                "n": 512,
+                "neural": 0.1171875,
+                "terminal_CE": 2.0821827352046967
+              },
+              "ood": {
+                "deployed": 0.126953125,
+                "interface": "same neural execution; no separate compiled/native interface",
+                "n": 512,
+                "neural": 0.126953125,
+                "terminal_CE": 2.080989360809326
+              },
+              "valid": {
+                "deployed": 0.125,
+                "interface": "same neural execution; no separate compiled/native interface",
+                "n": 512,
+                "neural": 0.125,
+                "terminal_CE": 2.0822710394859314
+              }
+            }
+          },
+          "resources": {
+            "byte_boundary": "logical tensor bytes; full serialized checkpoint bytes reported separately; no claim of hardware energy",
+            "cuda_allocated_bytes": 18570752,
+            "cuda_peak_allocated_bytes": 153997824,
+            "cuda_peak_reserved_bytes": 165675008,
+            "cuda_reserved_bytes": 165675008,
+            "model_extra_metadata_skeleton_json_bytes": 702,
+            "model_extra_tensor_bytes": 0,
+            "model_specific": {
+              "active_after_row_masks": 81224,
+              "allocated_task_codes": 6,
+              "cms_parameter_scalars": 50112,
+              "cms_period_unit": "feedback minibatch",
+              "cms_periods": [
+                1,
+                4,
+                16
+              ],
+              "created_fast_matrix_values_upper_per_forward": 27525120,
+              "cumulative_dense_dot_product_MAC_proxy": 62285414400,
+              "dot_product_proxy_boundary": "forward dense products only, including padded work; excludes rank updates, scalar/gate/norm/activation work, backward and optimizer",
+              "expected_parameter_count": 81224,
+              "fast_state_accounting_boundary": "logical matrices only; autograd saved tensors/allocator peak require external measurement",
+              "fast_state_current_logical_bytes_at_max_batch": 5242880,
+              "fast_state_current_logical_bytes_per_example": 81920,
+              "independent_episode_reset": true,
+              "input_labels_used_in_forward": 0,
+              "last_growth_report": {
+                "delta_parameter_scalars": 0,
+                "grew": false,
+                "optimizer_rebuild_required": false
+              },
+              "learned_fast_initial_state_scalars": 20480,
+              "learning_rule_fidelity": {
+                "cms_context_unit": "terminal-feedback minibatch, explicit benchmark adaptation",
+                "complete_HOPE_replication": false,
+                "constructor": {
+                  "cms_periods": [
+                    1,
+                    4,
+                    16
+                  ],
+                  "d_model": 64,
+                  "decay_max": 0.01,
+                  "eta_max": 0.1,
+                  "max_len": 18,
+                  "n_layers": 1,
+                  "n_states": 8,
+                  "vocab": 6
+                },
+                "gradient_convention": "half squared L2, Eq93",
+                "inner_chunk_size": 1,
+                "official_implementation": false,
+                "query_policy": "slow fixed-within-context projection, explicit Eq83 text",
+                "schema": "selfmod-cms-linear-reconstruction-v1",
+                "source": "https://arxiv.org/html/2512.24695v1",
+                "source_equations": [
+                  70,
+                  71,
+                  83,
+                  84,
+                  93,
+                  97
+                ],
+                "telemetry": {
+                  "forward_calls": 396,
+                  "logical_block_positions": 506880,
+                  "max_batch": 64,
+                  "max_padded": 18
+                }
+              },
+              "model_parameter_tensor_bytes": 324896,
+              "optimizer_tensor_bytes": 850368,
+              "persistent_inference_fast_weight_bytes": 0,
+              "registered_buffer_tensor_bytes": 16,
+              "replay_bytes": 0,
+              "requires_grad": 81224,
+              "stage": 0,
+              "total": 81224
+            },
+            "nested_optimizer": {
+              "cms_periods": [
+                1,
+                4,
+                16
+              ],
+              "cms_update_events": [
+                300,
+                75,
+                18
+              ],
+              "feedback": "same caller-provided terminal minibatch labels; no extra labels",
+              "global_feedback_steps": 300,
+              "pending_gradient_tensor_bytes": 200448,
+              "pending_gradients": [
+                0,
+                0,
+                12
+              ],
+              "state_reset_policy": "retain optimizer across all stages; checkpoints include pending buffers",
+              "total_optimizer_tensor_bytes": 850368
+            },
+            "optimizer_tensor_bytes": 850368,
+            "parameters": {
+              "bytes": 324896,
+              "total": 81224,
+              "trainable": 81224
+            },
+            "registered_buffer_bytes": 16,
+            "replay_bytes": 0,
+            "storage_fields_overlap": "model_specific echoes top-level optimizer/buffer counts; extra tensor bytes price serialization payload including snapshots/masks already itemized; do not add duplicate views of the same cost",
+            "training_replay_episodes": 0
+          },
+          "stage": 0,
+          "step": 300
+        },
+        {
+          "cumulative_stage_cost": {
+            "actual_current_training_episodes": 38400,
+            "actual_old_training_episodes": 0,
+            "batch_assembly_wall_seconds": 0.409249507705681,
+            "cuda_stream_elapsed_seconds": 43.99949269866947,
+            "evaluation_cpu_process_seconds": 2.739074867999994,
+            "evaluation_episodes": 8192,
+            "evaluation_wall_seconds": 2.7351951808668673,
+            "maintenance_cpu_process_seconds": 0.0,
+            "maintenance_wall_seconds": 0.00020074995700269938,
+            "training_cpu_process_seconds": 44.04310406700004,
+            "training_wall_seconds": 44.05118825775571
+          },
+          "metrics": {
+            "0": {
+              "iid": {
+                "deployed": 0.138671875,
+                "interface": "same neural execution; no separate compiled/native interface",
+                "n": 512,
+                "neural": 0.138671875,
+                "terminal_CE": 2.0852905213832855
+              },
+              "length16": {
+                "deployed": 0.140625,
+                "interface": "same neural execution; no separate compiled/native interface",
+                "n": 512,
+                "neural": 0.140625,
+                "terminal_CE": 2.092274785041809
+              },
+              "ood": {
+                "deployed": 0.126953125,
+                "interface": "same neural execution; no separate compiled/native interface",
+                "n": 512,
+                "neural": 0.126953125,
+                "terminal_CE": 2.084385871887207
+              },
+              "valid": {
+                "deployed": 0.12890625,
+                "interface": "same neural execution; no separate compiled/native interface",
+                "n": 512,
+                "neural": 0.12890625,
+                "terminal_CE": 2.0790745317935944
+              }
+            }
+          },
+          "resources": {
+            "byte_boundary": "logical tensor bytes; full serialized checkpoint bytes reported separately; no claim of hardware energy",
+            "cuda_allocated_bytes": 18570752,
+            "cuda_peak_allocated_bytes": 153997824,
+            "cuda_peak_reserved_bytes": 165675008,
+            "cuda_reserved_bytes": 165675008,
+            "model_extra_metadata_skeleton_json_bytes": 702,
+            "model_extra_tensor_bytes": 0,
+            "model_specific": {
+              "active_after_row_masks": 81224,
+              "allocated_task_codes": 6,
+              "cms_parameter_scalars": 50112,
+              "cms_period_unit": "feedback minibatch",
+              "cms_periods": [
+                1,
+                4,
+                16
+              ],
+              "created_fast_matrix_values_upper_per_forward": 27525120,
+              "cumulative_dense_dot_product_MAC_proxy": 114504499200,
+              "dot_product_proxy_boundary": "forward dense products only, including padded work; excludes rank updates, scalar/gate/norm/activation work, backward and optimizer",
+              "expected_parameter_count": 81224,
+              "fast_state_accounting_boundary": "logical matrices only; autograd saved tensors/allocator peak require external measurement",
+              "fast_state_current_logical_bytes_at_max_batch": 5242880,
+              "fast_state_current_logical_bytes_per_example": 81920,
+              "independent_episode_reset": true,
+              "input_labels_used_in_forward": 0,
+              "last_growth_report": {
+                "delta_parameter_scalars": 0,
+                "grew": false,
+                "optimizer_rebuild_required": false
+              },
+              "learned_fast_initial_state_scalars": 20480,
+              "learning_rule_fidelity": {
+                "cms_context_unit": "terminal-feedback minibatch, explicit benchmark adaptation",
+                "complete_HOPE_replication": false,
+                "constructor": {
+                  "cms_periods": [
+                    1,
+                    4,
+                    16
+                  ],
+                  "d_model": 64,
+                  "decay_max": 0.01,
+                  "eta_max": 0.1,
+                  "max_len": 18,
+                  "n_layers": 1,
+                  "n_states": 8,
+                  "vocab": 6
+                },
+                "gradient_convention": "half squared L2, Eq93",
+                "inner_chunk_size": 1,
+                "official_implementation": false,
+                "query_policy": "slow fixed-within-context projection, explicit Eq83 text",
+                "schema": "selfmod-cms-linear-reconstruction-v1",
+                "source": "https://arxiv.org/html/2512.24695v1",
+                "source_equations": [
+                  70,
+                  71,
+                  83,
+                  84,
+                  93,
+                  97
+                ],
+                "telemetry": {
+                  "forward_calls": 728,
+                  "logical_block_positions": 931840,
+                  "max_batch": 64,
+                  "max_padded": 18
+                }
+              },
+              "model_parameter_tensor_bytes": 324896,
+              "optimizer_tensor_bytes": 850368,
+              "persistent_inference_fast_weight_bytes": 0,
+              "registered_buffer_tensor_bytes": 16,
+              "replay_bytes": 0,
+              "requires_grad": 81224,
+              "stage": 0,
+              "total": 81224
+            },
+            "nested_optimizer": {
+              "cms_periods": [
+                1,
+                4,
+                16
+              ],
+              "cms_update_events": [
+                600,
+                150,
+                37
+              ],
+              "feedback": "same caller-provided terminal minibatch labels; no extra labels",
+              "global_feedback_steps": 600,
+              "pending_gradient_tensor_bytes": 200448,
+              "pending_gradients": [
+                0,
+                0,
+                8
+              ],
+              "state_reset_policy": "retain optimizer across all stages; checkpoints include pending buffers",
+              "total_optimizer_tensor_bytes": 850368
+            },
+            "optimizer_tensor_bytes": 850368,
+            "parameters": {
+              "bytes": 324896,
+              "total": 81224,
+              "trainable": 81224
+            },
+            "registered_buffer_bytes": 16,
+            "replay_bytes": 0,
+            "storage_fields_overlap": "model_specific echoes top-level optimizer/buffer counts; extra tensor bytes price serialization payload including snapshots/masks already itemized; do not add duplicate views of the same cost",
+            "training_replay_episodes": 0
+          },
+          "stage": 0,
+          "step": 600
+        }
+      ],
+      "delta_parameters": 81224,
+      "final_metrics": {
+        "0": {
+          "iid": {
+            "deployed": 0.138671875,
+            "interface": "same neural execution; no separate compiled/native interface",
+            "n": 512,
+            "neural": 0.138671875,
+            "terminal_CE": 2.0852905213832855
+          },
+          "length16": {
+            "deployed": 0.140625,
+            "interface": "same neural execution; no separate compiled/native interface",
+            "n": 512,
+            "neural": 0.140625,
+            "terminal_CE": 2.092274785041809
+          },
+          "ood": {
+            "deployed": 0.126953125,
+            "interface": "same neural execution; no separate compiled/native interface",
+            "n": 512,
+            "neural": 0.126953125,
+            "terminal_CE": 2.084385871887207
+          },
+          "valid": {
+            "deployed": 0.12890625,
+            "interface": "same neural execution; no separate compiled/native interface",
+            "n": 512,
+            "neural": 0.12890625,
+            "terminal_CE": 2.0790745317935944
+          }
+        }
+      },
+      "first_task_acquisition_ready": false,
+      "first_task_interpretation": "reconstruction requires diagnosis/tuning; this is not a strong-method defeat",
+      "parameters": 81224,
+      "phase_cpu_process_seconds": 48.698648057,
+      "phase_wall_seconds": 48.707177696051076,
+      "resources": {
+        "byte_boundary": "logical tensor bytes; full serialized checkpoint bytes reported separately; no claim of hardware energy",
+        "cuda_allocated_bytes": 18570752,
+        "cuda_peak_allocated_bytes": 153997824,
+        "cuda_peak_reserved_bytes": 165675008,
+        "cuda_reserved_bytes": 165675008,
+        "model_extra_metadata_skeleton_json_bytes": 702,
+        "model_extra_tensor_bytes": 0,
+        "model_specific": {
+          "active_after_row_masks": 81224,
+          "allocated_task_codes": 6,
+          "cms_parameter_scalars": 50112,
+          "cms_period_unit": "feedback minibatch",
+          "cms_periods": [
+            1,
+            4,
+            16
+          ],
+          "created_fast_matrix_values_upper_per_forward": 27525120,
+          "cumulative_dense_dot_product_MAC_proxy": 114504499200,
+          "dot_product_proxy_boundary": "forward dense products only, including padded work; excludes rank updates, scalar/gate/norm/activation work, backward and optimizer",
+          "expected_parameter_count": 81224,
+          "fast_state_accounting_boundary": "logical matrices only; autograd saved tensors/allocator peak require external measurement",
+          "fast_state_current_logical_bytes_at_max_batch": 5242880,
+          "fast_state_current_logical_bytes_per_example": 81920,
+          "independent_episode_reset": true,
+          "input_labels_used_in_forward": 0,
+          "last_growth_report": {
+            "delta_parameter_scalars": 0,
+            "grew": false,
+            "optimizer_rebuild_required": false
+          },
+          "learned_fast_initial_state_scalars": 20480,
+          "learning_rule_fidelity": {
+            "cms_context_unit": "terminal-feedback minibatch, explicit benchmark adaptation",
+            "complete_HOPE_replication": false,
+            "constructor": {
+              "cms_periods": [
+                1,
+                4,
+                16
+              ],
+              "d_model": 64,
+              "decay_max": 0.01,
+              "eta_max": 0.1,
+              "max_len": 18,
+              "n_layers": 1,
+              "n_states": 8,
+              "vocab": 6
+            },
+            "gradient_convention": "half squared L2, Eq93",
+            "inner_chunk_size": 1,
+            "official_implementation": false,
+            "query_policy": "slow fixed-within-context projection, explicit Eq83 text",
+            "schema": "selfmod-cms-linear-reconstruction-v1",
+            "source": "https://arxiv.org/html/2512.24695v1",
+            "source_equations": [
+              70,
+              71,
+              83,
+              84,
+              93,
+              97
+            ],
+            "telemetry": {
+              "forward_calls": 728,
+              "logical_block_positions": 931840,
+              "max_batch": 64,
+              "max_padded": 18
+            }
+          },
+          "model_parameter_tensor_bytes": 324896,
+          "optimizer_tensor_bytes": 850368,
+          "persistent_inference_fast_weight_bytes": 0,
+          "registered_buffer_tensor_bytes": 16,
+          "replay_bytes": 0,
+          "requires_grad": 81224,
+          "stage": 0,
+          "total": 81224
+        },
+        "nested_optimizer": {
+          "cms_periods": [
+            1,
+            4,
+            16
+          ],
+          "cms_update_events": [
+            600,
+            150,
+            37
+          ],
+          "feedback": "same caller-provided terminal minibatch labels; no extra labels",
+          "global_feedback_steps": 600,
+          "pending_gradient_tensor_bytes": 200448,
+          "pending_gradients": [
+            0,
+            0,
+            8
+          ],
+          "state_reset_policy": "retain optimizer across all stages; checkpoints include pending buffers",
+          "total_optimizer_tensor_bytes": 850368
+        },
+        "optimizer_tensor_bytes": 850368,
+        "parameters": {
+          "bytes": 324896,
+          "total": 81224,
+          "trainable": 81224
+        },
+        "registered_buffer_bytes": 16,
+        "replay_bytes": 0,
+        "storage_fields_overlap": "model_specific echoes top-level optimizer/buffer counts; extra tensor bytes price serialization payload including snapshots/masks already itemized; do not add duplicate views of the same cost",
+        "training_replay_episodes": 0
+      },
+      "stage": 0
+    }
+  ],
+  "task_completion_not_campaign_completion": true
+}

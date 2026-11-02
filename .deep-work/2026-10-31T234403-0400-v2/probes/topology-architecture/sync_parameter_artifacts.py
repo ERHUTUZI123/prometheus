@@ -38,7 +38,9 @@ print(json.dumps(result))
                               HOST, 'python3', '-'], input=code, text=True,
                              capture_output=True, check=True, timeout=120)
         manifest = json.loads(raw.stdout)
-        temp = Path(tempfile.mkdtemp(prefix='sync-'+name+'-', dir=ROOT))
+        # Keep disposable transfers outside the repository: editor snapshots
+        # must not capture a partial transfer as scientific evidence.
+        temp = Path(tempfile.mkdtemp(prefix='prometheus-sync-'+name+'-'))
         for relative, files in manifest.items():
             source = HOST+':'+REMOTE+'/'+relative
             subprocess.run(['scp', '-q', '-r', '-P', '24343', '-i', KEY, source, str(temp)],

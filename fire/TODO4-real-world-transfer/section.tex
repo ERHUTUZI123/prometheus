@@ -1,0 +1,40 @@
+% Roadmap correspondence: TODO 4. No real-data execution is claimed here.
+\section{TODO 4: Transfer to Real-World Continual Learning}
+\label{sec:real-world-transfer}
+
+The same core computation and learning rule must be evaluated on algorithmic,
+audio, and visual tasks. Input adapters and output heads may change, but changes
+to the core block or its protection rule define an architecture variant and must
+be reported separately. Synthetic permutation accuracy alone does not establish
+this transfer.
+
+\subsection{Fixed audio protocol}
+Speech Commands v2 uses all 35 word classes in seven class-incremental stages,
+with five new classes at each stage. Training, validation, and test examples
+follow the official split and all methods use the same $16\,\mathrm{kHz}$ input
+preprocessing. Each stage trains only on its permitted current data and declared
+memory. Evaluation recognizes all classes seen so far without a task or class-group
+identifier at inference.
+
+\subsection{Fixed visual protocol}
+Split CIFAR-100 uses ten class-incremental stages, each introducing ten fine-grained
+classes. The official 50,000-example training set supplies a per-class 10\%
+validation subset under a fixed seed; the official 10,000-example test set is not
+used for development. All methods share preprocessing and augmentation rules and
+use a single expanding classifier without a task identifier at inference.
+
+\subsection{Memory, initialization, and cost}
+Both tasks require Memory-0 and Memory-500 comparisons. The latter permits at most
+500 old examples across all classes. Saved features, labels, teacher outputs,
+statistics, and other persistent information are disclosed and charged separately;
+a representation cache is not free memory. Main experiments use random
+initialization. Pretrained runs, if any, form a separate comparison with matched
+pretraining access. The fixed per-stage epoch budgets are 10, 50, and 200, with
+validation-only configuration selection under the current benchmarking protocol.
+
+\subsection{Evidence boundary}
+No audio or visual training result is available in the present checkpoint.
+In particular, the existing synthetic learner's public task embeddings cannot be
+passed to these class-incremental evaluations as inference-time task identifiers.
+The transfer study must test whether the learned computation actually reduces
+acquisition, retention, parameter, or full lifecycle costs under these protocols.
