@@ -1,0 +1,373 @@
+{
+  "arm": "gru",
+  "checkpoint_sha256": "6d9257b7cd5c58ae805f4133c991039d8fcb40b74f69f7a7eb5054f21bf4e6eb",
+  "cost_scope": "evaluation/batchtimingsnested; warmup+timeddrawsfullycounted; forwardMACproxiesonly; nohardwareenergyorexclusiveGPUclaim",
+  "costs": {
+    "batch_assembly_and_transfer_wall_seconds": 0.0055493563413619995,
+    "evaluation_forward_MAC_proxy": 2671190016,
+    "evaluation_forward_examples": 1536,
+    "evaluation_wall_seconds": 0.48602816998027265,
+    "timed_forward_MAC_proxy": 4069391040,
+    "timed_forward_calls": 72,
+    "timed_forward_examples": 2340,
+    "warmup_forward_MAC_proxy": 678231840,
+    "warmup_forward_calls": 12,
+    "warmup_forward_examples": 390
+  },
+  "driver_wall_seconds": 1.177811146946624,
+  "final_memory": {
+    "cpu_peak_RSS_bytes": 1163214848,
+    "cuda_allocated_bytes": 8687616,
+    "cuda_peak_allocated_bytes": 17743360,
+    "cuda_peak_reserved_bytes": 27262976,
+    "cuda_reserved_bytes": 27262976
+  },
+  "formal_Primary": false,
+  "frozen_weights_unchanged": true,
+  "input_receipts": [
+    {
+      "context": 32,
+      "positions_sha256": "8fe1be9b8d2287e1f16d51f1805adc5a9b4bf4e690abf16956ce07d7c398d8e1",
+      "rows": 512,
+      "source_sha256": "8bfecc151ca99e5c0a43202d019d3365456fecf7df296b14d0543d465fefbef9",
+      "split": "test_iid"
+    },
+    {
+      "context": 64,
+      "positions_sha256": "8fe1be9b8d2287e1f16d51f1805adc5a9b4bf4e690abf16956ce07d7c398d8e1",
+      "rows": 512,
+      "source_sha256": "806b21c8d78dd090657bc4d5bb5d0bd4281e81f83fd41b5a4393e33722df8f65",
+      "split": "test_unseen"
+    },
+    {
+      "context": 128,
+      "positions_sha256": "8fe1be9b8d2287e1f16d51f1805adc5a9b4bf4e690abf16956ce07d7c398d8e1",
+      "rows": 512,
+      "source_sha256": "86850d6ff6822ff9ffd5a58af14a84bb21c9dcab0430351accf67783535bd88f",
+      "split": "test_long"
+    }
+  ],
+  "latency": [
+    {
+      "batch_size": 1,
+      "context": 32,
+      "forward_MAC_proxy_per_call": 747824,
+      "memory_after": {
+        "cpu_peak_RSS_bytes": 1162166272,
+        "cuda_allocated_bytes": 8689664,
+        "cuda_peak_allocated_bytes": 9760768,
+        "cuda_peak_reserved_bytes": 25165824,
+        "cuda_reserved_bytes": 25165824
+      },
+      "memory_before": {
+        "cpu_peak_RSS_bytes": 1144340480,
+        "cuda_allocated_bytes": 8689664,
+        "cuda_peak_allocated_bytes": 8689664,
+        "cuda_peak_reserved_bytes": 25165824,
+        "cuda_reserved_bytes": 25165824
+      },
+      "mode": "soft",
+      "p50_seconds": 0.001165125984698534,
+      "p95_seconds": 0.0013491452496964484,
+      "repetitions": 12,
+      "resident_forward_latency_seconds": [
+        0.0013193520717322826,
+        0.0013613849878311157,
+        0.0013304079184308648,
+        0.0013160370290279388,
+        0.001339130918495357,
+        0.0012142839841544628,
+        0.0011137649416923523,
+        0.0011159679852426052,
+        0.0011056519579142332,
+        0.0011073049390688539,
+        0.0011037590447813272,
+        0.0011037299409508705
+      ],
+      "scope": "synchronizedwall resident-input no-gradforward inclPython/kernel/gather; excludesdata/H2D/loading; noautoregressiveKVcache",
+      "split": "test_iid",
+      "warmup_repetitions": 2
+    },
+    {
+      "batch_size": 64,
+      "context": 32,
+      "forward_MAC_proxy_per_call": 47860736,
+      "memory_after": {
+        "cpu_peak_RSS_bytes": 1162166272,
+        "cuda_allocated_bytes": 8705536,
+        "cuda_peak_allocated_bytes": 11150848,
+        "cuda_peak_reserved_bytes": 25165824,
+        "cuda_reserved_bytes": 25165824
+      },
+      "memory_before": {
+        "cpu_peak_RSS_bytes": 1162166272,
+        "cuda_allocated_bytes": 8705536,
+        "cuda_peak_allocated_bytes": 8705536,
+        "cuda_peak_reserved_bytes": 25165824,
+        "cuda_reserved_bytes": 25165824
+      },
+      "mode": "soft",
+      "p50_seconds": 0.0012123619671911001,
+      "p95_seconds": 0.001228230498963967,
+      "repetitions": 12,
+      "resident_forward_latency_seconds": [
+        0.001216718927025795,
+        0.001213843934237957,
+        0.0012227969709783792,
+        0.0012252519372850657,
+        0.0012080150190740824,
+        0.0012082860339432955,
+        0.0012108800001442432,
+        0.0012092370307072997,
+        0.0012093069963157177,
+        0.0011970989871770144,
+        0.001216457923874259,
+        0.0012318709632381797
+      ],
+      "scope": "synchronizedwall resident-input no-gradforward inclPython/kernel/gather; excludesdata/H2D/loading; noautoregressiveKVcache",
+      "split": "test_iid",
+      "warmup_repetitions": 2
+    },
+    {
+      "batch_size": 1,
+      "context": 64,
+      "forward_MAC_proxy_per_call": 1491248,
+      "memory_after": {
+        "cpu_peak_RSS_bytes": 1162166272,
+        "cuda_allocated_bytes": 8689664,
+        "cuda_peak_allocated_bytes": 9777664,
+        "cuda_peak_reserved_bytes": 27262976,
+        "cuda_reserved_bytes": 27262976
+      },
+      "memory_before": {
+        "cpu_peak_RSS_bytes": 1162166272,
+        "cuda_allocated_bytes": 8689664,
+        "cuda_peak_allocated_bytes": 8689664,
+        "cuda_peak_reserved_bytes": 27262976,
+        "cuda_reserved_bytes": 27262976
+      },
+      "mode": "soft",
+      "p50_seconds": 0.00191056594485417,
+      "p95_seconds": 0.001926377706695348,
+      "repetitions": 12,
+      "resident_forward_latency_seconds": [
+        0.0019111259607598186,
+        0.001935262931510806,
+        0.0019101649522781372,
+        0.0019189879531040788,
+        0.0019092430593445897,
+        0.001910966937430203,
+        0.0019116769544780254,
+        0.0019191079773008823,
+        0.0016613929765298963,
+        0.0015811730409041047,
+        0.0015931710368022323,
+        0.001598738948814571
+      ],
+      "scope": "synchronizedwall resident-input no-gradforward inclPython/kernel/gather; excludesdata/H2D/loading; noautoregressiveKVcache",
+      "split": "test_unseen",
+      "warmup_repetitions": 2
+    },
+    {
+      "batch_size": 64,
+      "context": 64,
+      "forward_MAC_proxy_per_call": 95439872,
+      "memory_after": {
+        "cpu_peak_RSS_bytes": 1162166272,
+        "cuda_allocated_bytes": 8721920,
+        "cuda_peak_allocated_bytes": 13348352,
+        "cuda_peak_reserved_bytes": 27262976,
+        "cuda_reserved_bytes": 27262976
+      },
+      "memory_before": {
+        "cpu_peak_RSS_bytes": 1162166272,
+        "cuda_allocated_bytes": 8721920,
+        "cuda_peak_allocated_bytes": 8721920,
+        "cuda_peak_reserved_bytes": 27262976,
+        "cuda_reserved_bytes": 27262976
+      },
+      "mode": "soft",
+      "p50_seconds": 0.0017753629945218563,
+      "p95_seconds": 0.0020076736982446164,
+      "repetitions": 12,
+      "resident_forward_latency_seconds": [
+        0.0017719980096444488,
+        0.0017975469818338752,
+        0.0019366740016266704,
+        0.002094451105222106,
+        0.0017995990347117186,
+        0.0017772159771993756,
+        0.0017727899830788374,
+        0.0017614030512049794,
+        0.0017795590683817863,
+        0.0017676020506769419,
+        0.0017619229620322585,
+        0.001773510011844337
+      ],
+      "scope": "synchronizedwall resident-input no-gradforward inclPython/kernel/gather; excludesdata/H2D/loading; noautoregressiveKVcache",
+      "split": "test_unseen",
+      "warmup_repetitions": 2
+    },
+    {
+      "batch_size": 1,
+      "context": 128,
+      "forward_MAC_proxy_per_call": 2978096,
+      "memory_after": {
+        "cpu_peak_RSS_bytes": 1162166272,
+        "cuda_allocated_bytes": 8690176,
+        "cuda_peak_allocated_bytes": 9812480,
+        "cuda_peak_reserved_bytes": 27262976,
+        "cuda_reserved_bytes": 27262976
+      },
+      "memory_before": {
+        "cpu_peak_RSS_bytes": 1162166272,
+        "cuda_allocated_bytes": 8690176,
+        "cuda_peak_allocated_bytes": 8690176,
+        "cuda_peak_reserved_bytes": 27262976,
+        "cuda_reserved_bytes": 27262976
+      },
+      "mode": "soft",
+      "p50_seconds": 0.0026427045231685042,
+      "p95_seconds": 0.0031270279665477573,
+      "repetitions": 12,
+      "resident_forward_latency_seconds": [
+        0.0031175100011751056,
+        0.0031039989553391933,
+        0.003138661035336554,
+        0.0031034080311656,
+        0.0031105190282687545,
+        0.0027180820470675826,
+        0.0025562909431755543,
+        0.0025272060884162784,
+        0.0025379129219800234,
+        0.0025521949864923954,
+        0.0025311530334874988,
+        0.002567326999269426
+      ],
+      "scope": "synchronizedwall resident-input no-gradforward inclPython/kernel/gather; excludesdata/H2D/loading; noautoregressiveKVcache",
+      "split": "test_long",
+      "warmup_repetitions": 2
+    },
+    {
+      "batch_size": 64,
+      "context": 128,
+      "forward_MAC_proxy_per_call": 190598144,
+      "memory_after": {
+        "cpu_peak_RSS_bytes": 1162166272,
+        "cuda_allocated_bytes": 8754688,
+        "cuda_peak_allocated_bytes": 17743360,
+        "cuda_peak_reserved_bytes": 27262976,
+        "cuda_reserved_bytes": 27262976
+      },
+      "memory_before": {
+        "cpu_peak_RSS_bytes": 1162166272,
+        "cuda_allocated_bytes": 8754688,
+        "cuda_peak_allocated_bytes": 8754688,
+        "cuda_peak_reserved_bytes": 27262976,
+        "cuda_reserved_bytes": 27262976
+      },
+      "mode": "soft",
+      "p50_seconds": 0.0029282020404934883,
+      "p95_seconds": 0.00354419331997633,
+      "repetitions": 12,
+      "resident_forward_latency_seconds": [
+        0.002927596098743379,
+        0.0029288079822435975,
+        0.0029041299130767584,
+        0.002934055053628981,
+        0.0028960880590602756,
+        0.0028778210980817676,
+        0.002989238011650741,
+        0.0035491340095177293,
+        0.0035401509376242757,
+        0.002883870038203895,
+        0.002878742991015315,
+        0.003332179971039295
+      ],
+      "scope": "synchronizedwall resident-input no-gradforward inclPython/kernel/gather; excludesdata/H2D/loading; noautoregressiveKVcache",
+      "split": "test_long",
+      "warmup_repetitions": 2
+    }
+  ],
+  "metric_scope": "512paired sampledcharactertargets, notfullcorpusPPL; hardCALLPPL normalizedcontinuousreadout",
+  "model_state_after_sha256": "86fa0ae71783592645c3c6f275acad88a4a8c8fab885d2ea407b47c9153a31cb",
+  "model_state_before_sha256": "86fa0ae71783592645c3c6f275acad88a4a8c8fab885d2ea407b47c9153a31cb",
+  "no_selection": true,
+  "no_training": true,
+  "paired_TEST_targets": true,
+  "resource_overlap_note": "Root independently checked nvidia-smi immediately before each serial audit: no compute-app process; no concurrent training launched during this series",
+  "resources": {
+    "buffer_bytes": 0,
+    "checkpoint_bytes": 533834,
+    "live_inference_optimizer_tensor_bytes": 0,
+    "parameter_bytes": 166192,
+    "parameters": 41548,
+    "saved_training_optimizer_tensor_bytes": 332440
+  },
+  "results": {
+    "test_iid": {
+      "soft": {
+        "accuracy": 0.359375,
+        "context": 32,
+        "forward_MAC_proxy": 382885888,
+        "maximum_log_normalizer_error": 2.384185791015625e-07,
+        "memory": {
+          "cpu_peak_RSS_bytes": 1144340480,
+          "cuda_allocated_bytes": 8731136,
+          "cuda_peak_allocated_bytes": 11176448,
+          "cuda_peak_reserved_bytes": 25165824,
+          "cuda_reserved_bytes": 25165824
+        },
+        "next_character_NLL": 2.31150899351087,
+        "per_target_file": "test_iid-soft-per-target.npz",
+        "per_target_sha256": "75c11b6a9c2ce01bc0dff09962de8b61ecbcdb3bad6d2dda03df6ae5ea879e86",
+        "rows": 512,
+        "sampled_character_PPL": 10.089638372257168,
+        "wall_seconds": 0.44069691002368927
+      }
+    },
+    "test_long": {
+      "soft": {
+        "accuracy": 0.359375,
+        "context": 128,
+        "forward_MAC_proxy": 1524785152,
+        "maximum_log_normalizer_error": 2.384185791015625e-07,
+        "memory": {
+          "cpu_peak_RSS_bytes": 1162166272,
+          "cuda_allocated_bytes": 8780288,
+          "cuda_peak_allocated_bytes": 17768960,
+          "cuda_peak_reserved_bytes": 27262976,
+          "cuda_reserved_bytes": 27262976
+        },
+        "next_character_NLL": 2.311520388140707,
+        "per_target_file": "test_long-soft-per-target.npz",
+        "per_target_sha256": "fe9f094b955ef7bf17d214af687d5ce0c329a1f8891f335ed6a62ddaa2e9925d",
+        "rows": 512,
+        "sampled_character_PPL": 10.089753340606618,
+        "wall_seconds": 0.026862867991439998
+      }
+    },
+    "test_unseen": {
+      "soft": {
+        "accuracy": 0.359375,
+        "context": 64,
+        "forward_MAC_proxy": 763518976,
+        "maximum_log_normalizer_error": 2.384185791015625e-07,
+        "memory": {
+          "cpu_peak_RSS_bytes": 1162166272,
+          "cuda_allocated_bytes": 8747520,
+          "cuda_peak_allocated_bytes": 13373952,
+          "cuda_peak_reserved_bytes": 27262976,
+          "cuda_reserved_bytes": 27262976
+        },
+        "next_character_NLL": 2.311519246624812,
+        "per_target_file": "test_unseen-soft-per-target.npz",
+        "per_target_sha256": "6cdfe0f32a28abe478518a2cecbe64e8199f2e615ede2dfc935468bb3b82f7a6",
+        "rows": 512,
+        "sampled_character_PPL": 10.089741822999375,
+        "wall_seconds": 0.018468391965143383
+      }
+    }
+  },
+  "status": "completed_frozen_inference_audit"
+}

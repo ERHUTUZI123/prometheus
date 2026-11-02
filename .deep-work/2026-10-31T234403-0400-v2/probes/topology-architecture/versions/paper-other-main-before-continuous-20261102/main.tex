@@ -1,0 +1,68 @@
+\documentclass[10pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs,array,longtable}
+\usepackage{xurl}
+\usepackage[hidelinks]{hyperref}
+\usepackage{graphicx}
+\setlength{\emergencystretch}{2em}
+\newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}
+\newcommand{\method}{Prometheus}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\title{Prometheus: Learning and Preserving\\Executable Operations through Monodromy}
+\author{Prometheus Research Project}
+\date{Working manuscript: 1 November 2026}
+
+% Canonical method: water/method.md. Direction: water/now.md.
+% Protocol authority: ALL.md, TODO 5. Source and evidence remain versioned.
+% Main text follows the human-specified eight-section paper structure.
+% All detailed development records and unvalidated extensions are in the appendix.
+\begin{document}
+\maketitle
+\begin{abstract}
+Learning systems can retain individual operations yet lose the ability to call
+and compose them when shared representations change. We investigate Prometheus,
+a candidate computational architecture that represents executable operations by
+monodromy and learns their neural bindings from terminal task feedback. A Block
+combines a learned state encoder, shared loop controller, operation calls, and
+readout. Operation formation changes a loop's executable class; subsequent
+within-class deformation preserves its action through a nonsingular homotopy.
+A coupled gradient combines ordinary credit through the neural computation with
+loss jumps at class boundaries. Protected update transactions additionally check
+old task bindings and soft/native execution consistency, since preserving an
+operation alone does not preserve its use. We derive sufficient retention
+conditions and quantify workspace requirements for irreversible logical
+interfaces. In a bounded integrated diagnostic, the coupled learner acquires a
+new operation and calling behavior while retaining its supplied old capability;
+a targeted block-coordinate repair resolves a measured feasibility bottleneck
+without adding parameters. Historical continual-learning prototypes and matched
+ordinary constraints are documented separately. These development results do
+not establish topology-specific competitive advantage. We specify a frozen,
+five-layer evaluation against Transformers and continual-learning baselines,
+including acquisition, forgetting, composition, parameter growth, and complete
+resource accounting. The complete general Block and its primary benchmark
+remain under development. The central hypothesis is that topology can enlarge
+useful shared adaptation while reducing the cost of preserving executable
+computational capabilities.
+\end{abstract}
+\input{sections/01-introduction.tex}
+\input{sections/02-related-work.tex}
+\input{sections/03-architecture.tex}
+\input{sections/04-monodromy-learning.tex}
+\input{sections/05-theory.tex}
+\input{sections/06-experiments.tex}
+\input{sections/07-discussion.tex}
+\input{sections/08-conclusion.tex}
+
+\clearpage
+\bibliographystyle{plain}
+\bibliography{references}
+\clearpage
+\appendix
+\input{appendix/materials.tex}
+\end{document}

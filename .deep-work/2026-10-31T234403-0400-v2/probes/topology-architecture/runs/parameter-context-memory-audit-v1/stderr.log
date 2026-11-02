@@ -1,0 +1,17 @@
+{"event": "runner_failure", "error_type": "TypeError", "error": "dict() got multiple values for keyword argument 'wall_seconds'", "isolation_fallback": false}
+Traceback (most recent call last):
+  File "/workspace/prometheus-v2-m0-architecture/remote_runner_gpu_authorized.py", line 481, in main
+  File "/workspace/prometheus-v2-m0-architecture/remote_runner_gpu_authorized.py", line 363, in _child
+  File "<frozen runpy>", line 286, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-context-memory-audit-v1/audit_context_memory.py", line 256, in <module>
+    if __name__=="__main__":main()
+                            ^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-context-memory-audit-v1/audit_context_memory.py", line 236, in main
+    results.append(row);emit("actual_read_intervention",**row)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-context-memory-audit-v1/audit_context_memory.py", line 163, in emit
+    stream.write(json.dumps(dict(kind=kind,wall_seconds=time.perf_counter()-began,**fields),sort_keys=True,allow_nan=False)+"\n");stream.flush()
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: dict() got multiple values for keyword argument 'wall_seconds'

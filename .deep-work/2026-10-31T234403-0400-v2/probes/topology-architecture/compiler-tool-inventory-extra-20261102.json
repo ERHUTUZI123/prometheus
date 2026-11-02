@@ -1,0 +1,33 @@
+{
+  "extra_files": [
+    {
+      "path": "/usr/libexec/gcc/x86_64-linux-gnu/13/cc1",
+      "sha256": "5d1679131184e2de4435b426eb264bf13472fe026db8e5c6bc97445814e8e2f4",
+      "bytes": 30487984,
+      "uid": 0,
+      "mode": "0o755",
+      "ELF": true
+    },
+    {
+      "path": "/usr/libexec/gcc/x86_64-linux-gnu/13/collect2",
+      "sha256": "4d1f341ae5b763b513258ee2812422a45e063c30a2f1924a0cf63d3699f3a158",
+      "bytes": 336056,
+      "uid": 0,
+      "mode": "0o755",
+      "ELF": true
+    },
+    {
+      "path": "/usr/sbin/ldconfig.real",
+      "sha256": "d879c9a8a41240aeb7fd0f3221116fc4cf41cc6c64c24e10541d1bafbe537ab1",
+      "bytes": 1051280,
+      "uid": 0,
+      "mode": "0o755",
+      "ELF": true
+    }
+  ],
+  "libcuda_cache_entries": [
+    "\tlibcuda.so.1 (libc6,x86-64) => /lib/x86_64-linux-gnu/libcuda.so.1",
+    "\tlibcuda.so (libc6,x86-64) => /lib/x86_64-linux-gnu/libcuda.so"
+  ],
+  "ldconfig_wrapper": "#!/bin/sh\n\nif  test $# = 0\t\t\t\t\t\t\t\\\n    && test x\"$LDCONFIG_NOTRIGGER\" = x\t\t\t\t\\\n && test x\"$DPKG_MAINTSCRIPT_PACKAGE\" != x\t\t\t\\\n && dpkg-trigger --check-supported 2>/dev/null\nthen\n\tif dpkg-trigger --no-await ldconfig; then\n\t\tif test x\"$LDCONFIG_TRIGGER_DEBUG\" != x; then\n\t\t\techo \"ldconfig: wrapper deferring update (trigger activated)\"\n\t\tfi\n\t\texit 0\n\tfi\t\nfi\n\nexec /sbin/ldconfig.real \"$@\"\n"
+}

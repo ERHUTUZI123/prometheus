@@ -1,50 +1,64 @@
 \section{Theoretical Analysis}
 \label{sec:theory-main}
 
-The following properties specify the architecture's retention and interface
-contracts. They concern exact finite semantics and real-arithmetic sufficient
-conditions; numerical execution additionally requires its declared precision
-and clearance checks. Detailed constructions and proofs appear in the appendix.
+We analyze the implemented resource structure, separating trainable weights,
+transient state and execution. These are conditional accounting identities
+and explicit work models, not claims of superior complexity or protection.
 
-\paragraph{Operation preservation.}
-Let $\delta$ be an admitted polygonal loop's minimum distance from the
-discriminant. If corresponding vertices move by less than $\delta$, every point
-of their linear interpolation moves by at most that amount. The interpolation
-therefore avoids the discriminant and preserves the endpoint permutation.
-Preserving each generator preserves every finite composition under fixed state
-ports. This property permits implementation changes while retaining the
-acquired operation.
+\paragraph{Parameters and working state.}
+Let $N$ be the output/initial-state cardinality, $V$ the input vocabulary,
+$H$ the state width, $T$ the token width, $Q$ the key width, $M$ memory slots,
+$K$ primitives, $R$ primitive rank, $C$ caller width and $S$ calls per token.
+Set $F=2H+T$. Including biases, the current Block has
+\begin{align}
+ P={}&NH+VT+ST+MQ+\big((H+T)Q+Q\big)\nonumber\\
+    &+(FC+C+CK+K)+K(RF+R+HR)+2H\nonumber\\
+    &+2(FQ+Q)+(FH+H)+(F+1)+(HN+N).
+ \label{eq:main-continuous-parameters}
+\end{align}
+The terms account respectively for learned interfaces and initial keys,
+queries, calls, primitives, normalization, writes and readout. A modality
+projection adds its own parameters. Increasing sequence length adds no model
+weights, while increasing $H$, $M$, $K$ or rank changes both capacity and cost.
 
-\paragraph{Task and soft-interface preservation.}
-For changing neural bindings, require a finite relation between reference and
-candidate states that contains every old encoded input pair, agrees on decoded
-outputs, and is closed under every old token transition. Induction on program
-length then preserves all native old words. Separately, let $p_E,p_R,p_C$ be
-minimum probabilities assigned to the model's own hard encoding, readout, and
-call choices. With $S$ slots and one-hot executed maps,
+The recurrent payload for one example is
 \begin{equation}
- m_L=p_Ep_Rp_C^{SL}>\tfrac12
- \label{eq:main-path-mass}
+ C_{\mathrm{state}}=H+M(Q+H)
 \end{equation}
-implies soft/native argmax agreement through length $L$: the designated path
-alone carries more probability than all alternatives combined. The native
-closure and finite-length soft guarantee have different scopes.
+scalars. For the stated development dimensions this is 704 floats. It excludes
+temporary tensors, gradients, optimizer moments and saved training activations.
+A streaming implementation can retain this state and process a new input;
+the current forward API instead resets per example. Current character
+experiments recompute each entire observed prefix. Their timings therefore
+do not establish a streaming or autoregressive caching advantage.
 
-\paragraph{Irreversible logical interfaces.}
-Let $Y$ be an $N$-element logical state set, let $f:Y\to Y$, and suppose
-its marked frame is a section of a physical decoder. Let
-$G$ be its retained permutation group, and require old operations to remain
-decoder-equivariant on an invariant set containing both the frame and the
-outputs of one reversible lift of $f$. The minimum physical-state count is
+\paragraph{Forward work and training memory.}
+For $B$ examples and maximum supplied length $L$, dense primitive projections
+contribute at most
 \begin{equation}
- D_{1,G}=\sum_{O\in Y/G}|O|
-       \max\!\left(1,\max_{y\in O}|f^{-1}(y)|\right).
+ W_{\mathrm{primitive}}=BLSKR(F+H)
 \end{equation}
-Fibers have equal cardinality along each orbit and must accommodate distinct
-preimages; assigning sufficient copies and extending a partial injection proves
-attainability. For transitive $G$, reset requires $N^2$ states. Repeated
-non-surjective reset cannot be a closed finite reversible quotient: injectivity
-makes its forward-invariant reachable set invariant, forcing the logical map
-to be surjective. Fresh ancillas or an explicit irreversible interface change
-this contract and incur storage or disposal costs. Configuration counts remain
-distinct from factorized memory bits and trainable parameters.
+multiply--accumulate operations in soft execution, versus
+$BLSR(F+H)$ for actual selected-expert evaluation. This conditional saving
+does not equate their predictions. Memory reads additionally require query
+projection and $O(BLSM(Q+H))$ attention products; writes and the caller have
+their own projection and update terms. Source counters report these components
+separately. They are forward MAC proxies, not measured training FLOPs: they
+exclude normalization, activations, indexing, backward and backend workspace.
+Actual wall time and allocator peaks remain necessary measurements.
+
+Backpropagation through a prefix retains intermediate states and operator
+activations. Its memory consequently grows with unrolled length even though
+the inference carry is fixed. Parameter storage, recurrent payload, training
+memory, checkpoint bytes and inference latency are distinct resources.
+
+\paragraph{Composition and protection boundaries.}
+Repeated calls define an explicit recurrent composition. Low-rank residual
+updates, LayerNorm and content addressing do not guarantee exact inversion,
+arbitrary memory recovery, length extrapolation, or preservation after shared
+learning. Likewise, the finite stochastic-path certificate of the earlier
+categorical model is not a certificate for this context-dependent continuous
+model. Historical topological preservation and reversible-workspace results
+retain their original assumptions in the appendix. The current architecture
+must establish useful acquisition and retention through the matched empirical
+comparisons of Section~\ref{sec:experiments}.

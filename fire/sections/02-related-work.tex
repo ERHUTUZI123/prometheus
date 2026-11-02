@@ -1,47 +1,50 @@
 \section{Related Work}
 \label{sec:related-work}
 
-\paragraph{Learned computation and continual organization.}
-The Transformer couples learned projections, attention-based information
-selection, and feedforward transformations to build compositional sequence
-models~\cite{vaswani2017attention}. Prometheus shares the use of neural
-representations and task-driven credit assignment; its proposed distinction
-concerns how executable operations change and remain reusable during later
-learning. Continual learning already offers architectural mechanisms for this
-problem. DEN selectively retrains relevant subnetworks, conditionally expands
-capacity, and uses splitting and timestamped inference to manage semantic
-drift~\cite{yoon2018lifelong}. Thus growth, sharing, and retention are established
-capabilities. A comparison with such methods must identify the additional work
-performed by loop semantics and include each method's stored capacity and
-maintenance costs.
+\paragraph{Context-dependent neural computation.}
+Transformers learn input-dependent interactions through attention and combine
+them with shared feedforward transformations~\cite{vaswani2017attention}.
+Prometheus also uses task-driven neural representations and weighted content
+selection. Its caller chooses among low-rank nonlinear residual functions;
+its externalized key--value state supplies a learned read vector to those
+functions. The static-caller control retains the same contextual primitives
+and memory, separating the effect of context-dependent invocation from the
+presence of a recurrent memory system. This comparison can identify an effect
+of the caller without treating memory, function composition or expert choice
+as new capabilities in themselves.
 
-\paragraph{Learning through discrete changes.}
-Stochastic computation graphs combine differentiable computation with
-score-function gradient terms and support surrogate-loss
-implementations~\cite{schulman2015stochastic}. For discontinuous models, Lee
-et al. explicitly separate regionwise reparameterization derivatives from
-boundary contributions~\cite{lee2018reparameterization}. Our coupled
-within-class and boundary update uses this established distinction: ordinary
-neural credit learns encoders, readouts, and calls, while class-boundary
-feedback changes the distribution over executable loop actions. The
-derivative decomposition itself is not a novelty claim. Its value here must
-come from the computational organization and a measured advantage over
-equally informed ordinary boundary optimization or search.
+Recurrent and selective state-space models provide additional conventional
+organizations of context. Gu and Dao's selective SSM makes step sizes and
+write/read vectors depend on the current input, controlling how information
+enters and propagates through state.\footnote{Original mechanism: Algorithm2
+and Sections3.2--3.4 of \url{https://arxiv.org/abs/2312.00752}.}
+Its state parameterization and recurrence differ from the explicit primitive
+mixture considered here. Comparisons must also distinguish an author's
+optimized implementation from a reference adaptation: mathematical recurrence
+alone does not reproduce fused scan, recomputation, or kernel performance.
 
-\paragraph{Topology and reversible computation.}
-Topology has an established computational role. Kitaev's anyon construction
-uses braiding to implement transformations in a physically protected quantum
-system~\cite{kitaev2003fault}. Our present algebraic-cover construction instead
-uses continuation to define inspectable state permutations; digital simulation
-does not inherit physical fault tolerance or energy savings. The relevant
-question is whether homotopy-preserving implementation freedom helps a
-learning system acquire and retain useful computations.
+\paragraph{Continual organization.}
+DEN selectively retrains relevant subnetworks, conditionally expands capacity,
+and uses splitting and timestamped inference to manage semantic
+drift~\cite{yoon2018lifelong}. Replay, freezing and modular capacity are likewise
+concrete comparison conditions in our protocol. The present continuous Block
+requires its own retention measurements during shared learning. Parameters,
+stored examples, auxiliary states, maintenance and execution must all enter
+comparisons; equivalent terminal supervision does not automatically equate
+total work or attained capability.
 
-Permutation operations also delimit the current computational domain.
-Bennett's reversible simulation retains auxiliary information, copies the
-result, and reverses the computation to clean its history~\cite{bennett1973logical}.
-It provides a constructive route toward irreversible tasks while making the
-extra workspace and computation explicit. Such an extension would need to
-preserve the same learning interface and account for those resources;
-reversible representability alone does not establish a general trainable
-Block or an efficient acquisition mechanism.
+\paragraph{Discrete mechanisms and topological protection.}
+Earlier Prometheus constructions used class-boundary feedback for loop
+operations. Their derivative decomposition follows established stochastic
+computation-graph and discontinuous-gradient
+analyses~\cite{schulman2015stochastic,lee2018reparameterization}; it is distinct
+from ordinary differentiable training of the current residual functions.
+Monodromy supplies a conditional operation-invariance mechanism, retained in
+the appendix as an optional component. Kitaev's braiding construction concerns
+physical topological quantum protection~\cite{kitaev2003fault}; classical loop
+simulation does not inherit that hardware guarantee. Bennett's reversible
+simulation explicitly retains and later cleans auxiliary
+information~\cite{bennett1973logical}. It informs historical workspace analyses,
+whereas the current nonlinear state and memory overwrite rules directly
+allow irreversible updates. Each organization needs its own learning,
+retention and resource evidence.

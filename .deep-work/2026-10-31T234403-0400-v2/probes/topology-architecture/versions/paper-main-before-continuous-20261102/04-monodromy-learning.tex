@@ -1,0 +1,79 @@
+\section{Monodromy Learning}
+\label{sec:monodromy-learning-main}
+
+The learning mechanism distinguishes changing an executable operation from
+adapting its realization. A concrete supplied covering is
+\begin{equation}
+ F_D(z,u)=z^D-Dz-u=0,\qquad
+ \mathcal C_D=\{-(D-1)\zeta:\zeta^{D-1}=1\},
+ \label{eq:main-polynomial-cover}
+\end{equation}
+over controls outside $\mathcal C_D$. At basepoint $u_*=0$, the roots are
+marked once. A neural controller emits polygon vertices with fixed endpoints;
+continuation determines the resulting sheet action. The tested component uses
+the cubic instance, while the general interface requires an appropriate
+covering and a computable execution domain.
+
+Raw coordinates $a_\theta$ determine the loop class. An unadmitted loop may
+change class between two regular parameter snapshots; the interpolating family
+can meet the discriminant, but that singular interpolation is not executed.
+The safe-realization interface, developed in earlier constructions but not
+jointly validated as a separate parameter layer in the present cubic hybrid,
+uses an admissible deformation parameter $\omega$ to move a realization
+through a nonsingular based homotopy. Such same-class adaptation can improve
+execution quality while preserving its operation. It cannot supply the
+class-changing learning signal. A changed loop counts as a new operation only
+when its endpoint action changes.
+
+\subsection{Coupled gradients from terminal feedback}
+
+Exact endpoint-semantic losses are locally constant in regular loop
+coordinates. For forming operations, introduce a normalized product of smooth
+location kernels with bounded support and optimize
+\begin{equation}
+ J_\sigma(\theta)=\int L(v;\theta)p_\sigma(v-a_\theta)\,dv.
+\end{equation}
+The parameter affects both the sampling distribution and the neural
+computation inside the loss. Its derivative is
+\begin{equation}
+ \begin{aligned}
+ \nabla_\theta J_\sigma&=
+ \mathbb E[\partial_\theta L(V;\theta)\vert_{V\,\mathrm{fixed}}]
+ +(D_\theta a_\theta)^\top g,\\
+ g_j&=\mathbb E_{V_{-j}}\!\left[
+       \sum_r\Delta L_r\,p_\sigma(b_r-a_{\theta,j})\right].
+ \end{aligned}
+ \label{eq:main-coupled-gradient}
+\end{equation}
+Here $b_r$ are discriminant-crossing events along a coordinate slice, and
+$\Delta L_r$ is the terminal-loss jump between adjacent chambers. The first
+term backpropagates through encoding, calling, readout, and their shared
+backbone with executed maps fixed. The second chains measured class feedback
+through the same controller. This combines established stochastic-gradient
+calculus with boundary differentiation~\cite{schulman2015stochastic,lee2018reparameterization}.
+
+For a free polygon-vertex coordinate, only two adjacent segments move. Each
+segment supplies at most one generic intersection with each critical control.
+Event locations can therefore be found without enumerating complete operator
+classes. Safe chamber representatives supply actual terminal losses; their
+execution, sorting, continuation, and observations are counted. Sampling means
+remain inside the domain eroded by the kernel support. Replacing a numerically
+difficult sample by a certified representative of its class preserves the
+ideal semantic objective rather than silently conditioning its distribution.
+
+\subsection{Protected update transactions}
+
+For an admitted loop, a maximum vertex displacement smaller than its old
+discriminant clearance certifies a based homotopy. Each proposed shared update
+also checks the numerical execution domain, old native binding closure, and
+the soft/native path-mass condition of
+Section~\ref{sec:theory-main}. These obligations protect different interfaces.
+
+The implemented transaction first backtracks a joint parameter proposal.
+When every positive joint scale is blocked, an optional fallback retries the
+same gradient restricted to existing encoder, readout, and call-head weights,
+holding the shared backbone and loop head fixed. All certificates still apply;
+only one proposal is committed. This block-coordinate feasibility repair
+preserves usable calling credit without changing the learning signal or adding
+parameters. It is an optimization mechanism rather than a new topological
+primitive. Its trials, masked components, and maintenance costs remain explicit.

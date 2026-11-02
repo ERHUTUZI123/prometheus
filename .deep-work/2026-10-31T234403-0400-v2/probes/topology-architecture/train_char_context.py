@@ -1,12 +1,12 @@
 """ROOT-RUN300-update sampled next-character development; no import-time run.
 
-Existing Contextual Block (SOFT only), GRU64, Transformer64 consume identical
+Categorical or continuous Block (SOFT only), GRU64, Transformer64 consume identical
 prefixes and300x64 common minibatch indices at Adam LR.003. Bidirectional
 attention INSIDE the fully observed prefix is legitimate next-token conditioning;
 the target character is never an input. This is terminal-prefix LM development,
 not a full-stream LM benchmark or publication Primary. Requires Root's external
 resource watchdog/isolation. No network, SSH, installation, HPO or silent device
-fallback. Native Block accuracy is separate; no native one-hot PPL is reported.
+fallback. Native Block accuracy is separate; native PPL is not a metric here.
 """
 from __future__ import annotations
 
@@ -25,17 +25,19 @@ import numpy as np
 import torch
 from torch.nn import functional as F
 
-from contextual_primitive_block import ContextualPrimitiveBlock
 from train_contextual_primitives import (Recorder, TerminalGRU, TerminalTransformer,
-    batch, load_split, plain, sha256, synchronize, tensor_bytes, tensor_state_equal)
+    batch, block_class, load_split, plain, sha256, synchronize, tensor_bytes, tensor_state_equal)
 
 
 SPLITS = ("train", "valid", "test_iid", "test_long", "test_unseen")
 
 
-def source_hashes():
-    return {p.name: sha256(p) for p in (Path(__file__), Path(__file__).with_name("contextual_primitive_block.py"),
-                                      Path(__file__).with_name("train_contextual_primitives.py"))}
+def source_hashes(args):
+    paths=[Path(__file__),Path(__file__).with_name("train_contextual_primitives.py")]
+    if args.arm=="block":
+        name="continuous_primitive_block.py" if getattr(args,"block_state","categorical")=="continuous" else "contextual_primitive_block.py"
+        paths.append(Path(__file__).with_name(name))
+    return {path.name:sha256(path) for path in paths}
 
 
 def frozen_split(args, metadata, name):
@@ -62,14 +64,22 @@ def objective(output, targets, arm, reduction="mean"):
             else F.cross_entropy(output, targets, reduction=reduction))
 
 
-def build(arm, metadata, internal_states, device, block_initialization="iid"):
+def build(arm, metadata, internal_states, device, block_initialization="iid", *,
+          block_state="categorical", n_slots=4, routing="dynamic", primitives=4,
+          primitive_rank=8, memory_slots=8, baseline_width=64):
     v = metadata["n_states"]
     if arm == "block":
-        return ContextualPrimitiveBlock(n_states=v, n_tokens=v, internal_states=internal_states,
-            n_primitives=4, token_dim=16, state_dim=16, memory_dim=16,
-            caller_hidden=32, n_slots=4, routing="dynamic", initialization=block_initialization).to(device)
+        cls=block_class(block_state)
+        if block_state=="continuous":
+            return cls(n_states=v,n_tokens=v,internal_states=internal_states,n_primitives=primitives,
+                token_dim=16,state_dim=internal_states,memory_dim=internal_states,caller_hidden=32,
+                n_slots=n_slots,routing=routing,memory_slots=memory_slots,key_dim=16,
+                primitive_rank=primitive_rank).to(device)
+        return cls(n_states=v, n_tokens=v, internal_states=internal_states,
+            n_primitives=primitives, token_dim=16, state_dim=16, memory_dim=16,
+            caller_hidden=32, n_slots=n_slots, routing=routing, initialization=block_initialization).to(device)
     cls = TerminalGRU if arm == "gru" else TerminalTransformer
-    return cls(n_states=v, n_tokens=v, max_length=128, width=64).to(device)
+    return cls(n_states=v, n_tokens=v, max_length=128, width=baseline_width).to(device)
 
 
 def resource_state(model, optimizer, device):
@@ -123,7 +133,7 @@ def evaluate(model, data, args, device, recorder, native_accuracy=True):
         "native_argmax_accuracy": native_correct / count if args.arm == "block" and native_accuracy else None,
         "native_PPL": None, "wall_seconds": time.perf_counter() - started,
         "forward_MAC_proxy": work, "native_forward_MAC_proxy": native_work,
-        "scope": "fixed sampled next-character positions, not all corpus tokens; no native one-hot PPL"}
+        "scope": "fixed sampled next-character positions, not all corpus tokens; native accuracy only, no native PPL"}
 
 
 def rng_snapshot(device):
@@ -138,11 +148,13 @@ def save_model(model, optimizer, args, metadata, recorder, completed, receipts, 
     payload = {"schema": "char-context-development-v1", "args": plain(vars(args)),
         "metadata": metadata, "completed_updates": completed, "fixed_update_budget": 300,
         "model_state": model.state_dict(), "block_config": model.configuration() if args.arm == "block" else None,
+        "block_checkpoint": model.checkpoint() if args.arm == "block" else None,
+        "block_state": args.block_state if args.arm == "block" else None,
         "baseline_spec": None if args.arm == "block" else model.spec,
         "parameter_flags": {n: p.requires_grad for n, p in model.named_parameters()},
         "optimizer": optimizer.state_dict(), "rng": rng_snapshot(next(model.parameters()).device), "input_receipts": receipts,
         "common_batch_indices_sha256": indices_sha, "costs": copy.deepcopy(costs),
-        "source_sha256": source_hashes(),
+        "source_sha256": source_hashes(args),
         "torch_version": str(torch.__version__), "exact_training_resume_tested": False,
         "scope": "sampled-prefix LM development; no full-corpus PPL or frozen Primary claim"}
     path = recorder.out / name;started = time.perf_counter()
@@ -156,7 +168,17 @@ def save_model(model, optimizer, args, metadata, recorder, completed, receipts, 
 
 def reload_audit(path, model, args, valid, device):
     payload = torch.load(path, map_location="cpu", weights_only=True)
-    other = build(args.arm, payload["metadata"], args.internal_states, device, args.block_initialization)
+    if args.arm=="block":
+        saved_state=payload.get("block_state") or payload.get("args",{}).get("block_state","categorical")
+        cls=block_class(saved_state)
+        if payload.get("block_checkpoint") is not None:
+            other=cls.from_checkpoint(payload["block_checkpoint"]).to(device)
+        else:
+            # Backward-compatible old categorical checkpoint, actual savedshape.
+            other=cls(**payload["block_config"]).to(device)
+    else:
+        cls=TerminalGRU if args.arm=="gru" else TerminalTransformer
+        other=cls(**payload["baseline_spec"]).to(device)
     other.load_state_dict(payload["model_state"], strict=True)
     if not tensor_state_equal(payload["model_state"], other.state_dict()):raise RuntimeError("LM tensor reload mismatch")
     indices = np.arange(min(64, len(valid["initial"])));inputs, length, active = batch(valid, indices, device)
@@ -178,11 +200,24 @@ def main():
     p.add_argument("--arm", choices=("block", "gru", "transformer"), required=True)
     p.add_argument("--seed", type=int, default=0);p.add_argument("--device", choices=("cuda:0", "cpu"), default="cuda:0")
     p.add_argument("--max-seconds", type=float, default=850.)
+    p.add_argument("--baseline-width",type=int,default=64)
     p.add_argument("--internal-states", type=int, default=None)
+    p.add_argument("--block-state",choices=("categorical","continuous"),default="categorical")
+    p.add_argument("--block-width",type=int,default=64)
+    p.add_argument("--primitive-rank",type=int,default=8)
+    p.add_argument("--memory-slots",type=int,default=8)
+    p.add_argument("--slots",type=int,default=None)
+    p.add_argument("--primitives",type=int,default=4)
+    p.add_argument("--block-routing",choices=("dynamic","static"),default="dynamic")
     p.add_argument("--block-initialization", choices=("iid", "carry"), default="iid")
     p.add_argument("--resource-overlap-note", default="coordinator must record concurrent jobs; not isolated throughput")
     args = p.parse_args()
+    if args.slots is None:args.slots=1 if args.block_state=="continuous" else 4
     if args.out.exists() or not 1 <= args.max_seconds <= 850:raise ValueError("new output and <=850s bound required")
+    if (not 1<=args.slots<=8 or not 1<=args.primitives<=16 or not 1<=args.block_width<=256
+            or not 1<=args.primitive_rank<=args.block_width or not 1<=args.memory_slots<=32
+            or not 1<=args.baseline_width<=256 or (args.arm=="transformer" and args.baseline_width%4!=0)):
+        raise ValueError("bounded public Block slot/K/width/rank/memory dimensions required")
     rec = Recorder(args.out, args.max_seconds);device = torch.device(args.device)
     model = optimizer = None;completed = 0;inputs = [];curves = [];checkpoints = [];status = "started"
     costs = {"training_examples": 0, "training_input_characters": 0, "training_target_characters": 0,
@@ -209,23 +244,33 @@ def main():
         if metadata.get("schema") != "sampled-char-context-terminal-v1" or not 2 <= v <= 512 or metadata["n_tokens"] != v or metadata["max_length"] != 128 or len(metadata["stages"]) != 1:
             raise ValueError("frozen sampled character development metadata required")
         args.states = v
-        if args.internal_states is None:args.internal_states = v
+        if args.internal_states is None:args.internal_states = args.block_width if args.block_state=="continuous" else v
         if not 1 <= args.internal_states <= 512:raise ValueError("bounded Block width required")
+        if args.arm=="block" and args.block_state=="continuous" and args.primitive_rank>args.internal_states:
+            raise ValueError("continuous primitive rank cannot exceed actual state width")
         train, receipt = frozen_split(args, metadata, "train");inputs.append(receipt)
         valid, receipt = frozen_split(args, metadata, "valid");inputs.append(receipt)
         indices = np.random.default_rng(np.random.SeedSequence([args.seed, v, 300, 0x4c4d])).integers(0, 8192, size=(300, 64), dtype=np.int64)
         np.savez_compressed(rec.out / "common-batch-indices.npz", indices=indices)
         indices_sha = sha256(rec.out / "common-batch-indices.npz")
-        model = build(args.arm, metadata, args.internal_states, device, args.block_initialization)
+        model = build(args.arm, metadata, args.internal_states, device, args.block_initialization,
+            block_state=args.block_state,n_slots=args.slots,routing=args.block_routing,
+            primitives=args.primitives,primitive_rank=args.primitive_rank,memory_slots=args.memory_slots,
+            baseline_width=args.baseline_width)
         optimizer = torch.optim.Adam(model.parameters(), lr=.003)
         if device.type == "cuda":torch.cuda.reset_peak_memory_stats(device)
         rec.emit("configuration", args=vars(args), vocabulary_size=v, metadata_sha256=sha256(args.data / "metadata.json"),
             common_batch_indices_sha256=indices_sha, input_receipts=inputs, resources=resource_state(model, optimizer, device),
             fixed_budget={"updates": 300, "batch": 64, "lr": .003, "optimizer": "Adam", "clip_norm": 1.},
             training_execution="SOFT only; native Block is accuracy-only evaluation", no_test_selection=True,
-            block_initialization=args.block_initialization if args.arm == "block" else None,
+            block_initialization=(args.block_initialization if args.arm=="block" and args.block_state=="categorical" else None),
+            block_state_organization=args.block_state if args.arm=="block" else None,
+            block_configuration=model.configuration() if args.arm=="block" else None,
+            block_resource_model=model.resource_report() if args.arm=="block" else None,
+            native_execution_scope=("hard CALL with continuous state/E/R/content memory" if args.block_state=="continuous"
+                                    else "hard categorical E/CALL/operator rows/R") if args.arm=="block" else None,
             formal_Primary=False, validity="checked implementation/information/prospective protocol, independent of achieved accuracy",
-            source_sha256=source_hashes(), torch_version=str(torch.__version__), CUDA_version=torch.version.cuda,
+            source_sha256=source_hashes(args), torch_version=str(torch.__version__), CUDA_version=torch.version.cuda,
             device_name=torch.cuda.get_device_name(device) if device.type == "cuda" else "explicit CPU request",
             metric_scope="sampled next-character conditional PPL; not full-corpus/word PPL")
         for step in range(301):

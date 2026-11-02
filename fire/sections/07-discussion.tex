@@ -1,29 +1,47 @@
 \section{Discussion \& Limitations}
 \label{sec:discussion}
 
-The intended benefit of monodromy is semantic stability under shared continuous
-adaptation. It protects an executable sheet action over a certified region,
-while leaving geometric implementation choices available for learning. Whether
-this freedom improves acquisition or resource use depends on the task and on
-the cost of finding, executing, and maintaining the region. An ordinary
-constraint method may exploit exactly the same freedom; the comparison must
-therefore measure a residual computational benefit rather than attach value
-to a topological description alone.
+The current Block makes computational operations and their invocation explicit
+within a trainable continuous system. Its contextual sequence development run
+shows that terminal supervision can train useful nonlinear state updates and
+calling behavior. The same-size static-caller model is also strong. Because
+that control still gives the primitives and memory full contextual inputs,
+these observations do not isolate a benefit of dynamic calling. The useful
+next mechanistic question is which learned primitive functions, memory reads
+and invocation decisions account for the acquired computation, and whether
+those roles remain reusable when task demands change.
 
-Several interfaces remain consequential. Stable operations can be called
-incorrectly after an encoder or router changes. The native relation and
-finite-length soft condition address this distinction, but checking them may
-be expensive or conservative. The current integrated diagnostic uses a supplied
-finite covering, small state space, bounded programs, and a supplied old
-capability. It does not establish autonomous substrate discovery, unbounded
-capability growth, or a general-purpose learning architecture. Reversible
-lifts broaden logical expressivity only by paying for auxiliary state and
-cleanup; a large configuration space is not itself a large parameter count.
+Parameter-matched character development makes the comparison more specific.
+After the same 300 updates, the 41,593-parameter dynamic Block has sampled
+perplexities 12.458, 12.468 and12.496 at contexts 32, 64 and 128, respectively.
+The static variant has 12.383, 12.452 and12.436. The 43,300-parameter Transformer
+has 12.803, 49.837 and48.409, while the 41,548-parameter GRU has approximately
+10.090 across these contexts. Context 64 is the designated unseen-length split
+and context 128 the long split. These are 512 paired sampled positions per split,
+not whole-corpus or word-level perplexities. They show a stable contextual
+behavior for the tested Block but also a stronger recurrent control. The
+Transformer's long-prefix result characterizes this configuration and budget,
+not the whole architecture family. Matching parameters does not match
+training work, forward cost or transient memory.
 
-A useful architecture must preserve the same core across new computational
-and real-data tasks, with honest costs for input adaptation and memory. The
-primary benchmark therefore waits for a validated complete Block and a frozen
-implementation. Existing negative results, ordinary-method correspondences,
-and failed training runs remain evidence for developing that Block, rather
-than being removed from its history or treated as conclusions about all
-topological learning systems.
+Initial real-input diagnostics expose a further gap. With the first ten
+official classes, at most 128 training examples per class and 300 updates,
+the speech Block has approximately 29.77\% soft and 22.19\% hard-call accuracy,
+compared with 76.48\% for the larger Transformer. The image Block obtains
+approximately 42.1\% and 30.4\%, respectively, compared with 49.9\% for the
+Transformer. Their Block parameter counts are 32,280 and 40,793; the Transformer
+counts are 105,379 and 110,116. These static development tests exercise the
+same core through learned adapters. They do not yet test full-class continual
+recognition, and the soft/hard gaps show that inference selection remains a
+material architectural choice.
+
+The central remaining obligation is continual acquisition with complete
+retention and resource accounting. The continuous Block currently resets
+per-example memory, recomputes observed prefixes and has no general shared-update
+protection certificate. Earlier finite monodromy and binding-closure results
+retain their narrower scope in the appendix. Any integration must explain
+what operation or task relation is protected in the new state space and
+measure its benefit against ordinary constraints. An independent new primitive
+is not a prerequisite for an important empirical result; a broad reproducible
+advantage still requires a frozen architecture, strong appropriate controls,
+and the full evaluation rather than a favorable subset of development scores.

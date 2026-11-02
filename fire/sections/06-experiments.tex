@@ -1,9 +1,10 @@
 \section{Experiments}
 \label{sec:experiments}
 
-Our evaluation asks whether learning executable topological operations improves
-continual acquisition, retention, or resource use beyond conventional learning
-and protection. The primary experimental object is the latest fully fused
+Our evaluation asks whether contextual computational primitives improve
+acquisition, retention, or resource use relative to strong conventional
+architectures. Topological components receive a separate causal test when
+included. The primary experimental object is the latest fully fused
 Prometheus architecture after general Block validation. Monodromy is an
 optional component selected by measured benefit; its independent advantage
 is not a prerequisite for the Primary freeze. Its core mechanism,
@@ -13,6 +14,106 @@ Primary are available at the present manuscript checkpoint. Earlier coordinate-r
 streams and small integrated diagnostics are development evidence in
 Appendices~\ref{app:benchmarking} and~\ref{app:evidence}; they are not pooled
 with Primary results or used to supply its performance or efficiency claims.
+
+\subsection{Observed development results}
+
+We first tested the same continuous core on three-stage contextual programs,
+sampled character prediction, and initial real-input recognition. These are
+fixed-budget, single-seed development measurements, not formal Primary results.
+The context stream exposes raw tokens and an initial state, with terminal labels
+but no task identifier, correct route, or intermediate state. Training lengths
+are 2--12; separate tests use lengths 24--48 and structured unseen compositions.
+Each phase uses 600 updates of 64 examples. Actual phase-0 weights, Adam state,
+and RNG were restored for later phases; phase0 was not retrained.
+
+\begin{table}[t]
+\centering\small
+\begin{tabular}{lrrrrr}
+\toprule
+Model & Parameters & Task0 & Task1 & Task2 & Train s\\
+\midrule
+Continuous dynamic &28,365&82.81&90.23&91.99&92.21\\
+Continuous static caller &28,365&81.45&94.92&94.14&79.12\\
+GRU44 &25,572&93.95&95.90&93.36&10.25\\
+Transformer32 &26,728&48.63&79.30&83.01&13.76\\
+\bottomrule
+\end{tabular}
+\caption{Final IID accuracy (\%) after three development phases, without
+replay. Train s sums actual gradient-step wall time, not total work or exclusive
+throughput. The static caller retains contextual primitives and memory.}
+\label{tab:development-context}
+\end{table}
+
+The dynamic model forgets part of task0 and does not uniquely outperform the
+static caller. Distribution checks are essential: a TRAIN-majority constant
+predictor scores 69.73\% on task2's long test, equal to the dynamic model's
+69.73\%. Its structured-unseen scores are 25.78\% and 25.98\%, respectively.
+Thus high IID accuracy alone does not establish general memory computation.
+
+All-token character development uses 300 updates of 32 length64 windows,
+614,400 next-character labels per method. A causal-mask Transformer and GRU
+receive identical windows and batches. Future-token perturbations test actual
+causality before training. The 512 frozen TEST endpoints are paired across
+lengths64/128/256; length comparisons score the same final 64 labels. These are
+sampled-window character PPLs, not full-corpus or word-level PPLs.
+
+\begin{table}[t]
+\centering\small
+\begin{tabular}{lrrrrr}
+\toprule
+Model &P&PPL64&Train s&Driver s&Forward G MAC\\
+\midrule
+Dynamic &41,593&10.358&75.96&119.47&21.715\\
+Static &41,593&10.306&75.24&118.74&21.715\\
+Detached &41,593&10.243&74.07&114.41&21.715\\
+Transformer36 &39,664&10.533&6.75&12.26&29.816\\
+GRU44 &32,660&8.664&2.49&7.96&16.977\\
+\bottomrule
+\end{tabular}
+\caption{Actual all-token language development. Driver time includes measured
+evaluation/checkpoint work but excludes process startup. MAC proxies count
+training forwards only, not backward or total FLOPs; all raw costs are retained.}
+\label{tab:development-ar-cost}
+\end{table}
+
+With contexts of 64, 128, and 256 characters, dynamic common-suffix PPL is
+10.358, 10.251, and 10.253; Transformer yields 10.533, 15.185, and 14.736,
+and GRU yields 8.664, 8.552, and 8.552. Stability under longer
+inputs alone does not prove useful distant-memory use. The earlier terminal-prefix
+protocol and serial eager/hard-call inference audits remain separately reported
+in the appendix and are not pooled into this new protocol. They show no
+hard-call speedup. Cached streaming serving has not been established.
+
+\begin{table}[t]
+\centering\small
+\begin{tabular}{lrrrr}
+\toprule
+Model &Speech acc.&Image acc.&Speech/image P&Train s (S/I)\\
+\midrule
+Dynamic &29.77&42.10&32,280/40,793&97.51/66.28\\
+Static caller &71.17&40.10&32,280/40,793&98.49/66.05\\
+Detached &69.38&39.00&32,280/40,793&97.84/65.97\\
+GRU64 &76.25&44.60&54,819/59,556&1.60/1.92\\
+Transformer64 &76.48&49.90&105,379/110,116&7.92/7.85\\
+CNN &59.77&44.30&35,683/38,852&.96/1.05\\
+\bottomrule
+\end{tabular}
+\caption{Initial Speech Commands/CIFAR-100 development TEST accuracy (\%).
+Each uses the first 10 official classes, 128 TRAIN examples per class, common
+features and 300 updates. Full 35/100-class heads are charged. This is not yet
+full-dataset or class-incremental validation. Training wall times reflect the
+original recorded possible concurrency, not isolated throughput.}
+\label{tab:development-real}
+\end{table}
+
+The detached variant preserves the dynamic forward rule and parameter count,
+but stops only the caller-input gradients from state and memory. CPU autograd
+checks verify this intervention. It improves the poor speech optimization
+trajectory, while not improving the image result; it is not a general solution.
+Training and evaluation work, optimizer state, input caches, and failed
+versions are recorded separately. The current Python-unrolled Block is slower
+than the competitors despite smaller forward MAC proxies. Consequently these
+observations do not establish a broad capability or complete-resource advantage.
 
 \subsection{Questions and comparison conditions}
 
@@ -75,7 +176,7 @@ merging or erasing operations, continuous inputs/outputs, and variable-length
 execution. Reversible lifting, extra workspace, or external memory counts
 toward resources rather than making irreversibility free.
 
-Speech Commands v2 uses 35 classes in seven phases of five, the official
+The following formal protocol remains prospective. Speech Commands v2 uses 35 classes in seven phases of five, the official
 train/validation/test split, and common 16-kHz preprocessing. Split CIFAR-100
 uses 100 fine classes in ten phases of ten, the official 50,000 training and
 10,000 test images, and a fixed class-stratified 10\% training holdout for

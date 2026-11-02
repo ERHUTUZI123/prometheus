@@ -1,0 +1,54 @@
+{
+  "before_execution": true,
+  "name": "parameter-real-cifar-block_detached-300-v1-token64",
+  "scope": "first10 officialclasses REAL-DEVELOPMENT only; not full benchmark or frozenPrimary",
+  "args": {
+    "prepare": false,
+    "dataset": "cifar",
+    "arm": "block_detached",
+    "revision": "v1",
+    "token_width": 64
+  },
+  "source_sha256": {
+    "real_feature_development.py": "3f854c07e66bf8b6a58e47e3bfc13b1ea0b215731a7136706b6d41aaebd1cc2d",
+    "dev_dataset_readers.py": "63ec2f4cda73bfacdd28923569ad46a72940f4b1fb5a833068f329ba0185fb6f",
+    "continuous_primitive_block.py": "f67e448dd393a8f7c7d0e988bab3812cbae21e0ff7b4ffe7691f87213f36b13f"
+  },
+  "TRAIN_cap_per_class": 128,
+  "VALID_cap_per_class": 64,
+  "TEST_cap_per_class": 128,
+  "output_head": 100,
+  "updates": 300,
+  "batch_size": 64,
+  "optimizer": "Adam.003",
+  "features": "same shared TRAIN-normalized logmel40 or64 RGBpatches48 for ALLmodels; no taskID/teacherroute",
+  "evaluation": "TRAIN/VALIDcurves, TESTafterfinaldiskfreeze; actualNNreload; noaccuracyvaliditygate",
+  "costs": "allP,datacache/inputadapter/memory, actualtraining/inference/proxyMAC, preprocessing separately; concurrentwallnotisolatedranking",
+  "outside_seconds": 900,
+  "inside_seconds": 850,
+  "interface_width_ablation": {
+    "token_width": 64,
+    "label": "interface_width_and_capacity",
+    "changes": "inputprojection output AND core token_dim; caller/expert/read/write input dimensions and P/MAC all change",
+    "fixed": "H64,rank8,K4,memory8,key16,slot1,300x64 batches,Adam.003,clip1,same feature cache",
+    "rationale": "architectural rank16 constraint plus existing TRAIN/VALID; static16 Speech success rules out rank as sole dynamic/static explanation",
+    "causal_scope": "not a pure frontend-rank causal test; no teacher operation/call",
+    "selection": "prospective bounded interface-width diagnostic; no TEST-based hyperparameter selection"
+  },
+  "source_origins": {
+    "real_feature_development.py": "/Users/xiaoyangliu/Desktop/prometheus/.deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/real_feature_development.py",
+    "dev_dataset_readers.py": "/Users/xiaoyangliu/Desktop/prometheus/.deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/dev_dataset_readers.py",
+    "continuous_primitive_block.py": "/Users/xiaoyangliu/Desktop/prometheus/.deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/versions/real-interface-width-beforechange-v1/continuous_primitive_block.py"
+  },
+  "beforechange_source_archive": {
+    "path": "/Users/xiaoyangliu/Desktop/prometheus/.deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/versions/real-interface-width-beforechange-v1",
+    "manifest_sha256": "56d404bd41357ce1c9c9d3467cad7490b841195f6754f9b453caed0fe4315d28"
+  },
+  "credit_ablation": {
+    "hypothesis": "recurrent CALL input Jacobian may destabilize credit; not yet identified cause",
+    "rule": "CALL sees actual h/read values; detach ONLY h/read at CALL inputs; x and caller/expert/read/write gradients remain",
+    "parameters": "identical to dynamic/static at SAME token-width; token64 has moreP than16",
+    "feedback_budget": "same cached examples/common minibatches/300updates; no teacher route or data change",
+    "interpretation": "targeted optimizer-credit ablation; not a bugfix or topology-specific advantage"
+  }
+}

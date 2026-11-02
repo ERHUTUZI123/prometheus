@@ -1,0 +1,35 @@
+{
+  "before_execution": true,
+  "name": "parameter-real-cifar-block_detached-300-v2",
+  "scope": "first10 officialclasses REAL-DEVELOPMENT only; not full benchmark or frozenPrimary",
+  "args": {
+    "prepare": false,
+    "dataset": "cifar",
+    "arm": "block_detached",
+    "revision": "v2"
+  },
+  "source_sha256": {
+    "real_feature_development.py": "4623c17bbef9e46174e8f1760883c06861945fcdda23917b325ad7cc099a0b6d",
+    "dev_dataset_readers.py": "63ec2f4cda73bfacdd28923569ad46a72940f4b1fb5a833068f329ba0185fb6f",
+    "continuous_primitive_block.py": "f67e448dd393a8f7c7d0e988bab3812cbae21e0ff7b4ffe7691f87213f36b13f"
+  },
+  "TRAIN_cap_per_class": 128,
+  "VALID_cap_per_class": 64,
+  "TEST_cap_per_class": 128,
+  "output_head": 100,
+  "updates": 300,
+  "batch_size": 64,
+  "optimizer": "Adam.003",
+  "features": "same shared TRAIN-normalized logmel40 or64 RGBpatches48 for ALLmodels; no taskID/teacherroute",
+  "evaluation": "TRAIN/VALIDcurves, TESTafterfinaldiskfreeze; actualNNreload; noaccuracyvaliditygate",
+  "costs": "allP,datacache/inputadapter/memory, actualtraining/inference/proxyMAC, preprocessing separately; concurrentwallnotisolatedranking",
+  "outside_seconds": 900,
+  "inside_seconds": 850,
+  "credit_ablation": {
+    "hypothesis": "recurrent CALL input Jacobian may destabilize credit; not yet identified cause",
+    "rule": "CALL sees actual h/read values; detach ONLY h/read at CALL inputs; x and caller/expert/read/write gradients remain",
+    "parameters": "identical to dynamic/static",
+    "feedback_budget": "same cached examples/common minibatches/300updates; no teacher route or data change",
+    "interpretation": "targeted optimizer-credit ablation; not a bugfix or topology-specific advantage"
+  }
+}

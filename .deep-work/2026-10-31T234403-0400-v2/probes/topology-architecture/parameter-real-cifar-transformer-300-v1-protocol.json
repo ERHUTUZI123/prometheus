@@ -1,0 +1,28 @@
+{
+  "before_execution": true,
+  "name": "parameter-real-cifar-transformer-300-v1",
+  "scope": "first10 officialclasses REAL-DEVELOPMENT only; not full benchmark or frozenPrimary",
+  "args": {
+    "prepare": false,
+    "dataset": "cifar",
+    "arm": "transformer",
+    "revision": "v1"
+  },
+  "source_sha256": {
+    "real_feature_development.py": "857969e744f82e92af6cde0d83811c194fcd1408987faebb1519ee153fcef884",
+    "dev_dataset_readers.py": "63ec2f4cda73bfacdd28923569ad46a72940f4b1fb5a833068f329ba0185fb6f",
+    "continuous_primitive_block.py": "8deca750f622c1e238d87219ef9e00c7d32d186214ac64896d428ba1ae6ea12d"
+  },
+  "TRAIN_cap_per_class": 128,
+  "VALID_cap_per_class": 64,
+  "TEST_cap_per_class": 128,
+  "output_head": 100,
+  "updates": 300,
+  "batch_size": 64,
+  "optimizer": "Adam.003",
+  "features": "same shared TRAIN-normalized logmel40 or64 RGBpatches48 for ALLmodels; no taskID/teacherroute",
+  "evaluation": "TRAIN/VALIDcurves, TESTafterfinaldiskfreeze; actualNNreload; noaccuracyvaliditygate",
+  "costs": "allP,datacache/inputadapter/memory, actualtraining/inference/proxyMAC, preprocessing separately; concurrentwallnotisolatedranking",
+  "outside_seconds": 900,
+  "inside_seconds": 850
+}

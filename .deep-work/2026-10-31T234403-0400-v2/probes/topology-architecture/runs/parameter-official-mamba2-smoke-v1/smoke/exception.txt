@@ -1,0 +1,77 @@
+Traceback (most recent call last):
+  File "/workspace/prometheus-v2-m0-architecture/code-parameter-official-mamba2-smoke-v1/official_mamba2_smoke.py", line 131, in main
+    stage = "cold_forward"; sync(); tick = time.perf_counter(); output = model(x); sync()
+                                                                         ^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/prometheus-mamba231-r1/mamba_ssm/modules/mamba2.py", line 244, in forward
+    y = mamba_chunk_scan_combined(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/prometheus-mamba231-r1/mamba_ssm/ops/triton/ssd_combined.py", line 643, in mamba_chunk_scan_combined
+    return MambaChunkScanCombinedFn.apply(x, dt, A, B, C, chunk_size, D, z, dt_bias, initial_states, seq_idx, cu_seqlens, dt_softplus, dt_limit, return_final_states, return_varlen_states)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/autograd/function.py", line 576, in apply
+    return super().apply(*args, **kwargs)  # type: ignore[misc]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/prometheus-mamba231-r1/mamba_ssm/ops/triton/ssd_combined.py", line 602, in forward
+    out, out_x, dt_out, dA_cumsum, states, final_states, *rest = _mamba_chunk_scan_combined_fwd(x, dt, A, B, C, chunk_size, D=D, z=z, dt_bias=dt_bias, initial_states=initial_states, seq_idx=seq_idx, cu_seqlens=cu_seqlens, dt_softplus=dt_softplus, dt_limit=dt_limit)
+                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/prometheus-mamba231-r1/mamba_ssm/ops/triton/ssd_combined.py", line 374, in _mamba_chunk_scan_combined_fwd
+    dA_cumsum, dt = _chunk_cumsum_fwd(dt, A, chunk_size, dt_bias=dt_bias, dt_softplus=dt_softplus, dt_limit=dt_limit)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/prometheus-mamba231-r1/mamba_ssm/ops/triton/ssd_chunk_state.py", line 728, in _chunk_cumsum_fwd
+    _chunk_cumsum_fwd_kernel[grid_chunk_cs](
+  File "/usr/local/lib/python3.12/dist-packages/triton/runtime/jit.py", line 390, in <lambda>
+    return lambda *args, **kwargs: self.run(grid=grid, warmup=False, *args, **kwargs)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/triton/runtime/autotuner.py", line 239, in run
+    benchmark()
+  File "/usr/local/lib/python3.12/dist-packages/triton/runtime/autotuner.py", line 228, in benchmark
+    timings = {config: self._bench(*args, config=config, **kwargs) for config in pruned_configs}
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/triton/runtime/autotuner.py", line 160, in _bench
+    return self.do_bench(kernel_call, quantiles=(0.5, 0.2, 0.8))
+           ^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/functools.py", line 995, in __get__
+    val = self.func(instance)
+          ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/triton/runtime/autotuner.py", line 121, in do_bench
+    return driver.active.get_benchmarker()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/triton/runtime/driver.py", line 30, in __getattr__
+    return getattr(self._initialize_obj(), name)
+                   ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/triton/runtime/driver.py", line 26, in _initialize_obj
+    self._obj = self._init_fn()
+                ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/triton/runtime/driver.py", line 12, in _create_driver
+    return active_drivers[0]()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/triton/backends/nvidia/driver.py", line 715, in __init__
+    self.utils = CudaUtils()  # TODO: make static
+                 ^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/triton/backends/nvidia/driver.py", line 65, in __init__
+    library_dirs=library_dirs(),
+                 ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/triton/backends/nvidia/driver.py", line 46, in library_dirs
+    return [libdevice_dir, *libcuda_dirs()]
+                            ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/triton/backends/nvidia/driver.py", line 25, in libcuda_dirs
+    libs = subprocess.check_output(["/sbin/ldconfig", "-p"]).decode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/usr/lib/python3.12/subprocess.py", line 1885, in _execute_child
+    self.pid = _fork_exec(
+               ^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted

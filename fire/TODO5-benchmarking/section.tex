@@ -280,3 +280,102 @@ Actual original-source reading and adaptation boundaries for DEN are in
 The governing prospective benchmark protocol is \path{ALL.md}, TODO~5, with
 the latest explicit human directives controlling architecture identity and
 accuracy-independent configuration validity if older wording conflicts.
+
+
+\subsection{Observed continuous-core development: parameters and full cost}
+
+All new development reports jointly expose parameters and relevant computational
+cost. Forward MAC proxies exclude backward, optimizer, indexing and
+normalization; they are not total training FLOPs. Energy and end-to-end serving
+latency are unmeasured, not zero. Nested timing fields are not added twice.
+
+\begin{longtable}{lrrrrr}
+\toprule
+All-token model & P & PPL64 & Train s & Driver s & Forward G MAC\\
+\midrule
+Dynamic &41,593&10.358&75.96&119.47&21.715\\
+Static &41,593&10.306&75.24&118.74&21.715\\
+Detached &41,593&10.243&74.07&114.41&21.715\\
+Transformer36 &39,664&10.533&6.75&12.26&29.816\\
+GRU44 &32,660&8.664&2.49&7.96&16.977\\
+\bottomrule
+\end{longtable}
+These actual runs use300 updates of32 length64 windows:614,400 next-character
+label observations per method. This is a separate protocol from the earlier
+19,200 terminal-prefix labels. All-token and common-suffix NLL vectors, input
+hashes, actual checkpoints, Adam state and curves are preserved. Driver time
+includes measured validation, test and audit work but is not a complete machine
+startup time; external runner receipts include import/CUDA overhead. Training
+wall times were collected under the recorded possible concurrency and are not
+exclusive-throughput rankings. Optimizer bytes are332,844 for each Block,
+317,476 for Transformer, and261,324 for GRU; allocated buffers, input cache,
+checkpoint files and allocator peaks are separately reported in
+\path{alltoken-parameter-complete-cost-evidence-v1.json} within the campaign
+probe directory. The GRU result is a strong concrete alternative, not an
+accuracy-gated baseline.
+
+The64-dimensional real-input interface adds10,560P on speech and10,944P on
+images, to42,840/51,737P. Actual dynamic TEST accuracy is72.27\%/42.20\%,
+versus the previous16-dimensional29.77\%/42.10\%; static speech already
+achieved71.17\% with32,280P. Thus additional capacity and gradient dynamics
+must be distinguished, and none of these changes demonstrates a broad resource
+win. All six interface-width runs, all earlier failures and strong controls
+remain separate records, not selected best-of-run Primary statistics.
+
+The context Replay128 intervention keeps600 updates and64 examples per batch,
+using48 current and16 stored old examples. The total128-row raw/provenance
+buffer costs55,296B in each arm; duplicates consume capacity and are disclosed.
+Actual old-task0 final IID rises from82.81\% to94.14\% for the dynamic Block,
+versus96.68\% for GRU with the same buffer. Formation/search is absent from this
+fixed-bank variant; this fact does not erase the historical discovery cost of
+other variants or the costs of development and failed executions.
+
+\paragraph{Memory dependence and measurement scope.}
+A frozen28,365P context checkpoint underwent36 VALID-only interventions,
+with9,216 label evaluations and zero learning. Third-stage soft/balanced
+accuracy was95.31\%/90.28\% intact,82.81\%/62.63\% with zero readout,
+and87.89\%/74.03\% after value-only slot rotation. Joint key/value rotation
+preserved all predictions, with floating-point probability differences retained.
+All extra read/instrumentation work and the first failed logging attempt are
+charged. This establishes frozen execution dependence on learned key--value
+pairing, not improved acquisition or retention. The earlier unseen skeletons
+can erase the effect of an intermediate read; they do not independently
+establish two-address composition. A new prospective live-read protocol is
+being constructed without altering the earlier data or results.
+
+\paragraph{Figure provenance.}
+The following plots are generated from fixed JSON/JSONL bytes and retain their
+original protocols. In particular, the character figure is the earlier
+terminal-prefix experiment, not the new all-token table. Source bytes, plotted
+arrays/CSV, failed-run inventory and hashes accompany
+\path{parameter-development-figures-v1}. No plot carries across-seed confidence
+bands because these are single development trajectories.
+
+\begin{figure}[p]
+\centering\includegraphics[width=\linewidth]{figures/development-20261102/context_task0_retention.pdf}
+\caption{Actual contextual old-task VALID curves, without replay. Open stage
+boundary points and transient forgetting are retained. This is not Primary.}
+\end{figure}
+\begin{figure}[p]
+\centering\includegraphics[width=\linewidth]{figures/development-20261102/context_final_three_tasks.pdf}
+\caption{Three-task contextual development, separate IID, unseen-composition
+and long-sequence outcomes. Target skew and overwritten-read limitations apply.}
+\end{figure}
+\begin{figure}[p]
+\centering\includegraphics[width=\linewidth]{figures/development-20261102/lm_probability_and_inference.pdf}
+\caption{Earlier terminal-prefix character protocol: paired512 target positions
+and frozen serial inference. Hard CALL retains continuous probability readout.
+This figure is not pooled with the all-token protocol.}
+\end{figure}
+\begin{figure}[p]
+\centering\includegraphics[width=\linewidth]{figures/development-20261102/real_data_learning_and_accuracy.pdf}
+\caption{First-ten-class real-data development at16-dimensional Block interfaces:
+actual training/validation curves and frozen TEST results, including detached
+credit ablation. Not full-class or continual real-data validation.}
+\end{figure}
+\begin{figure}[p]
+\centering\includegraphics[width=\linewidth]{figures/development-20261102/real_data_resources.pdf}
+\caption{Parameters, actual concurrent training wall time, and forward-MAC
+proxies for the same first real-data development runs. Full storage/cost records
+remain separate; smaller MAC counts did not imply faster execution.}
+\end{figure}

@@ -1,3 +1,45 @@
+## ACTIVE recovery after actual interruption — 2026-11-02T05:13:59.419914+00:00
+
+Same V2, latesthuman sixTODO/competitive-architecture goal; Monodromyoptional,PrimaryNOTfrozen. Latesthuman all experiments jointlyP+completecost deployedAGENTS/ALL/Method, notjustaccuracy. Earlierimmutable checkpoint paragraphs below are history where superseded.
+
+AlltokenproperAR fivearms ACTUALLY completed300updates/614400labels, allSHA-synced: dynamic41593P/PPL64=10.35835/train75.96s; static41593/10.30601/75.24s; detached41593/10.24277/74.07s; TF36 39664/10.53295/6.75s; GRU44 32660/8.66407/2.49s. Fullledger alltoken-parameter-complete-cost-evidence-v1.json/CSV. PrefixoldprotocolNOTpooled. Sixrealinterface64runsallcompleted/hashsynced; Speechdynamic42840P .722656 vsTF105379 .764844; CIFARdynamic51737P .422 vsTF110116 .499, extraP/costreported. NoPrimaryorbroadsuccess.
+
+Memoryaudit-v1failedafter1completedfullread due loggerduplicatewall_seconds; v2fixONLYloggingkey completed36VALIDinterventions0SGD/9216labelscored,weightsunchanged/hashverified. stage2full .953125/balanced .902806,zero .828125/.626332,value-onlyroll .878906/.740263,jointKVrollfullaccuracy/nochangedpred. Actualnontrivialmemorydependence, notdeadslots. Review044 independentagentverifyingraw; actualnewtaskunseenoldREADoverwrittenanalyticallyandNPZconfirmed, so NEWlive-twoaddressfourthstagecounterfactualdatasetbeingimplemented (olddataunchanged).
+
+Interruption ended oldnativeagents; newrootcompiler_exception,evidence_resume_review,live_memory_stage created with scopedbriefs. No oldmissingreviewsreconstructed. RootsoleSSH/launcher/Method. Existingtrainingallfinished; no confirmedactiveGPUtraining now; code+costreviewiscurrentwork. No after-hostpromise.
+
+HUMANactuallyapproved restrictedcompilerexception; inputs/compiler-exception-authorization-20261102.json. OfficialMamba2 exact231installed/fullimportsuccess,coldstrictforwardfailedfork atldconfig(0updates). Now implementing stagedfixedSHAtrustedcompilerprologue withnecessaryELFloader underUID/offline/FS/resourcebounds, thenrestoreoriginalstrictTSYNCexec/forkdeny+zeroEXECLandlock,cleanupallcompilerdescendants BEFOREexperiment. No compileexecutionyet; draftnotvalidated. Actualhosttools/loaderhashinventories and installedTritondriver/knobsreadarchived. No unrelatedresource/paidAPIorpublication.
+
+Nextdirect actions: (1)actualboundedCPUlive-memorydata/NNvocabgrowthchecks thenfourthstage4armtraining; (2)independentreview044actualnewresults; (3)strictcompilerpolicynegativechecks+chargedofficialMambasmoke; (4)copyactualverifiedfiguresintofire andcompile/renderupdatedeightsectiondraft. Existingraw/code/weights/rejectionsretained. No formalPrimaryfreeze untilTODO3validated.
+
+## ACTIVE actual three-stage and credit-ablation checkpoint — 2026-11-02T04:47:41.931929+00:00
+
+Same V2, six TODOs, latest competitive-architecture human priority; Monodromy optional; Primary NOT frozen. All prior artifacts and permanent principles preserved. No campaign completion, no off-host continuation promise.
+
+ACTUAL four continuous-context lineages completedstages1/2 fromown actualphase0 weights/Adam/RNG, 1200newupdates each, phase0notrerun. Firstresume-v1 allfailedzero-update due interpreter-specific AST constants; original+new runtime AST actuallyequal. Guardconstant-onlyfix yielded all4resume-v2exit0 andlocalSHAverified. Final3taskIID:dynamic.828125/.902344/.919922;static.814453/.949219/.941406;GRU44.939453/.958984/.933594;TF32.486328/.792969/.830078. No persistent retention/Primary acceptance. Contextfrequency control: stage2longTRAINmajorityclass0 itself.697265625, SAMEasdynamiclong; structuredunseenmajority.2578125 vsdynamic.259765625. HighaccuracydoesNOTestablish learnedcomplexmemory. Dataunchanged; perstagecontrolsnotcontinualsolutions.
+
+Actualreal10arms5methods x2datasets completed300 each, hashverified. Speechdyn/static/GRU/TF/CNN TEST .29765625/.71171875/.7625/.76484375/.59765625. CIFAR .421/.401/.446/.499/.443. New credit-onlydetachedCALL architecture SAMEP, sameforward/gradcontracts actuallyCPUchecked, same300newtraining each:SpeechTEST.69375/VALID.7015625/TRAIN.73203125;CIFARresultcompletednotyetread. SameP rewardgradientablation is not yetnewPrimary. Rootcurrentcoref67e448..., oldb8a51phase0sourcesforresumption preserved. No hardcodedroutes/teachers/targetchanges.
+
+LMmatched300 results/serialinferenceaudits saved, GRU44betterPPL at~sameP; hardCALLnoobservedlatencyadvantage. OfficialMamba231exactwheelinstalledown/opt withpinneddependencies,globalTorch/Tritonunchanged;unmodifiedfullimportsuccess, firstcoldforwarddeniedfork_exec atldconfig.0updates. No isolationbypass/prewarm. Humanasyncrequest forrestrictedcompilerexceptionpending; otherworkcontinues.
+
+CURRENT boundedROOT job: Replay128fourarmseries launchedfromsameactualphase0(2concurrent).128rawrowreservoir,48new+16oldbatch,600sameupdates/stage, no newlabels. Checkactualreceiptbeforeassumingstillactive. Worker3preparingplots(noexperiments), worker1review043completedactualmath/code/raw, worker2Replayhelpercompleted. Allscientificexecutionsremainuid65534/offline/Landlock/seccomp,originalGPUselftaskcommexceptiononly. No unauthorizedpaidpath/publication/commit.
+
+NEXTdirectly: inspectReplayresults/sourcecosts; readCIFARdetachedactualresult; executefrozenplotsCPU; strengthencontinuousmemorylearningbasedonTRAIN/VALIDspecificfailure, do notexpandtestconditionsforbetterresults. FormalPrimarynotfreezablebeforecontextualmemory/retentionvalidation. CanonicalMethodwater/method.md, ResearchVisionREADMEunchanged.
+
+## ACTIVE continuous-core / real-data checkpoint — 2026-11-02T04:28:04.321587+00:00
+
+Latest human objective: broad reproducible strong-architecture capability AND complete resource advantage; sixTODOs; TODO3 contextual/content-memory/general-state highest, Monodromy optional, Primary NOT frozen. No guaranteed win. Baseline no accuracy gate; unchanged isolation and existing L40S. Formal full benchmarks after TODO3 acceptance/freeze. Online remains USER-PARK. Old results preserved; do not rerun completed stages.
+
+ACTUAL: new continuous64/rank8/K4/content-memory8 source b8a51 phase0 complete600updates: dynamicIID soft.994140625/native.951171875,long.609375/.39453125,unseen.85546875/.802734375; static .998046875/.923828125,long.734375/.453125,unseen.96484375/.71875. P28365, memory payload704float/sample. Static matches, no unique dynamicrouting benefit. Categorical identity-lock repairs failed, preserved. Same600 baseline TF64IID.609375,GRU64 1, referenceSSM .779297 (notofficialMamba2).
+
+LM300 actual continuousP41593 testPPL32/64/128 dynamic12.45828/12.46752/12.49623; static12.38315/12.45243/12.43575. TF64P119908=12.36183/62.07115/59.46470; GRU64P75748=9.80137 stable. Prefix development only, notfullcorpus/Primary. Param-matched TF36P43300 andGRU44P41548 actuallycompleted; contextTF32/GRU44completed, localsync inprogress. Do not infer scores until read. They costsame300/600, no outcome tuning.
+
+Four first real dev runs have confirmedGPU runnerexit0: speech blockdynamic/TF300; CIFAR blockdynamic/TF300. Bothdata preparations exit0. First10officialclasses, TRAIN128/class, full35/100head counted, samefeatures+batchfeedback. Raw/code/checkpoints beinghashsynced, actualmetrics pendingread. NOT full realbenchmark. Allthreepublicdatasets downloaded/prepared; publisherdigests verified. No true persistence for overlay assumed.
+
+Actual pending actions: worker topology_learning_principle adds trusted RESUME launcher forphase1/2 only. Driver e67d02131b9e072d6af82ced00077862452411689be0d29495cf3bef2d92a746 must pairwith EXACTold continuousb8a51module, notnew8deca embeddedAPI. RestoreNN/Adam/RNG, old600 costs retained/new1200 separate, noreplay. Otherworker prepares actual inference audit launcher usingoriginalsource+ownweights; no newtraining. Official Mamba v2.3.2.post1 wheelSHA checked, NOT installed/imported; dependency drift needs read-only compatibilitycheck (worker). No sandboxrelaxation/new paidpath.
+
+Root solelauncher. No currently confirmed active GPUtraining at this timestamp; prior4 realjobscomplete. Sync session80003 active; inspectactualprocessesbeforeclaimingjobs. Continueactive session, no after-hostbackgroundpromise, no campaigncomplete.
+
 ## ACTIVE human-updated competitive architecture checkpoint — 2026-11-02T03:43:33.206950+00:00
 
 The latest HUMAN directives explicitly supersede mandatory Topology/Monodromy in Primary. Keep six TODOs, TODO3 highest: context/state/history-dependent calling, content addressing, general/continuous/noninvertible state transforms and memory. Monodromy is optional; TODO2 no longer blocks freezing. Independent original fundamental rule is not a hard requirement. Broad significant reproducible strong-baseline capability AND complete-resource evidence is the empirical goal, not a promised outcome. Formal Primary still NOT frozen. Real-data development is now authorized immediately; formal results require frozen retraining. Original vision, permanent principles and all raw evidence remain; no new permissions/resources.

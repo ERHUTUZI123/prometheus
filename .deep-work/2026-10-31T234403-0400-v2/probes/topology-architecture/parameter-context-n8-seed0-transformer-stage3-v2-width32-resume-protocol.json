@@ -1,0 +1,114 @@
+{
+  "before_execution": true,
+  "scope": "same V2 development; NOT frozen Primary",
+  "name": "parameter-context-n8-seed0-transformer-stage3-v2-width32-resume",
+  "args": {
+    "data_only": false,
+    "arm": "transformer",
+    "states": 8,
+    "seed": 0,
+    "stages": 3,
+    "steps": 600,
+    "revision": "v2",
+    "block_initialization": "iid",
+    "block_training": "scheduled",
+    "straight_through_backward": "selected",
+    "block_state": "categorical",
+    "slots": 4,
+    "baseline_width": 32,
+    "resume_parent": "parameter-context-n8-seed0-transformer-stage1-v1-width32",
+    "resume_checkpoint": "transformer-stage0-step600.pt"
+  },
+  "source_sha256": {
+    "train_contextual_primitives.py": "2faecb8253d35c0ca98259cdffc1e07328dd08d93592ec430a3710115812c179",
+    "parent_train_contextual_primitives.py.source": "b50edbfa4033d18a1e785218dcb1c8b30b8bdc64f59c4a45574063c53c5360b3"
+  },
+  "source_origins": {
+    "train_contextual_primitives.py": "/Users/xiaoyangliu/Desktop/prometheus/.deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/train_contextual_primitives.py",
+    "parent_train_contextual_primitives.py.source": "/Users/xiaoyangliu/Desktop/prometheus/.deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/versions/code-parameter-context-n8-seed0-transformer-stage1-v1-width32/train_contextual_primitives.py"
+  },
+  "resume_lineage": {
+    "parent_run": "parameter-context-n8-seed0-transformer-stage1-v1-width32",
+    "parent_frozen_source_directory": "/Users/xiaoyangliu/Desktop/prometheus/.deep-work/2026-10-31T234403-0400-v2/probes/topology-architecture/versions/code-parameter-context-n8-seed0-transformer-stage1-v1-width32",
+    "parent_frozen_source_sha256": {
+      "contextual_primitive_block.py": "69dd848383e5bb67a45a23512881ea4276daaac0d51f2ed28c81bde8ad20e28a",
+      "train_contextual_primitives.py": "b50edbfa4033d18a1e785218dcb1c8b30b8bdc64f59c4a45574063c53c5360b3"
+    },
+    "parent_actual_source_sha256": {
+      "train_contextual_primitives.py": "b50edbfa4033d18a1e785218dcb1c8b30b8bdc64f59c4a45574063c53c5360b3"
+    },
+    "parent_driver_sha256": "b50edbfa4033d18a1e785218dcb1c8b30b8bdc64f59c4a45574063c53c5360b3",
+    "parent_checkpoint_leaf": "transformer-stage0-step600.pt",
+    "parent_checkpoint_sha256": "bc8cf0f36826b0ced007c3a39bfb6aea782926e41de8408d6e4436733fa7b885",
+    "parent_checkpoint_bytes": 400879,
+    "parent_checkpoint_receipt": {
+      "bytes": 400879,
+      "file": "transformer-stage0-step600.pt",
+      "sha256": "bc8cf0f36826b0ced007c3a39bfb6aea782926e41de8408d6e4436733fa7b885",
+      "wall_seconds": 0.009665245073847473
+    },
+    "parent_actual_configuration": {
+      "arm": "transformer",
+      "baseline_width": 32,
+      "block_initialization": "iid",
+      "block_state": "categorical",
+      "block_training": "scheduled",
+      "block_width": 64,
+      "data": "/opt/prometheus-parameter-context-n8-seed0-transformer-stage1-v1-width32-inputs/data",
+      "device": "cuda:0",
+      "lr": 0.003,
+      "max_seconds": 850.0,
+      "memory_slots": 8,
+      "out": "/workspace/prometheus-v2-m0-architecture/outputs/parameter-context-n8-seed0-transformer-stage1-v1-width32/learn",
+      "primitive_rank": 8,
+      "primitives": 4,
+      "resource_overlap_note": "coordinator must record actual concurrent jobs; no isolated-throughput claim",
+      "seed": 0,
+      "slots": 4,
+      "stages": 1,
+      "states": 8,
+      "steps": 600,
+      "straight_through_backward": "selected"
+    },
+    "parent_stage0_paid_updates": 600,
+    "parent_stage0_checkpoint_costs": {
+      "CUDA_stream_elapsed_seconds": 5.228063322067264,
+      "SGD_updates": 600,
+      "batch_assembly_wall_seconds": 0.6570451101288199,
+      "evaluation_CPU_seconds": 1.7345793589999987,
+      "evaluation_forward_MAC_proxy": 11521986560,
+      "evaluation_forward_examples": 30464,
+      "evaluation_wall_seconds": 1.7363128447905183,
+      "old_examples_used_for_training": 0,
+      "training_CPU_seconds": 5.36284050600001,
+      "training_examples": 38400,
+      "training_forward_MAC_proxy": 14663147520,
+      "training_wall_seconds": 5.350295940763317
+    },
+    "historical_cost_scope": "original parent retains post-freeze/inference/coordinator costs",
+    "first_new_stage": 1,
+    "new_stages": [
+      1,
+      2
+    ],
+    "new_updates_per_stage": 600,
+    "new_training_updates": 1200,
+    "old_phase0_updates_repeated": false,
+    "replay_examples": 0
+  },
+  "feedback": "identical observedinitial/rawtokens/terminal labels; no taskID/routes/intermediate or teacher operations",
+  "shared_step_budget": 600,
+  "previous_paid_training_updates": 600,
+  "new_training_updates": 1200,
+  "replay_examples": 0,
+  "proposal_config": "actual declared categorical/continuous state and calling semantics remain distinct",
+  "comparison": "actual matched baseline width/P; static differs only caller context; all failures retained",
+  "budget": {
+    "outside_seconds": 900,
+    "internal_seconds": 850,
+    "gpu_fraction": 0.3
+  },
+  "costs": "historical parent costs separate; new updates/time/P/optimizer/checkpoint/memory/proxyMAC/inference charged; no isolated-throughput claim",
+  "training_runtime": "existing uid65534,Landlock4+,TSYNCseccomp,offline; unchanged authorized GPU exception",
+  "acceptance": "no baseline score floor; no broad advantage or formal Primary claim"
+}

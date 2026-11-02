@@ -1,93 +1,85 @@
 \section{Prometheus Architecture}
 \label{sec:architecture-main}
 
-Prometheus is a candidate architecture in which a neural controller constructs
-executable operations, calls them on a persistent internal state, and retains
-their acquired meanings during subsequent learning. Its computational unit is a
-Block with a marked state interface, an operation bank, and learned input,
-calling, and output maps. The architecture separates the representation of an
-operation from the neural decision to invoke it, while training both through
-terminal task feedback. Repeated Blocks are intended to communicate through
-explicit state ports rather than independently classify intermediate outputs.
+Prometheus investigates a trainable computational Block whose internal
+operations, calls, and memory are learned together from task feedback. The
+current development architecture uses a continuous state, a bank of nonlinear
+residual primitives, and content-addressed memory. This revises the earlier
+categorical and loop-based implementations without transferring their
+protection guarantees to the new model. Its ingredients are established neural
+mechanisms; the question is whether their particular organization supports
+useful acquisition, composition, and retention at competitive total cost.
 
-\subsection{State and executable operations}
+\subsection{State, inputs, and executable primitives}
 
-A Block maintains neural parameters $\theta$, a logical state
-$q\in\{1,\ldots,D\}$, and a bank of based loops
-$\{\gamma_{k,\theta}\}_{k=1}^{K}$. A supplied covering
-$p:\mathcal E\rightarrow X$ has a fixed control basepoint $x_*$ and a marked
-$D$-element fiber. Lifting a loop transports the current marked state to another
-point of that fiber, defining an endpoint permutation
-$\Pi_k=\rho([\gamma_{k,\theta}])$. Consecutive calls carry the same state through
-their operations. Their order therefore determines a genuine composed
-computation, including when the endpoint actions do not commute.
+Let $h_{t,s}\in\mathbb R^H$ denote the state before call slot $s$ of input $t$.
+Memory contains keys $\mathsf K_t\in\mathbb R^{M\times Q}$ and values
+$\mathsf V_t\in\mathbb R^{M\times H}$. An observed initial-state identifier
+selects a learned embedding $h_{1,0}=E_\theta[x]$. Keys begin at a learned,
+task-independent matrix and values at zero for each example. There is no
+persistent memory across examples in this implementation.
 
-The bank stores operation inputs, source versions, and execution receipts.
-Endpoint maps are obtained from actual continuation and may subsequently be
-cached as derived computational state. Such reuse distinguishes a paid cold
-identification from a warm discrete application. A receipt certifying unchanged
-semantics does not assert that a newly deformed trajectory has been integrated.
-The numerical precision, domain checks, cache payload, and source observations
-are part of the execution interface.
-
-\subsection{Shared neural control and terminal learning}
-
-Shared features $h_\theta(e)$ feed both a loop head, producing raw path
-coordinates $a_\theta(e)$, and call heads, producing probabilities over bank
-entries and an identity operation. Learned encoder and readout logits define
-row-stochastic matrices $E_\theta$ and $R_\theta$. For a token $b_t$, optional
-public context $c$, and $S$ call slots, the differentiable computation is
+The raw input feature $u_t\in\mathbb R^T$ is a token embedding for symbolic
+inputs or the output of a learned modality adapter. A learned slot embedding
+gives $x_{t,s}=u_t+e_s$. All slots reuse the same primitive bank and caller.
+During a token, memory is fixed while the state changes. Each call computes
 \begin{align}
- \alpha_0&=E_\theta[x,:],\\
- A_{b_t,c}&=\prod_{s=1}^{S}
-       \left[\sum_{k=0}^{K}p_{\theta,s}(k\mid b_t,c)\Pi_k\right],
-       \qquad \Pi_0=I,\\
- p_\theta(y\mid x,b_{1:T},c)&=
-       [\alpha_0 A_{b_1,c}\cdots A_{b_T,c}R_\theta]_y.
+ r_{t,s}&=\operatorname{softmax}\!\left(
+   q_\theta(h_{t,s},x_{t,s})\mathsf K_t^\top/\sqrt Q\right)\mathsf V_t,
+   \\[-1mm]
+ \alpha_{t,s}&=\operatorname{softmax}
+   f_\theta(h_{t,s},x_{t,s},r_{t,s}),\\
+ z_{t,s}&=[h_{t,s};x_{t,s};r_{t,s}],\\
+ \delta_{t,s,k}&=U_k\operatorname{GELU}(D_k z_{t,s}+b_k),\\
+ h_{t,s+1}&=\operatorname{LayerNorm}\!\left(
+    h_{t,s}+\sum_{k=1}^{K}\alpha_{t,s,k}\delta_{t,s,k}\right).
  \label{eq:main-block-computation}
 \end{align}
-The matrices $\Pi_k$ are detached observations of executed loops. There is no
-additional trainable permutation-score tensor. Gradients through the smooth
-encoder, calls, and readout are combined with the class-boundary contribution
-derived in Section~\ref{sec:monodromy-learning-main}. Because the backbone is
-shared, either contribution can change several parts of the computation.
+Here $D_k\in\mathbb R^{R\times(2H+T)}$ and
+$U_k\in\mathbb R^{H\times R}$. Each primitive is an executable nonlinear
+state update with its own learned parameters. The bank has no supplied
+task-specific operation or explicit identity choice. A residual path replaces
+repeated row-stochastic state propagation; neither normalization nor low rank
+implies invertibility or exact preservation of information.
 
-The native interface selects the encoder, calls, and readout by their hard
-choices and executes the resulting program. Soft likelihood supplies learning
-credit; successful acquisition additionally requires a correct native program.
-The target specifies a terminal output, without supplying an intermediate
-state, desired loop, or correct call. Known substrate equations and any observed
-full-fiber actions are disclosed information available to comparison methods.
+\subsection{Content memory and composition}
 
-\subsection{Formation, retention, and extensibility}
+After the last call, write features concatenate the final state, raw input,
+and last read vector: $\bar z_t=[h_{t,S};u_t;r_{t,S-1}]$. Learned projections
+produce an address, gate, candidate key and candidate value:
+\begin{align}
+ a_t&=\operatorname{softmax}
+    (w_\theta(\bar z_t)\mathsf K_t^\top/\sqrt Q),
+       &g_t&=\sigma(g_\theta(\bar z_t)),\\
+ \widehat k_t&=\tanh(k_\theta(\bar z_t)),
+       &\widehat v_t&=v_\theta(\bar z_t).
+\end{align}
+With $\beta_{tj}=g_ta_{tj}$, each slot updates as
+\begin{equation}
+ (\mathsf K_{t+1,j},\mathsf V_{t+1,j})=
+ (1-\beta_{tj})(\mathsf K_{t,j},\mathsf V_{t,j})+
+ \beta_{tj}(\widehat k_t,\widehat v_t).
+\end{equation}
+The next token starts from $h_{t+1,0}=h_{t,S}$. Thus later calls depend on
+the actual intermediate computation and retained content. Order-sensitive
+composition follows from executing successive nonlinear updates; no
+commutativity constraint is imposed. The terminal distribution is
+$\operatorname{softmax}(W_Rh_{L,S}+b_R)$.
 
-An unadmitted entry can move between executable classes while terminal feedback
-shapes its controller and binding. Admission installs the acquired operation
-and its calling contract after deterministic execution and confidence checks.
-Later updates preserve admitted loop actions, the complete old
-input--call--readout relation, and agreement between the native and soft
-interfaces over a specified length range. The reference records the acquired
-mechanism rather than a teacher transition table. Subsequent compression or
-reuse must preserve that contract.
+The development configuration has $H=64$, $T=Q=16$, $M=8$, $K=4$, $R=8$ and
+one call per token. All dimensions are explicit resources, rather than counts
+inferred from a hidden task generator. A static-caller control zeros only the
+state and memory-read inputs to $f_\theta$; its primitives, memory, shapes and
+parameter count are unchanged. It therefore retains contextual computation
+and is stronger than a memoryless ablation.
 
-The proposed general Block includes typed ports for state expansion and
-auxiliary storage. Expansion requires an explicit correspondence between old
-and new states and compatible old operations. An irreversible logical update
-can use a reversible lift on the core and a fresh auxiliary register, with a
-projection defining its visible result. The consumed blank, retained garbage,
-and later cleanup are charged resources, following the established reversible
-computation construction~\cite{bennett1973logical}. Local factorization permits
-register storage without enumerating the entire history state space; efficient
-learning and execution still require their own construction. Continuous
-inputs and stacked Blocks additionally require compatible learned encodings
-and a specified protected input domain.
+\subsection{A common input interface}
 
-The tested integrated component instantiates the encoder, shared controller,
-calls, and loop bank in a fixed three-state covering. It provides an executable
-example of the learning interface. The broader architecture specifies the
-interfaces for growth, noninvertible computation, and composition across
-Blocks; validating their common implementation precedes the primary benchmark.
-That benchmark will freeze the complete architecture and retrain every method
-under the same five-layer evaluation protocol. Resource comparisons will count
-neural parameters together with auxiliary state, program and cache storage,
-formation queries, rejected proposals, protection, and cold and warm execution.
+Symbolic lookup and externally embedded inputs enter the same execution
+function. Audio features or image patches require a learned projection to
+$\mathbb R^T$, whose parameters and work are charged separately. No modality
+adapter supplies operations, calls, intermediate targets, or task identities.
+This common interface permits testing the same core across tasks; it does not
+by itself establish transfer or continual retention. The complete Primary
+architecture remains unfrozen, and present measurements are separately
+identified development evidence.
