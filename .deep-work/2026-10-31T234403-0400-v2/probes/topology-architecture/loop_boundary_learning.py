@@ -127,6 +127,13 @@ def loop_clearance(vertices: Sequence[complex], critical: Sequence[complex]) -> 
                for p, q in zip(points, points[1:]) for c in critical)
 
 
+def vertices_in_execution_box(vertices: Sequence[complex], limits: Limits) -> bool:
+    return (1 <= len(vertices) <= limits.max_vertices
+            and all(math.isfinite(v.real) and math.isfinite(v.imag)
+                    and max(abs(v.real), abs(v.imag)) <= limits.max_control_coordinate
+                    for v in vertices))
+
+
 class AffineLoopFamily:
     """Vertices = template + sum(action[j] * basis[j]); basepoint is always 0.
 
@@ -197,6 +204,7 @@ class SharedVertexController(nn.Module):
             raise ValueError("require operation-by-feature matrix")
         self.register_buffer("features", features_tensor)
         self.action_dim, self.hidden = int(action_dim), int(hidden)
+        self.forward_calls = 0
         if hidden:
             self.network = nn.Sequential(nn.Linear(features_tensor.shape[1], hidden),
                                          nn.Tanh(), nn.Linear(hidden, action_dim))
@@ -205,10 +213,23 @@ class SharedVertexController(nn.Module):
         self.double()
 
     def forward(self, operation: int) -> torch.Tensor:
+        self.forward_calls += 1
         return self.network(self.features[int(operation)])
 
     def action(self, operation: int) -> list[float]:
         return self(operation).detach().cpu().tolist()
+
+    def vertex_tensor(self, operation: int, family: AffineLoopFamily) -> torch.Tensor:
+        """Differentiable actual [M,2] vertex outputs from the shared NN.
+
+        The acquisition estimator differentiates affine action coefficients and
+        then chains through forward(). This equivalent tensor view makes the
+        continuous neural-to-geometric interface inspectable to lifecycle users.
+        """
+        action = self(operation)
+        template = action.new_tensor([[v.real, v.imag] for v in family.template])
+        basis = action.new_tensor([[[v.real, v.imag] for v in row] for row in family.basis])
+        return template + torch.einsum("a,amc->mc", action, basis)
 
     def configuration(self) -> dict[str, Any]:
         return {"features": self.features.detach().cpu().tolist(),
@@ -268,7 +289,7 @@ class CubicCoveringExecutor:
             raise ValueError("word length outside external process bounds")
         roots = list(self.base_roots)  # Marked initial roots, carried THROUGH calls.
         local_steps = 0
-        minimum_separation = math.inf
+        minimum_separation = min(abs(a - b) for i, a in enumerate(roots) for b in roots[i + 1:])
         minimum_clearance = math.inf
         max_residual = 0.0
         try:
@@ -404,13 +425,18 @@ class TerminalObjective:
         total = 0.0
         for example in self.examples:
             ledger.check()
-            ledger.add("feedback_calls")  # Reserve BEFORE the costly execution.
+            # Check quota before execution, but count the actual callback only
+            # after successful continuation. A failed lift is not feedback.
+            if ledger.counts.get("feedback_calls", 0) >= ledger.limits.max_feedback:
+                raise BudgetStop("terminal feedback quota exhausted before execution")
+            ledger.add("feedback_evaluation_attempts")
             actions = {op: list(overrides[op]) if op in overrides else self.controller.action(op)
                        for op in set(example.word)}
             ledger.add("controller_operation_outputs", len(set(example.word) - set(overrides)))
             loops = [self.family.vertices(actions[op]) for op in example.word]
             receipt = self.executor.execute(loops)
             observed = receipt["endpoint_map"][example.initial_sheet]
+            ledger.add("feedback_calls")
             started = time.perf_counter()
             loss = float(self.feedback(example, observed, receipt))
             ledger.elapsed("terminal_callback", started)
@@ -614,9 +640,12 @@ class ProtectedLoopSet:
     for the guard. Current old vertices are recomputed and transiently stored.
     """
 
-    def __init__(self, admitted: Iterable[int] = ()):
+    def __init__(self, admitted: Iterable[int] = (), policy: str = "clearance"):
+        if policy not in ("clearance", "executed_map"):
+            raise ValueError("unknown protection policy")
         self.admitted = set(int(op) for op in admitted)
         self.receipts: dict[int, dict[str, Any]] = {}
+        self.policy = policy
 
     def before(self, controller: SharedVertexController, family: AffineLoopFamily,
                executor: CubicCoveringExecutor) -> dict[int, tuple[tuple[complex, ...], float]]:
@@ -627,17 +656,44 @@ class ProtectedLoopSet:
             clearance = loop_clearance(vertices, executor.critical_controls)
             executor.ledger.add("protection_segment_checks",
                                 (len(vertices) + 1) * len(executor.critical_controls))
-            if clearance < executor.ledger.limits.min_control_clearance:
-                raise NumericalFailure("already admitted loop lacks executable clearance")
+            if (not vertices_in_execution_box(vertices, executor.ledger.limits)
+                    or clearance < executor.ledger.limits.min_control_clearance):
+                raise NumericalFailure("already admitted loop outside finite execution domain")
             snapshot[operation] = vertices, clearance
         return snapshot
 
     def accepts(self, controller: SharedVertexController, family: AffineLoopFamily,
                 snapshot: Mapping[int, tuple[tuple[complex, ...], float]],
-                ledger: CostLedger) -> bool:
+                executor: CubicCoveringExecutor) -> bool:
+        ledger = executor.ledger
         for operation, (old_vertices, clearance) in snapshot.items():
             ledger.add("protection_controller_outputs")
             current = family.vertices(controller.action(operation))
+            # Homotopy clearance alone only proves delta_new > 0. Preserve the
+            # executor's declared finite numerical margin/box as well, BEFORE
+            # committing a proposal. Otherwise an old class could be unchanged
+            # but no longer executable under the frozen numerical contract.
+            ledger.add("protection_new_domain_segment_checks",
+                       (len(current) + 1) * len(executor.critical_controls))
+            if (not vertices_in_execution_box(current, ledger.limits)
+                    or loop_clearance(current, executor.critical_controls)
+                       < ledger.limits.min_control_clearance):
+                return False
+            if self.policy == "executed_map":
+                # A verification-cost ablation, not the strongest generic rival:
+                # a generic optimizer may use the SAME analytic certificate.
+                # Endpoint-map equality can be MORE permissive than based-loop
+                # homotopy equality because pure braids have trivial permutation.
+                ledger.add("protection_old_map_reexecutions")
+                try:
+                    receipt = executor.execute([current])
+                except NumericalFailure:
+                    return False
+                target = self.receipts[operation]["actual_lift_receipt"]["endpoint_map"]
+                ledger.add("protection_map_entry_comparisons", len(target))
+                if receipt["endpoint_map"] != target:
+                    return False
+                continue
             displacement = max(abs(a - b) for a, b in zip(old_vertices, current))
             ledger.add("protection_vertex_comparisons", len(current))
             if not displacement < clearance:
@@ -685,9 +741,10 @@ def protected_parameter_step(controller: SharedVertexController, family: AffineL
                 family.require_support(controller.action(current_operation), sigma)
                 new_vertices = family.vertices(controller.action(current_operation))
                 ledger.add("current_clearance_checks")
-                current_regular = (loop_clearance(new_vertices, executor.critical_controls)
+                current_regular = (vertices_in_execution_box(new_vertices, ledger.limits)
+                                   and loop_clearance(new_vertices, executor.critical_controls)
                                    >= ledger.limits.min_control_clearance)
-                allowed = current_regular and protected.accepts(controller, family, snapshot, ledger)
+                allowed = current_regular and protected.accepts(controller, family, snapshot, executor)
             except NumericalFailure:
                 allowed = False
             if allowed:
@@ -789,6 +846,8 @@ def checkpoint_payload(controller: SharedVertexController, family: AffineLoopFam
             "state_capacity": 3, "encoding_readout": "fixed resting cubic sheets",
             "parameters_total": controller.parameter_count(),
             "feature_buffer_scalars": controller.features.numel(),
+            "controller_forward_calls_observed": controller.forward_calls,
+            "protection_policy": protected.policy,
             "optimizer": "explicit SGD; no Adam state in this diagnostic",
             "costs": ledger.snapshot(), "parameter_hash": controller.parameter_hash()}
 
@@ -797,12 +856,47 @@ def restore_checkpoint(payload: Mapping[str, Any]) -> tuple[SharedVertexControll
     controller = SharedVertexController(**payload["controller_configuration"])
     controller.load_state_dict(payload["state_dict"], strict=True)
     family = AffineLoopFamily.from_configuration(payload["family_configuration"])
-    protected = ProtectedLoopSet(int(op) for op in payload["primitive_bank"])
+    protected = ProtectedLoopSet((int(op) for op in payload["primitive_bank"]),
+                                policy=payload["protection_policy"])
     protected.receipts = {int(op): values["admission_receipt"]
                           for op, values in payload["primitive_bank"].items()}
     if controller.parameter_hash() != payload["parameter_hash"]:
         raise NumericalFailure("actual NN checkpoint parameter hash mismatch")
     return controller, family, protected
+
+
+def evaluate_observed_map_cache(protected: ProtectedLoopSet,
+                                examples: Sequence[ProgramExample],
+                                ledger: CostLedger,
+                                feedback: Feedback = zero_one_terminal_feedback) -> dict[str, Any]:
+    """Legal cheap digital rival/interface using ONLY already paid lift receipts.
+
+    Pure digital answers do not require geometric execution after identification.
+    This interface is available to every arm; its storage is explicit. These few
+    calls check semantics/counter costs, not an independent latency benchmark.
+    """
+    maps = {op: values["actual_lift_receipt"]["endpoint_map"]
+            for op, values in protected.receipts.items()}
+    if any(op not in maps for example in examples for op in example.word):
+        return {"available": False, "reason": "not all referenced operations admitted"}
+    loss_sum = 0.0
+    for example in examples:
+        ledger.add("feedback_calls")
+        state = example.initial_sheet
+        for operation in example.word:
+            state = maps[operation][state]
+            ledger.add("cached_native_primitive_applications")
+        receipt = {"execution": "digital composition of actually observed admission maps"}
+        loss = float(feedback(example, state, receipt))
+        if not math.isfinite(loss) or not 0 <= loss <= 1:
+            raise ValueError("cached native callback loss outside [0,1]")
+        loss_sum += loss
+        ledger.emit("cached_native_feedback", example=asdict(example),
+                    observed_sheet=state, loss=loss)
+    return {"available": True, "loss": loss_sum / len(examples),
+            "int64_payload_bytes": 8 * sum(len(values) for values in maps.values()),
+            "serialized_map_bytes": len(json.dumps(maps).encode()),
+            "scope": "paid maps then cheap digital calls; not a latency benchmark"}
 
 
 def _diagnostic_data() -> tuple[tuple[ProgramExample, ...], tuple[ProgramExample, ...]]:
@@ -833,6 +927,7 @@ def _sample_variance(values: Sequence[float]) -> float | None:
 def run_arm(mode: str, output: Path, limits: Limits, deadline: float,
             seed: int, sigma: float, learning_rate: float,
             gradient_draws: int, score_samples: int) -> dict[str, Any]:
+    arm_started = time.perf_counter()
     output.mkdir(exist_ok=False)
     stream = (output / "records.jsonl").open("x", encoding="utf-8")
     def write(record: dict[str, Any]) -> None:
@@ -840,18 +935,29 @@ def run_arm(mode: str, output: Path, limits: Limits, deadline: float,
         stream.flush()
     ledger = CostLedger(limits, deadline, writer=write)
     rng = random.Random(seed)
-    controller = SharedVertexController(((1., -1.), (1., 1.)), action_dim=1)
+    # Deliberately NONORTHOGONAL old/new features. A new-task gradient changes
+    # the old loop geometry too; retention is not obtained from an automatically
+    # frozen old output/nullspace direction. The chosen family still has a real
+    # compatible acquisition window. The discrete rival may choose a cheaper
+    # old-output-preserving fit instead, and that is a legitimate alternative.
+    controller = SharedVertexController(((1., 0.), (1., 1.)), action_dim=1)
     with torch.no_grad():
-        controller.network.weight.copy_(torch.tensor([[-1., 2.]], dtype=torch.float64))
+        controller.network.weight.copy_(torch.tensor([[-3., 4.]], dtype=torch.float64))
     family = AffineLoopFamily((1j, -1j), ((1 + 0j, 1 + 0j),))
     executor = CubicCoveringExecutor(ledger)
-    protected = ProtectedLoopSet()
+    protected = ProtectedLoopSet(policy="executed_map" if mode == "event_map_guard" else "clearance")
     kernel = RaisedCosineKernel(sigma)
     training, heldout = _diagnostic_data()
     objective = TerminalObjective(controller, family, executor, training)
     current_objective = lambda action: objective({1: action})
     results: dict[str, Any] = {"arm": mode, "status": "started", "seed": seed,
         "parameters_total": controller.parameter_count(), "sigma": sigma,
+        "protection_policy": protected.policy,
+        "representation_payload_bytes": {
+            "trainable_float64_weights": 8 * controller.parameter_count(),
+            "public_feature_buffer": 8 * controller.features.numel(),
+            "fixed_affine_template_basis": 16 * len(family.template) * (1 + family.dimension),
+            "additional_note": "receipts, maps, records and checkpoint bytes reported separately"},
         "feedback_contract": "same terminal records and full paid continuation observations",
         "ordinary_identity": "event and ordinary_event invoke the same generic boundary optimizer",
         "source": "fixed internally authored z^3-3z-u; no desired map supplied"}
@@ -897,6 +1003,7 @@ def run_arm(mode: str, output: Path, limits: Limits, deadline: float,
         for iteration in range(limits.max_updates):
             ledger.check()
             before_parameters = [p.detach().clone() for p in controller.parameters()]
+            old_vertices_before = family.vertices(controller.action(0))
             mean = controller.action(1)
             if mode == "discrete":
                 result = discrete_class_step(controller, family, executor, protected, 1,
@@ -920,6 +1027,8 @@ def run_arm(mode: str, output: Path, limits: Limits, deadline: float,
                    "new_action": controller.action(1), "old_action": controller.action(0),
                    "gradient": gradient, "accepted_scale": accepted_scale,
                    "shared_parameter_displacement": displacement,
+                   "old_loop_vertex_displacement": max(abs(a - b) for a, b in zip(
+                       old_vertices_before, family.vertices(controller.action(0)))),
                    "training_loss": training_loss, "old_loss": old_loss,
                    "parameter_hash": controller.parameter_hash(), "costs": ledger.snapshot()}
             trajectory.append(row)
@@ -938,6 +1047,7 @@ def run_arm(mode: str, output: Path, limits: Limits, deadline: float,
         results["final_old_loss"] = old_objective()
         results["final_actions"] = {str(op): controller.action(op) for op in (0, 1)}
         results["final_parameter_hash"] = controller.parameter_hash()
+        results["cached_native_interface"] = evaluate_observed_map_cache(protected, heldout, ledger)
 
         # Genuine current NN tensors, controller-input bank, and actual admission
         # receipts are saved; no fabricated native maps or generated target maps.
@@ -949,9 +1059,11 @@ def run_arm(mode: str, output: Path, limits: Limits, deadline: float,
         restored, restored_family, restored_protected = restore_checkpoint(restored_payload)
         ledger.add("checkpoint_reloads")
         restored_loss = TerminalObjective(restored, restored_family, executor, heldout)()
+        restored_old_loss = TerminalObjective(restored, restored_family, executor, old_examples)()
         results["checkpoint_reload"] = {
             "path": str(checkpoint), "parameter_hash_equal": restored.parameter_hash() == controller.parameter_hash(),
             "heldout_loss": restored_loss, "admitted_operations": sorted(restored_protected.admitted),
+            "old_loss": restored_old_loss,
             "bytes": checkpoint.stat().st_size}
         results["status"] = "completed_finite_diagnostic"
     except (BudgetStop, NumericalFailure) as error:
@@ -962,6 +1074,8 @@ def run_arm(mode: str, output: Path, limits: Limits, deadline: float,
         torch.save(checkpoint_payload(controller, family, protected, ledger),
                    output / "partial-checkpoint.pt")
     finally:
+        results["controller_forward_calls"] = controller.forward_calls
+        results["arm_wall_seconds"] = time.perf_counter() - arm_started
         results["costs"] = ledger.snapshot()
         write({"kind": "arm_end", **results})
         stream.close()
@@ -978,10 +1092,11 @@ def main() -> None:
     parser.add_argument("--gradient-draws", type=int, default=3)
     parser.add_argument("--score-samples", type=int, default=2)
     parser.add_argument("--sigma", type=float, default=2.0)
-    parser.add_argument("--learning-rate", type=float, default=1.0)
+    parser.add_argument("--learning-rate", type=float, default=2.0)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--arms", nargs="+", default=["event", "ordinary_event", "score", "discrete"],
-                        choices=["event", "ordinary_event", "score", "discrete"])
+                        choices=["event", "ordinary_event", "score", "discrete", "event_map_guard"],
+                        help="event_map_guard optionally reexecutes old maps; a protection-cost ablation")
     args = parser.parse_args()
     if args.out.exists():
         parser.error("--out must be a NEW directory")

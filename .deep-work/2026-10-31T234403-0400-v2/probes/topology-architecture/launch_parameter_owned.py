@@ -26,6 +26,8 @@ def main():
     p.add_argument('--width',type=int,default=64)
     p.add_argument('--hope-layers',type=int,default=1)
     p.add_argument('--revision',choices=('v1','v2','v3'),default='v1')
+    p.add_argument('--transformer-competence',action='store_true')
+    p.add_argument('--loop-boundary-diagnostic',action='store_true')
     p.add_argument('--stop-stage',type=int,default=5);p.add_argument('--resume')
     a=p.parse_args()
     if a.smoke and not a.external_baseline:p.error('smoke belongs to external baseline harness')
@@ -40,10 +42,14 @@ def main():
     if a.external_baseline:
         tag=a.arm+str(a.width)+(f'-l{a.hope_layers}' if a.arm=='selfmod_cms' else '')
         name=f'parameter-n{a.scale}-seed{a.seed}-{tag}-'+('smoke-' if a.smoke else suffix+'-')+a.revision
+    if a.transformer_competence:name=f'parameter-n{a.scale}-seed{a.seed}-transformer{a.width}-anchored-competence-'+a.revision
+    if a.loop_boundary_diagnostic:name='parameter-loop-boundary-learning-'+a.revision
     driver='parameter_efficiency_tasks.py' if a.data_only else 'diagnose_parameter_refresh.py' if a.refresh else 'parameter_efficiency_study.py'
     if a.length_diagnostic:driver='transformer_length_diagnostic.py'
     if a.factor_diagnostic:driver='check_factored_parameter_backend.py'
     if a.external_baseline:driver='parameter_external_baseline_study.py'
+    if a.transformer_competence:driver='transformer_competence_curriculum.py'
+    if a.loop_boundary_diagnostic:driver='loop_boundary_learning.py'
     files=([driver] if a.data_only else ['parameter_efficiency_study.py','parameter_native_models.py',
         'parameter_transformer_baselines.py','terminal_profile_formation.py','train.py','tasks.py',
         'torch_baselines.py','program_baseline_v2.py','topology_model.py','semantic_promotion_model.py',
@@ -53,6 +59,8 @@ def main():
         'parameter_consistency_refresh.py','diagnose_parameter_refresh.py','transformer_length_diagnostic.py',
         'factored_monodromy_cache.py','check_factored_parameter_backend.py'])
     if a.external_baseline:files+=['parameter_external_baseline_study.py','parameter_den_baseline.py','parameter_hope_baseline.py']
+    if a.transformer_competence:files+=['transformer_competence_curriculum.py']
+    if a.loop_boundary_diagnostic:files+=['loop_boundary_learning.py']
     version=ROOT/'versions'/('code-'+name);version.mkdir(exist_ok=False)
     encoded={};hashes={}
     for f in files:
@@ -75,6 +83,8 @@ def main():
     if a.length_diagnostic:protocol.update(gradient_budget_per_task=0,external_seconds=120,internal_seconds=110,scope='actual saved TF64/96 stage0 checkpoints TRAIN/VALID stratified by observed input length; no training/noTEST')
     if a.factor_diagnostic:protocol.update(gradient_budget_per_task=0,external_seconds=120,internal_seconds=110,scope='N32 execution prerequisite: bounded multi-loop lift/quadrature/real NN reload; no task training or acquisition claim')
     if a.external_baseline:protocol.update(scope='DEN-RNN sequence adaptation or linear self-modifying CMS reconstruction; not full/official DEN or HOPE replication',smoke_not_benchmark=a.smoke,overlapping_GPU_workloads_possible=True)
+    if a.transformer_competence:protocol.update(gradient_budget_per_task=6000,scope='same Transformer task0 competence repair:32frontier+32short anchors;max6000 added updates/1200 stalledfrontier; TRAIN/VALID-only selection; TEST opened after frozenNNhash; all extra costs charged')
+    if a.loop_boundary_diagnostic:protocol.update(gradient_budget_per_task=24,external_seconds=120,internal_seconds=90,scope='TODO2 discovery diagnostic: actual cubic loop-class learning via terminal feedback; sharednonorthogonalfeatures old=(1,0),new=(1,1),weights=(-3,4),2P; event/ordinary_event/score/discrete/mapguard; no M0 or originality claim',information='4 authored terminaltraining records,4heldoutrecords; fixed covering geometry known to all; all paid full-fiber endpointobservations available; max1600feedback/2000programs/160000continuationsteps perarm; shared90s deadline maycensorlaterarms')
     with (ROOT/(name+'-protocol.json')).open('x') as f:json.dump(protocol,f,indent=2);f.write('\n')
     cfg=dict(name=name,driver=driver,files=encoded,hashes=hashes,remote=REMOTE,args=vars(a))
     code='''import base64,hashlib,json,pathlib,shutil,subprocess,sys
@@ -83,10 +93,12 @@ code=r/('code-'+name);code.mkdir()
 for n,b in c['files'].items():
  p=code/n;d=base64.b64decode(b);assert hashlib.sha256(d).hexdigest()==c['hashes'][n];p.write_bytes(d);p.chmod(0o444)
 code.chmod(0o555);out=r/'outputs'/name
-if a['data_only'] or a['factor_diagnostic']:
+if a['data_only'] or a['factor_diagnostic'] or a['loop_boundary_diagnostic']:
  runner=r/'remote_runner_cpu_v2.py';assert hashlib.sha256(runner.read_bytes()).hexdigest()=='c9f00f8e85f68d99e76aa4203efe77d08ac9a6ea25536631cf592b9b8c711335'
  cmd=[sys.executable,str(runner),'--script',str(code/c['driver']),'--out',str(out),'--timeout','120','--address-space-gib','64','--file-limit-mib','100','--cpu-only','--','--out',str(out/('learn' if a['factor_diagnostic'] else 'data')),'--max-seconds','110']
  if a['data_only']:cmd+=['--scale',str(a['scale']),'--seed',str(a['seed'])]
+ if a['loop_boundary_diagnostic']:
+    cmd=[sys.executable,str(runner),'--script',str(code/c['driver']),'--out',str(out),'--timeout','120','--address-space-gib','64','--file-limit-mib','100','--cpu-only','--','--out',str(out/'learn'),'--seconds','90','--arms','event','ordinary_event','score','discrete','event_map_guard']
 else:
  inputs=pathlib.Path('/opt/prometheus-'+name+'-inputs');inputs.mkdir()
  shutil.copytree(r/'outputs'/('parameter-data-n'+str(a['scale'])+'-seed'+str(a['seed']))/'data'/'datasets',inputs/'datasets')
@@ -109,6 +121,9 @@ else:
     if a['smoke']:cmd+=['--smoke']
     if a['resume']:cmd+=['--resume',str(inputs/'resume.pt')]
     if a['curriculum']:cmd+=['--curriculum']
+ if a['transformer_competence']:
+    cmd=[sys.executable,str(runner),'--script',str(code/c['driver']),'--out',str(out),'--timeout','900','--address-space-gib','512','--file-limit-mib','100','--gpu-fraction','.3','--cuda-init-before-seccomp','--','--out',str(out/'learn'),'--datasets',str(inputs/'datasets'),'--scale',str(a['scale']),'--seed',str(a['seed']),'--width',str(a['width']),'--max-updates','6000','--per-length-budget','1200','--max-seconds','850','--device','cuda:0','--evaluate-tests','--resource-overlap-note','Concurrent authorized scaling runs possible; no isolated throughput comparison']
+    if a['resume']:cmd+=['--checkpoint',str(inputs/'resume.pt')]
 print(json.dumps({'event':'frozen_parameter_study_launch','command':cmd}),flush=True)
 x=subprocess.run(cmd,capture_output=True,text=True,timeout=930);print(x.stdout);print(x.stderr,file=sys.stderr)
 if x.returncode:print((out/'stderr.log').read_text(errors='replace')[-5000:],file=sys.stderr)

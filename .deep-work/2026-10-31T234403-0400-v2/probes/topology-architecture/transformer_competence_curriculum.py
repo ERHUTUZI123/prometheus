@@ -46,7 +46,8 @@ def read_data(directory,split,n):
     path=directory/f"task0-{split}.npz"
     if path.stat().st_size>20*1024*1024:raise ValueError("raw dataset exceeds20MiB")
     with np.load(path,allow_pickle=False) as archive:
-        if set(archive.files)!=set(KEYS):raise ValueError("only four original raw arrays accepted")
+        if set(archive.files) not in (set(KEYS),set(KEYS)|{'metadata'}):
+            raise ValueError("four original raw arrays plus optional ignored public metadata required")
         data={k:np.asarray(archive[k],dtype=np.int64) for k in KEYS}
     count=len(data["starts"])
     if (not 64<=count<=32768 or data["tokens"].shape!=(count,18)
