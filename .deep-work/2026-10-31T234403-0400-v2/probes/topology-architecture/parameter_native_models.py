@@ -190,6 +190,8 @@ class _CompactOperations:
             actual_dense_operation_parameters=False,
             checkpoint_loader="parameter_native_models.compact_model_from_checkpoint",
             model_kind="continuous" if hasattr(self,"path_omega") else "ordinary_constraint")
+        if hasattr(self,"factored_monodromy"):
+            extra["compact_operations"]["factored_monodromy"]=self.factored_monodromy
         if "continuous_monodromy" in extra:
             extra["continuous_monodromy"]["checkpoint_loader"]="parameter_native_models.compact_model_from_checkpoint"
         return extra
@@ -232,13 +234,26 @@ class CompactSemanticPromotionModel(_CompactOperations,SemanticPromotionModel):
 
 class CompactContinuousNativeModel(_CompactOperations,ContinuousNativeModel):
     def __init__(self,n_states,vocab=6,n_tasks=6,emb_dim=48,n_ops=1,max_bank=48,
-                 latent_factor=1,task_alphabets=None,homotopy_lift_cache_capacity=128,**kwargs):
+                 latent_factor=1,task_alphabets=None,homotopy_lift_cache_capacity=128,
+                 factored_monodromy=False,**kwargs):
         self._compact_enabled=False
+        self.factored_monodromy=bool(factored_monodromy)
+        if self.factored_monodromy and (not homotopy_lift_cache_capacity or kwargs.get('geometry_cache_capacity',0)):
+            raise ValueError('factored execution requires an actual first-lift cache and its own uncached quadrature')
         if not 1<=n_ops<=24:raise ValueError("construct a small initial bank; factory resizes saved banks")
         super().__init__(n_states,vocab=vocab,n_tasks=n_tasks,emb_dim=emb_dim,n_ops=n_ops,
             max_bank=min(int(max_bank),24),latent_factor=latent_factor,
             homotopy_lift_cache_capacity=homotopy_lift_cache_capacity,**kwargs)
         self._finish_compact(max_bank,task_alphabets)
+
+    def set_homotopy_lift_cache(self,capacity,shared_cache=None):
+        if self.factored_monodromy and capacity:
+            from factored_monodromy_cache import FactoredMonodromyCache
+            if shared_cache is None:
+                shared_cache=FactoredMonodromyCache(capacity=int(capacity))
+            elif not isinstance(shared_cache,FactoredMonodromyCache):
+                raise ValueError('factored execution cannot share an unfactored proof namespace')
+        return super().set_homotopy_lift_cache(capacity,shared_cache=shared_cache)
 
     def geometry_regularizer(self):
         """Existing action rule with actual configurable six-task alphabets."""
@@ -256,7 +271,11 @@ class CompactContinuousNativeModel(_CompactOperations,ContinuousNativeModel):
         if signature!=self._moment_signature:
             start=time.perf_counter()
             if self._path_moment_cache is None:
-                self._moments=kinetic_moments(classes)
+                if self.factored_monodromy:
+                    from factored_monodromy_cache import factored_kinetic_moments
+                    self._moments=factored_kinetic_moments(classes)
+                else:
+                    self._moments=kinetic_moments(classes)
                 actual_points=self._moments["quadrature_point_strands"]
             else:
                 before=self._path_moment_cache.statistics()["point_strands_actually_computed_on_misses"]
@@ -321,7 +340,8 @@ def compact_model_from_checkpoint(checkpoint,device="cpu"):
         options.update(initial_omega=state["path_omega"].detach().cpu().tolist(),
             continuous_lift_seconds=geometry.get("continuous_lift_seconds",110.),
             geometry_cache_capacity=geometry.get("moment_cache_capacity",0),
-            homotopy_lift_cache_capacity=0 if policy is None else int(policy["capacity"]))
+            homotopy_lift_cache_capacity=0 if policy is None else int(policy["capacity"]),
+            factored_monodromy=bool(meta.get('factored_monodromy',False)))
         cls=CompactContinuousNativeModel
     else:
         cls=CompactSemanticPromotionModel

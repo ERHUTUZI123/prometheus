@@ -55,7 +55,9 @@ def build_native(arm,n,dim,seed,task_count=6,n_ops=1):
     cls=CompactContinuousNativeModel if arm=='topology' else (SemanticPromotionModel if arm=='constraint_dense' else CompactSemanticPromotionModel)
     kwargs=dict(vocab=6,n_tasks=task_count,latent_factor=dim//n,n_ops=n_ops,emb_dim=48,max_bank=48,
                 protection=arm not in ('freeze','modular'),seed=seed)
-    if arm=='topology':kwargs['homotopy_lift_cache_capacity']=128
+    if arm=='topology':
+        kwargs['homotopy_lift_cache_capacity']=128
+        kwargs['factored_monodromy']=n==32
     return cls(n,**kwargs)
 
 
@@ -229,7 +231,7 @@ def save_model(model,optimizer,args,stage,step,rec,resources,capabilities,comple
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--datasets',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
-    p.add_argument('--arm',choices=ARMS,required=True);p.add_argument('--scale',type=int,choices=(8,16),required=True)
+    p.add_argument('--arm',choices=ARMS,required=True);p.add_argument('--scale',type=int,choices=(8,16,32),required=True)
     p.add_argument('--seed',type=int,default=0);p.add_argument('--steps',type=int,default=600)
     p.add_argument('--stop-after-stage',type=int,default=5);p.add_argument('--resume',type=Path)
     p.add_argument('--consistency-refresh',action='store_true')
